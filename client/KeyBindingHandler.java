@@ -11,10 +11,10 @@ import cpw.mods.fml.common.TickType;
 import fgtXray.FgtXRay;
 
 public class KeyBindingHandler extends KeyHandler {
-	public static KeyBinding toggleFindIt = new KeyBinding("FindIt - Toggle", Keyboard.KEY_T);
-	public static KeyBinding openFindIt = new KeyBinding("FindIt - Menu", Keyboard.KEY_Y);
+	public static KeyBinding toggleXray = new KeyBinding("Fgt XRay - Toggle", Keyboard.KEY_T);
+	public static KeyBinding openXrayMenu = new KeyBinding("Fgt XRay - Menu", Keyboard.KEY_Y);
 	
-	public static KeyBinding[] arrayOfKeys = new KeyBinding[] { toggleFindIt, openFindIt };
+	public static KeyBinding[] arrayOfKeys = new KeyBinding[] { toggleXray, openXrayMenu };
 	public static boolean[] areRepeating = new boolean[] { false, false };
 	private Minecraft mc = Minecraft.getMinecraft();
 	
@@ -24,7 +24,7 @@ public class KeyBindingHandler extends KeyHandler {
 
 	@Override
 	public String getLabel() {
-		return "FindIt KeyBind";
+		return "Fgt XRay KeyBind";
 	}
 
 	@Override
@@ -32,16 +32,14 @@ public class KeyBindingHandler extends KeyHandler {
 	}
 
 	@Override
-	public void keyUp(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd) {	
+	public void keyUp(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd) { // Add the default keybinds to the forge keybind.
 		if( !tickEnd && (mc.currentScreen == null) && (mc.theWorld != null) ){
-			
-			if(kb.keyCode == toggleFindIt.keyCode){
+			if(kb.keyCode == toggleXray.keyCode){
 				FgtXRay.drawOres = !FgtXRay.drawOres;
 				RenderTick.ores.clear();
-			}else if(kb.keyCode == openFindIt.keyCode){
+			}else if(kb.keyCode == openXrayMenu.keyCode){
 				mc.displayGuiScreen( new GuiSettings() );
 			}
-			
 		}
 	}
 

@@ -1,3 +1,6 @@
+// This class (structure?) is for holding the blocks x,y,z and color to draw.
+// This gets copied and accessed by RenderTick to draw the boxes around found ores/blocks.
+
 package fgtXray;
 
 public class BlockInfo {

@@ -29,18 +29,25 @@ import cpw.mods.fml.common.network.NetworkMod;
 import fgtXray.OreInfo;
 import fgtXray.client.OresSearch;
 
-@Mod(modid="FindIt", name="Find It", version="0.0.1")
+@Mod(modid="FgtXray", name="Fgt X-Ray", version="0.0.1")
 @NetworkMod(clientSideRequired=true)
 public class FgtXRay {
-	public static int localPlyX, localPlyY, localPlyZ;
-	public static boolean drawOres = false;
-	public static boolean skipGenericBlocks = true;
+	public static int localPlyX, localPlyY, localPlyZ; // For internal use in the ClientTick thread.
+	public static boolean drawOres = false; // Off by default
+	public static boolean skipGenericBlocks = true; // See ClientTick.run() thread. Skip common blocks in overworld/nether/end.
 	
-	public static String[] distStrings = new String[]{ "8", "16", "32", "48", "64", "80", "128", "256" };
-	public static int[] distNumbers = new int[]{ 8, 16, 32, 48, 64, 80, 128, 256 };
-	public static int distIndex = 2;
+	public static String[] distStrings = new String[]{ "8", "16", "32", "48", "64", "80", "128", "256" }; // Strings for use in the GUI
+	public static int[] distNumbers = new int[]{ 8, 16, 32, 48, 64, 80, 128, 256 }; // Radius +/- around the player to search. So 8 is 8 on left and right of player plus under the player. So 17x17 area. 
+	public static int distIndex = 2; // Index for the distNumers array. Default search distance.
 	
 	public static Map<String, OreInfo> defaultOres = new HashMap<String, OreInfo>(){{
+		/* Default ores to check through the ore dictionary and add each instance found to the searchList. 
+		 * put( "oreType", new OreInfo(...) ) oreType is the ore dictionary string id. Press Print OreDict and check console to see list.
+		 * OreInfo( String "Gui Name", // The name to be displayed in the GUI.
+		 *     int id, int meta, // Leave these at 0. The OresSearch will set them through the ore dictionary.
+		 *     int color, // 0x RED GREEN BLUE (0xRRGGBB)
+		 *     bool enabled) // Should the be on by default. Its then set internally by GuiSettings.
+		 */
 		put("oreLapis", new OreInfo("Lapis", 0, 0, 0x0000FF, false) );
 		put("oreCopper", new OreInfo("Copper", 0, 0, 0xCC6600, true) );
 		put("oreTin", new OreInfo("Tin", 0, 0, 0xA1A1A1, true) );
@@ -58,17 +65,22 @@ public class FgtXRay {
 	}};
 	
 	public static List<OreInfo> customOres = new ArrayList<OreInfo>(){{
-		// add( OreInfo("GUI Name", id, meta, color, enabled ) );
+		/* List of custom id:meta to add.
+		 * OreInfo( String "Gui Name", // Displayed in the GUI.
+		 *     int id, int meta, // Set these to whatever the id:meta is for your block.
+		 *     int color, // color 0xRRGGBB
+		 *     bool enabled) // On by default? 
+		 */
 		add( new OreInfo("Chest", Block.chest.blockID, 0, 0x663000, false) );
 		add( new OreInfo("Redstone Wire", Block.redstoneWire.blockID, 0, 0xFF0000, false) );
 	}};
 	
 	// The instance of your mod that Forge uses.
-	@Instance(value = "FindIt")
+	@Instance(value = "FgtXray")
 	public static FgtXRay instance;
 	
 	// Says where the client and server 'proxy' code is loaded.
-	@SidedProxy(clientSide="findIt.client.ClientProxy", serverSide="findIt.ServerProxy")
+	@SidedProxy(clientSide="fgtXray.client.ClientProxy", serverSide="fgtXray.ServerProxy")
 	public static ServerProxy proxy;
 	
 	//@PreInit    // used in 1.5.2
@@ -80,7 +92,7 @@ public class FgtXRay {
 	public void load(FMLInitializationEvent event) {
 		proxy.proxyInit();
 		//OreDictionary.registerOre("oreGold", Block.oreGold); // Testing Duplicate OreDict bug.
-		if (OresSearch.searchList.isEmpty()){
+		if (OresSearch.searchList.isEmpty()){ // Populate the OresSearch.searchList
 			OresSearch.get();
 		}
 	}

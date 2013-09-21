@@ -2,7 +2,8 @@ package fgtXray.client;
 
 /* Props goto CJB for the render functions and maths.
  * http://twitter.com/CJBMods
- * */
+ * I pretty much copied this from his decompiled MoreInfo mod and bitbucket repo.
+ */
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -39,9 +40,9 @@ public class RenderTick implements ITickHandler {
 	}
 
 	@ForgeSubscribe
-	public void onRenderEvent( RenderWorldLastEvent event ){
+	public void onRenderEvent( RenderWorldLastEvent event ){ // Called when drawing the world.
 		if ( mc.theWorld != null && FgtXRay.drawOres ) {
-			float f = event.partialTicks;
+			float f = event.partialTicks; // I still dont know what this is for.
 			float px = (float)mc.thePlayer.posX;
 			float py = (float)mc.thePlayer.posY;
 			float pz = (float)mc.thePlayer.posZ;
@@ -55,7 +56,7 @@ public class RenderTick implements ITickHandler {
 		}
 	}
 	
-	private void drawOres( float px, float py, float pz ){// blockX - playerPos + offset ...
+	private void drawOres( float px, float py, float pz ){  // I suck at opengl. Document later.
 		int bx, by, bz;
 		
 		GL11.glDisable( GL11.GL_TEXTURE_2D );
@@ -120,7 +121,7 @@ public class RenderTick implements ITickHandler {
 	
 	@Override
 	public void tickEnd(EnumSet<TickType> type, Object... tickData) {
-		/*if ( mc.theWorld != null && FindIt.drawText ) {
+		/*if ( mc.theWorld != null && fgtXray.drawText ) {
 			renderText("Test");
 		}*/
 	}
