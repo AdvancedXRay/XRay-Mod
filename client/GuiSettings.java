@@ -15,6 +15,7 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class GuiSettings extends GuiScreen {
 	Map<String, OreButtons> buttons = new HashMap<String, OreButtons>();
+	boolean distChanged = false;	// To prevent saving the file every time you hit the button.
 	
 	@Override
 	public void initGui(){ // Called when the gui should be (re)created.
@@ -61,13 +62,16 @@ public class GuiSettings extends GuiScreen {
 				}
 			}
 			break;
+			
 		case 99:		// Distance Button
 			if (FgtXRay.distIndex < FgtXRay.distNumbers.length-1){
 				FgtXRay.distIndex++;
 			}else{
 				FgtXRay.distIndex = 0;
 			}
+			distChanged = true;
 			break;
+			
 		default:
 			for( Map.Entry<String, OreButtons> entry : buttons.entrySet() ){ // Iterate through the buttons map and check what ores need to be toggled
 				String key = entry.getKey(); // Block name (Diamond)
@@ -78,6 +82,7 @@ public class GuiSettings extends GuiScreen {
 						for( OreInfo ore : OresSearch.searchList ){ // Match this ore with the one in the searchList.
 							if( (tempOre.id == ore.id) && (tempOre.meta == ore.meta) ){
 								ore.draw = !ore.draw; // Invert searchList.ore.draw
+								ConfigHandler.update( ore.oreName, ore.draw );
 								//System.out.println( String.format( "[Fgt XRay] Setting %s %d:%d to %b", ore.oreName, ore.id, ore.meta, ore.draw ) );
 							}
 						}
@@ -86,12 +91,17 @@ public class GuiSettings extends GuiScreen {
 			}
 			break;
 		}
+		
 		this.initGui(); // Redraw the gui.
 	}
 	
 	@Override
 	protected void keyTyped( char par1, int par2 ){
 		if (par2 == 1 || par2 == mc.gameSettings.keyBindInventory.keyCode){ // Close on esc or inventory key (e)
+			if( distChanged ){ // Save the config file when we exit.
+				ConfigHandler.update("searchdist", false);
+				distChanged=false;
+			}
 			mc.thePlayer.closeScreen();
 		}
 	}

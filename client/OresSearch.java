@@ -30,7 +30,7 @@ public class OresSearch {
 			System.out.println( "[Fgt XRay] --- Populating the searchList with the ore dictionary --- ");
 			List<OreInfo> temp = new ArrayList();
 			
-			for( Map.Entry<String, OreInfo> entry : FgtXRay.defaultOres.entrySet() ){
+			for( Map.Entry<String, OreInfo> entry : FgtXRay.oredictOres.entrySet() ){
 				String key = entry.getKey();
 				OreInfo value = entry.getValue();
 				

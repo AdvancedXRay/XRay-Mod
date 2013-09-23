@@ -59,7 +59,7 @@ public class ClientTick implements ITickHandler, Runnable {
 	public void run() { // Our thread code for finding ores near the player.
 		try{
 			while(!this.thread.isInterrupted()){ // Check the internal interrupt flag. Exit thread if set.
-				if ( FgtXRay.drawOres && !OresSearch.searchList.isEmpty() && (mc.theWorld != null) && (mc.thePlayer != null) ){
+				if ( FgtXRay.drawOres && !OresSearch.searchList.isEmpty() && (mc != null) && (mc.theWorld != null) && (mc.thePlayer != null) ){
 					if ( nextTimeMs > System.currentTimeMillis() ) { continue; } // Delay to avoid spamming ore updates.
 					List temp = new ArrayList();
 					int radius = FgtXRay.distNumbers[ FgtXRay.distIndex ]; // Get the radius around the player to search.
