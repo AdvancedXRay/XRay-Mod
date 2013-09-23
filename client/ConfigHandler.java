@@ -24,7 +24,7 @@ public class ConfigHandler {
 		for( String category : config.getCategoryNames() ){ // Iterate through each category in our config file.
 			ConfigCategory cat = config.getCategory( category );
 			
-			if( category.contains("oredict.") ){ // Dont iterate over the base category and make sure were on the oredict category.
+			if( category.startsWith( "oredict.") ){ // Dont iterate over the base category and make sure were on the oredict category.
 				String dictName = cat.get("dictname").getString();
 				String guiName = cat.get("guiname").getString();
 				int id = cat.get("id").getInt();
@@ -34,7 +34,7 @@ public class ConfigHandler {
 				
 				FgtXRay.oredictOres.put(dictName, new OreInfo( guiName, id, meta, color, enabled ) );
 				
-			} else if( category.contains("customores.") ){
+			} else if( category.startsWith("customores.") ){
 				String name = cat.get("name").getString();
 				int id = cat.get("id").getInt();
 				int meta = cat.get("meta").getInt();
@@ -48,7 +48,7 @@ public class ConfigHandler {
 	}
 	
 	public static void update(String string, boolean draw){
-		if( string == "searchdist" ){ // Save the new render distance.
+		if( string.equals("searchdist") ){ // Save the new render distance.
 			config.get(config.CATEGORY_GENERAL, "searchdist", 0).set( FgtXRay.distIndex );
 			config.save();
 			return;
@@ -56,11 +56,13 @@ public class ConfigHandler {
 		
 		for( String category : config.getCategoryNames() ){ // Figure out if this is a custom or dictionary ore.
 			String cleanStr = string.replaceAll("\\s+", "").toLowerCase(); // No whitespace or capitals in the config file categories.
+			String[] splitCat = category.split("\\.");
 			
-			if( category.contains( cleanStr ) ){
-				if( category.contains("oredict") ){
+			if( splitCat.length == 2 ){
+				if( splitCat[0].equals( "oredict" ) && splitCat[1].equals( cleanStr ) ){ // Check if the current itration is the correct category (oredict.emerald)
 					config.get("oredict."+cleanStr, "enabled", false).set( draw );
-				} else {
+					
+				} else if ( splitCat[0].equals( "customores" ) && splitCat[1].equals( cleanStr ) ){
 					config.get("customores."+cleanStr, "enabled", false).set( draw );
 				}
 			}
