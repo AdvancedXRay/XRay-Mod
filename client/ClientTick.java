@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.ITickHandler;
@@ -72,6 +73,10 @@ public class ClientTick implements ITickHandler, Runnable {
 								int id = mc.theWorld.getBlockId(x, y, z);
 								int meta = mc.theWorld.getBlockMetadata(x, y, z);
 								
+								if( mc.theWorld.blockHasTileEntity(x, y, z) ){ // Ignore metadata for tileentities
+									meta = 0;
+								}
+								
 								if(FgtXRay.skipGenericBlocks){ // Dont iterate through the searchList if its a common block.
 									if( (id == 0) ||
 										(id == Block.stone.blockID) ||
@@ -102,7 +107,7 @@ public class ClientTick implements ITickHandler, Runnable {
 								}
 								
 								for( OreInfo ore : OresSearch.searchList ){ // Now we're actually checking if the current x,y,z block is in our searchList.
-									if ((ore.draw) && (id == ore.id) && (meta == ore.meta)){
+									if ( (ore.draw) && (id == ore.id) && ( meta == ore.meta ) ){ // Dont check meta if its -1 (custom)
 										temp.add( new BlockInfo( x, y, z, ore.color) ); // Add this block to the temp list
 										break; // Found a match, move on to the next block.
 									}
