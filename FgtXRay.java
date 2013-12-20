@@ -13,9 +13,7 @@ import net.minecraftforge.common.Property;
 import net.minecraftforge.oredict.OreDictionary;
 
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.PreInit;
-import cpw.mods.fml.common.Mod.Init;
-import cpw.mods.fml.common.Mod.PostInit;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -66,7 +64,7 @@ public class FgtXRay {
 	@SidedProxy(clientSide="fgtXray.client.ClientProxy", serverSide="fgtXray.ServerProxy")
 	public static ServerProxy proxy;
 	
-	@PreInit    // used in 1.5.2
+	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		Configuration config = new Configuration( event.getSuggestedConfigurationFile() );
 		config.load();
@@ -80,7 +78,7 @@ public class FgtXRay {
 		ConfigHandler.setup( event ); // Read the config file and setup environment.
 	}
 
-	@Init       // used in 1.5.2
+	@EventHandler
 	public void load(FMLInitializationEvent event) {
 		proxy.proxyInit();
 		//OreDictionary.registerOre("oreGold", Block.oreGold); // Testing Duplicate OreDict bug.
@@ -89,7 +87,7 @@ public class FgtXRay {
 		}
 	}
 	
-	@PostInit   // used in 1.5.2
+	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 	}
 }
