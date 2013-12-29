@@ -30,10 +30,13 @@ public class ClientTick implements ITickHandler, Runnable {
 	@Override
 	public void tickEnd(EnumSet<TickType> type, Object... tickData) {
 		if ( type.contains(TickType.PLAYER) ){
-			EntityPlayer player = (EntityPlayer)tickData[0];
-			FgtXRay.localPlyX = MathHelper.floor_double(player.posX); // Set the x,y,z variables to be used by the thread later.
-			FgtXRay.localPlyY = MathHelper.floor_double(player.posY);
-			FgtXRay.localPlyZ = MathHelper.floor_double(player.posZ);
+			/*EntityPlayer player = (EntityPlayer)tickData[0];
+			FgtXRay.localPlyX = MathHelper.floor_double( player.posX ); // Set the x,y,z variables to be used by the thread later.
+			FgtXRay.localPlyY = MathHelper.floor_double( player.posY );
+			FgtXRay.localPlyZ = MathHelper.floor_double( player.posZ );*/
+			FgtXRay.localPlyX = MathHelper.floor_double( mc.thePlayer.posX );
+			FgtXRay.localPlyY = MathHelper.floor_double( mc.thePlayer.posY );
+			FgtXRay.localPlyZ = MathHelper.floor_double( mc.thePlayer.posZ );
 
 			if( FgtXRay.drawOres && ((this.thread == null) || !this.thread.isAlive()) &&
 			( (mc.theWorld != null) && (mc.thePlayer != null) ) ){ // If we're in a world and want to start drawing create the thread.

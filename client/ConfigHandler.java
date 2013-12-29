@@ -2,7 +2,6 @@ package fgtXray.client;
 
 import java.io.File;
 
-import scala.util.parsing.combinator.testing.Str;
 import net.minecraftforge.common.ConfigCategory;
 import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
