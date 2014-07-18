@@ -6,11 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.block.Block;
-import net.minecraftforge.common.ConfigCategory;
-import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.Property;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.init.Blocks;
+
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.common.config.Configuration;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -19,14 +22,13 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
+
 import fgtXray.OreInfo;
 import fgtXray.client.DefaultConfig;
 import fgtXray.client.ConfigHandler;
 import fgtXray.client.OresSearch;
 
-@Mod(modid="FgtXray", name="Fgt X-Ray", version="0.0.1")
-@NetworkMod(clientSideRequired=true)
+@Mod(modid="fgtxray", name="Fgt X-Ray", version="1.3.3.7")
 public class FgtXRay {
 	public static int localPlyX, localPlyY, localPlyZ; // For internal use in the ClientTick thread.
 	public static boolean drawOres = false; // Off by default
@@ -35,6 +37,15 @@ public class FgtXRay {
 	public static String[] distStrings = new String[]{ "8", "16", "32", "48", "64", "80", "128", "256" }; // Strings for use in the GUI
 	public static int[] distNumbers = new int[]{ 8, 16, 32, 48, 64, 80, 128, 256 }; // Radius +/- around the player to search. So 8 is 8 on left and right of player plus under the player. So 17x17 area. 
 	public static int distIndex = 0; // Index for the distNumers array. Default search distance.
+	
+	public static boolean hasBeenNagged = false; // TODO: DELETE ME
+	
+	// Keybindings
+	public static final int keyIndex_toggleXray = 0;
+	public static final int keyIndex_showXrayMenu = 1;
+	public static final int[] keyBind_keyValues = { Keyboard.KEY_NONE, Keyboard.KEY_NONE };
+	public static final String[] keyBind_descriptions = { "Toggle X-Ray", "Open X-Ray Menu" };
+	public static KeyBinding[] keyBind_keys = null;
 	
 	public static Configuration config = null;
 	
@@ -81,10 +92,8 @@ public class FgtXRay {
 	@EventHandler
 	public void load(FMLInitializationEvent event) {
 		proxy.proxyInit();
-		//OreDictionary.registerOre("oreGold", Block.oreGold); // Testing Duplicate OreDict bug.
-		if (OresSearch.searchList.isEmpty()){ // Populate the OresSearch.searchList
-			OresSearch.get();
-		}
+		//OreDictionary.registerOre("oreGold", Blocks.gold_ore ); // Testing Duplicate OreDict bug.
+		// Remember not to populate the searchList until all mods are loaded
 	}
 	
 	@EventHandler

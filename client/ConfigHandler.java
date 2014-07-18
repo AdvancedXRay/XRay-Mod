@@ -2,8 +2,8 @@ package fgtXray.client;
 
 import java.io.File;
 
-import net.minecraftforge.common.ConfigCategory;
-import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.config.ConfigCategory;
+import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import fgtXray.FgtXRay;
 import fgtXray.OreInfo;
@@ -11,9 +11,7 @@ import fgtXray.OreInfo;
 public class ConfigHandler {
 	static Configuration config = null; // Save the config file handle for use later.
 	
-	public ConfigHandler() {}
-	
-	public void saveAll(){}// I shouldnt need this. Placeholder for saving all options at once.
+	//public void saveAll(){}// I shouldn't need this. Placeholder for saving all options at once.
 
 	public static void setup(FMLPreInitializationEvent event ) {
 		config = new Configuration( event.getSuggestedConfigurationFile() );
@@ -46,6 +44,11 @@ public class ConfigHandler {
 		config.save();
 	}
 	
+	public static void add( String oreName ){ // TODO: Save ores added while in game.
+		
+	}
+	
+	// For updating single options
 	public static void update(String string, boolean draw){
 		if( string.equals("searchdist") ){ // Save the new render distance.
 			config.get(config.CATEGORY_GENERAL, "searchdist", 0).set( FgtXRay.distIndex );
@@ -58,7 +61,7 @@ public class ConfigHandler {
 			String[] splitCat = category.split("\\.");
 			
 			if( splitCat.length == 2 ){
-				if( splitCat[0].equals( "oredict" ) && splitCat[1].equals( cleanStr ) ){ // Check if the current itration is the correct category (oredict.emerald)
+				if( splitCat[0].equals( "oredict" ) && splitCat[1].equals( cleanStr ) ){ // Check if the current iteration is the correct category (oredict.emerald)
 					config.get("oredict."+cleanStr, "enabled", false).set( draw );
 					
 				} else if ( splitCat[0].equals( "customores" ) && splitCat[1].equals( cleanStr ) ){

@@ -21,25 +21,19 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.DimensionManager;
-import cpw.mods.fml.common.ITickHandler;
-import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import fgtXray.BlockInfo;
 import fgtXray.FgtXRay;
 
 import org.lwjgl.opengl.GL11;
-import net.minecraftforge.event.ForgeSubscribe;
 
-public class RenderTick implements ITickHandler {
+public class RenderTick {
 	private final Minecraft mc = Minecraft.getMinecraft();
 	public static List<BlockInfo> ores = new ArrayList();
 	World world = mc.theWorld;
-	
-	@Override
-	public void tickStart(EnumSet<TickType> type, Object... tickData) {
-	}
 
-	@ForgeSubscribe
+	@SubscribeEvent
 	public void onRenderEvent( RenderWorldLastEvent event ){ // Called when drawing the world.
 		if ( mc.theWorld != null && FgtXRay.drawOres ) {
 			float f = event.partialTicks; // I still dont know what this is for.
@@ -108,32 +102,6 @@ public class RenderTick implements ITickHandler {
 		GL11.glEnable( GL11.GL_TEXTURE_2D );
 		GL11.glEnable( GL11.GL_DEPTH_TEST );
 		GL11.glEnable( GL11.GL_CULL_FACE );
-	}
-	
-	/*private void renderText( String str ) {
-		ScaledResolution res = new ScaledResolution( this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight);
-		FontRenderer fontRend = mc.fontRenderer;
-		int width = res.getScaledWidth();
-		int height = res.getScaledHeight();
-		mc.entityRenderer.setupOverlayRendering();
-		fontRend.drawString( str, 1, 140, 0xFFFFFF);
-	}*/
-	
-	@Override
-	public void tickEnd(EnumSet<TickType> type, Object... tickData) {
-		/*if ( mc.theWorld != null && fgtXray.drawText ) {
-			renderText("Test");
-		}*/
-	}
-
-	@Override
-	public EnumSet<TickType> ticks() {
-		return EnumSet.of(TickType.RENDER);
-	}
-
-	@Override
-	public String getLabel() {
-		return "rendertick";
 	}
 
 }
