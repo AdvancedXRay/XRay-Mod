@@ -1,4 +1,4 @@
-package fgtXray.client;
+package com.fgtXray.config;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,16 +6,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import fgtXray.OreInfo;
+import com.fgtXray.reference.OreInfo;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
-import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 
 public class DefaultConfig {
 	// Below are the 'default' ores/blocks to add through the ore dictionary.
-	final static Map<String, OreInfo> defaults = new HashMap<String, OreInfo>(){{
+	final static Map<String, OreInfo> defaults = new HashMap<String, OreInfo>()
+	{{
 		put("oreLapis", new OreInfo("Lapis", 0, 0, 0x0000FF, false) );
 		put("oreCopper", new OreInfo("Copper", 0, 0, 0xCC6600, true) );
 		put("oreTin", new OreInfo("Tin", 0, 0, 0xA1A1A1, true) );
@@ -35,20 +35,22 @@ public class DefaultConfig {
 		put("oreQuartz", new OreInfo("Quartz", 0, 0, 0x8888FF, false) );
 		put("oreCoal", new OreInfo("Coal", 0, 0, 0x000000, false ) );
 		put("blockGlass", new OreInfo("Glass", 0, 0, 0x8888FF, false) );
-		
 	}};
 	
 	// Default block to add. Mostly just so people can add custom blocks manually through the config until I setup a gui for it.
-	final static List<OreInfo> custom = new ArrayList<OreInfo>(){{
+	final static List<OreInfo> custom = new ArrayList<OreInfo>()
+	{{
 		add( new OreInfo("Redstone Wire", Block.getIdFromBlock( Blocks.redstone_wire ), 0, 0xFF0000, false) );
 		add( new OreInfo("Chest", Block.getIdFromBlock( Blocks.chest ), 0, 0xFF00FF, true) );
 	}};
 	
 
-	public static void create(Configuration config) { // Put default blocks and settings into the config file.
+	public static void create(Configuration config) // Put default blocks and settings into the config file.
+	{
 		config.get(config.CATEGORY_GENERAL, "searchdist", 0); // Default search distance is index 0 (8)
 		
-		for( Entry<String, OreInfo> ore : defaults.entrySet() ){
+		for( Entry<String, OreInfo> ore : defaults.entrySet() )
+		{
 			String key = ore.getKey();
 			OreInfo value = ore.getValue();
 			String category = value.oreName.replaceAll("\\s+", "").toLowerCase(); // No whitespace or capitals in the config file categories
@@ -61,7 +63,8 @@ public class DefaultConfig {
 			config.get("oredict."+category, "enabled", false).set( value.draw );
 		}
 		
-		for( OreInfo ore : custom ){ // Put custom block into the config file.
+		for( OreInfo ore : custom ) // Put custom block into the config file.
+		{
 			String name = ore.oreName.replaceAll("\\s+", "").toLowerCase(); // No whitespace or capitals in the config file categories.
 			config.get("customores."+name, "name", "SOMETHINGBROKE").set( ore.oreName );
 			config.get("customores."+name, "id", -1).set( ore.id );

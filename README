@@ -1,6 +1,19 @@
 Fgt X-Ray
-It's an xray mod for minecraft, self explanatory.
+Minecraft Forge XRay mod made by mcd1992
+GUI Designed by AoKMiKeY
 
-Currently working with Minecraft 1.7.10 and FML 10.13.2.1291
+Feature:
+  - Works with Forge
+  - Awesome GUI
+  - Able to add new ores/blocks
+  - Color selector ( RGB )
+
+Currently updated to: 
+                    - Forge verison: 10.13.2.1291
+                    - Minecraft Version: 1.7.10
+
+Tested with:
+          Minecraft Forge 1.7.10
+          FTB: Direwolf20 modpack
 
 The rendering is copied off of CJB's MoreInfo mod. Thanks CJB.

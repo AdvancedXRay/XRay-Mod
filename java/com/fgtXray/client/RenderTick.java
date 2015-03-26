@@ -1,4 +1,4 @@
-package fgtXray.client;
+package com.fgtXray.client;
 
 /* Props goto CJB for the render functions and maths.
  * http://twitter.com/CJBMods
@@ -6,36 +6,29 @@ package fgtXray.client;
  */
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.common.DimensionManager;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import fgtXray.BlockInfo;
-import fgtXray.FgtXRay;
+import com.fgtXray.reference.BlockInfo;
+import com.fgtXray.FgtXRay;
 
 import org.lwjgl.opengl.GL11;
 
-public class RenderTick {
+public class RenderTick
+{
 	private final Minecraft mc = Minecraft.getMinecraft();
 	public static List<BlockInfo> ores = new ArrayList();
 	World world = mc.theWorld;
 
 	@SubscribeEvent
-	public void onRenderEvent( RenderWorldLastEvent event ){ // Called when drawing the world.
-		if ( mc.theWorld != null && FgtXRay.drawOres ) {
+	public void onRenderEvent( RenderWorldLastEvent event ) // Called when drawing the world.
+	{
+		if ( mc.theWorld != null && FgtXRay.drawOres )
+		{
 			float f = event.partialTicks; // I still dont know what this is for.
 			float px = (float)mc.thePlayer.posX;
 			float py = (float)mc.thePlayer.posY;
@@ -50,7 +43,8 @@ public class RenderTick {
 		}
 	}
 	
-	private void drawOres( float px, float py, float pz ){  // I suck at opengl. Document later.
+	private void drawOres( float px, float py, float pz )
+	{
 		int bx, by, bz;
 		
 		GL11.glDisable( GL11.GL_TEXTURE_2D );
@@ -65,7 +59,8 @@ public class RenderTick {
 		List<BlockInfo> temp = new ArrayList();
 		temp.addAll(this.ores);	// If we dont make a copy then the thread in ClientTick will ConcurrentModificationException.
 		
-		for ( BlockInfo b : temp ){
+		for ( BlockInfo b : temp )
+		{
 			bx = b.x;
 			by = b.y;
 			bz = b.z;
@@ -103,5 +98,4 @@ public class RenderTick {
 		GL11.glEnable( GL11.GL_DEPTH_TEST );
 		GL11.glEnable( GL11.GL_CULL_FACE );
 	}
-
 }
