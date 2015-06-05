@@ -72,10 +72,6 @@ public class GuiNewOre extends GuiScreen {
 	{
 		switch(button.id)
 		{
-			case 8:
-				ConfigHandler.add( "nothing" );
-				break;
-
 			case 98: // Add
 				int color = (int)(redSlider.sliderValue * 255);
 				color = (color<<8) + (int)(greenSlider.sliderValue * 255);

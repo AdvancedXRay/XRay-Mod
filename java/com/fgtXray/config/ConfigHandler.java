@@ -1,5 +1,7 @@
 package com.fgtXray.config;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -10,6 +12,7 @@ import org.lwjgl.Sys;
 public class ConfigHandler
 {
 	public static Configuration config = null; // Save the config file handle for use later.
+	public static Minecraft mc = Minecraft.getMinecraft();
 
 	public static void setup(FMLPreInitializationEvent event )
 	{
@@ -47,8 +50,42 @@ public class ConfigHandler
 		config.save();
 	}
 	
-	public static void add( String oreName )
+	public static void add( String oreName, String ore, int color )
     {
+		config.load();
+		String formattedname = oreName.replace("\\s+", "").toLowerCase();
+
+		// check if entry exists
+		for( String category : config.getCategoryNames() )
+		{
+			if( category.startsWith("customores.") )
+			{
+				if( config.get("customores."+formattedname, "name", "").getString() == formattedname )
+				{
+					String notify = String.format( "[Fgt XRay] %s already exists. Please enter a different name. ", oreName );
+					ChatComponentText chat = new ChatComponentText( notify );
+					mc.ingameGUI.getChatGUI().printChatMessage( chat );
+					return;
+				}
+			}
+		}
+
+		int oreId = Integer.parseInt(ore.split( ":" )[0]);
+		int oreMeta = Integer.parseInt(ore.split( ":" )[1]);
+
+		for( String category : config.getCategoryNames() )
+		{
+			if( category.startsWith("customores.") )
+			{
+				config.get("customores."+formattedname, "color", "").set( color );
+				config.get("customores."+formattedname, "enabled", "false").set( true );
+				config.get("customores."+formattedname, "id", "").set( oreId );
+				config.get("customores."+formattedname, "meta", "").set( oreMeta );
+				config.get("customores." + formattedname, "name", "").set(oreName);
+
+			}
+		}
+		config.save();
 	}
 	
 	// For updating single options
@@ -79,5 +116,11 @@ public class ConfigHandler
 			}
 		}
 		config.save();
+	}
+
+	// TODO: add remove option - AoKMiKeY
+	public static void remove( String name )
+	{
+
 	}
 }

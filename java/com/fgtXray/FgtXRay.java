@@ -24,7 +24,7 @@ import com.fgtXray.reference.OreInfo;
 import com.fgtXray.config.DefaultConfig;
 import com.fgtXray.config.ConfigHandler;
 
-@Mod(modid="fgtxray", name="Fgt X-Ray", version="1.0.1.7")
+@Mod(modid="fgtXray", name="Fgt X-Ray", version="1.0.1.75")
 public class FgtXRay
 {
 	public static int localPlyX, localPlyY, localPlyZ; // For internal use in the ClientTick thread.
@@ -46,8 +46,8 @@ public class FgtXRay
 	public static final int keyIndex_showXrayMenu = 1;
 	public static final int[] keyBind_keyValues = 
 	{
-		Keyboard.KEY_NONE, 
-		Keyboard.KEY_NONE
+		Keyboard.KEY_X,
+		Keyboard.KEY_I
 	};
 	public static final String[] keyBind_descriptions =
 	{

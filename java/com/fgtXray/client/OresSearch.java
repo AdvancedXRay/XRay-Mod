@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fgtXray.config.ConfigHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -85,8 +86,9 @@ public class OresSearch
 		OresSearch.searchList.add( new OreInfo( name, id, meta, color, true ) );
 		String notify = String.format( "[�aFgt XRay�r] successfully added %s.", oreIdent );
 		ChatComponentText chat = new ChatComponentText( notify );
-		mc.ingameGUI.getChatGUI().printChatMessage( chat );
-		// TODO: Check if exists and file saving.
+		mc.ingameGUI.getChatGUI().printChatMessage(chat);
+
+		ConfigHandler.add(name, oreIdent, color);
 	}
 	
 	public static List<OreInfo> get() // Return the searchList, create it if needed.
