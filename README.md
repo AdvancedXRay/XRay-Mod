@@ -1,7 +1,7 @@
-Fgt X-Ray
+## Fgt X-Ray
 Minecraft Forge XRay mod
 
-Feature:
+## Feature:
     - Works with Forge
     - Awesome GUI
     - Able to add new ores/blocks
@@ -10,14 +10,17 @@ Feature:
 Working on: Minecraft 1.7.10 and Forge 10.13.2.1291
 
 Tested with:
+
  - Minecraft Forge 1.7.10
  - FTB: Direwolf20 modpack
 
 The rendering is copied off of CJB's MoreInfo mod. Thanks CJB.
 
-Contributors
+Contributors:
+
 [mcd1992](https://github.com/mcd1992)
+
 [AoKMiKeY](https://github.com/aokmikey)
 
-License
+## License
 Licensed under the [DBaJ (Don't Be a Jerk) non-commercial care-free license](http://www.dbad-license.org/).
