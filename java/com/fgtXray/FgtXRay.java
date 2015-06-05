@@ -46,8 +46,8 @@ public class FgtXRay
 	public static final int keyIndex_showXrayMenu = 1;
 	public static final int[] keyBind_keyValues = 
 	{
-		Keyboard.KEY_X,
-		Keyboard.KEY_I
+		Keyboard.KEY_NONE,
+		Keyboard.KEY_NONE
 	};
 	public static final String[] keyBind_descriptions =
 	{
