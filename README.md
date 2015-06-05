@@ -1,6 +1,5 @@
-## Fgt X-Ray
----
-### Minecraft Forge XRay mod
+Fgt X-Ray
+Minecraft Forge XRay mod
 
 Feature:
     - Works with Forge
@@ -8,7 +7,7 @@ Feature:
     - Able to add new ores/blocks
     - Color selector ( RGB )
 
-#### Working on: Minecraft 1.7.10 and Forge 10.13.2.1291
+Working on: Minecraft 1.7.10 and Forge 10.13.2.1291
 
 Tested with:
  - Minecraft Forge 1.7.10
@@ -16,9 +15,9 @@ Tested with:
 
 The rendering is copied off of CJB's MoreInfo mod. Thanks CJB.
 
-## Contributors
+Contributors
 [mcd1992](https://github.com/mcd1992)
 [AoKMiKeY](https://github.com/aokmikey)
 
-## License
+License
 Licensed under the [DBaJ (Don't Be a Jerk) non-commercial care-free license](http://www.dbad-license.org/).
