@@ -19,11 +19,11 @@ public class ConfigHandler
 		config = new Configuration( event.getSuggestedConfigurationFile() );
 		config.load();
 		FgtXRay.distIndex = config.get(config.CATEGORY_GENERAL, "searchdist", 0).getInt(); // Get our search distance.
-		
+
 		for( String category : config.getCategoryNames() ) // Iterate through each category in our config file.
 		{
 			ConfigCategory cat = config.getCategory( category );
-			
+
 			if( category.startsWith( "oredict.") ) // Dont iterate over the base category and make sure were on the oredict category.
 			{
 				String dictName = cat.get("dictname").getString();
@@ -32,9 +32,9 @@ public class ConfigHandler
 				int meta = cat.get("meta").getInt();
 				int color = cat.get("color").getInt();
 				boolean enabled = cat.get("enabled").getBoolean(false);
-				
+
 				FgtXRay.oredictOres.put(dictName, new OreInfo( guiName, id, meta, color, enabled ) );
-				
+
 			}
 			else if( category.startsWith("customores.") )
 			{
@@ -43,13 +43,13 @@ public class ConfigHandler
 				int meta = cat.get("meta").getInt();
 				int color = cat.get("color").getInt();
 				boolean enabled = cat.get("enabled").getBoolean(false);
-				
+
 				FgtXRay.customOres.add( new OreInfo( name, id, meta, color, enabled ) );
 			}
 		}
 		config.save();
 	}
-	
+
 	public static void add( String oreName, String ore, int color )
     {
 		config.load();
@@ -71,7 +71,8 @@ public class ConfigHandler
 		}
 
 		int oreId = Integer.parseInt(ore.split( ":" )[0]);
-		int oreMeta = Integer.parseInt(ore.split( ":" )[1]);
+		// Don't do this if it does not exist... Stupid me
+		int oreMeta = ore.contains(":") ? Integer.parseInt(ore.split( ":" )[1]) : 0;
 
 		for( String category : config.getCategoryNames() )
 		{
@@ -87,7 +88,7 @@ public class ConfigHandler
 		}
 		config.save();
 	}
-	
+
 	// For updating single options
 	public static void update(String string, boolean draw){
 		if( string.equals("searchdist") ) // Save the new render distance.
@@ -96,18 +97,18 @@ public class ConfigHandler
 			config.save();
 			return;
 		}
-		
+
 		for( String category : config.getCategoryNames() ) // Figure out if this is a custom or dictionary ore.
 		{
 			String cleanStr = string.replaceAll("\\s+", "").toLowerCase(); // No whitespace or capitals in the config file categories.
 			String[] splitCat = category.split("\\.");
-			
+
 			if( splitCat.length == 2 )
 			{
 				if( splitCat[0].equals( "oredict" ) && splitCat[1].equals( cleanStr ) ) // Check if the current iteration is the correct category (oredict.emerald)
 				{
 					config.get("oredict."+cleanStr, "enabled", false).set( draw );
-					
+
 				}
 				else if ( splitCat[0].equals( "customores" ) && splitCat[1].equals( cleanStr ) )
 				{
