@@ -1,13 +1,12 @@
 package com.fgtXray.config;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import com.fgtXray.FgtXRay;
 import com.fgtXray.reference.OreInfo;
-import org.lwjgl.Sys;
 
 public class ConfigHandler
 {
@@ -63,8 +62,7 @@ public class ConfigHandler
 				if( config.get("customores."+formattedname, "name", "").getString() == formattedname )
 				{
 					String notify = String.format( "[Fgt XRay] %s already exists. Please enter a different name. ", oreName );
-					ChatComponentText chat = new ChatComponentText( notify );
-					mc.ingameGUI.getChatGUI().printChatMessage( chat );
+					mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify));
 					return;
 				}
 			}

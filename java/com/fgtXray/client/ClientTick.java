@@ -3,12 +3,13 @@ package com.fgtXray.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.MathHelper;
 import com.fgtXray.reference.BlockInfo;
 import com.fgtXray.FgtXRay;
 import com.fgtXray.reference.OreInfo;
@@ -66,17 +67,18 @@ public class ClientTick implements Runnable
 						{
 							for (int z = pz - radius; z < pz + radius; z++) // z axis.
 							{
-								int id = Block.getIdFromBlock( mc.theWorld.getBlock( x, y, z ) );
-								int meta = mc.theWorld.getBlockMetadata(x, y, z);
+								int id = Block.getIdFromBlock( mc.theWorld.getBlockState( new BlockPos(x, y, z)).getBlock() );
+//								int meta = mc.theWorld.getBlockMetadata(x, y, z);
 								
-								if( mc.theWorld.getBlock( x, y, z ).hasTileEntity() )
-								{
-									meta = 0;
-								}
+//								if( mc.theWorld.getBlockState( new BlockPos(x, y, z)).getBlock().hasTileEntity() )
+//								{
+//									meta = 0;
+//								}
 								
 								for( OreInfo ore : OresSearch.searchList ) // Now we're actually checking if the current x,y,z block is in our searchList.
 								{
-									if ( (ore.draw) && (id == ore.id) && (meta == ore.meta) ) // Dont check meta if its -1 (custom)
+//									if ( (ore.draw) && (id == ore.id) && (meta == ore.meta) ) // Dont check meta if its -1 (custom)
+									if ( (ore.draw) && (id == ore.id) ) // Dont check meta if its -1 (custom)
 									{
 										temp.add( new BlockInfo( x, y, z, ore.color) ); // Add this block to the temp list
 										break; // Found a match, move on to the next block.

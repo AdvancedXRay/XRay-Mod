@@ -1,19 +1,24 @@
 package com.fgtXray.client.gui;
 
+import java.io.IOException;
 import java.util.*;
 import com.fgtXray.FgtXRay;
 import com.fgtXray.OreButtons;
 import com.fgtXray.client.OresSearch;
 import com.fgtXray.config.ConfigHandler;
 import com.fgtXray.reference.OreInfo;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
+
+import org.lwjgl.opengl.GL11;
 
 public class GuiSettings extends GuiScreen
 {
@@ -133,7 +138,7 @@ public class GuiSettings extends GuiScreen
 		case 99: // Print OreDict
 			for ( String name : OreDictionary.getOreNames() ) // Print the ore dictionary.
 			{
-				ArrayList<ItemStack> oreStack = OreDictionary.getOres( OreDictionary.getOreID( name ) );
+				List<ItemStack> oreStack = OreDictionary.getOres( name);
 				System.out.print( String.format("[OreDict] %-40.40s [%d types] ( ", name, oreStack.size() ) );
 				StringBuilder idMetaCsv = new StringBuilder();
 				if( oreStack.size() < 1 )
@@ -229,7 +234,11 @@ public class GuiSettings extends GuiScreen
 	@Override
 	protected void keyTyped( char par1, int par2 )
     {
-		super.keyTyped( par1, par2 );
+		try {
+			super.keyTyped( par1, par2 );
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		if( (par2 == 1) || (par2 == mc.gameSettings.keyBindInventory.getKeyCode()) || par2 == FgtXRay.keyBind_keys[ FgtXRay.keyIndex_showXrayMenu ].getKeyCode() )
         {
             // Close on esc, inventory key or keybind
@@ -248,13 +257,13 @@ public class GuiSettings extends GuiScreen
     // this removes the stupid power of 2 rule that comes with minecraft.
     public static void drawTexturedQuadFit(double x, double y, double width, double height, double zLevel)
     {
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(x + 0, y + height, zLevel, 0,1);
-        tessellator.addVertexWithUV(x + width, y + height, zLevel, 1, 1);
-        tessellator.addVertexWithUV(x + width, y + 0, zLevel, 1,0);
-        tessellator.addVertexWithUV(x + 0, y + 0, zLevel, 0, 0);
-        tessellator.draw();
+        VertexBuffer tessellator = Tessellator.getInstance().getBuffer();
+		tessellator.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        tessellator.pos(x + 0, y + height, zLevel).tex( 0,1).endVertex();
+        tessellator.pos(x + width, y + height, zLevel).tex( 1, 1).endVertex();
+        tessellator.pos(x + width, y + 0, zLevel).tex( 1,0).endVertex();
+        tessellator.pos(x + 0, y + 0, zLevel).tex( 0, 0).endVertex();
+		Tessellator.getInstance().draw();
     }
 
 	@Override
@@ -270,14 +279,18 @@ public class GuiSettings extends GuiScreen
 	@Override
 	public void mouseClicked( int x, int y, int mouse )
     {
-		super.mouseClicked( x, y, mouse );
+		try {
+			super.mouseClicked( x, y, mouse );
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		if( mouse == 1 )
         {
             // Right clicked
 			for( int i = 0; i < this.buttonList.size(); i++ )
             {
 				GuiButton button = (GuiButton)this.buttonList.get( i );
-				if( button.func_146115_a() )
+				if( button.isMouseOver() )
                 { //func_146115_a() returns true if the button is being hovered
 					//mc.theWorld.playSoundAtEntity( mc.thePlayer, "minecraft.sound.random.click", 1.0F, 1.0F ); TODO: click sound...
 					if( button.id == 98 )

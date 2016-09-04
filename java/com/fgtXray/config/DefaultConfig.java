@@ -40,8 +40,8 @@ public class DefaultConfig {
 	// Default block to add. Mostly just so people can add custom blocks manually through the config until I setup a gui for it.
 	final static List<OreInfo> custom = new ArrayList<OreInfo>()
 	{{
-		add( new OreInfo("Redstone Wire", Block.getIdFromBlock( Blocks.redstone_wire ), 0, 0xFF0000, false) );
-		add( new OreInfo("Chest", Block.getIdFromBlock( Blocks.chest ), 0, 0xFF00FF, true) );
+		add( new OreInfo("Redstone Wire", Block.getIdFromBlock( Blocks.REDSTONE_WIRE ), 0, 0xFF0000, false) );
+		add( new OreInfo("Chest", Block.getIdFromBlock( Blocks.CHEST ), 0, 0xFF00FF, true) );
 	}};
 	
 
