@@ -16,6 +16,7 @@ FTB: Direwolf20 modpack
 
 ##### Contributors:
 [mcd1992](https://github.com/mcd1992) | [gitlab](http://gitlab.com/u/mcd1992)
+
 [AoKMiKeY](https://github.com/aokmikey)
 
 ## License
