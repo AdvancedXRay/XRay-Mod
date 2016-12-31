@@ -1,26 +1,30 @@
-## Fgt X-Ray
+# X-Ray Mod
 Minecraft Forge XRay mod
 
-## Feature:
-    - Works with Forge
-    - Awesome GUI
-    - Able to add new ores/blocks
-    - Color selector ( RGB )
+### Supports
+- Minecraft 1.7.10      / 1.9.4
+- Forge 10.13.2.1291    / 12.17.0.2051
 
-Working on: Minecraft 1.7.10 and Forge 10.13.2.1291
+### Feature:
+- Full Support for Forge
+    - Supports versions back from 1.7.10
+- Clean and simple GUI to add blocks
+- Colour RGB Selector
+- Auto adds ores from other mods.
 
-Tested with:
+### Previews:
+![XRAY](http://i.imgur.com/N3KOEaE.png)
 
- - Minecraft Forge 1.7.10
- - FTB: Direwolf20 modpack
+The [Imgur Album](http://imgur.com/a/23dX5)
 
-The rendering is copied off of CJB's MoreInfo mod. Thanks CJB.
+### Contributors:
+|User   | Title / Work Done| Link   |
+|---|---|---|
+|MichaelHillcox   | Main Dev |[https://github.com/MichaelHillcox](https://github.com/MichaelHillcox)
+|mcd1992          | Original Creator| [https://github.com/mcd1992](https://github.com/mcd1992) ([GitLab](https://gitlab.com/mcd1992))
+|BondarenkoArtur | Updater (1.7.10-1.9.4) | [https://github.com/BondarenkoArtur](https://github.com/BondarenkoArtur)
 
-Contributors:
-
-[mcd1992](https://github.com/mcd1992)
-
-[AoKMiKeY](https://github.com/aokmikey)
+> A big thanks CJB for his rendering system.
 
 ## License
 Licensed under the [DBaJ (Don't Be a Jerk) non-commercial care-free license](http://www.dbad-license.org/).

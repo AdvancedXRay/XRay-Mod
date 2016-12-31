@@ -121,38 +121,39 @@ public class GuiSettings extends GuiScreen
 	@Override
 	public void actionPerformed( GuiButton button )
 	{
-		// Called on left click of GuiButton
+			// Called on left click of GuiButton
 		switch(button.id)
 		{
 			case 99: // Print OreDict
 				for ( String name : OreDictionary.getOreNames() ) // Print the ore dictionary.
 				{
-					List<ItemStack> oreStack = OreDictionary.getOres(name);
-					System.out.print(String.format("[OreDict] %-40.40s [%d types] ( ", name, oreStack.size()));
+					List<ItemStack> oreStack = OreDictionary.getOres( name);
+					System.out.print( String.format("[OreDict] %-40.40s [%d types] ( ", name, oreStack.size() ) );
 					StringBuilder idMetaCsv = new StringBuilder();
-					if (oreStack.size() < 1) {
-						List<ItemStack> oreStack = OreDictionary.getOres(name);
-						System.out.print(String.format("[OreDict] %-40.40s [%d types] ( ", name, oreStack.size()));
-						StringBuilder idMetaCsv = new StringBuilder();
-						if (oreStack.size() < 1) {
-							idMetaCsv.append(" )");
-						}
-
-						for (ItemStack stack : oreStack) {
-							if (stack == oreStack.get(oreStack.size() - 1)) {
-								idMetaCsv.append(String.format("%d:%d )", Item.getIdFromItem(stack.getItem()), stack.getItemDamage()));
-							} else {
-								idMetaCsv.append(String.format("%d:%d, ", Item.getIdFromItem(stack.getItem()), stack.getItemDamage()));
-							}
-						}
-						System.out.println(idMetaCsv.toString());
+					if( oreStack.size() < 1 )
+					{
+						idMetaCsv.append( " )" );
 					}
 
-					if (!OresSearch.searchList.isEmpty()) // Print out the searchList.
+					for( ItemStack stack : oreStack )
 					{
-						for (OreInfo ore : OresSearch.searchList) {
-							System.out.println(String.format("[Fgt XRay] OreInfo( %s, %d, %d, 0x%x, %b )", ore.oreName, ore.id, ore.meta, ore.color[0], ore.draw));
+						if( stack == oreStack.get( oreStack.size() - 1 ) )
+						{
+							idMetaCsv.append( String.format( "%d:%d )", Item.getIdFromItem( stack.getItem() ), stack.getItemDamage() ) );
 						}
+						else
+						{
+							idMetaCsv.append( String.format( "%d:%d, ", Item.getIdFromItem( stack.getItem() ), stack.getItemDamage() ) );
+						}
+					}
+					System.out.println( idMetaCsv.toString() );
+				}
+
+				if (!OresSearch.searchList.isEmpty()) // Print out the searchList.
+				{
+					for (OreInfo ore : OresSearch.searchList)
+					{
+						System.out.println(String.format("[Fgt XRay] OreInfo( %s, %d, %d, 0x%x, %b )", ore.oreName, ore.id, ore.meta, ore.color[0], ore.draw));
 					}
 				}
 				break;
@@ -244,12 +245,12 @@ public class GuiSettings extends GuiScreen
     // this removes the stupid power of 2 rule that comes with minecraft.
     private static void drawTexturedQuadFit(double x, double y, double width, double height, double zLevel)
     {
-        VertexBuffer tessellator = Tessellator.getInstance().getBuffer();
-		tessellator.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        tessellator.pos(x + 0, y + height, zLevel).tex( 0,1).endVertex();
-        tessellator.pos(x + width, y + height, zLevel).tex( 1, 1).endVertex();
-        tessellator.pos(x + width, y + 0, zLevel).tex( 1,0).endVertex();
-        tessellator.pos(x + 0, y + 0, zLevel).tex( 0, 0).endVertex();
+        VertexBuffer tessellate = Tessellator.getInstance().getBuffer();
+		tessellate.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        tessellate.pos(x + 0, y + height, zLevel).tex( 0,1).endVertex();
+        tessellate.pos(x + width, y + height, zLevel).tex( 1, 1).endVertex();
+        tessellate.pos(x + width, y + 0, zLevel).tex( 1,0).endVertex();
+        tessellate.pos(x + 0, y + 0, zLevel).tex( 0, 0).endVertex();
 		Tessellator.getInstance().draw();
     }
 
