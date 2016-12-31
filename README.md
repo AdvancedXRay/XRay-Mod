@@ -1,10 +1,6 @@
 # X-Ray Mod
 Minecraft Forge XRay mod
 
-### Supports
-- Minecraft 1.7.10      / 1.9.4
-- Forge 10.13.2.1291    / 12.17.0.2051
-
 ### Feature:
 - Full Support for Forge
     - Supports versions back from 1.7.10
@@ -16,6 +12,14 @@ Minecraft Forge XRay mod
 ![XRAY](http://i.imgur.com/N3KOEaE.png)
 
 The [Imgur Album](http://imgur.com/a/23dX5)
+
+### Supports
+|Minecraft Version   | Forge Version |
+|---|---|
+|1.10.2 | 12.18.3.2185
+|1.9.4 | 12.17.0.2051
+|1.7.10 | 10.13.2.1291
+
 
 ### Contributors:
 |User   | Title / Work Done| Link   |
