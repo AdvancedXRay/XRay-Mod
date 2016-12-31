@@ -24,7 +24,7 @@ import com.fgtXray.reference.OreInfo;
 import com.fgtXray.config.DefaultConfig;
 import com.fgtXray.config.ConfigHandler;
 
-@Mod(modid="fgtxray", name="Fgt X-Ray", version="1.0.9")
+@Mod(modid="fgtxray", name="Fgt X-Ray", version="1.1.0")
 public class FgtXRay
 {
 	public static int localPlyX, localPlyY, localPlyZ, localPlyXPrev, localPlyZPrev; // For internal use in the ClientTick thread.
