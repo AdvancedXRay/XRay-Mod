@@ -38,9 +38,9 @@ public class RenderTick
 			float mx = (float)mc.thePlayer.prevPosX;
 			float my = (float)mc.thePlayer.prevPosY;
 			float mz = (float)mc.thePlayer.prevPosZ;
-			float dx = mx + ( px - mx ) * f;
-			float dy = my + ( py - my ) * f;
-			float dz = mz + ( pz - mz ) * f;
+			float dx = mx + ( px - mx );
+			float dy = my + ( py - my );
+			float dz = mz + ( pz - mz );
 			drawOres( dx, dy, dz ); // this is a world pos of the player
 		}
 	}
