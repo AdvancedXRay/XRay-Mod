@@ -1,13 +1,12 @@
 package com.fgtXray.config;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import com.fgtXray.FgtXRay;
 import com.fgtXray.reference.OreInfo;
-import org.lwjgl.Sys;
 
 public class ConfigHandler
 {
@@ -30,7 +29,7 @@ public class ConfigHandler
 				String guiName = cat.get("guiname").getString();
 				int id = cat.get("id").getInt();
 				int meta = cat.get("meta").getInt();
-				int color = cat.get("color").getInt();
+				int[] color = {cat.get("red").getInt(), cat.get("green").getInt(), cat.get("blue").getInt()};
 				boolean enabled = cat.get("enabled").getBoolean(false);
 
 				FgtXRay.oredictOres.put(dictName, new OreInfo( guiName, id, meta, color, enabled ) );
@@ -41,7 +40,7 @@ public class ConfigHandler
 				String name = cat.get("name").getString();
 				int id = cat.get("id").getInt();
 				int meta = cat.get("meta").getInt();
-				int color = cat.get("color").getInt();
+				int[] color = {cat.get("red").getInt(), cat.get("green").getInt(), cat.get("blue").getInt()};
 				boolean enabled = cat.get("enabled").getBoolean(false);
 
 				FgtXRay.customOres.add( new OreInfo( name, id, meta, color, enabled ) );
@@ -50,7 +49,7 @@ public class ConfigHandler
 		config.save();
 	}
 
-	public static void add( String oreName, String ore, int color )
+	public static void add( String oreName, String ore, int[] color )
     {
 		config.load();
 		String formattedname = oreName.replace("\\s+", "").toLowerCase();
@@ -63,8 +62,7 @@ public class ConfigHandler
 				if( config.get("customores."+formattedname, "name", "").getString() == formattedname )
 				{
 					String notify = String.format( "[Fgt XRay] %s already exists. Please enter a different name. ", oreName );
-					ChatComponentText chat = new ChatComponentText( notify );
-					mc.ingameGUI.getChatGUI().printChatMessage( chat );
+					mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify));
 					return;
 				}
 			}
@@ -78,7 +76,9 @@ public class ConfigHandler
 		{
 			if( category.startsWith("customores.") )
 			{
-				config.get("customores."+formattedname, "color", "").set( color );
+				config.get("customores."+formattedname, "red", "").set( color[0] );
+				config.get("customores."+formattedname, "green", "").set( color[1] );
+				config.get("customores."+formattedname, "blue", "").set( color[2] );
 				config.get("customores."+formattedname, "enabled", "false").set( true );
 				config.get("customores."+formattedname, "id", "").set( oreId );
 				config.get("customores."+formattedname, "meta", "").set( oreMeta );

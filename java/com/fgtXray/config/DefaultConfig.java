@@ -16,32 +16,31 @@ public class DefaultConfig {
 	// Below are the 'default' ores/blocks to add through the ore dictionary.
 	final static Map<String, OreInfo> defaults = new HashMap<String, OreInfo>()
 	{{
-		put("oreLapis", new OreInfo("Lapis", 0, 0, 0x0000FF, false) );
-		put("oreCopper", new OreInfo("Copper", 0, 0, 0xCC6600, true) );
-		put("oreTin", new OreInfo("Tin", 0, 0, 0xA1A1A1, true) );
-		put("oreCobalt", new OreInfo("Cobalt", 0, 0, 0x0000FF, false) );
-		put("oreArdite", new OreInfo("Ardite", 0, 0, 0xFF9900, false) );
-		put("oreCertusQuartz", new OreInfo("Certus Quartz", 0, 0, 0xFFFFFF, false) );
-		put("oreUranium", new OreInfo("Uranium", 0, 0, 0x00FF00, true) );
-		put("oreDiamond", new OreInfo("Diamond", 0, 0, 0x8888FF, false) );
-		put("blockDiamond", new OreInfo("Diamond Block", 0, 0, 0x8888FF, false) );
-		put("oreEmerald", new OreInfo("Emerald", 0, 0, 0x008810, true) );
-		put("oreGold", new OreInfo("Gold", 0, 0, 0xFFFF00, false) );
-		put("blockGold", new OreInfo("Gold Block", 0, 0, 0xFFFF00, false) );
-		put("oreRedstone", new OreInfo("Redstone", 0, 0, 0xFF0000, false) );
-		put("oreIron", new OreInfo("Iron", 0, 0, 0xAA7525, false) );
-		put("oreSilver", new OreInfo("Silver", 0, 0, 0x8F8F8F, false) );
-		put("mossystone", new OreInfo("Mossy Stone", 0, 0, 0x1E4A00, false) );
-		put("oreQuartz", new OreInfo("Quartz", 0, 0, 0x8888FF, false) );
-		put("oreCoal", new OreInfo("Coal", 0, 0, 0x000000, false ) );
-		put("blockGlass", new OreInfo("Glass", 0, 0, 0x8888FF, false) );
+		put("oreLapis", new OreInfo("Lapis", 0, 0, new int[]{0, 0, 255}, false) );
+		put("oreCopper", new OreInfo("Copper", 0, 0, new int[]{204, 102, 0}, true) );
+		put("oreTin", new OreInfo("Tin", 0, 0, new int[]{161, 161, 161}, true) );
+		put("oreCobalt", new OreInfo("Cobalt", 0, 0, new int[]{0, 0, 255}, false) );
+		put("oreArdite", new OreInfo("Ardite", 0, 0, new int[]{255, 153, 0}, false) );
+		put("oreCertusQuartz", new OreInfo("Certus Quartz", 0, 0, new int[]{255, 255, 255}, false) );
+		put("oreUranium", new OreInfo("Uranium", 0, 0, new int[]{0, 255, 0}, true) );
+		put("oreDiamond", new OreInfo("Diamond", 0, 0, new int[]{136, 136, 255}, false) );
+		put("blockDiamond", new OreInfo("Diamond Block", 0, 0, new int[]{136, 136, 255}, false) );
+		put("oreEmerald", new OreInfo("Emerald", 0, 0, new int[]{0, 136, 10}, true) );
+		put("blockGold", new OreInfo("Gold Block", 0, 0, new int[]{255, 255, 0}, false) );
+		put("oreRedstone", new OreInfo("Redstone", 0, 0, new int[]{255, 0, 0}, false) );
+		put("oreIron", new OreInfo("Iron", 0, 0, new int[]{170, 117, 37}, false) );
+		put("oreSilver", new OreInfo("Silver", 0, 0, new int[]{143,143,143}, false) );
+		put("mossystone", new OreInfo("Mossy Stone", 0, 0, new int[]{0, 0, 255}, false) );
+		put("oreQuartz", new OreInfo("Quartz", 0, 0, new int[]{30,74,0}, false) );
+		put("oreCoal", new OreInfo("Coal", 0, 0, new int[]{0, 0, 0}, false ) );
+		put("blockGlass", new OreInfo("Glass", 0, 0, new int[]{136, 136, 255}, false) );
 	}};
 	
 	// Default block to add. Mostly just so people can add custom blocks manually through the config until I setup a gui for it.
 	final static List<OreInfo> custom = new ArrayList<OreInfo>()
 	{{
-		add( new OreInfo("Redstone Wire", Block.getIdFromBlock( Blocks.redstone_wire ), 0, 0xFF0000, false) );
-		add( new OreInfo("Chest", Block.getIdFromBlock( Blocks.chest ), 0, 0xFF00FF, true) );
+		add( new OreInfo("Redstone Wire", Block.getIdFromBlock( Blocks.REDSTONE_WIRE ), 0, new int[]{255, 0, 0}, false) );
+		add( new OreInfo("Chest", Block.getIdFromBlock( Blocks.CHEST ), 0, new int[]{255, 0, 255}, true) );
 	}};
 	
 
@@ -59,7 +58,9 @@ public class DefaultConfig {
 			config.get("oredict."+category, "guiname", "SOMETHINGBROKE").set( value.oreName );
 			config.get("oredict."+category, "id", -1).set( value.id );
 			config.get("oredict."+category, "meta", -1).set( value.meta );
-			config.get("oredict."+category, "color", -1).set( value.color );
+			config.get("oredict."+category, "red", -1).set( value.color[0] );
+			config.get("oredict."+category, "green", -1).set( value.color[1] );
+			config.get("oredict."+category, "blue", -1).set( value.color[2] );
 			config.get("oredict."+category, "enabled", false).set( value.draw );
 		}
 		
@@ -69,7 +70,9 @@ public class DefaultConfig {
 			config.get("customores."+name, "name", "SOMETHINGBROKE").set( ore.oreName );
 			config.get("customores."+name, "id", -1).set( ore.id );
 			config.get("customores."+name, "meta", -1).set( ore.meta );
-			config.get("customores."+name, "color", -1).set( ore.color );
+			config.get("customores."+name, "red", -1).set( ore.color[0] );
+			config.get("customores."+name, "green", -1).set( ore.color[1] );
+			config.get("customores."+name, "blue", -1).set( ore.color[2] );
 			config.get("customores."+name, "enabled", false).set( ore.draw );
 		}
 		

@@ -12,22 +12,22 @@ import net.minecraft.client.settings.KeyBinding;
 
 import net.minecraftforge.common.config.Configuration;
 
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import com.fgtXray.reference.OreInfo;
 import com.fgtXray.config.DefaultConfig;
 import com.fgtXray.config.ConfigHandler;
 
-@Mod(modid="fgtXray", name="Fgt X-Ray", version="1.0.8")
+@Mod(modid="fgtxray", name="Fgt X-Ray", version="1.0.9")
 public class FgtXRay
 {
-	public static int localPlyX, localPlyY, localPlyZ; // For internal use in the ClientTick thread.
+	public static int localPlyX, localPlyY, localPlyZ, localPlyXPrev, localPlyZPrev; // For internal use in the ClientTick thread.
 	public static boolean drawOres = false; // Off by default
 	
 	public static final String[] distStrings = new String[] // Strings for use in the GUI Render Distance button

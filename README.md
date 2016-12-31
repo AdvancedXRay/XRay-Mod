@@ -9,13 +9,16 @@ Minecraft Forge XRay mod
 
 Working on: Minecraft 1.7.10 and Forge 10.13.2.1291
 
-##### Tested with:
-Minecraft Forge 1.7.10 
-FTB: Direwolf20 modpack
+Tested with:
 
+ - Minecraft Forge 1.7.10
+ - FTB: Direwolf20 modpack
 
-##### Contributors:
-[mcd1992](https://github.com/mcd1992) | [gitlab](http://gitlab.com/u/mcd1992)
+The rendering is copied off of CJB's MoreInfo mod. Thanks CJB.
+
+Contributors:
+
+[mcd1992](https://github.com/mcd1992)
 
 [AoKMiKeY](https://github.com/aokmikey)
 

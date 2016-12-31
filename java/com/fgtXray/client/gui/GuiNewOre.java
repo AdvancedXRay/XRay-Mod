@@ -1,16 +1,15 @@
 package com.fgtXray.client.gui;
 
 import com.fgtXray.client.OresSearch;
-import com.fgtXray.config.ConfigHandler;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IIcon;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-import javax.swing.*;
+import java.io.IOException;
 
 public class GuiNewOre extends GuiScreen {
 	GuiTextField oreName;
@@ -61,8 +60,8 @@ public class GuiNewOre extends GuiScreen {
 		greenSlider.sliderValue = 1.0F;
 		blueSlider.sliderValue  = 0.0F;
 		
-		oreName = new GuiTextField( this.fontRendererObj, width / 2 - 108, height / 2 + 8, 220, 20 );
-		oreIdent = new GuiTextField( this.fontRendererObj, width / 2 - 108, height / 2 + 32, 220, 20 );
+		oreName = new GuiTextField( 1, this.fontRendererObj, width / 2 - 108, height / 2 + 8, 220, 20 );
+		oreIdent = new GuiTextField( 0, this.fontRendererObj, width / 2 - 108, height / 2 + 32, 220, 20 );
 		oreName.setText( "Name of block");
 		oreIdent.setText( "ID:META" ); // TODO: oreName
 	}
@@ -73,11 +72,9 @@ public class GuiNewOre extends GuiScreen {
 		switch(button.id)
 		{
 			case 98: // Add
-				int color = (int)(redSlider.sliderValue * 255);
-				color = (color<<8) + (int)(greenSlider.sliderValue * 255);
-				color = (color<<8) + (int)(blueSlider.sliderValue * 255);
-				
-				OresSearch.add(oreIdent.getText(), oreName.getText(), color);
+				int[] rgb = {(int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255)};
+
+				OresSearch.add(oreIdent.getText(), oreName.getText(), rgb);
 				
 				mc.thePlayer.closeScreen();
 				mc.displayGuiScreen( new GuiSettings() );
@@ -97,7 +94,11 @@ public class GuiNewOre extends GuiScreen {
 	protected void keyTyped( char par1, int par2 ) // par1 is char typed, par2 is ascii hex (tab=15 return=28)
 	{
 		//System.out.println( String.format( "keyTyped: %c : %d", par1, par2 ) );
-		super.keyTyped( par1, par2 );
+		try {
+			super.keyTyped( par1, par2 );
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		if( oreName.isFocused() )
 		{
 			oreName.textboxKeyTyped( par1, par2 );
@@ -161,27 +162,28 @@ public class GuiNewOre extends GuiScreen {
         mc.renderEngine.bindTexture( new ResourceLocation("fgtxray:textures/gui/oreAddBackground.png") );
         drawTexturedModalRect(width / 2 - 125, height / 2 - 95, 0, 0, 256, 205);
 
-        FontRenderer fr = this.mc.fontRenderer;
+        FontRenderer fr = this.mc.fontRendererObj;
         fr.drawString("Add an Ore", width / 2 - 108, height / 2 - 80, 0x404040);
 
 		oreName.drawTextBox();
 		oreIdent.drawTextBox();
+
+		Tessellator tessellator = Tessellator.getInstance();
+		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		GlStateManager.enableBlend();
+		GlStateManager.disableTexture2D();
+		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		GlStateManager.color(redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue, 1);
+		vertexbuffer.begin(7, DefaultVertexFormats.POSITION);
+		vertexbuffer.pos(width / 2 + 46, height / 2 - 63, 0.0D).endVertex();
+		vertexbuffer.pos(width / 2 + 46, height / 2 + 3, 0.0D).endVertex();
+		vertexbuffer.pos(width / 2 + 113, height / 2 + 3, 0.0D).endVertex();
+		vertexbuffer.pos(width / 2 + 113, height / 2 - 63, 0.0D).endVertex();
+		tessellator.draw();
+		GlStateManager.enableTexture2D();
+		GlStateManager.disableBlend();
+
 		super.drawScreen(x, y, f);
-
-		GL11.glDisable( GL11.GL_TEXTURE_2D );
-		GL11.glEnable( GL11.GL_BLEND );
-		GL11.glDepthMask( false );
-		GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA );
-		
-		GL11.glBegin( GL11.GL_QUADS );
-		GL11.glColor3f( redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue );
-        GL11.glVertex2d( width / 2 + 46, height / 2 - 63 ); // TL
-        GL11.glVertex2d( width / 2 + 46, height / 2 + 3 ); // BL
-        GL11.glVertex2d( width / 2 + 113, height / 2 + 3 ); // BR
-        GL11.glVertex2d( width / 2 + 113, height / 2 - 63 ); // TR
-		GL11.glEnd();
-
-
         // new
         // I want to render the item here but i am unsure on how to
         // do it so i am leaving it for now. :)
@@ -193,7 +195,11 @@ public class GuiNewOre extends GuiScreen {
 	@Override
 	public void mouseClicked( int x, int y, int mouse )
 	{
-		super.mouseClicked( x, y, mouse );
+		try {
+			super.mouseClicked( x, y, mouse );
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		oreName.mouseClicked( x, y, mouse );
 		oreIdent.mouseClicked( x, y, mouse );
 		
@@ -220,18 +226,18 @@ public class GuiNewOre extends GuiScreen {
             oreIdentCleared = false;
             oreIdent.setText( "ID:META");
         }
-
-		if( mouse == 1 ) // Right clicked
-		{
-			for( int i = 0; i < this.buttonList.size(); i++ )
-			{
-				GuiButton button = (GuiButton)this.buttonList.get( i );
-				if( button.func_146115_a() ) //func_146115_a() returns true if the button is being hovered
-				{
-					/*if( button.id == 99 ){
-					}*/
-				}
-			}
-		}
+//
+//		if( mouse == 1 ) // Right clicked
+//		{
+//			for( int i = 0; i < this.buttonList.size(); i++ )
+//			{
+//				GuiButton button = (GuiButton)this.buttonList.get( i );
+//				if( button.func_146115_a() ) //func_146115_a() returns true if the button is being hovered
+//				{
+//					/*if( button.id == 99 ){
+//					}*/
+//				}
+//			}
+//		}
 	}
 }

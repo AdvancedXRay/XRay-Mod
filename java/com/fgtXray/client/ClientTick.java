@@ -3,12 +3,14 @@ package com.fgtXray.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.MathHelper;
 import com.fgtXray.reference.BlockInfo;
 import com.fgtXray.FgtXRay;
 import com.fgtXray.reference.OreInfo;
@@ -28,6 +30,8 @@ public class ClientTick implements Runnable
 			FgtXRay.localPlyX = MathHelper.floor_double( mc.thePlayer.posX );
 			FgtXRay.localPlyY = MathHelper.floor_double( mc.thePlayer.posY );
 			FgtXRay.localPlyZ = MathHelper.floor_double( mc.thePlayer.posZ );
+            FgtXRay.localPlyXPrev = MathHelper.floor_double( mc.thePlayer.prevPosX );
+            FgtXRay.localPlyZPrev = MathHelper.floor_double( mc.thePlayer.prevPosZ );
 
 			if( FgtXRay.drawOres && ((this.thread == null) || !this.thread.isAlive()) &&
 			( (mc.theWorld != null) && (mc.thePlayer != null) ) ) // If we're in a world and want to start drawing create the thread.
@@ -51,29 +55,32 @@ public class ClientTick implements Runnable
 				if ( FgtXRay.drawOres && !OresSearch.searchList.isEmpty() && (mc != null) && (mc.theWorld != null) && (mc.thePlayer != null) )
 				{
 					if ( nextTimeMs > System.currentTimeMillis() ) // Delay to avoid spamming ore updates.
-					{
-						continue; 
-					}
-					
-					List temp = new ArrayList();
+						continue;
+
+                    int px = FgtXRay.localPlyX;
+                    int py = FgtXRay.localPlyY;
+                    int pz = FgtXRay.localPlyZ;
+                    if( ( px == FgtXRay.localPlyXPrev && pz == FgtXRay.localPlyZPrev ) && RenderTick.ores.size() > 0 )
+                        continue; // Skip the check if the player hasn't moved
+
+                    List<BlockInfo> temp = new ArrayList<BlockInfo>();
 					int radius = FgtXRay.distNumbers[ FgtXRay.distIndex ]; // Get the radius around the player to search.
-					int px = FgtXRay.localPlyX;
-					int py = FgtXRay.localPlyY;
-					int pz = FgtXRay.localPlyZ;
+
 					for (int y = Math.max( 0, py - 96 ); y < py + 32; y++) // Check the y axis. from 0 or the players y-96 to the players y + 32
 					{
 						for (int x = px - radius; x < px + radius; x++) // Iterate the x axis around the player in radius.
 						{
 							for (int z = pz - radius; z < pz + radius; z++) // z axis.
 							{
-								int id = Block.getIdFromBlock( mc.theWorld.getBlock( x, y, z ) );
-								int meta = mc.theWorld.getBlockMetadata(x, y, z);
-								
-								if( mc.theWorld.getBlock( x, y, z ).hasTileEntity() )
-								{
+								BlockPos xyz = new BlockPos(x, y, z);
+								IBlockState state = mc.theWorld.getBlockState( xyz );
+
+								int id = Block.getIdFromBlock( state.getBlock() );
+								int meta = state.getBlock().getMetaFromState(state);
+
+								if( state.getBlock().hasTileEntity( state ) )
 									meta = 0;
-								}
-								
+
 								for( OreInfo ore : OresSearch.searchList ) // Now we're actually checking if the current x,y,z block is in our searchList.
 								{
 									if ( (ore.draw) && (id == ore.id) && (meta == ore.meta) ) // Dont check meta if its -1 (custom)
@@ -90,9 +97,7 @@ public class ClientTick implements Runnable
 					nextTimeMs = System.currentTimeMillis() + delayMs; // Update the delay.
 				}
 				else
-				{
 					this.thread.interrupt(); // Kill the thread if we turn off xray or the player/world object becomes null.
-				}
 			}
 			//System.out.println(" --- Thread Exited Cleanly! ");
 			this.thread = null;
