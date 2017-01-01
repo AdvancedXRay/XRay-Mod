@@ -1,4 +1,4 @@
-# X-Ray Mod
+# X-Ray Mod - ![Forge Downloads](http://cf.way2muchnoise.eu/advanced-xray.svg) ![Forge Available For](http://cf.way2muchnoise.eu/versions/advanced-xray.svg)
 Minecraft Forge XRay mod
 
 ### Feature:
