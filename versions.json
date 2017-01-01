@@ -1,5 +1,6 @@
 {
     "1.10.2": {
+      "r1.1.0.1": "See https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.1.0.1",
       "r1.1.0": "See https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.1.0"
     },
     "1.9.4": {
@@ -11,8 +12,8 @@
     },
     "homepage": "https://github.com/MichaelHillcox/XRay-Mod",
     "promos": {
-        "1.10.2-latest": "r1.1.0",
-        "1.10.2-recommended": "r1.1.0",
+        "1.10.2-latest": "r1.1.0.1",
+        "1.10.2-recommended": "r1.1.0.1",
         "1.9.4-latest": "r1.0.9",
         "1.9.4-recommended": "r1.0.9",
         "1.7.10-latest": "r1.0.8",
