@@ -1,14 +1,14 @@
 // Forge proxy for the client side.
-package com.fgtXray.proxy;
+package com.fgtxray.proxy;
 
-import com.fgtXray.client.ClientTick;
-import com.fgtXray.client.KeyBindingHandler;
-import com.fgtXray.client.RenderTick;
+import com.fgtxray.client.ClientTick;
+import com.fgtxray.client.KeyBindingHandler;
+import com.fgtxray.client.RenderTick;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
-import com.fgtXray.FgtXRay;
+import com.fgtxray.FgtXRay;
 
 public class ClientProxy extends ServerProxy
 {
@@ -23,8 +23,8 @@ public class ClientProxy extends ServerProxy
 			ClientRegistry.registerKeyBinding( FgtXRay.keyBind_keys[i] );
 		}
 
-		FMLCommonHandler.instance().bus().register( new KeyBindingHandler() );
-		FMLCommonHandler.instance().bus().register( new ClientTick() );
+		MinecraftForge.EVENT_BUS.register( new KeyBindingHandler() );
+		MinecraftForge.EVENT_BUS.register( new ClientTick() );
 		MinecraftForge.EVENT_BUS.register( new RenderTick() );	// RenderTick is forge subscribed to onRenderEvent. Which is called when drawing the world.
 	}
 }

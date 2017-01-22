@@ -1,4 +1,4 @@
-package com.fgtXray.config;
+package com.fgtxray.config;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.fgtXray.reference.OreInfo;
+import com.fgtxray.reference.OreInfo;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;

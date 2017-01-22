@@ -1,4 +1,4 @@
-package com.fgtXray.client;
+package com.fgtxray.client;
 
 /* Props goto CJB for the render functions and maths.
  * http://twitter.com/CJBMods
@@ -9,15 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import com.fgtXray.reference.BlockInfo;
-import com.fgtXray.FgtXRay;
+import com.fgtxray.reference.BlockInfo;
+import com.fgtxray.FgtXRay;
 
 import org.lwjgl.opengl.GL11;
 
@@ -29,15 +27,15 @@ public class RenderTick
 	@SubscribeEvent
 	public void onWorldRenderLast( RenderWorldLastEvent event ) // Called when drawing the world.
 	{
-		if ( mc.theWorld != null && FgtXRay.drawOres )
+		if ( mc.world != null && FgtXRay.drawOres )
 		{
 			float f = event.getPartialTicks();
-			float px = (float)mc.thePlayer.posX;
-			float py = (float)mc.thePlayer.posY;
-			float pz = (float)mc.thePlayer.posZ;
-			float mx = (float)mc.thePlayer.prevPosX;
-			float my = (float)mc.thePlayer.prevPosY;
-			float mz = (float)mc.thePlayer.prevPosZ;
+			float px = (float)mc.player.posX;
+			float py = (float)mc.player.posY;
+			float pz = (float)mc.player.posZ;
+			float mx = (float)mc.player.prevPosX;
+			float my = (float)mc.player.prevPosY;
+			float mz = (float)mc.player.prevPosZ;
 			float dx = mx + ( px - mx ) * f;
 			float dy = my + ( py - my ) * f;
 			float dz = mz + ( pz - mz ) * f;

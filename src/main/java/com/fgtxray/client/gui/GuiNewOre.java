@@ -1,13 +1,13 @@
-package com.fgtXray.client.gui;
+package com.fgtxray.client.gui;
 
-import com.fgtXray.client.OresSearch;
+import com.fgtxray.client.OresSearch;
+import com.fgtxray.reference.Ref;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 
@@ -76,12 +76,12 @@ public class GuiNewOre extends GuiScreen {
 
 				OresSearch.add(oreIdent.getText(), oreName.getText(), rgb);
 				
-				mc.thePlayer.closeScreen();
+				mc.player.closeScreen();
 				mc.displayGuiScreen( new GuiSettings() );
 				break;
 						
 			case 99: // Cancel
-				mc.thePlayer.closeScreen();
+				mc.player.closeScreen();
 				mc.displayGuiScreen( new GuiSettings() );
 				break;
 				
@@ -135,7 +135,7 @@ public class GuiNewOre extends GuiScreen {
 					break;
 				case 1: // Exit on escape
                     mc.displayGuiScreen( new GuiSettings() );
-					mc.thePlayer.closeScreen();
+					mc.player.closeScreen();
 				default:
 					break;
 			}
@@ -159,7 +159,7 @@ public class GuiNewOre extends GuiScreen {
 	public void drawScreen( int x, int y, float f )
     {
         drawDefaultBackground();
-        mc.renderEngine.bindTexture( new ResourceLocation("fgtxray:textures/gui/oreAddBackground.png") );
+        mc.renderEngine.bindTexture( new ResourceLocation(Ref.PREFIX_GUI+"addorebg.png") );
         drawTexturedModalRect(width / 2 - 125, height / 2 - 95, 0, 0, 256, 205);
 
         FontRenderer fr = this.mc.fontRendererObj;

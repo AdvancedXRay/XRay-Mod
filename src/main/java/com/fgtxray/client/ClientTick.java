@@ -1,4 +1,4 @@
-package com.fgtXray.client;
+package com.fgtxray.client;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +11,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import com.fgtXray.reference.BlockInfo;
-import com.fgtXray.FgtXRay;
-import com.fgtXray.reference.OreInfo;
+import com.fgtxray.reference.BlockInfo;
+import com.fgtxray.FgtXRay;
+import com.fgtxray.reference.OreInfo;
 
 public class ClientTick implements Runnable
 {
@@ -25,16 +25,16 @@ public class ClientTick implements Runnable
 	@SubscribeEvent
 	public void tickEnd( TickEvent.ClientTickEvent event )
 	{
-		if ( (event.phase == TickEvent.Phase.END) && (mc.thePlayer != null) )
+		if ( (event.phase == TickEvent.Phase.END) && (mc.player != null) )
 		{
-			FgtXRay.localPlyX = MathHelper.floor_double( mc.thePlayer.posX );
-			FgtXRay.localPlyY = MathHelper.floor_double( mc.thePlayer.posY );
-			FgtXRay.localPlyZ = MathHelper.floor_double( mc.thePlayer.posZ );
-            FgtXRay.localPlyXPrev = MathHelper.floor_double( mc.thePlayer.prevPosX );
-            FgtXRay.localPlyZPrev = MathHelper.floor_double( mc.thePlayer.prevPosZ );
+			FgtXRay.localPlyX = MathHelper.floor( mc.player.posX );
+			FgtXRay.localPlyY = MathHelper.floor( mc.player.posY );
+			FgtXRay.localPlyZ = MathHelper.floor( mc.player.posZ );
+            FgtXRay.localPlyXPrev = MathHelper.floor( mc.player.prevPosX );
+            FgtXRay.localPlyZPrev = MathHelper.floor( mc.player.prevPosZ );
 
 			if( FgtXRay.drawOres && ((this.thread == null) || !this.thread.isAlive()) &&
-			( (mc.theWorld != null) && (mc.thePlayer != null) ) ) // If we're in a world and want to start drawing create the thread.
+			( (mc.world != null) && (mc.player != null) ) ) // If we're in a world and want to start drawing create the thread.
 			{
 				this.thread = new Thread( this );
 				this.thread.setDaemon( false );
@@ -52,7 +52,7 @@ public class ClientTick implements Runnable
 		{
 			while( !this.thread.isInterrupted() ) // Check the internal interrupt flag. Exit thread if set.
 			{
-				if ( FgtXRay.drawOres && !OresSearch.searchList.isEmpty() && (mc != null) && (mc.theWorld != null) && (mc.thePlayer != null) )
+				if ( FgtXRay.drawOres && !OresSearch.searchList.isEmpty() && (mc != null) && (mc.world != null) && (mc.player != null) )
 				{
 					if ( nextTimeMs > System.currentTimeMillis() ) // Delay to avoid spamming ore updates.
 						continue;
@@ -73,7 +73,7 @@ public class ClientTick implements Runnable
 							for (int z = pz - radius; z < pz + radius; z++) // z axis.
 							{
 								BlockPos xyz = new BlockPos(x, y, z);
-								IBlockState state = mc.theWorld.getBlockState( xyz );
+								IBlockState state = mc.world.getBlockState( xyz );
 
 								int id = Block.getIdFromBlock( state.getBlock() );
 								int meta = state.getBlock().getMetaFromState(state);

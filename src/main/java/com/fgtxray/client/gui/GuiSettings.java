@@ -1,18 +1,18 @@
-package com.fgtXray.client.gui;
+package com.fgtxray.client.gui;
 
 import java.io.IOException;
 import java.util.*;
-import com.fgtXray.FgtXRay;
-import com.fgtXray.OreButtons;
-import com.fgtXray.client.OresSearch;
-import com.fgtXray.config.ConfigHandler;
-import com.fgtXray.reference.OreInfo;
+import com.fgtxray.FgtXRay;
+import com.fgtxray.OreButtons;
+import com.fgtxray.client.OresSearch;
+import com.fgtxray.config.ConfigHandler;
+import com.fgtxray.reference.OreInfo;
+import com.fgtxray.reference.Ref;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -172,7 +172,7 @@ public class GuiSettings extends GuiScreen
 				break;
 
 			case 97: // New Ore button
-				mc.thePlayer.closeScreen();
+				mc.player.closeScreen();
 				mc.displayGuiScreen( new GuiNewOre() );
 				break;
 
@@ -232,7 +232,7 @@ public class GuiSettings extends GuiScreen
 		if( (par2 == 1) || (par2 == mc.gameSettings.keyBindInventory.getKeyCode()) || par2 == FgtXRay.keyBind_keys[ FgtXRay.keyIndex_showXrayMenu ].getKeyCode() )
         {
             // Close on esc, inventory key or keybind
-			mc.thePlayer.closeScreen();
+			mc.player.closeScreen();
 		}
 	}
 	
@@ -259,7 +259,7 @@ public class GuiSettings extends GuiScreen
 	public void drawScreen( int x, int y, float f )
     {
 		drawDefaultBackground();
-        mc.renderEngine.bindTexture( new ResourceLocation("fgtxray:textures/gui/Background.png") );
+        mc.renderEngine.bindTexture( new ResourceLocation(Ref.PREFIX_GUI+"bg.png") );
         drawTexturedQuadFit(width / 2 - 110, height / 2 - 110, 229, 193, 0);
 
 		super.drawScreen(x, y, f);
