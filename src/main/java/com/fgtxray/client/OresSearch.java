@@ -1,11 +1,11 @@
-package com.fgtXray.client;
+package com.fgtxray.client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fgtXray.config.ConfigHandler;
+import com.fgtxray.config.ConfigHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -13,8 +13,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.fgtXray.FgtXRay;
-import com.fgtXray.reference.OreInfo;
+import com.fgtxray.FgtXRay;
+import com.fgtxray.reference.OreInfo;
 
 public class OresSearch
 {

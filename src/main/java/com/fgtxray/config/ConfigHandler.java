@@ -1,12 +1,12 @@
-package com.fgtXray.config;
+package com.fgtxray.config;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import com.fgtXray.FgtXRay;
-import com.fgtXray.reference.OreInfo;
+import com.fgtxray.FgtXRay;
+import com.fgtxray.reference.OreInfo;
 
 public class ConfigHandler
 {

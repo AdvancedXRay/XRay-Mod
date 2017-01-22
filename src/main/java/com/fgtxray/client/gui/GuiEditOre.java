@@ -1,4 +1,4 @@
-package com.fgtXray.client.gui;
+package com.fgtxray.client.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -29,7 +29,7 @@ public class GuiEditOre extends GuiScreen
 				break;
 		
 			case 99: // Cancel
-				mc.thePlayer.closeScreen();
+				mc.player.closeScreen();
 				break;
 
 			default:
@@ -52,7 +52,7 @@ public class GuiEditOre extends GuiScreen
 		}
 		else if( par2 == 1 ) // Close on esc
 		{
-			mc.thePlayer.closeScreen();
+			mc.player.closeScreen();
 		}
 	}
 	

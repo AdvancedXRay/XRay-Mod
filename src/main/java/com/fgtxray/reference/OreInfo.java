@@ -1,5 +1,5 @@
 // Structure for damn near everything.
-package com.fgtXray.reference;
+package com.fgtxray.reference;
 
 public class OreInfo
 {

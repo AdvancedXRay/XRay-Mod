@@ -1,11 +1,12 @@
-package com.fgtXray;
+package com.fgtxray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fgtXray.proxy.ServerProxy;
+import com.fgtxray.proxy.ServerProxy;
+import com.fgtxray.reference.Ref;
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.settings.KeyBinding;
@@ -20,11 +21,11 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-import com.fgtXray.reference.OreInfo;
-import com.fgtXray.config.DefaultConfig;
-import com.fgtXray.config.ConfigHandler;
+import com.fgtxray.reference.OreInfo;
+import com.fgtxray.config.DefaultConfig;
+import com.fgtxray.config.ConfigHandler;
 
-@Mod(modid="fgtxray", name="Fgt X-Ray", version="1.1.0")
+@Mod(modid= Ref.MOD_ID, name="Fgt X-Ray", version="1.1.0")
 public class FgtXRay
 {
 	public static int localPlyX, localPlyY, localPlyZ, localPlyXPrev, localPlyZPrev; // For internal use in the ClientTick thread.
@@ -58,7 +59,7 @@ public class FgtXRay
 	
 	public static Configuration config = null;
 	
-	public static Map<String, OreInfo> oredictOres = new HashMap<String, OreInfo>();
+	public static Map<String, OreInfo> oredictOres = new HashMap<>();
 		/* Ores to check through the ore dictionary and add each instance found to the searchList. 
 		 * put( "oreType", new OreInfo(...) ) oreType is the ore dictionary string id. Press Print OreDict and check console to see list.
 		 * OreInfo( String "Gui Name", // The name to be displayed in the GUI.
@@ -68,7 +69,7 @@ public class FgtXRay
 		 * Open DefaultConfig.java for more info.
 		 */
 	
-	public static List<OreInfo> customOres = new ArrayList<OreInfo>();
+	public static List<OreInfo> customOres = new ArrayList<>();
 		/* List of custom id:meta to add.
 		 * OreInfo( String "Gui Name", // Displayed in the GUI.
 		 *     int id, int meta, // Set these to whatever the id:meta is for your block.
@@ -77,11 +78,11 @@ public class FgtXRay
 		 */
 	
 	// The instance of your mod that Forge uses.
-	@Instance(value = "FgtXray")
+	@Instance(Ref.MOD_ID)
 	public static FgtXRay instance;
 	
 	// Says where the client and server 'proxy' code is loaded.
-	@SidedProxy(clientSide="com.fgtXray.proxy.ClientProxy", serverSide="com.fgtXray.proxy.ServerProxy")
+	@SidedProxy(clientSide="com.fgtxray.proxy.ClientProxy", serverSide="com.fgtxray.proxy.ServerProxy")
 	public static ServerProxy proxy;
 	
 	@EventHandler
