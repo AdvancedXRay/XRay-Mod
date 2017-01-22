@@ -8,14 +8,12 @@ import com.fgtXray.client.OresSearch;
 import com.fgtXray.config.ConfigHandler;
 import com.fgtXray.reference.OreInfo;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -246,7 +244,7 @@ public class GuiSettings extends GuiScreen
     // this removes the stupid power of 2 rule that comes with minecraft.
     private static void drawTexturedQuadFit(double x, double y, double width, double height, double zLevel)
     {
-        VertexBuffer tessellate = Tessellator.getInstance().getBuffer();
+		WorldRenderer tessellate = Tessellator.getInstance().getWorldRenderer();
 		tessellate.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         tessellate.pos(x + 0, y + height, zLevel).tex( 0,1).endVertex();
         tessellate.pos(x + width, y + height, zLevel).tex( 1, 1).endVertex();

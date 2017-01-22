@@ -4,11 +4,11 @@
   "name": "Fgt X-Ray",
   "description": "An advanced XRay mod for Minecraft.",
   "version": "1.1.0",
-  "mcversion": "1.10.2",
+  "mcversion": "1.8.9",
   "url": "https://github.com/michaelhillcox/XRay-Mod",
   "updateJSON": "https://raw.githubusercontent.com/MichaelHillcox/XRay-Mod/master/versions.json",
   "authorList": ["mcd1992, AoKMiKeY"],
-  "credits": "Contributors: AoKMiKeY, uaBArt",
+  "credits": "Contributors: AoKMiKeY",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []

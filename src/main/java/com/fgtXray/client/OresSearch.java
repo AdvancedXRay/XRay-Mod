@@ -10,7 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.oredict.OreDictionary;
 
 import com.fgtXray.FgtXRay;
@@ -47,7 +47,7 @@ public class OresSearch
 			{
 				//System.out.println( String.format( "Can't add %s to searchList. Invalid format.", oreIdent ) );
 				String notify = String.format( "[�aFgt XRay�r] %s is not a valid identifier. Try id:meta (example 1:0 for stone) or oreName (example oreDiamond or mossyStone)", oreIdent );
-				mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify));
+				mc.ingameGUI.getChatGUI().printChatMessage( new ChatComponentText(notify));
 				return;
 			}
 			
@@ -60,7 +60,7 @@ public class OresSearch
 			{ // TODO: Some oredict ores are mod:block for some reason...
 				//System.out.println( String.format( "%s is not a valid id:meta format.", oreIdent ) );
 				String notify = String.format( "[�aFgt XRay�r] %s contains data other than numbers and the colon. Failed to add.", oreIdent );
-				mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify) );
+				mc.ingameGUI.getChatGUI().printChatMessage( new ChatComponentText(notify) );
 				return;
 			}
 			
@@ -75,7 +75,7 @@ public class OresSearch
 			catch( NumberFormatException e )
 			{
 				String notify = String.format( "[�aFgt XRay�r] Doesn't support in-game additions to the ore dictionary yet.. Failed to add." );
-				mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify) );
+				mc.ingameGUI.getChatGUI().printChatMessage( new ChatComponentText(notify) );
 				return;
 			}
 			
@@ -83,7 +83,7 @@ public class OresSearch
 		//System.out.println( String.format( "Adding ore: %s", oreIdent ) );
 		OresSearch.searchList.add( new OreInfo( name, id, meta, color, true ) );
 		String notify = String.format( "[�aFgt XRay�r] successfully added %s.", oreIdent );
-		mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(notify));
+		mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(notify));
 
 		ConfigHandler.add(name, oreIdent, color);
 	}

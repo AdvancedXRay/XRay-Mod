@@ -9,11 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import com.fgtXray.reference.BlockInfo;
@@ -31,7 +29,7 @@ public class RenderTick
 	{
 		if ( mc.theWorld != null && FgtXRay.drawOres )
 		{
-			float f = event.getPartialTicks();
+			float f = event.partialTicks;
 			float px = (float)mc.thePlayer.posX;
 			float py = (float)mc.thePlayer.posY;
 			float pz = (float)mc.thePlayer.posZ;
@@ -41,7 +39,8 @@ public class RenderTick
 			float dx = mx + ( px - mx ) * f;
 			float dy = my + ( py - my ) * f;
 			float dz = mz + ( pz - mz ) * f;
-			drawOres( dx, dy, dz ); // this is a world pos of the player
+
+			drawOres( dx, dy, dz );
 		}
 	}
 	
@@ -57,10 +56,9 @@ public class RenderTick
 		GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA );
 		GL11.glLineWidth( 1f );
 
-		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertexBuffer = tessellator.getBuffer();
-
-		List<BlockInfo> temp = new ArrayList();
+		Tessellator tes = Tessellator.getInstance();
+		WorldRenderer vertexBuffer = Tessellator.getInstance().getWorldRenderer();
+		List<BlockInfo> temp = new ArrayList<BlockInfo>();
 		temp.addAll(this.ores);	// If we dont make a copy then the thread in ClientTick will ConcurrentModificationException.
 		
 		for ( BlockInfo b : temp )
@@ -101,7 +99,7 @@ public class RenderTick
 			vertexBuffer.pos(bx-px + f, by-py + f, bz-pz + f).color(red, green, blue, 255).endVertex();
 			vertexBuffer.pos(bx-px + f, by-py + f1, bz-pz + f).color(red, green, blue, 255).endVertex();
 
-			tessellator.draw();
+			tes.draw();
 		}
 		
 		GL11.glDepthMask(true);
