@@ -16,7 +16,8 @@ The [Imgur Album](http://imgur.com/a/23dX5)
 ### Supports
 |Minecraft Version   | Forge Version | Branch
 |---|---|---
-|1.10.2 | 12.18.3.2185 | [XRay-Mod/tree/master](https://github.com/MichaelHillcox/XRay-Mod/tree/master)
+|1.11.2 | 13.20.0.2224 | [XRay-Mod/tree/master](https://github.com/MichaelHillcox/XRay-Mod/tree/master)
+|1.10.2 | 12.18.3.2185 | [XRay-Mod/tree/master](https://github.com/MichaelHillcox/XRay-Mod/tree/1.10.x)
 |1.9.4 | 12.17.0.2051 | [XRay-Mod/tree/1.9.4](https://github.com/MichaelHillcox/XRay-Mod/tree/1.9.4)
 |1.8.9 | 11.15.1.1722 | [XRay-Mod/tree/1.8.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.8.x)
 |1.7.10 | 10.13.2.1291 | [XRay-Mod/tree/1.7.10](https://github.com/MichaelHillcox/XRay-Mod/tree/1.7.10)
@@ -28,7 +29,7 @@ The [Imgur Album](http://imgur.com/a/23dX5)
 |---|---|---|
 |MichaelHillcox   | Main Dev |[https://github.com/MichaelHillcox](https://github.com/MichaelHillcox)
 |mcd1992          | Original Creator| [https://github.com/mcd1992](https://github.com/mcd1992) ([GitLab](https://gitlab.com/mcd1992))
-|BondarenkoArtur | Updater (1.7.10-1.9.4) | [https://github.com/BondarenkoArtur](https://github.com/BondarenkoArtur)
+|BondarenkoArtur  | Updater (1.7.10-1.9.4) | [https://github.com/BondarenkoArtur](https://github.com/BondarenkoArtur)
 
 > A big thanks CJB for his rendering system.
 
