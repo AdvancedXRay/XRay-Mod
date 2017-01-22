@@ -3,7 +3,7 @@ Minecraft Forge XRay mod
 
 ### Feature:
 - Full Support for Forge
-    - Supports versions back from 1.7.10
+    - Supports versions back from 1.6.4
 - Clean and simple GUI to add blocks
 - Colour RGB Selector
 - Auto adds ores from other mods.
@@ -14,11 +14,13 @@ Minecraft Forge XRay mod
 The [Imgur Album](http://imgur.com/a/23dX5)
 
 ### Supports
-|Minecraft Version   | Forge Version |
-|---|---|
-|1.10.2 | 12.18.3.2185
-|1.9.4 | 12.17.0.2051
-|1.7.10 | 10.13.2.1291
+|Minecraft Version   | Forge Version | Branch
+|---|---|---
+|1.10.2 | 12.18.3.2185 | [XRay-Mod/tree/master](https://github.com/MichaelHillcox/XRay-Mod/tree/master)
+|1.9.4 | 12.17.0.2051 | [XRay-Mod/tree/1.9.4](https://github.com/MichaelHillcox/XRay-Mod/tree/1.9.4)
+|1.8.9 | 11.15.1.1722 | [XRay-Mod/tree/1.8.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.8.x)
+|1.7.10 | 10.13.2.1291 | [XRay-Mod/tree/1.7.10](https://github.com/MichaelHillcox/XRay-Mod/tree/1.7.10)
+|1.6.4 | 9.11.1.953 |  [XRay-Mod/tree/1.6.4](https://github.com/MichaelHillcox/XRay-Mod/tree/1.6.4)
 
 
 ### Contributors:
