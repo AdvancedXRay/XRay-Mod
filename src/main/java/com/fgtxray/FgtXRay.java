@@ -59,8 +59,8 @@ public class FgtXRay
 	
 	public static Configuration config = null;
 	
-	public static Map<String, OreInfo> oredictOres = new HashMap<>();
-		/* Ores to check through the ore dictionary and add each instance found to the searchList. 
+	public static Map<String, OreInfo> oredictOres = new HashMap<String, OreInfo>();
+		/* Ores to check through the ore dictionary and add each instance found to the searchList.
 		 * put( "oreType", new OreInfo(...) ) oreType is the ore dictionary string id. Press Print OreDict and check console to see list.
 		 * OreInfo( String "Gui Name", // The name to be displayed in the GUI.
 		 *     int id, int meta, // Leave these at 0. The OresSearch will set them through the ore dictionary.
@@ -68,8 +68,8 @@ public class FgtXRay
 		 *     bool enabled) // Should the be on by default. Its then set internally by GuiSettings.
 		 * Open DefaultConfig.java for more info.
 		 */
-	
-	public static List<OreInfo> customOres = new ArrayList<>();
+
+	public static List<OreInfo> customOres = new ArrayList<OreInfo>();
 		/* List of custom id:meta to add.
 		 * OreInfo( String "Gui Name", // Displayed in the GUI.
 		 *     int id, int meta, // Set these to whatever the id:meta is for your block.
