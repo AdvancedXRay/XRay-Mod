@@ -24,11 +24,10 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiSettings extends GuiScreen
 {
-	private Map<String, OreButtons> buttons = new HashMap<String, OreButtons>();
-    private List<GuiPage> pageIndex = new ArrayList<GuiPage>();
+	private Map<String, OreButtons> buttons = new HashMap<>();
+    private List<GuiPage> pageIndex = new ArrayList<>();
 
-	private int pageCurrent = 0;
-    private int pageMax = 0;
+	private int pageCurrent, pageMax = 0;
 
 	@Override
 	public void initGui()
@@ -50,12 +49,9 @@ public class GuiSettings extends GuiScreen
 		this.buttonList.add( aNextButton );
 		this.buttonList.add( aPrevButton );
 
-        int x = width / 2 - 100;
-		int y = height / 2 - 100;
+        int x = width / 2 - 100, y = height / 2 - 100;
+        int Count = 0, Page = 0, CountPerPage = 0;
 
-        int Count = 0;
-        int Page = 0;
-        int CountPerPage = 0;
 		for( OreInfo ore : OresSearch.searchList )
         {
 			if( buttons.get( ore.oreName ) != null )
@@ -72,9 +68,7 @@ public class GuiSettings extends GuiScreen
                 {
                     Page++;
                     if( Page > pageMax )
-                    {
                         pageMax++;
-                    }
 
                     x = width / 2 - 100;
                     y = height / 2 - 100;
@@ -83,7 +77,7 @@ public class GuiSettings extends GuiScreen
                 pageIndex.add(new GuiPage(Page, new GuiButton(id, x, y, 100, 20, ore.oreName + ": " + (ore.draw ? "On" : "Off")))); // create new button and set the text to Name: On||Off
                 buttons.put( ore.oreName, new OreButtons( ore.oreName, id,  ore ) ); // Add this new button to the buttons hashmap.
 				y += 21.8; // Next button should be placed down from this one.
-				
+
 				// this should reset each page to split the list :)
                 if( CountPerPage == 6 )
                 {
