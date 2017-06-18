@@ -1,9 +1,8 @@
-# X-Ray Mod - [![Forge Downloads](http://cf.way2muchnoise.eu/advanced-xray.svg)](https://mods.curse.com/mc-mods/minecraft/256256-advanced-xray) [![Forge Available For](http://cf.way2muchnoise.eu/versions/advanced-xray.svg)](https://mods.curse.com/mc-mods/minecraft/256256-advanced-xray)
+# XRay Mod - [![Forge Downloads](http://cf.way2muchnoise.eu/advanced-xray.svg)](https://mods.curse.com/mc-mods/minecraft/256256-advanced-xray) [![Forge Available For](http://cf.way2muchnoise.eu/versions/advanced-xray.svg)](https://mods.curse.com/mc-mods/minecraft/256256-advanced-xray)
 Minecraft Forge XRay mod
 
 ### Feature:
 - Full Support for Forge
-    - Supports versions back from 1.6.4
 - Clean and simple GUI to add blocks
 - Colour RGB Selector
 - Auto adds ores from other mods.
@@ -16,7 +15,8 @@ The [Imgur Album](http://imgur.com/a/23dX5)
 ### Supports
 |Minecraft Version   | Forge Version | Branch
 |---|---|---
-|1.11.2 | 13.20.0.2224 | [XRay-Mod/tree/master](https://github.com/MichaelHillcox/XRay-Mod/tree/master)
+|1.12 | 14.21.0.2334 | [XRay-Mod/tree/master](https://github.com/MichaelHillcox/XRay-Mod/tree/master)
+|1.11.2 | 13.20.0.2224 | [XRay-Mod/tree/1.11.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.11.x)
 |1.10.2 | 12.18.3.2185 | [XRay-Mod/tree/1.10.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.10.x)
 |1.9.4 | 12.17.0.2051 | [XRay-Mod/tree/1.9.4](https://github.com/MichaelHillcox/XRay-Mod/tree/1.9.4)
 |1.8.9 | 11.15.1.1722 | [XRay-Mod/tree/1.8.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.8.x)
