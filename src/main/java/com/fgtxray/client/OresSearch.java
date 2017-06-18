@@ -1,9 +1,6 @@
 package com.fgtxray.client;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.fgtxray.config.ConfigHandler;
 import net.minecraft.client.Minecraft;
@@ -18,14 +15,14 @@ import com.fgtxray.reference.OreInfo;
 
 public class OresSearch
 {
-	public static List<OreInfo> searchList = new ArrayList(); // List of ores/blocks to search for.
-	public static Minecraft mc = Minecraft.getMinecraft();
+	public static ArrayList<OreInfo> searchList = new ArrayList<>(); // List of ores/blocks to search for.
+	private static Minecraft mc = Minecraft.getMinecraft();
 	
 	private static boolean checkList( List<OreInfo> temp, OreInfo value, ItemStack stack ) // Used to check if a OreInfo already exists in the searchList
 	{
 		for( OreInfo oreCheck : temp )
 		{
-			if( (oreCheck.oreName == value.oreName) && (oreCheck.id == Item.getIdFromItem( stack.getItem() ) ) && (oreCheck.meta == stack.getItemDamage()) )
+			if( (Objects.equals(oreCheck.oreName, value.oreName)) && (oreCheck.id == Item.getIdFromItem( stack.getItem() ) ) && (oreCheck.meta == stack.getItemDamage()) )
 			{
 				return true; // This ore already exists in the temp list. (Sometimes the OreDict returns duplicate entries, like gold twice) 
 			}
@@ -46,7 +43,7 @@ public class OresSearch
 			if( splitArray.length != 2 )
 			{
 				//System.out.println( String.format( "Can't add %s to searchList. Invalid format.", oreIdent ) );
-				String notify = String.format( "[�aFgt XRay�r] %s is not a valid identifier. Try id:meta (example 1:0 for stone) or oreName (example oreDiamond or mossyStone)", oreIdent );
+				String notify = String.format( "[Fgt XRay] %s is not a valid identifier. Try id:meta (example 1:0 for stone) or oreName (example oreDiamond or mossyStone)", oreIdent );
 				mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify));
 				return;
 			}
@@ -59,7 +56,7 @@ public class OresSearch
 			catch( NumberFormatException e )
 			{ // TODO: Some oredict ores are mod:block for some reason...
 				//System.out.println( String.format( "%s is not a valid id:meta format.", oreIdent ) );
-				String notify = String.format( "[�aFgt XRay�r] %s contains data other than numbers and the colon. Failed to add.", oreIdent );
+				String notify = String.format( "[Fgt XRay] %s contains data other than numbers and the colon. Failed to add.", oreIdent );
 				mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify) );
 				return;
 			}
@@ -74,7 +71,7 @@ public class OresSearch
 			}
 			catch( NumberFormatException e )
 			{
-				String notify = String.format( "[�aFgt XRay�r] Doesn't support in-game additions to the ore dictionary yet.. Failed to add." );
+				String notify = String.format( "[Fgt XRay] Doesn't support in-game additions to the ore dictionary yet.. Failed to add." );
 				mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify) );
 				return;
 			}
@@ -82,7 +79,7 @@ public class OresSearch
 		}
 		//System.out.println( String.format( "Adding ore: %s", oreIdent ) );
 		OresSearch.searchList.add( new OreInfo( name, id, meta, color, true ) );
-		String notify = String.format( "[�aFgt XRay�r] successfully added %s.", oreIdent );
+		String notify = String.format( "[Fgt XRay] successfully added %s.", oreIdent );
 		mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(notify));
 
 		ConfigHandler.add(name, oreIdent, color);
@@ -93,7 +90,7 @@ public class OresSearch
 		if( OresSearch.searchList.isEmpty() )
 		{
 			System.out.println( "[Fgt XRay] --- Populating the searchList with the ore dictionary --- ");
-			List<OreInfo> temp = new ArrayList(); // Temporary array of OreInfos to replace searchList
+			List<OreInfo> temp = new ArrayList<>(); // Temporary array of OreInfos to replace searchList
 			Map<String, OreInfo> tempOredict = new HashMap<String, OreInfo>(); // Temporary oredict map to replace oredictOres
 			
 			// OreDictionary.getOres("string") adds the ore if it doesn't exist.
