@@ -77,7 +77,16 @@ public class OresSearch
 			}
 			
 		}
+
 		//System.out.println( String.format( "Adding ore: %s", oreIdent ) );
+		for( OreInfo info : OresSearch.searchList ) {
+			if( info.getId() == id && info.getMeta() == meta ) {
+				String notify = String.format("[Fgt XRay] This block has already been added to the block list");
+				mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(notify));
+				return;
+			}
+		}
+
 		OresSearch.searchList.add( new OreInfo( name, id, meta, color, true ) );
 		String notify = String.format( "[Fgt XRay] successfully added %s.", oreIdent );
 		mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(notify));

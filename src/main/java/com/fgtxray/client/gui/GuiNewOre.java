@@ -60,8 +60,8 @@ public class GuiNewOre extends GuiScreen {
 		
 		oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 108, height / 2 + 8, 220, 20 );
 		oreIdent = new GuiTextField( 0, this.fontRenderer, width / 2 - 108, height / 2 + 32, 220, 20 );
-		oreName.setText( "Name of block");
-		oreIdent.setText( "ModName:BlockName" ); // TODO: oreName
+		oreName.setText( "Block Name");
+		oreIdent.setText( "ID:META" ); // TODO: oreName
 	}
 	
 	@Override

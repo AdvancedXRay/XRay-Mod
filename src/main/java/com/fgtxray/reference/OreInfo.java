@@ -17,7 +17,19 @@ public class OreInfo
 		this.color = color;
 		this.draw = draw;
 	}
-	
+
+	public String getOreName() {
+		return oreName;
+	}
+
+	public int getMeta() {
+		return meta;
+	}
+
+	public int getId() {
+		return id;
+	}
+
 	public void disable() // Stop drawing this ore.
 	{
 		this.draw = false;
