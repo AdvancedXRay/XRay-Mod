@@ -10,8 +10,8 @@ import com.fgtxray.reference.OreInfo;
 
 public class ConfigHandler
 {
-	public static Configuration config = null; // Save the config file handle for use later.
-	public static Minecraft mc = Minecraft.getMinecraft();
+	private static Configuration config = null; // Save the config file handle for use later.
+	private static Minecraft mc = Minecraft.getMinecraft();
 
 	public static void setup(FMLPreInitializationEvent event )
 	{
@@ -61,7 +61,7 @@ public class ConfigHandler
 			{
 				if( config.get("customores."+formattedname, "name", "").getString() == formattedname )
 				{
-					String notify = String.format( "[Fgt XRay] %s already exists. Please enter a different name. ", oreName );
+					String notify = String.format( "[XRay] %s already exists. Please enter a different name. ", oreName );
 					mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify));
 					return;
 				}

@@ -19,7 +19,7 @@ public class ClientProxy extends ServerProxy
 		FgtXRay.keyBind_keys = new KeyBinding[ FgtXRay.keyBind_descriptions.length ];
 		for( int i = 0; i < FgtXRay.keyBind_descriptions.length; ++i )
         {
-			FgtXRay.keyBind_keys[i] = new KeyBinding( FgtXRay.keyBind_descriptions[i], FgtXRay.keyBind_keyValues[i], "Fgt X-Ray" );
+			FgtXRay.keyBind_keys[i] = new KeyBinding( FgtXRay.keyBind_descriptions[i], FgtXRay.keyBind_keyValues[i], "X-Ray" );
 			ClientRegistry.registerKeyBinding( FgtXRay.keyBind_keys[i] );
 		}
 

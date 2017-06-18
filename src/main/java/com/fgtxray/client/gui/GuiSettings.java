@@ -36,7 +36,7 @@ public class GuiSettings extends GuiScreen
 		if( OresSearch.searchList.isEmpty() )
         {
             // This shouldnt happen. But return if it does.
-			System.out.println( "[Fgt XRay] Error: searchList is empty inside initGui call!" );
+			System.out.println( "[XRay] Error: searchList is empty inside initGui call!" );
 			return;
 		}
 
@@ -149,7 +149,7 @@ public class GuiSettings extends GuiScreen
 				{
 					for (OreInfo ore : OresSearch.searchList)
 					{
-						System.out.println(String.format("[Fgt XRay] OreInfo( %s, %d, %d, 0x%x, %b )", ore.oreName, ore.id, ore.meta, ore.color[0], ore.draw));
+						System.out.println(String.format("[XRay] OreInfo( %s, %d, %d, 0x%x, %b )", ore.oreName, ore.id, ore.meta, ore.color[0], ore.draw));
 					}
 				}
 				break;

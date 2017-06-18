@@ -25,7 +25,7 @@ import com.fgtxray.reference.OreInfo;
 import com.fgtxray.config.DefaultConfig;
 import com.fgtxray.config.ConfigHandler;
 
-@Mod(modid= Ref.MOD_ID, name="Fgt X-Ray", version="1.1.0.2")
+@Mod(modid= Ref.MOD_ID, name="XRay", version="1.2.0")
 public class FgtXRay
 {
 	public static int localPlyX, localPlyY, localPlyZ, localPlyXPrev, localPlyZPrev; // For internal use in the ClientTick thread.
@@ -92,13 +92,13 @@ public class FgtXRay
 		
 		if( config.getCategoryNames().isEmpty() )
         {
-			System.out.println("[Fgt XRay] Config file not found. Creating now.");
+			System.out.println("[XRay] Config file not found. Creating now.");
 			DefaultConfig.create( config );
 			config.save();
 		}
 		
 		ConfigHandler.setup( event ); // Read the config file and setup environment.
-        System.out.println("[Fgt XRay] PreInit ");
+        System.out.println("[XRay] PreInit ");
 	}
 
 	@EventHandler

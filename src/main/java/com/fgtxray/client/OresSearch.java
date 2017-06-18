@@ -42,7 +42,7 @@ public class OresSearch
 			if( splitArray.length != 2 )
 			{
 				//System.out.println( String.format( "Can't add %s to searchList. Invalid format.", oreIdent ) );
-				String notify = String.format( "[Fgt XRay] %s is not a valid identifier. Try id:meta (example 1:0 for stone) or oreName (example oreDiamond or mossyStone)", oreIdent );
+				String notify = String.format( "[XRay] %s is not a valid identifier. Try id:meta (example 1:0 for stone) or oreName (example oreDiamond or mossyStone)", oreIdent );
 				mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify));
 				return;
 			}
@@ -55,7 +55,7 @@ public class OresSearch
 			catch( NumberFormatException e )
 			{ // TODO: Some oredict ores are mod:block for some reason...
 				//System.out.println( String.format( "%s is not a valid id:meta format.", oreIdent ) );
-				String notify = String.format( "[Fgt XRay] %s contains data other than numbers and the colon. Failed to add.", oreIdent );
+				String notify = String.format( "[XRay] %s contains data other than numbers and the colon. Failed to add.", oreIdent );
 				mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify) );
 				return;
 			}
@@ -70,7 +70,7 @@ public class OresSearch
 			}
 			catch( NumberFormatException e )
 			{
-				mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString("[Fgt XRay] Doesn't support in-game additions to the ore dictionary yet.. Failed to add.") );
+				mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString("[XRay] Doesn't support in-game additions to the ore dictionary yet.. Failed to add.") );
 				return;
 			}
 			
@@ -79,13 +79,13 @@ public class OresSearch
 		//System.out.println( String.format( "Adding ore: %s", oreIdent ) );
 		for( OreInfo info : OresSearch.searchList ) {
 			if( info.getId() == id && info.getMeta() == meta ) {
-				mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString("[Fgt XRay] This block has already been added to the block list"));
+				mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString("[XRay] This block has already been added to the block list"));
 				return;
 			}
 		}
 
 		OresSearch.searchList.add( new OreInfo( name, id, meta, color, true ) );
-		String notify = String.format( "[Fgt XRay] successfully added %s.", oreIdent );
+		String notify = String.format( "[XRay] successfully added %s.", oreIdent );
 		mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(notify));
 
 		ConfigHandler.add(name, oreIdent, color);
@@ -95,7 +95,7 @@ public class OresSearch
 	{
 		if( OresSearch.searchList.isEmpty() )
 		{
-			System.out.println( "[Fgt XRay] --- Populating the searchList with the ore dictionary --- ");
+			System.out.println( "[XRay] --- Populating the searchList with the ore dictionary --- ");
 			List<OreInfo> temp = new ArrayList<>(); // Temporary array of OreInfos to replace searchList
 			Map<String, OreInfo> tempOredict = new HashMap<String, OreInfo>(); // Temporary oredict map to replace oredictOres
 			
@@ -115,7 +115,7 @@ public class OresSearch
 				String key = entry.getKey();
 				if( !tempOredict.containsKey( key ) )
 				{
-					System.out.println( String.format( "[Fgt XRay] Ore %s doesn't exist in dictionary! Deleting.", key ) );
+					System.out.println( String.format( "[XRay] Ore %s doesn't exist in dictionary! Deleting.", key ) );
 				}
 			}
 			FgtXRay.oredictOres.clear();
@@ -131,27 +131,27 @@ public class OresSearch
 				List<ItemStack> oreDictOres = OreDictionary.getOres( key ); // Get an itemstack array of all the oredict ores for 'key'
 				if( oreDictOres.size() < 1 )
 				{
-					System.out.println( String.format( "[Fgt XRay] Ore %s doesn't exist! Skipping. (We shouldn't have this issue here! Please tell me about this!)", key ) );
+					System.out.println( String.format( "[XRay] Ore %s doesn't exist! Skipping. (We shouldn't have this issue here! Please tell me about this!)", key ) );
 					continue;
 				}
 				for (ItemStack oreItem : oreDictOres) {
 					if (checkList(temp, value, oreItem)) {
-						System.out.println("[Fgt XRay] Duplicate ore found in Ore Dictionary!!! (" + key + ")");
+						System.out.println("[XRay] Duplicate ore found in Ore Dictionary!!! (" + key + ")");
 						continue;
 					}
 					temp.add(new OreInfo(value.oreName, Item.getIdFromItem(oreItem.getItem()), oreItem.getItemDamage(), value.color, value.draw));
 					//System.out.println( String.format("[Fgt XRay] Adding OreInfo( %s, %d, %d, %s, %b ) ", value.oreName, Item.getIdFromItem( oreItem.getItem() ), oreItem.getItemDamage(), value.color[0], value.draw ) );
 				}
 			}
-			System.out.println( "[Fgt XRay] --- Done populating searchList! --- ");
-			System.out.println( "[Fgt XRay] --- Adding custom blocks --- ");
+			System.out.println( "[XRay] --- Done populating searchList! --- ");
+			System.out.println( "[XRay] --- Adding custom blocks --- ");
 			
 			for( OreInfo ore : FgtXRay.customOres ) //TODO: Check if custom already exists
 			{
-				System.out.println( String.format( "[Fgt XRay] Adding OreInfo( %s, %d, %d, %b ) ", ore.oreName, ore.id, ore.meta, ore.draw ) );
+				System.out.println( String.format( "[XRay] Adding OreInfo( %s, %d, %d, %b ) ", ore.oreName, ore.id, ore.meta, ore.draw ) );
 				temp.add( ore );
 			}
-			System.out.println( "[Fgt XRay] --- Done adding custom blocks --- ");
+			System.out.println( "[XRay] --- Done adding custom blocks --- ");
 			
 			OresSearch.searchList.clear();
 			OresSearch.searchList.addAll( temp );
