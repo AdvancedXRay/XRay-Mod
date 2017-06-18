@@ -22,7 +22,7 @@ import java.util.List;
 public class RenderTick
 {
 	private final Minecraft mc = Minecraft.getMinecraft();
-	public static List<BlockInfo> ores = new ArrayList();
+	public static List<BlockInfo> ores = new ArrayList<>();
 
 	@SubscribeEvent
 	public void onWorldRenderLast( RenderWorldLastEvent event ) // Called when drawing the world.
@@ -50,6 +50,14 @@ public class RenderTick
             ClientTick.blockFinder( true );
         }
     }
+
+    @SubscribeEvent
+    public void placeItem(BlockEvent.PlaceEvent event ) {
+        if ( mc.world != null && FgtXRay.drawOres )
+        {
+            ClientTick.blockFinder( true );
+        }
+    }
 	
 	private void drawOres( float px, float py, float pz )
 	{
@@ -66,8 +74,8 @@ public class RenderTick
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder tessellate = tessellator.getBuffer();
 
-		List<BlockInfo> temp = new ArrayList();
-		temp.addAll(this.ores);	// If we dont make a copy then the thread in ClientTick will ConcurrentModificationException.
+		ArrayList<BlockInfo> temp = new ArrayList<>();
+		temp.addAll(ores);
 		
 		for ( BlockInfo b : temp )
 		{
