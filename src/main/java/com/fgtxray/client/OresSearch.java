@@ -33,8 +33,7 @@ public class OresSearch
 	public static void add( String oreIdent, String name, int[] color ) // Takes a string of id:meta or oreName to add to our search list.
 	{
 		oreIdent = oreIdent.replaceAll( "\\p{C}",  "?" );
-		int id = 0;
-		int meta = 0;
+		int id, meta = 0;
 
 		if( oreIdent.contains( ":" ) ) // Hopefully a proper id:meta string.
 		{
@@ -71,8 +70,7 @@ public class OresSearch
 			}
 			catch( NumberFormatException e )
 			{
-				String notify = String.format( "[Fgt XRay] Doesn't support in-game additions to the ore dictionary yet.. Failed to add." );
-				mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify) );
+				mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString("[Fgt XRay] Doesn't support in-game additions to the ore dictionary yet.. Failed to add.") );
 				return;
 			}
 			
@@ -81,8 +79,7 @@ public class OresSearch
 		//System.out.println( String.format( "Adding ore: %s", oreIdent ) );
 		for( OreInfo info : OresSearch.searchList ) {
 			if( info.getId() == id && info.getMeta() == meta ) {
-				String notify = String.format("[Fgt XRay] This block has already been added to the block list");
-				mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(notify));
+				mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString("[Fgt XRay] This block has already been added to the block list"));
 				return;
 			}
 		}
@@ -137,15 +134,12 @@ public class OresSearch
 					System.out.println( String.format( "[Fgt XRay] Ore %s doesn't exist! Skipping. (We shouldn't have this issue here! Please tell me about this!)", key ) );
 					continue;
 				}
-				for( int i = 0; i < oreDictOres.size(); i++ )
-				{
-					ItemStack oreItem = oreDictOres.get( i );
-					if( checkList( temp, value, oreItem ) )
-					{	
-						System.out.println("[Fgt XRay] Duplicate ore found in Ore Dictionary!!! ("+key+")");
+				for (ItemStack oreItem : oreDictOres) {
+					if (checkList(temp, value, oreItem)) {
+						System.out.println("[Fgt XRay] Duplicate ore found in Ore Dictionary!!! (" + key + ")");
 						continue;
 					}
-					temp.add( new OreInfo( value.oreName, Item.getIdFromItem( oreItem.getItem() ), oreItem.getItemDamage(), value.color, value.draw ) );
+					temp.add(new OreInfo(value.oreName, Item.getIdFromItem(oreItem.getItem()), oreItem.getItemDamage(), value.color, value.draw));
 					//System.out.println( String.format("[Fgt XRay] Adding OreInfo( %s, %d, %d, %s, %b ) ", value.oreName, Item.getIdFromItem( oreItem.getItem() ), oreItem.getItemDamage(), value.color[0], value.draw ) );
 				}
 			}
