@@ -5,19 +5,19 @@ package com.fgtxray.client;
  * I pretty much copied this from his decompiled MoreInfo mod and bitbucket repo.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fgtxray.FgtXRay;
+import com.fgtxray.reference.BlockInfo;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import com.fgtxray.reference.BlockInfo;
-import com.fgtxray.FgtXRay;
-
 import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RenderTick
 {
@@ -42,6 +42,14 @@ public class RenderTick
 			drawOres( dx, dy, dz ); // this is a world pos of the player
 		}
 	}
+
+    @SubscribeEvent
+    public void pickupItem( BlockEvent.BreakEvent event ) {
+        if ( mc.world != null && FgtXRay.drawOres )
+        {
+            ClientTick.blockFinder( true );
+        }
+    }
 	
 	private void drawOres( float px, float py, float pz )
 	{
@@ -56,7 +64,7 @@ public class RenderTick
 		GL11.glLineWidth( 1f );
 
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertexBuffer = tessellator.getBuffer();
+		BufferBuilder tessellate = tessellator.getBuffer();
 
 		List<BlockInfo> temp = new ArrayList();
 		temp.addAll(this.ores);	// If we dont make a copy then the thread in ClientTick will ConcurrentModificationException.
@@ -70,34 +78,34 @@ public class RenderTick
 			float f1 = 1.0f;
 			int red =  b.color[0], green =  b.color[1], blue =  b.color[2];
 
-			vertexBuffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+			tessellate.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 
-			vertexBuffer.pos(bx-px + f, by-py + f1, bz-pz + f).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f1, by-py + f1, bz-pz + f).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f1, by-py + f1, bz-pz + f).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f1, by-py + f1, bz-pz + f1).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f1, by-py + f1, bz-pz + f1).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f, by-py + f1, bz-pz + f1).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f, by-py + f1, bz-pz + f1).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f, by-py + f1, bz-pz + f).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f, by-py + f1, bz-pz + f).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f1, by-py + f1, bz-pz + f).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f1, by-py + f1, bz-pz + f).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f1, by-py + f1, bz-pz + f1).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f1, by-py + f1, bz-pz + f1).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f, by-py + f1, bz-pz + f1).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f, by-py + f1, bz-pz + f1).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f, by-py + f1, bz-pz + f).color(red, green, blue, 255).endVertex();
 
-			vertexBuffer.pos(bx-px + f1, by-py + f, bz-pz + f).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f1, by-py + f, bz-pz + f1).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f1, by-py + f, bz-pz + f1).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f, by-py + f, bz-pz + f1).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f, by-py + f, bz-pz + f1).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f, by-py + f, bz-pz + f).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f, by-py + f, bz-pz + f).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f1, by-py + f, bz-pz + f).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f1, by-py + f, bz-pz + f).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f1, by-py + f, bz-pz + f1).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f1, by-py + f, bz-pz + f1).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f, by-py + f, bz-pz + f1).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f, by-py + f, bz-pz + f1).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f, by-py + f, bz-pz + f).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f, by-py + f, bz-pz + f).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f1, by-py + f, bz-pz + f).color(red, green, blue, 255).endVertex();
 
-			vertexBuffer.pos(bx-px + f1, by-py + f, bz-pz + f1).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f1, by-py + f1, bz-pz + f1).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f1, by-py + f, bz-pz + f).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f1, by-py + f1, bz-pz + f).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f, by-py + f, bz-pz + f1).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f, by-py + f1, bz-pz + f1).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f, by-py + f, bz-pz + f).color(red, green, blue, 255).endVertex();
-			vertexBuffer.pos(bx-px + f, by-py + f1, bz-pz + f).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f1, by-py + f, bz-pz + f1).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f1, by-py + f1, bz-pz + f1).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f1, by-py + f, bz-pz + f).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f1, by-py + f1, bz-pz + f).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f, by-py + f, bz-pz + f1).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f, by-py + f1, bz-pz + f1).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f, by-py + f, bz-pz + f).color(red, green, blue, 255).endVertex();
+			tessellate.pos(bx-px + f, by-py + f1, bz-pz + f).color(red, green, blue, 255).endVertex();
 
 			tessellator.draw();
 		}

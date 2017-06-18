@@ -17,9 +17,9 @@ import com.fgtxray.reference.OreInfo;
 
 public class ClientTick implements Runnable
 {
-	private final Minecraft mc = Minecraft.getMinecraft();
-	private long nextTimeMs = System.currentTimeMillis();
-	private final int delayMs = 200;
+    private static final Minecraft mc = Minecraft.getMinecraft();
+	private static long nextTimeMs = System.currentTimeMillis();
+	private static final int delayMs = 200;
 	private Thread thread = null;
 
 	@SubscribeEvent
@@ -52,52 +52,8 @@ public class ClientTick implements Runnable
 		{
 			while( !this.thread.isInterrupted() ) // Check the internal interrupt flag. Exit thread if set.
 			{
-				if ( FgtXRay.drawOres && !OresSearch.searchList.isEmpty() && (mc != null) && (mc.world != null) && (mc.player != null) )
-				{
-					if ( nextTimeMs > System.currentTimeMillis() ) // Delay to avoid spamming ore updates.
-						continue;
-
-                    int px = FgtXRay.localPlyX;
-                    int py = FgtXRay.localPlyY;
-                    int pz = FgtXRay.localPlyZ;
-                    if( ( px == FgtXRay.localPlyXPrev && pz == FgtXRay.localPlyZPrev ) && RenderTick.ores.size() > 0 )
-                        continue; // Skip the check if the player hasn't moved
-
-                    List<BlockInfo> temp = new ArrayList<BlockInfo>();
-					int radius = FgtXRay.distNumbers[ FgtXRay.distIndex ]; // Get the radius around the player to search.
-
-					for (int y = Math.max( 0, py - 96 ); y < py + 32; y++) // Check the y axis. from 0 or the players y-96 to the players y + 32
-					{
-						for (int x = px - radius; x < px + radius; x++) // Iterate the x axis around the player in radius.
-						{
-							for (int z = pz - radius; z < pz + radius; z++) // z axis.
-							{
-								BlockPos xyz = new BlockPos(x, y, z);
-								IBlockState state = mc.world.getBlockState( xyz );
-
-								int id = Block.getIdFromBlock( state.getBlock() );
-								int meta = state.getBlock().getMetaFromState(state);
-
-								if( state.getBlock().hasTileEntity( state ) )
-									meta = 0;
-
-								for( OreInfo ore : OresSearch.searchList ) // Now we're actually checking if the current x,y,z block is in our searchList.
-								{
-									if ( (ore.draw) && (id == ore.id) && (meta == ore.meta) ) // Dont check meta if its -1 (custom)
-									{
-										temp.add( new BlockInfo( x, y, z, ore.color) ); // Add this block to the temp list
-										break; // Found a match, move on to the next block.
-									}
-								}
-							}
-						}
-					}
-					RenderTick.ores.clear();
-					RenderTick.ores.addAll(temp); // Add all our found blocks to the RenderTick.ores list. To be use by RenderTick when drawing.
-					nextTimeMs = System.currentTimeMillis() + delayMs; // Update the delay.
-				}
-				else
-					this.thread.interrupt(); // Kill the thread if we turn off xray or the player/world object becomes null.
+				if( !blockFinder( false ) )
+                    this.thread.interrupt(); // Kill the thread if we turn off xray or the player/world object becomes null.
 			}
 			//System.out.println(" --- Thread Exited Cleanly! ");
 			this.thread = null;
@@ -106,5 +62,56 @@ public class ClientTick implements Runnable
 		{
 			System.out.println(" ClientTick Thread Interrupted!!! " + exc.toString() ); // This shouldnt get called.
 		}
+	}
+
+	public static boolean blockFinder(boolean ForceAdd) {
+		if ( FgtXRay.drawOres && !OresSearch.searchList.isEmpty() && (mc != null) && (mc.world != null) && (mc.player != null) )
+		{
+			if ( nextTimeMs > System.currentTimeMillis() ) // Delay to avoid spamming ore updates.
+				return true;
+
+			int px = FgtXRay.localPlyX;
+			int py = FgtXRay.localPlyY;
+			int pz = FgtXRay.localPlyZ;
+			if( ( ( px == FgtXRay.localPlyXPrev && pz == FgtXRay.localPlyZPrev ) && RenderTick.ores.size() > 0 ) && !ForceAdd )
+				return true; // Skip the check if the player hasn't moved
+
+			List<BlockInfo> temp = new ArrayList<>();
+			int radius = FgtXRay.distNumbers[ FgtXRay.distIndex ]; // Get the radius around the player to search.
+
+			for (int y = Math.max( 0, py - 96 ); y < py + 32; y++) // Check the y axis. from 0 or the players y-96 to the players y + 32
+			{
+				for (int x = px - radius; x < px + radius; x++) // Iterate the x axis around the player in radius.
+				{
+					for (int z = pz - radius; z < pz + radius; z++) // z axis.
+					{
+						BlockPos xyz = new BlockPos(x, y, z);
+						IBlockState state = mc.world.getBlockState( xyz );
+
+						int id = Block.getIdFromBlock( state.getBlock() );
+						int meta = state.getBlock().getMetaFromState(state);
+
+						if( state.getBlock().hasTileEntity( state ) )
+							meta = 0;
+
+						for( OreInfo ore : OresSearch.searchList ) // Now we're actually checking if the current x,y,z block is in our searchList.
+						{
+							if ( (ore.draw) && (id == ore.id) && (meta == ore.meta) ) // Dont check meta if its -1 (custom)
+							{
+								temp.add( new BlockInfo( x, y, z, ore.color) ); // Add this block to the temp list
+								break; // Found a match, move on to the next block.
+							}
+						}
+					}
+				}
+			}
+			RenderTick.ores.clear();
+			RenderTick.ores.addAll(temp); // Add all our found blocks to the RenderTick.ores list. To be use by RenderTick when drawing.
+			nextTimeMs = System.currentTimeMillis() + delayMs; // Update the delay.
+		}
+		else
+		    return false;
+
+		return true;
 	}
 }

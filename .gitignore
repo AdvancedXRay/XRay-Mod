@@ -21,7 +21,6 @@ build
 eclipse
 run
 
-LICENSE-fml.txt
 gradlew
 gradlew.bat
 gradle/

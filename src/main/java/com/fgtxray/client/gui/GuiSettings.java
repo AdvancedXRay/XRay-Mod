@@ -8,8 +8,9 @@ import com.fgtxray.client.OresSearch;
 import com.fgtxray.config.ConfigHandler;
 import com.fgtxray.reference.OreInfo;
 import com.fgtxray.reference.Ref;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -40,7 +41,7 @@ public class GuiSettings extends GuiScreen
 			return;
 		}
 
-		this.buttons = new HashMap<String, OreButtons>(); // String id for the button. Same as the button text. (Diamond / Iron ect.)
+		this.buttons = new HashMap<>(); // String id for the button. Same as the button text. (Diamond / Iron ect.)
 		this.buttonList.clear();
         pageIndex.clear();
 
@@ -246,7 +247,8 @@ public class GuiSettings extends GuiScreen
     // this removes the stupid power of 2 rule that comes with minecraft.
     private static void drawTexturedQuadFit(double x, double y, double width, double height, double zLevel)
     {
-        VertexBuffer tessellate = Tessellator.getInstance().getBuffer();
+    	Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder tessellate = tessellator.getBuffer();
 		tessellate.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         tessellate.pos(x + 0, y + height, zLevel).tex( 0,1).endVertex();
         tessellate.pos(x + width, y + height, zLevel).tex( 1, 1).endVertex();

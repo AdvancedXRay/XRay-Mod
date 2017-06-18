@@ -38,7 +38,7 @@ public class OresSearch
 		oreIdent = oreIdent.replaceAll( "\\p{C}",  "?" );
 		int id = 0;
 		int meta = 0;
-		
+
 		if( oreIdent.contains( ":" ) ) // Hopefully a proper id:meta string.
 		{
 			String[] splitArray = oreIdent.split( ":" );

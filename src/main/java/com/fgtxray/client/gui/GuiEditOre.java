@@ -8,16 +8,15 @@ import java.io.IOException;
 
 public class GuiEditOre extends GuiScreen
 {
-	GuiTextField oreName; // Human readable name
-	GuiTextField oreIdent; // oredict oreName or id:meta
-	
+	private GuiTextField oreName; // Human readable name
+
 	@Override
 	public void initGui() // Called when the gui should be (re)created.
 	{
 		this.buttonList.add( new GuiButton( 97, 2, 2, 100, 20, "Delete" ) ); // Delete button
 		this.buttonList.add( new GuiButton( 98, this.width-102, this.height-22, 100, 20, "Save" ) ); // Save button
 		this.buttonList.add( new GuiButton( 99, 2, this.height-22, 100, 20, "Cancel" ) ); // Cancel button
-		oreName = new GuiTextField( 1, this.fontRendererObj, 104, this.height-22, 200, 20 );
+		oreName = new GuiTextField( 1, this.fontRenderer, 104, this.height-22, 200, 20 );
 	}
 	
 	@Override
@@ -87,13 +86,12 @@ public class GuiEditOre extends GuiScreen
 		oreName.mouseClicked( x, y, mouse );
 		if( mouse == 1 ) // Right clicked
 		{
-			for( int i = 0; i < this.buttonList.size(); i++ )
-			{
-				GuiButton button = (GuiButton)this.buttonList.get( i );
-				if( button.isMouseOver() ) //func_146115_a() returns true if the button is being hovered
+			for (GuiButton aButtonList : this.buttonList) {
+				if (aButtonList.isMouseOver()) //func_146115_a() returns true if the button is being hovered
 				{
 					/* TODO: Allow editing of ores
 					 * if( button.id == 99 ){ */
+
 				}
 			}
 		}

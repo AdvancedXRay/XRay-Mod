@@ -3,24 +3,25 @@ package com.fgtxray.client.gui;
 import com.fgtxray.client.OresSearch;
 import com.fgtxray.reference.Ref;
 import net.minecraft.client.gui.*;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class GuiNewOre extends GuiScreen {
-	GuiTextField oreName;
-	GuiTextField oreIdent;
-	GuiSlider redSlider;
-	GuiSlider greenSlider;
-	GuiSlider blueSlider;
-	GuiButton addButton;
+	private GuiTextField oreName;
+	private GuiTextField oreIdent;
+	private GuiSlider redSlider;
+	private GuiSlider greenSlider;
+	private GuiSlider blueSlider;
+	private GuiButton addButton;
 
-	boolean oreNameCleared  = false;
-	boolean oreIdentCleared = false;
+	private boolean oreNameCleared  = false;
+	private boolean oreIdentCleared = false;
 	
 	@Override
 	public void initGui()
@@ -34,23 +35,20 @@ public class GuiNewOre extends GuiScreen {
 		this.buttonList.add( new GuiSlider( 1, width / 2 - 108, height / 2 - 63, "Red", 0, 255 )  );
 		this.buttonList.add( new GuiSlider( 2, width / 2 - 108, height / 2 - 40, "Green", 0, 255 )  );
 		this.buttonList.add( new GuiSlider( 3, width / 2 - 108, height / 2 - 17, "Blue", 0, 255 )  );
-		
-		for( int i = 0; i < buttonList.size(); i++ )
-		{
-			GuiButton btn = (GuiButton)buttonList.get( i );
-			switch( btn.id )
-			{
+
+		for (GuiButton aButtonList : buttonList) {
+			switch (aButtonList.id) {
 				case 1: // Red slider
-					redSlider = (GuiSlider)btn;
+					redSlider = (GuiSlider) aButtonList;
 					break;
 				case 2: // Green slider
-					greenSlider = (GuiSlider)btn;
+					greenSlider = (GuiSlider) aButtonList;
 					break;
 				case 3: // Blue slider
-					blueSlider = (GuiSlider)btn;
+					blueSlider = (GuiSlider) aButtonList;
 					break;
 				case 98: // Add button
-					addButton = btn;
+					addButton = aButtonList;
 					break;
 				default:
 					break;
@@ -60,10 +58,10 @@ public class GuiNewOre extends GuiScreen {
 		greenSlider.sliderValue = 1.0F;
 		blueSlider.sliderValue  = 0.0F;
 		
-		oreName = new GuiTextField( 1, this.fontRendererObj, width / 2 - 108, height / 2 + 8, 220, 20 );
-		oreIdent = new GuiTextField( 0, this.fontRendererObj, width / 2 - 108, height / 2 + 32, 220, 20 );
+		oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 108, height / 2 + 8, 220, 20 );
+		oreIdent = new GuiTextField( 0, this.fontRenderer, width / 2 - 108, height / 2 + 32, 220, 20 );
 		oreName.setText( "Name of block");
-		oreIdent.setText( "ID:META" ); // TODO: oreName
+		oreIdent.setText( "ModName:BlockName" ); // TODO: oreName
 	}
 	
 	@Override
@@ -99,6 +97,7 @@ public class GuiNewOre extends GuiScreen {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		if( oreName.isFocused() )
 		{
 			oreName.textboxKeyTyped( par1, par2 );
@@ -106,21 +105,15 @@ public class GuiNewOre extends GuiScreen {
 			{
 				oreName.setFocused( false );
 				if( !oreIdentCleared )
-				{
 					oreIdent.setText("");
-				}
 				oreIdent.setFocused( true );
 			}
-			
 		}
 		else if( oreIdent.isFocused() )
 		{
 			oreIdent.textboxKeyTyped( par1, par2 );
 			if( par2 == 28 )
-			{
 				this.actionPerformed( addButton );
-			}
-			
 		}
 		else
 		{
@@ -128,9 +121,7 @@ public class GuiNewOre extends GuiScreen {
 			{
 				case 15: // Change focus to oreName on focus-less tab
 					if( !oreNameCleared )
-					{
 						oreName.setText("");
-					}
 					oreName.setFocused( true );
 					break;
 				case 1: // Exit on escape
@@ -162,23 +153,23 @@ public class GuiNewOre extends GuiScreen {
         mc.renderEngine.bindTexture( new ResourceLocation(Ref.PREFIX_GUI+"addorebg.png") );
         drawTexturedModalRect(width / 2 - 125, height / 2 - 95, 0, 0, 256, 205);
 
-        FontRenderer fr = this.mc.fontRendererObj;
+        FontRenderer fr = this.mc.fontRenderer;
         fr.drawString("Add an Ore", width / 2 - 108, height / 2 - 80, 0x404040);
 
 		oreName.drawTextBox();
 		oreIdent.drawTextBox();
 
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		BufferBuilder tessellate = tessellator.getBuffer();
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture2D();
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		GlStateManager.color(redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue, 1);
-		vertexbuffer.begin(7, DefaultVertexFormats.POSITION);
-		vertexbuffer.pos(width / 2 + 46, height / 2 - 63, 0.0D).endVertex();
-		vertexbuffer.pos(width / 2 + 46, height / 2 + 3, 0.0D).endVertex();
-		vertexbuffer.pos(width / 2 + 113, height / 2 + 3, 0.0D).endVertex();
-		vertexbuffer.pos(width / 2 + 113, height / 2 - 63, 0.0D).endVertex();
+		tessellate.begin(7, DefaultVertexFormats.POSITION);
+		tessellate.pos(width / 2 + 46, height / 2 - 63, 0.0D).endVertex();
+		tessellate.pos(width / 2 + 46, height / 2 + 3, 0.0D).endVertex();
+		tessellate.pos(width / 2 + 113, height / 2 + 3, 0.0D).endVertex();
+		tessellate.pos(width / 2 + 113, height / 2 - 63, 0.0D).endVertex();
 		tessellator.draw();
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();
@@ -215,13 +206,13 @@ public class GuiNewOre extends GuiScreen {
 		}
 
         // TODO: fix bug where if you type then remove it the text will not be put back.
-        if( !oreName.isFocused() && oreNameCleared && oreName.getText() == "" )
+        if( !oreName.isFocused() && oreNameCleared && Objects.equals(oreName.getText(), ""))
         {
             oreNameCleared = false;
             oreName.setText( "Name of block");
         }
 
-        if( !oreIdent.isFocused() && oreIdentCleared && oreIdent.getText() == "" )
+        if( !oreIdent.isFocused() && oreIdentCleared && Objects.equals(oreIdent.getText(), ""))
         {
             oreIdentCleared = false;
             oreIdent.setText( "ID:META");

@@ -25,7 +25,7 @@ import com.fgtxray.reference.OreInfo;
 import com.fgtxray.config.DefaultConfig;
 import com.fgtxray.config.ConfigHandler;
 
-@Mod(modid= Ref.MOD_ID, name="Fgt X-Ray", version="1.1.0")
+@Mod(modid= Ref.MOD_ID, name="Fgt X-Ray", version="1.1.0.2")
 public class FgtXRay
 {
 	public static int localPlyX, localPlyY, localPlyZ, localPlyXPrev, localPlyZPrev; // For internal use in the ClientTick thread.
@@ -40,8 +40,7 @@ public class FgtXRay
 		8, 16, 32, 48, 64, 80, 128, 256
 	};
     public static int distIndex = 0; // Index for the distNumers array. Default search distance.
-    public static boolean skipGenericBlocks = true; // See ClientTick.run() thread. Skip common blocks in overworld/nether/end.
-	
+
 	// Keybindings
 	public static final int keyIndex_toggleXray = 0;
 	public static final int keyIndex_showXrayMenu = 1;
