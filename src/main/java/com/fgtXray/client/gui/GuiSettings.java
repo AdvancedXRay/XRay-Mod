@@ -7,6 +7,7 @@ import com.fgtXray.OreButtons;
 import com.fgtXray.client.OresSearch;
 import com.fgtXray.config.ConfigHandler;
 import com.fgtXray.reference.OreInfo;
+import com.fgtXray.reference.Ref;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -259,7 +260,7 @@ public class GuiSettings extends GuiScreen
 	public void drawScreen( int x, int y, float f )
     {
 		drawDefaultBackground();
-        mc.renderEngine.bindTexture( new ResourceLocation("fgtxray:textures/gui/Background.png") );
+        mc.renderEngine.bindTexture( new ResourceLocation(Ref.PREFIX_GUI+"Background.png") );
         drawTexturedQuadFit(width / 2 - 110, height / 2 - 110, 229, 193, 0);
 
 		super.drawScreen(x, y, f);

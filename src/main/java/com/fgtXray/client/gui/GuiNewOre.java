@@ -153,7 +153,7 @@ public class GuiNewOre extends GuiScreen {
 	public void drawScreen( int x, int y, float f )
 	{
 		drawDefaultBackground();
-		mc.renderEngine.bindTexture( new ResourceLocation(Ref.PREFIX_GUI+"addorebg.png") );
+		mc.renderEngine.bindTexture( new ResourceLocation(Ref.PREFIX_GUI+"oreAddBackground.png") );
 		drawTexturedModalRect(width / 2 - 125, height / 2 - 95, 0, 0, 256, 205);
 
 		FontRenderer fr = this.mc.fontRendererObj;
