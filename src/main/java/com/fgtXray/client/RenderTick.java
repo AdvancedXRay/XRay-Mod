@@ -5,26 +5,24 @@ package com.fgtXray.client;
  * I pretty much copied this from his decompiled MoreInfo mod and bitbucket repo.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fgtXray.FgtXRay;
+import com.fgtXray.reference.BlockInfo;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import com.fgtXray.reference.BlockInfo;
-import com.fgtXray.FgtXRay;
-
 import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RenderTick
 {
 	private final Minecraft mc = Minecraft.getMinecraft();
-	public static List<BlockInfo> ores = new ArrayList();
+	public static List<BlockInfo> ores = new ArrayList<>();
 
 	@SubscribeEvent
 	public void onWorldRenderLast( RenderWorldLastEvent event ) // Called when drawing the world.
@@ -44,7 +42,23 @@ public class RenderTick
 			drawOres( dx, dy, dz ); // this is a world pos of the player
 		}
 	}
-	
+
+	@SubscribeEvent
+	public void pickupItem( BlockEvent.BreakEvent event ) {
+		if ( mc.theWorld != null && FgtXRay.drawOres )
+		{
+			ClientTick.blockFinder( true );
+		}
+	}
+
+	@SubscribeEvent
+	public void placeItem(BlockEvent.PlaceEvent event ) {
+		if ( mc.theWorld != null && FgtXRay.drawOres )
+		{
+			ClientTick.blockFinder( true );
+		}
+	}
+
 	private void drawOres( float px, float py, float pz )
 	{
 		int bx, by, bz;
@@ -60,8 +74,8 @@ public class RenderTick
 		Tessellator tessellator = Tessellator.getInstance();
 		VertexBuffer vertexBuffer = tessellator.getBuffer();
 
-		List<BlockInfo> temp = new ArrayList();
-		temp.addAll(this.ores);	// If we dont make a copy then the thread in ClientTick will ConcurrentModificationException.
+		ArrayList<BlockInfo> temp = new ArrayList<>();
+		temp.addAll(ores);	// If we dont make a copy then the thread in ClientTick will ConcurrentModificationException.
 		
 		for ( BlockInfo b : temp )
 		{
