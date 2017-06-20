@@ -81,7 +81,7 @@ public class FgtXRay
 	public static FgtXRay instance;
 
 	// Says where the client and server 'proxy' code is loaded.
-	@SidedProxy(clientSide="com.fgtxray.proxy.ClientProxy", serverSide="com.fgtxray.proxy.ServerProxy")
+	@SidedProxy(clientSide="com.fgtXray.proxy.ClientProxy", serverSide="com.fgtXray.proxy.ServerProxy")
 	public static ServerProxy proxy;
 
 	@EventHandler
