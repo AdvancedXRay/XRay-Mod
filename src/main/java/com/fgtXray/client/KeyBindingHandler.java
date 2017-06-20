@@ -1,13 +1,12 @@
 package com.fgtXray.client;
 
+import com.fgtXray.FgtXRay;
+import com.fgtXray.client.gui.GuiSettings;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiChat;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiChat;
-import com.fgtXray.FgtXRay;
-import com.fgtXray.client.gui.GuiSettings;
 
 public class KeyBindingHandler
 {
