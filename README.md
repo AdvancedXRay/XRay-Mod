@@ -7,6 +7,10 @@ Minecraft Forge XRay mod
 - Colour RGB Selector
 - Auto adds ores from other mods.
 
+### How to use:
+Open settings -> controls and edit the button to open the GUI and the button to toggle the Overlay on and off. 
+Then press your key to open the gui to edit the ores on the list. Then press your key to turn on the Overlay
+
 ### Previews:
 ![XRAY](http://i.imgur.com/N3KOEaE.png)
 
