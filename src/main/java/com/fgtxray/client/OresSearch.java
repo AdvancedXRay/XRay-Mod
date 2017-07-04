@@ -3,6 +3,7 @@ package com.fgtxray.client;
 import java.util.*;
 
 import com.fgtxray.config.ConfigHandler;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -29,51 +30,40 @@ public class OresSearch
 		}
 		return false;
 	}
-	
-	public static void add( String oreIdent, String name, int[] color ) // Takes a string of id:meta or oreName to add to our search list.
+
+	public static void add( String oreIdent, String oreMeta, String name, int[] color ) // Takes a string of id:meta or oreName to add to our search list.
 	{
 		oreIdent = oreIdent.replaceAll( "\\p{C}",  "?" );
 		int id, meta = 0;
 
-		if( oreIdent.contains( ":" ) ) // Hopefully a proper id:meta string.
-		{
-			String[] splitArray = oreIdent.split( ":" );
-			
-			if( splitArray.length != 2 )
-			{
-				//System.out.println( String.format( "Can't add %s to searchList. Invalid format.", oreIdent ) );
-				String notify = String.format( "[XRay] %s is not a valid identifier. Try id:meta (example 1:0 for stone) or oreName (example oreDiamond or mossyStone)", oreIdent );
+		if( oreIdent.equals("") || oreMeta.equals("") || name.equals("") ) {
+			mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString( "[XRay] You need to have all the inputs filled" ));
+			return;
+		}
+
+		if( oreIdent.contains( ":" ) ) {
+
+			Block tmpBlock = Block.getBlockFromName( oreIdent );
+			if( tmpBlock != null ) {
+				id = Block.getIdFromBlock( tmpBlock );
+				try {
+					meta = Integer.parseInt( oreMeta );
+				} catch( NumberFormatException e ) {
+					String notify = String.format( "[XRay] %s contains data other than numbers. Failed to add.", oreIdent );
+					mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify) );
+					return;
+				}
+
+			} else {
+				String notify = String.format( "[XRay] %s is not a valid block name", oreIdent );
 				mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify));
 				return;
 			}
-			
-			try
-			{
-				id = Integer.parseInt( splitArray[0] );
-				meta = Integer.parseInt( splitArray[1] );
-			}
-			catch( NumberFormatException e )
-			{ // TODO: Some oredict ores are mod:block for some reason...
-				//System.out.println( String.format( "%s is not a valid id:meta format.", oreIdent ) );
-				String notify = String.format( "[XRay] %s contains data other than numbers and the colon. Failed to add.", oreIdent );
-				mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify) );
-				return;
-			}
-			
-		}
-		else
-		{
-			try
-			{
-				id = Integer.parseInt( oreIdent );
-				meta = 0;
-			}
-			catch( NumberFormatException e )
-			{
-				mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString("[XRay] Doesn't support in-game additions to the ore dictionary yet.. Failed to add.") );
-				return;
-			}
-			
+
+		} else {
+			String notify = String.format( "[XRay] %s is not a valid identifier. Try modname:blockname (example minecraft:stone for stone)", oreIdent );
+			mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify));
+			return;
 		}
 
 		//System.out.println( String.format( "Adding ore: %s", oreIdent ) );
@@ -88,7 +78,7 @@ public class OresSearch
 		String notify = String.format( "[XRay] successfully added %s.", oreIdent );
 		mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(notify));
 
-		ConfigHandler.add(name, oreIdent, color);
+		ConfigHandler.add(name, id, meta, color);
 	}
 	
 	public static List<OreInfo> get() // Return the searchList, create it if needed.

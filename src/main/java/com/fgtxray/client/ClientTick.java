@@ -85,8 +85,7 @@ public class ClientTick implements Runnable
 				{
 					for (int z = pz - radius; z < pz + radius; z++) // z axis.
 					{
-						BlockPos xyz = new BlockPos(x, y, z);
-						IBlockState state = mc.world.getBlockState( xyz );
+						IBlockState state = mc.world.getBlockState(  new BlockPos(x, y, z) );
 
 						int id = Block.getIdFromBlock( state.getBlock() );
 						int meta = state.getBlock().getMetaFromState(state);

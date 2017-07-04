@@ -49,8 +49,8 @@ public class ConfigHandler
 		config.save();
 	}
 
-	public static void add( String oreName, String ore, int[] color )
-    {
+	public static void add( String oreName, Integer id, Integer meta, int[] color )
+	{
 		config.load();
 		String formattedname = oreName.replace("\\s+", "").toLowerCase();
 
@@ -68,10 +68,6 @@ public class ConfigHandler
 			}
 		}
 
-		int oreId = Integer.parseInt(ore.split( ":" )[0]);
-		// Don't do this if it does not exist... Stupid me
-		int oreMeta = ore.contains(":") ? Integer.parseInt(ore.split( ":" )[1]) : 0;
-
 		for( String category : config.getCategoryNames() )
 		{
 			if( category.startsWith("customores.") )
@@ -80,8 +76,8 @@ public class ConfigHandler
 				config.get("customores."+formattedname, "green", "").set( color[1] );
 				config.get("customores."+formattedname, "blue", "").set( color[2] );
 				config.get("customores."+formattedname, "enabled", "false").set( true );
-				config.get("customores."+formattedname, "id", "").set( oreId );
-				config.get("customores."+formattedname, "meta", "").set( oreMeta );
+				config.get("customores."+formattedname, "id", "").set( id );
+				config.get("customores."+formattedname, "meta", "").set( meta );
 				config.get("customores." + formattedname, "name", "").set(oreName);
 
 			}

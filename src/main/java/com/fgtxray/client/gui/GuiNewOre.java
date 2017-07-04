@@ -14,6 +14,7 @@ import java.util.Objects;
 
 public class GuiNewOre extends GuiScreen {
 	private GuiTextField oreName;
+	private GuiTextField oreMeta;
 	private GuiTextField oreIdent;
 	private GuiSlider redSlider;
 	private GuiSlider greenSlider;
@@ -22,15 +23,16 @@ public class GuiNewOre extends GuiScreen {
 
 	private boolean oreNameCleared  = false;
 	private boolean oreIdentCleared = false;
-	
+	private boolean oreMetaCleared = false;
+
 	@Override
 	public void initGui()
-    {
-        // Called when the gui should be (re)created
+	{
+		// Called when the gui should be (re)created
 		this.buttonList.add( new GuiButton( 98, width / 2 + 5, height / 2 + 58, 108, 20, "Add" ) ); // Add button
 		this.buttonList.add( new GuiButton( 99, width / 2 - 108, height / 2 + 58, 108, 20, "Cancel" ) ); // Cancel button
 
-        //this.buttonList.add( new GuiButton( 8, width / 2 - 102, height / 2 + 80, 105, 20, "test" ) ); // Cancel button
+		//this.buttonList.add( new GuiButton( 8, width / 2 - 102, height / 2 + 80, 105, 20, "test" ) ); // Cancel button
 
 		this.buttonList.add( new GuiSlider( 1, width / 2 - 108, height / 2 - 63, "Red", 0, 255 )  );
 		this.buttonList.add( new GuiSlider( 2, width / 2 - 108, height / 2 - 40, "Green", 0, 255 )  );
@@ -57,13 +59,15 @@ public class GuiNewOre extends GuiScreen {
 		redSlider.sliderValue   = 0.0F;
 		greenSlider.sliderValue = 1.0F;
 		blueSlider.sliderValue  = 0.0F;
-		
+
 		oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 108, height / 2 + 8, 220, 20 );
-		oreIdent = new GuiTextField( 0, this.fontRenderer, width / 2 - 108, height / 2 + 32, 220, 20 );
-		oreName.setText( "Block Name");
-		oreIdent.setText( "ID:META" ); // TODO: oreName
+		oreIdent = new GuiTextField( 0, this.fontRenderer, width / 2 - 108, height / 2 + 32, 185, 20 );
+		oreMeta = new GuiTextField( 3, this.fontRenderer, width / 2 + 82, height / 2 + 32, 30, 20 );
+		oreName.setText( "Gui Name");
+		oreIdent.setText( "minecraft:grass" );
+		oreMeta.setText( "Meta" );
 	}
-	
+
 	@Override
 	public void actionPerformed( GuiButton button ) // Called on left click of GuiButton
 	{
@@ -72,22 +76,22 @@ public class GuiNewOre extends GuiScreen {
 			case 98: // Add
 				int[] rgb = {(int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255)};
 
-				OresSearch.add(oreIdent.getText(), oreName.getText(), rgb);
-				
+				OresSearch.add(oreIdent.getText(), oreMeta.getText(), oreName.getText(), rgb);
+
 				mc.player.closeScreen();
 				mc.displayGuiScreen( new GuiSettings() );
 				break;
-						
+
 			case 99: // Cancel
 				mc.player.closeScreen();
 				mc.displayGuiScreen( new GuiSettings() );
 				break;
-				
+
 			default:
 				break;
 		}
 	}
-	
+
 	@Override
 	protected void keyTyped( char par1, int par2 ) // par1 is char typed, par2 is ascii hex (tab=15 return=28)
 	{
@@ -112,6 +116,17 @@ public class GuiNewOre extends GuiScreen {
 		else if( oreIdent.isFocused() )
 		{
 			oreIdent.textboxKeyTyped( par1, par2 );
+			if( par2 == 15 )
+			{
+				oreIdent.setFocused( false );
+				if( !oreMetaCleared )
+					oreMeta.setText("");
+				oreMeta.setFocused( true );
+			}
+		}
+		else if( oreMeta.isFocused() )
+		{
+			oreMeta.textboxKeyTyped( par1, par2 );
 			if( par2 == 28 )
 				this.actionPerformed( addButton );
 		}
@@ -125,25 +140,26 @@ public class GuiNewOre extends GuiScreen {
 					oreName.setFocused( true );
 					break;
 				case 1: // Exit on escape
-                    mc.displayGuiScreen( new GuiSettings() );
+					mc.displayGuiScreen( new GuiSettings() );
 					mc.player.closeScreen();
 				default:
 					break;
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean doesGuiPauseGame() // Dont pause the game in single player.
 	{
 		return false;
 	}
-	
+
 	@Override
 	public void updateScreen()
-    {
+	{
 		oreName.updateCursorCounter();
 		oreIdent.updateCursorCounter();
+		oreMeta.updateCursorCounter();
 	}
 
 	@Override
@@ -158,6 +174,7 @@ public class GuiNewOre extends GuiScreen {
 
 		oreName.drawTextBox();
 		oreIdent.drawTextBox();
+		oreMeta.drawTextBox();
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder tessellate = tessellator.getBuffer();
@@ -182,7 +199,7 @@ public class GuiNewOre extends GuiScreen {
         // IIcon icon = net.minecraft.block.Block.getBlockById(3).getIcon( 1, 2 );
         // renderItem.renderIcon(50, 50, icon, 16, 16);
 	}
-	
+
 	@Override
 	public void mouseClicked( int x, int y, int mouse )
 	{
@@ -191,9 +208,11 @@ public class GuiNewOre extends GuiScreen {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		oreName.mouseClicked( x, y, mouse );
 		oreIdent.mouseClicked( x, y, mouse );
-		
+		oreMeta.mouseClicked( x, y, mouse );
+
 		if( oreName.isFocused() && !oreNameCleared )
 		{
 			oreName.setText( "" );
@@ -204,19 +223,29 @@ public class GuiNewOre extends GuiScreen {
 			oreIdent.setText( "" );
 			oreIdentCleared = true;
 		}
+		if( oreMeta.isFocused() && !oreMetaCleared )
+		{
+			oreMeta.setText( "" );
+			oreMetaCleared = true;
+		}
 
-        // TODO: fix bug where if you type then remove it the text will not be put back.
-        if( !oreName.isFocused() && oreNameCleared && Objects.equals(oreName.getText(), ""))
-        {
-            oreNameCleared = false;
-            oreName.setText( "Name of block");
-        }
+		if( !oreName.isFocused() && oreNameCleared && Objects.equals(oreName.getText(), ""))
+		{
+			oreNameCleared = false;
+			oreName.setText( "Gui Name");
+		}
 
-        if( !oreIdent.isFocused() && oreIdentCleared && Objects.equals(oreIdent.getText(), ""))
-        {
-            oreIdentCleared = false;
-            oreIdent.setText( "ID:META");
-        }
+		if( !oreIdent.isFocused() && oreIdentCleared && Objects.equals(oreIdent.getText(), ""))
+		{
+			oreIdentCleared = false;
+			oreIdent.setText( "minecraft:grass");
+		}
+
+		if( !oreMeta.isFocused() && oreMetaCleared && Objects.equals(oreMeta.getText(), ""))
+		{
+			oreMetaCleared = false;
+			oreMeta.setText( "Meta");
+		}
 //
 //		if( mouse == 1 ) // Right clicked
 //		{
