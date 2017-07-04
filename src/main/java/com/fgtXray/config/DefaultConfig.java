@@ -1,17 +1,16 @@
 package com.fgtXray.config;
 
+import com.fgtXray.reference.OreInfo;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.oredict.OreDictionary;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import com.fgtXray.reference.OreInfo;
-
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class DefaultConfig {
 	// Below are the 'default' ores/blocks to add through the ore dictionary.
@@ -47,7 +46,6 @@ public class DefaultConfig {
 	public static void create(Configuration config) // Put default blocks and settings into the config file.
 	{
 		config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0); // Default search distance is index 0 (8)
-		//OreDictionary ores = new OreDictionary();
 
 		for( Entry<String, OreInfo> ore : defaults.entrySet() )
 		{
@@ -58,7 +56,7 @@ public class DefaultConfig {
 				continue;
 
 			String category = value.oreName.replaceAll("\\s+", "").toLowerCase(); // No whitespace or capitals in the config file categories
-			
+
 			config.get("oredict."+category, "dictname", "SOMETHINGBROKE").set( key ); // We need the capitals for the ore dictionary.
 			config.get("oredict."+category, "guiname", "SOMETHINGBROKE").set( value.oreName );
 			config.get("oredict."+category, "id", -1).set( OreDictionary.getOreID( key ) );
