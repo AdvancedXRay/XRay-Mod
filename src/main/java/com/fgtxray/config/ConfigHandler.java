@@ -17,7 +17,7 @@ public class ConfigHandler
 	{
 		config = new Configuration( event.getSuggestedConfigurationFile() );
 		config.load();
-		FgtXRay.distIndex = config.get(config.CATEGORY_GENERAL, "searchdist", 0).getInt(); // Get our search distance.
+		FgtXRay.distIndex = config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0).getInt(); // Get our search distance.
 
 		for( String category : config.getCategoryNames() ) // Iterate through each category in our config file.
 		{
@@ -93,7 +93,7 @@ public class ConfigHandler
 	public static void update(String string, boolean draw){
 		if( string.equals("searchdist") ) // Save the new render distance.
 		{
-			config.get(config.CATEGORY_GENERAL, "searchdist", 0).set( FgtXRay.distIndex );
+			config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0).set( FgtXRay.distIndex );
 			config.save();
 			return;
 		}
