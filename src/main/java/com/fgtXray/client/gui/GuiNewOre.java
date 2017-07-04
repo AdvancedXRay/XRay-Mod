@@ -2,6 +2,7 @@ package com.fgtXray.client.gui;
 
 import com.fgtXray.client.OresSearch;
 import com.fgtXray.reference.Ref;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -11,12 +12,14 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.io.IOException;
 import java.util.Objects;
 
 public class GuiNewOre extends GuiScreen {
 	private GuiTextField oreName;
+	private GuiTextField oreMeta;
 	private GuiTextField oreIdent;
 	private GuiSlider redSlider;
 	private GuiSlider greenSlider;
@@ -25,6 +28,7 @@ public class GuiNewOre extends GuiScreen {
 
 	private boolean oreNameCleared  = false;
 	private boolean oreIdentCleared = false;
+	private boolean oreMetaCleared = false;
 
 	@Override
 	public void initGui()
@@ -62,9 +66,11 @@ public class GuiNewOre extends GuiScreen {
 		blueSlider.sliderValue  = 0.0F;
 
 		oreName = new GuiTextField( 1, this.fontRendererObj, width / 2 - 108, height / 2 + 8, 220, 20 );
-		oreIdent = new GuiTextField( 0, this.fontRendererObj, width / 2 - 108, height / 2 + 32, 220, 20 );
-		oreName.setText( "Block Name");
-		oreIdent.setText( "ID:META" ); // TODO: oreName
+		oreIdent = new GuiTextField( 0, this.fontRendererObj, width / 2 - 108, height / 2 + 32, 185, 20 );
+		oreMeta = new GuiTextField( 3, this.fontRendererObj, width / 2 + 82, height / 2 + 32, 30, 20 );
+		oreName.setText( "Gui Name");
+		oreIdent.setText( "minecraft:grass" );
+		oreMeta.setText( "Meta" );
 	}
 
 	@Override
@@ -75,7 +81,7 @@ public class GuiNewOre extends GuiScreen {
 			case 98: // Add
 				int[] rgb = {(int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255)};
 
-				OresSearch.add(oreIdent.getText(), oreName.getText(), rgb);
+				OresSearch.add(oreIdent.getText(), oreMeta.getText(), oreName.getText(), rgb);
 
 				mc.thePlayer.closeScreen();
 				mc.displayGuiScreen( new GuiSettings() );
@@ -115,6 +121,17 @@ public class GuiNewOre extends GuiScreen {
 		else if( oreIdent.isFocused() )
 		{
 			oreIdent.textboxKeyTyped( par1, par2 );
+			if( par2 == 15 )
+			{
+				oreIdent.setFocused( false );
+				if( !oreMetaCleared )
+					oreMeta.setText("");
+				oreMeta.setFocused( true );
+			}
+		}
+		else if( oreMeta.isFocused() )
+		{
+			oreMeta.textboxKeyTyped( par1, par2 );
 			if( par2 == 28 )
 				this.actionPerformed( addButton );
 		}
@@ -147,6 +164,7 @@ public class GuiNewOre extends GuiScreen {
 	{
 		oreName.updateCursorCounter();
 		oreIdent.updateCursorCounter();
+		oreMeta.updateCursorCounter();
 	}
 
 	@Override
@@ -161,6 +179,7 @@ public class GuiNewOre extends GuiScreen {
 
 		oreName.drawTextBox();
 		oreIdent.drawTextBox();
+		oreMeta.drawTextBox();
 
 		Tessellator tessellator = Tessellator.getInstance();
 		VertexBuffer vertexbuffer = tessellator.getBuffer();
@@ -194,8 +213,10 @@ public class GuiNewOre extends GuiScreen {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		oreName.mouseClicked( x, y, mouse );
 		oreIdent.mouseClicked( x, y, mouse );
+		oreMeta.mouseClicked( x, y, mouse );
 
 		if( oreName.isFocused() && !oreNameCleared )
 		{
@@ -207,18 +228,28 @@ public class GuiNewOre extends GuiScreen {
 			oreIdent.setText( "" );
 			oreIdentCleared = true;
 		}
+		if( oreMeta.isFocused() && !oreMetaCleared )
+		{
+			oreMeta.setText( "" );
+			oreMetaCleared = true;
+		}
 
-		// TODO: fix bug where if you type then remove it the text will not be put back.
 		if( !oreName.isFocused() && oreNameCleared && Objects.equals(oreName.getText(), ""))
 		{
 			oreNameCleared = false;
-			oreName.setText( "Name of block");
+			oreName.setText( "Gui Name");
 		}
 
 		if( !oreIdent.isFocused() && oreIdentCleared && Objects.equals(oreIdent.getText(), ""))
 		{
 			oreIdentCleared = false;
-			oreIdent.setText( "ID:META");
+			oreIdent.setText( "minecraft:grass");
+		}
+
+		if( !oreMeta.isFocused() && oreMetaCleared && Objects.equals(oreMeta.getText(), ""))
+		{
+			oreMetaCleared = false;
+			oreMeta.setText( "Meta");
 		}
 //
 //		if( mouse == 1 ) // Right clicked
