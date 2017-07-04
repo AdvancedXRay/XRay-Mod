@@ -3,7 +3,7 @@
   "modid": "xray",
   "name": "XRay",
   "description": "An advanced XRay mod for Minecraft.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "mcversion": "1.12",
   "url": "https://github.com/michaelhillcox/XRay-Mod",
   "updateJSON": "https://raw.githubusercontent.com/MichaelHillcox/XRay-Mod/master/versions.json",
