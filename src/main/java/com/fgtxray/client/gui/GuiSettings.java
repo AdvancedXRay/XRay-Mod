@@ -1,31 +1,35 @@
 package com.fgtxray.client.gui;
 
-import java.io.IOException;
-import java.util.*;
 import com.fgtxray.FgtXRay;
 import com.fgtxray.OreButtons;
 import com.fgtxray.client.OresSearch;
 import com.fgtxray.config.ConfigHandler;
 import com.fgtxray.reference.OreInfo;
 import com.fgtxray.reference.Ref;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.VertexBuffer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
-
 import org.lwjgl.opengl.GL11;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GuiSettings extends GuiScreen
 {
 	private Map<String, OreButtons> buttons = new HashMap<>();
     private List<GuiPage> pageIndex = new ArrayList<>();
+    private List<GuiList> listInfo = new ArrayList<>();
 
 	private int pageCurrent, pageMax = 0;
 
@@ -42,6 +46,7 @@ public class GuiSettings extends GuiScreen
 
 		this.buttons = new HashMap<>(); // String id for the button. Same as the button text. (Diamond / Iron ect.)
 		this.buttonList.clear();
+		this.listInfo.clear();
         pageIndex.clear();
 
 		GuiButton aNextButton = new GuiButton(-150, width / 2 + 75, height / 2 + 52, 30, 20, ">");
@@ -64,7 +69,7 @@ public class GuiSettings extends GuiScreen
                 // Create the new button for this ore.
 				int id = Integer.parseInt( Integer.toString( ore.id ) + Integer.toString( ore.meta) );                     // Unique button id. int( str(id) + str(meta) )
                 // very hacky... Need to keep an eye on it.
-                if( Count % 14 == 0 && Count != 0 )
+                if( Count % 7 == 0 && Count != 0 )
                 {
                     Page++;
                     if( Page > pageMax )
@@ -74,7 +79,8 @@ public class GuiSettings extends GuiScreen
                     y = height / 2 - 100;
                     CountPerPage = 0;
                 }
-                pageIndex.add(new GuiPage(Page, new GuiButton(id, x, y, 100, 20, ore.oreName + ": " + (ore.draw ? "On" : "Off")))); // create new button and set the text to Name: On||Off
+                GuiButton tmpButton = new GuiButton(id, x, y, 200, 20, ore.oreName + ": " + (ore.draw ? "On" : "Off"));
+                pageIndex.add(new GuiPage(x, y, Page, tmpButton, ore)); // create new button and set the text to Name: On||Off
                 buttons.put( ore.oreName, new OreButtons( ore.oreName, id,  ore ) ); // Add this new button to the buttons hashmap.
 				y += 21.8; // Next button should be placed down from this one.
 
@@ -90,11 +96,12 @@ public class GuiSettings extends GuiScreen
 		}
 
         // only draws the current page
-		for (GuiPage aPageIndex : pageIndex) {
-			if (aPageIndex.getPage() != pageCurrent)
+		for (GuiPage page : pageIndex) {
+			if (page.getPage() != pageCurrent)
 				continue; // skip the ones that are not on this page.
 
-			this.buttonList.add(aPageIndex.getButton());
+			this.buttonList.add(page.getButton());
+			this.listInfo.add( new GuiList( page.x, page.y, page.ore, page.getButton(), page.getButton()) );
 		}
 
 		this.buttonList.add( new GuiButton(97, (width / 2) - 67, height / 2 + 52, 55, 20, "Add Ore" ) );
@@ -252,13 +259,21 @@ public class GuiSettings extends GuiScreen
     }
 
 	@Override
-	public void drawScreen( int x, int y, float f )
-    {
+	public void drawScreen( int x, int y, float f ) {
 		drawDefaultBackground();
-        mc.renderEngine.bindTexture( new ResourceLocation(Ref.PREFIX_GUI+"bg.png") );
-        drawTexturedQuadFit(width / 2 - 110, height / 2 - 110, 229, 193, 0);
+		mc.renderEngine.bindTexture(new ResourceLocation(Ref.PREFIX_GUI + "bg.png"));
+		drawTexturedQuadFit(width / 2 - 110, height / 2 - 110, 229, 193, 0);
 
 		super.drawScreen(x, y, f);
+
+		RenderHelper.enableGUIStandardItemLighting();
+
+		for ( GuiList item : this.listInfo ) {
+			ItemStack items = new ItemStack(Block.getBlockById( item.ore.getId() ), 64);
+			this.itemRender.renderItemAndEffectIntoGUI(items, item.x+2, item.y+2);
+		}
+
+		RenderHelper.disableStandardItemLighting();
 	}
 	
 	@Override
@@ -272,14 +287,10 @@ public class GuiSettings extends GuiScreen
 		if( mouse == 1 )
 		{
 			// Right clicked
-			for( int i = 0; i < this.buttonList.size(); i++ )
-			{
-				GuiButton button = this.buttonList.get( i );
-				if( button.isMouseOver() )
-				{
-					if( button.id == 98 )
-					{
-						if( FgtXRay.distIndex > 0 )
+			for (GuiButton button : this.buttonList) {
+				if (button.isMouseOver()) {
+					if (button.id == 98) {
+						if (FgtXRay.distIndex > 0)
 							FgtXRay.distIndex--;
 						else
 							FgtXRay.distIndex = FgtXRay.distNumbers.length - 1;

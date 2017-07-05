@@ -2,7 +2,10 @@ package com.fgtxray.client.gui;
 
 import com.fgtxray.client.OresSearch;
 import com.fgtxray.reference.Ref;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -192,12 +195,6 @@ public class GuiNewOre extends GuiScreen {
 		GlStateManager.disableBlend();
 
 		super.drawScreen(x, y, f);
-        // new
-        // I want to render the item here but i am unsure on how to
-        // do it so i am leaving it for now. :)
-        // RenderItem renderItem = new RenderItem();
-        // IIcon icon = net.minecraft.block.Block.getBlockById(3).getIcon( 1, 2 );
-        // renderItem.renderIcon(50, 50, icon, 16, 16);
 	}
 
 	@Override
