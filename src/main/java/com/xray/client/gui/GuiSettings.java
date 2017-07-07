@@ -50,7 +50,7 @@ public class GuiSettings extends GuiScreen
         pageIndex.clear();
 
         int x = width / 2 - 100, y = height / 2 - 106;
-        int Count = 0, Page = 0, CountPerPage = 0;
+        int Count = 0, Page = 0;
 
 		for( OreInfo ore : OresSearch.searchList )
         {
@@ -72,15 +72,13 @@ public class GuiSettings extends GuiScreen
 
                     x = width / 2 - 100;
                     y = height / 2 - 106;
-                    CountPerPage = 0;
-                }
+				}
                 GuiButton tmpButton = new GuiButton(id, x+25, y, 160, 20, ore.oreName + ": " + (ore.draw ? "On" : "Off"));
                 pageIndex.add(new GuiPage(x, y, Page, tmpButton, ore)); // create new button and set the text to Name: On||Off
                 buttons.put( ore.oreName, new OreButtons( ore.oreName, id,  ore ) ); // Add this new button to the buttons hashmap.
 				y += 21.8; // Next button should be placed down from this one.
 
                 Count++;
-                CountPerPage++;
 			}
 		}
 
@@ -95,10 +93,9 @@ public class GuiSettings extends GuiScreen
 
 		GuiButton aNextButton, aPrevButton;
 		this.buttonList.add( new GuiButton(97, (width / 2) - 67, height / 2 + 86, 55, 20, "Add Ore" ) );
-		this.buttonList.add( new GuiButton(98, (width / 2) - 10, height / 2 + 86, 82, 20, "Distance: "+ XRay.distNumbers[ XRay.currentDist]) ); // Static button for printing the ore dictionary / searchList.
+		this.buttonList.add( new GuiButton(98, (width / 2) - 10, height / 2 + 86, 82, 20, "Distance: "+ XRay.distStrings[ XRay.currentDist]) ); // Static button for printing the ore dictionary / searchList.
 		this.buttonList.add( aNextButton = new GuiButton(-150, width / 2 + 75, height / 2 + 86, 30, 20, ">") );
 		this.buttonList.add( aPrevButton = new GuiButton(-151, width / 2 - 100, height / 2 + 86, 30, 20, "<") );
-		//this.buttonList.add( new GuiButton(99, this.width-102, this.height-22, 100, 20, "Print OreDict") ); // Static button for search distance.
 
         if( pageMax < 1 )
         {
@@ -155,13 +152,9 @@ public class GuiSettings extends GuiScreen
 
 			case 98: // Distance Button
 				if (XRay.currentDist < XRay.distNumbers.length - 1)
-				{
 					XRay.currentDist++;
-				}
 				else
-				{
 					XRay.currentDist = 0;
-				}
 				ConfigHandler.update("searchdist", false);
 				break;
 
@@ -275,23 +268,6 @@ public class GuiSettings extends GuiScreen
 			super.mouseClicked( x, y, mouse );
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		if( mouse == 1 )
-		{
-			// Right clicked
-			for (GuiButton button : this.buttonList) {
-				if (button.isMouseOver()) {
-					if (button.id == 98) {
-						if (XRay.currentDist > 0)
-							XRay.currentDist--;
-						else
-							XRay.currentDist = XRay.distNumbers.length - 1;
-
-						ConfigHandler.update("searchdist", false);
-						this.initGui();
-					}
-				}
-			}
 		}
 	}
 }

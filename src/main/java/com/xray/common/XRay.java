@@ -31,8 +31,11 @@ public class XRay
 	public static int localPlyX, localPlyY, localPlyZ, localPlyXPrev, localPlyZPrev; // For internal use in the ClientTick thread.
 	public static boolean drawOres = false; // Off by default
 
-	// Radius +/- around the player to search. So 8 is 8 on left and right of player plus under the player. So 17x17 area.
-	public static final int[] distNumbers = new int[] { 8, 16, 32, 48, 64, 80, 128, 256 };
+	public static final String[] distStrings = new String[] // Strings for use in the GUI Render Distance button
+		{ "8", "16", "32", "48", "64", "80", "128", "256" };
+    public static final int[] distNumbers = new int[] // Radius +/- around the player to search. So 8 is 8 on left and right of player plus under the player. So 17x17 area.
+		{8, 16, 32, 48, 64, 80, 128, 256};
+
     public static int currentDist = 0; // Index for the distNumers array. Default search distance.
 
 	// Keybindings
