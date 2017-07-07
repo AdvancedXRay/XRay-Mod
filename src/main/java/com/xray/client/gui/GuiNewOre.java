@@ -2,17 +2,15 @@ package com.xray.client.gui;
 
 import com.xray.client.OresSearch;
 import com.xray.common.reference.Reference;
-import net.minecraft.block.Block;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -34,33 +32,12 @@ public class GuiNewOre extends GuiScreen {
 	public void initGui()
 	{
 		// Called when the gui should be (re)created
-		this.buttonList.add( new GuiButton( 98, width / 2 + 5, height / 2 + 58, 108, 20, "Add" ) ); // Add button
-		this.buttonList.add( new GuiButton( 99, width / 2 - 108, height / 2 + 58, 108, 20, "Cancel" ) ); // Cancel button
+		this.buttonList.add( addButton = new GuiButton( 98, width / 2 + 5, height / 2 + 58, 108, 20, "Add" ));
 
-		//this.buttonList.add( new GuiButton( 8, width / 2 - 102, height / 2 + 80, 105, 20, "test" ) ); // Cancel button
+		this.buttonList.add( redSlider = new GuiSlider( 1, width / 2 - 108, height / 2 - 63, "Red", 0, 255 ) );
+		this.buttonList.add( greenSlider = new GuiSlider( 2, width / 2 - 108, height / 2 - 40, "Green", 0, 255 ));
+		this.buttonList.add( blueSlider = new GuiSlider( 3, width / 2 - 108, height / 2 - 17, "Blue", 0, 255 ));
 
-		this.buttonList.add( new GuiSlider( 1, width / 2 - 108, height / 2 - 63, "Red", 0, 255 )  );
-		this.buttonList.add( new GuiSlider( 2, width / 2 - 108, height / 2 - 40, "Green", 0, 255 )  );
-		this.buttonList.add( new GuiSlider( 3, width / 2 - 108, height / 2 - 17, "Blue", 0, 255 )  );
-
-		for (GuiButton aButtonList : buttonList) {
-			switch (aButtonList.id) {
-				case 1: // Red slider
-					redSlider = (GuiSlider) aButtonList;
-					break;
-				case 2: // Green slider
-					greenSlider = (GuiSlider) aButtonList;
-					break;
-				case 3: // Blue slider
-					blueSlider = (GuiSlider) aButtonList;
-					break;
-				case 98: // Add button
-					addButton = aButtonList;
-					break;
-				default:
-					break;
-			}
-		}
 		redSlider.sliderValue   = 0.0F;
 		greenSlider.sliderValue = 1.0F;
 		blueSlider.sliderValue  = 0.0F;
@@ -71,6 +48,9 @@ public class GuiNewOre extends GuiScreen {
 		oreName.setText( "Gui Name");
 		oreIdent.setText( "minecraft:grass" );
 		oreMeta.setText( "Meta" );
+
+		this.buttonList.add( new GuiButton( 130, width / 2 - 108, height / 2 + 8, 108, 20, "Select Block" ) );
+		this.buttonList.add( new GuiButton( 99, width / 2 - 108, height / 2 + 58, 108, 20, "Cancel" ) ); // Cancel button
 	}
 
 	@Override
@@ -92,20 +72,20 @@ public class GuiNewOre extends GuiScreen {
 				mc.displayGuiScreen( new GuiSettings() );
 				break;
 
+			case 130: // Cancel
+				mc.player.closeScreen();
+				mc.displayGuiScreen( new GuiBlocks() );
+				break;
+
 			default:
 				break;
 		}
 	}
 
 	@Override
-	protected void keyTyped( char par1, int par2 ) // par1 is char typed, par2 is ascii hex (tab=15 return=28)
+	protected void keyTyped( char par1, int par2 ) throws IOException // par1 is char typed, par2 is ascii hex (tab=15 return=28)
 	{
-		//System.out.println( String.format( "keyTyped: %c : %d", par1, par2 ) );
-		try {
-			super.keyTyped( par1, par2 );
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		super.keyTyped( par1, par2 );
 
 		if( oreName.isFocused() )
 		{
@@ -171,11 +151,12 @@ public class GuiNewOre extends GuiScreen {
 	public void drawScreen( int x, int y, float f )
     {
         drawDefaultBackground();
-        mc.renderEngine.bindTexture( new ResourceLocation(Reference.PREFIX_GUI+"addorebg.png") );
-        drawTexturedModalRect(width / 2 - 125, height / 2 - 95, 0, 0, 256, 205);
+        mc.renderEngine.bindTexture( new ResourceLocation(Reference.PREFIX_GUI+"bg.png") );
+        GuiSettings.drawTexturedQuadFit(width / 2 - 110, height / 2 - 118, 229, 235, 0);
 
         FontRenderer fr = this.mc.fontRenderer;
         fr.drawString("Add an Ore", width / 2 - 108, height / 2 - 80, 0x404040);
+
 
 		oreName.drawTextBox();
 		oreIdent.drawTextBox();
@@ -195,40 +176,13 @@ public class GuiNewOre extends GuiScreen {
 		tessellator.draw();
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();
-
 		super.drawScreen(x, y, f);
-
-		RenderHelper.enableGUIStandardItemLighting();
-
-		int tmpX = 0, tmpY = 0, ss = 0;
-		for ( Block block : ForgeRegistries.BLOCKS ) {
-			NonNullList<ItemStack> subBlocks = NonNullList.create();
-			block.getSubBlocks( block.getCreativeTabToDisplayOn(), subBlocks );
-			for( ItemStack subBlock : subBlocks ) {
-				if (subBlock.isEmpty())
-					continue;
-				this.itemRender.renderItemAndEffectIntoGUI(subBlock, tmpX, tmpY);
-
-				ss++;
-				tmpX += 25;
-				if (ss % 27 == 0 && ss != 0) {
-					tmpY += 25;
-					tmpX = 0;
-				}
-			}
-		}
-
-		RenderHelper.disableStandardItemLighting();
 	}
 
 	@Override
-	public void mouseClicked( int x, int y, int mouse )
+	public void mouseClicked( int x, int y, int mouse ) throws IOException
 	{
-		try {
-			super.mouseClicked( x, y, mouse );
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		super.mouseClicked( x, y, mouse );
 
 		oreName.mouseClicked( x, y, mouse );
 		oreIdent.mouseClicked( x, y, mouse );
@@ -267,7 +221,7 @@ public class GuiNewOre extends GuiScreen {
 			oreMetaCleared = false;
 			oreMeta.setText( "Meta");
 		}
-//
+////
 //		if( mouse == 1 ) // Right clicked
 //		{
 //			for( int i = 0; i < this.buttonList.size(); i++ )

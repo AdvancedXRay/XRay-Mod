@@ -231,7 +231,7 @@ public class GuiSettings extends GuiScreen
 
     // this should be moved to some sort of utility package but fuck it :).
     // this removes the stupid power of 2 rule that comes with minecraft.
-    private static void drawTexturedQuadFit(double x, double y, double width, double height, double zLevel)
+    public static void drawTexturedQuadFit(double x, double y, double width, double height, double zLevel)
     {
     	Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder tessellate = tessellator.getBuffer();
@@ -246,6 +246,7 @@ public class GuiSettings extends GuiScreen
 	@Override
 	public void drawScreen( int x, int y, float f ) {
 		drawDefaultBackground();
+
 		mc.renderEngine.bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "bg.png"));
 		drawTexturedQuadFit(width / 2 - 110, height / 2 - 118, 229, 235, 0);
 
