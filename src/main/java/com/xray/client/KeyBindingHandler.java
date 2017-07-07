@@ -1,13 +1,13 @@
 package com.xray.client;
 
 import com.xray.client.render.RenderTick;
+import com.xray.common.XRay;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
-import com.xray.common.FgtXRay;
 import com.xray.client.gui.GuiSettings;
 
 public class KeyBindingHandler
@@ -23,12 +23,12 @@ public class KeyBindingHandler
 			{
 				OresSearch.get();
 			}
-			if( FgtXRay.keyBind_keys[ FgtXRay.keyIndex_toggleXray ].isPressed() )
+			if( XRay.keyBind_keys[ XRay.keyIndex_toggleXray ].isPressed() )
 			{
-				FgtXRay.drawOres = !FgtXRay.drawOres;
+				XRay.drawOres = !XRay.drawOres;
 				RenderTick.ores.clear();
 			}
-			else if( FgtXRay.keyBind_keys[ FgtXRay.keyIndex_showXrayMenu ].isPressed() )
+			else if( XRay.keyBind_keys[ XRay.keyIndex_showXrayMenu ].isPressed() )
 			{
 				mc.displayGuiScreen( new GuiSettings() );
 			}

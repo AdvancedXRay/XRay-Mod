@@ -2,6 +2,7 @@ package com.xray.client;
 
 import java.util.*;
 
+import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -11,7 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.xray.common.FgtXRay;
 import com.xray.common.reference.OreInfo;
 
 public class OresSearch
@@ -93,14 +93,14 @@ public class OresSearch
 			// Here we check our oredictOres with the untouched oredict and delete any that dont exist already. This avoids polluting the oredict.
 			for( String oreName : OreDictionary.getOreNames() )
 			{
-				if( FgtXRay.oredictOres.containsKey( oreName ) )
+				if( XRay.oredictOres.containsKey( oreName ) )
 				{
-					tempOredict.put( oreName, FgtXRay.oredictOres.get( oreName ) );
+					tempOredict.put( oreName, XRay.oredictOres.get( oreName ) );
 					//System.out.println( String.foramt( "[Fgt XRay]: Found ore %s in dictionary, adding.", oreName ) );
 				}
 			}
 			// Debug loop to notify of invalid and removed oreDict names.
-			for( Map.Entry<String, OreInfo> entry : FgtXRay.oredictOres.entrySet() )
+			for( Map.Entry<String, OreInfo> entry : XRay.oredictOres.entrySet() )
 			{
 				String key = entry.getKey();
 				if( !tempOredict.containsKey( key ) )
@@ -108,12 +108,12 @@ public class OresSearch
 					System.out.println( String.format( "[XRay] Ore %s doesn't exist in dictionary! Deleting.", key ) );
 				}
 			}
-			FgtXRay.oredictOres.clear();
-			FgtXRay.oredictOres.putAll( tempOredict );
+			XRay.oredictOres.clear();
+			XRay.oredictOres.putAll( tempOredict );
 			tempOredict.clear();
 			
 			// Now we can iterate over the clean oredictOres and get all the different types of oreName
-			for( Map.Entry<String, OreInfo> entry : FgtXRay.oredictOres.entrySet() )
+			for( Map.Entry<String, OreInfo> entry : XRay.oredictOres.entrySet() )
 			{
 				String key = entry.getKey(); // oreName string
 				OreInfo value = entry.getValue(); // OreInfo class
@@ -136,7 +136,7 @@ public class OresSearch
 			System.out.println( "[XRay] --- Done populating searchList! --- ");
 			System.out.println( "[XRay] --- Adding custom blocks --- ");
 			
-			for( OreInfo ore : FgtXRay.customOres ) //TODO: Check if custom already exists
+			for( OreInfo ore : XRay.customOres ) //TODO: Check if custom already exists
 			{
 				System.out.println( String.format( "[XRay] Adding OreInfo( %s, %d, %d, %b ) ", ore.oreName, ore.id, ore.meta, ore.draw ) );
 				temp.add( ore );

@@ -5,7 +5,7 @@ package com.xray.client.render;
  * I pretty much copied this from his decompiled MoreInfo mod and bitbucket repo.
  */
 
-import com.xray.common.FgtXRay;
+import com.xray.common.XRay;
 import com.xray.common.reference.BlockInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -27,7 +27,7 @@ public class RenderTick
 	@SubscribeEvent
 	public void onWorldRenderLast( RenderWorldLastEvent event ) // Called when drawing the world.
 	{
-		if ( mc.world != null && FgtXRay.drawOres )
+		if ( mc.world != null && XRay.drawOres )
 		{
 			float f = event.getPartialTicks();
 			float px = (float)mc.player.posX;
@@ -45,7 +45,7 @@ public class RenderTick
 
     @SubscribeEvent
     public void pickupItem( BlockEvent.BreakEvent event ) {
-        if ( mc.world != null && FgtXRay.drawOres )
+        if ( mc.world != null && XRay.drawOres )
         {
             ClientTick.blockFinder( true );
         }
@@ -53,7 +53,7 @@ public class RenderTick
 
     @SubscribeEvent
     public void placeItem(BlockEvent.PlaceEvent event ) {
-        if ( mc.world != null && FgtXRay.drawOres )
+        if ( mc.world != null && XRay.drawOres )
         {
             ClientTick.blockFinder( true );
         }

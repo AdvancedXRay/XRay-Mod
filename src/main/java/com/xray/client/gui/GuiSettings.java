@@ -1,6 +1,6 @@
 package com.xray.client.gui;
 
-import com.xray.common.FgtXRay;
+import com.xray.common.XRay;
 import com.xray.common.reference.OreButtons;
 import com.xray.client.OresSearch;
 import com.xray.common.config.ConfigHandler;
@@ -105,7 +105,7 @@ public class GuiSettings extends GuiScreen
 		}
 
 		this.buttonList.add( new GuiButton(97, (width / 2) - 67, height / 2 + 52, 55, 20, "Add Ore" ) );
-		this.buttonList.add( new GuiButton(98, (width / 2) - 10, height / 2 + 52, 82, 20, "Distance: "+FgtXRay.distStrings[ FgtXRay.distIndex ]) ); // Static button for printing the ore dictionary / searchList.
+		this.buttonList.add( new GuiButton(98, (width / 2) - 10, height / 2 + 52, 82, 20, "Distance: "+ XRay.distStrings[ XRay.distIndex ]) ); // Static button for printing the ore dictionary / searchList.
 		//this.buttonList.add( new GuiButton(99, this.width-102, this.height-22, 100, 20, "Print OreDict") ); // Static button for search distance.
 
         if( pageMax < 1 )
@@ -162,13 +162,13 @@ public class GuiSettings extends GuiScreen
 				break;
 
 			case 98: // Distance Button
-				if (FgtXRay.distIndex < FgtXRay.distNumbers.length - 1)
+				if (XRay.distIndex < XRay.distNumbers.length - 1)
 				{
-					FgtXRay.distIndex++;
+					XRay.distIndex++;
 				}
 				else
 				{
-					FgtXRay.distIndex = 0;
+					XRay.distIndex = 0;
 				}
 				ConfigHandler.update("searchdist", false);
 				break;
@@ -231,7 +231,7 @@ public class GuiSettings extends GuiScreen
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if( (par2 == 1) || (par2 == mc.gameSettings.keyBindInventory.getKeyCode()) || par2 == FgtXRay.keyBind_keys[ FgtXRay.keyIndex_showXrayMenu ].getKeyCode() )
+		if( (par2 == 1) || (par2 == mc.gameSettings.keyBindInventory.getKeyCode()) || par2 == XRay.keyBind_keys[ XRay.keyIndex_showXrayMenu ].getKeyCode() )
         {
             // Close on esc, inventory key or keybind
 			mc.player.closeScreen();
@@ -290,10 +290,10 @@ public class GuiSettings extends GuiScreen
 			for (GuiButton button : this.buttonList) {
 				if (button.isMouseOver()) {
 					if (button.id == 98) {
-						if (FgtXRay.distIndex > 0)
-							FgtXRay.distIndex--;
+						if (XRay.distIndex > 0)
+							XRay.distIndex--;
 						else
-							FgtXRay.distIndex = FgtXRay.distNumbers.length - 1;
+							XRay.distIndex = XRay.distNumbers.length - 1;
 
 						ConfigHandler.update("searchdist", false);
 						this.initGui();

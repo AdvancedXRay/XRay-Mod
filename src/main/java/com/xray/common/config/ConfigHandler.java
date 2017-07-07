@@ -1,11 +1,11 @@
 package com.xray.common.config;
 
+import com.xray.common.XRay;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import com.xray.common.FgtXRay;
 import com.xray.common.reference.OreInfo;
 
 public class ConfigHandler
@@ -17,7 +17,7 @@ public class ConfigHandler
 	{
 		config = new Configuration( event.getSuggestedConfigurationFile() );
 		config.load();
-		FgtXRay.distIndex = config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0).getInt(); // Get our search distance.
+		XRay.distIndex = config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0).getInt(); // Get our search distance.
 
 		for( String category : config.getCategoryNames() ) // Iterate through each category in our config file.
 		{
@@ -32,7 +32,7 @@ public class ConfigHandler
 				int[] color = {cat.get("red").getInt(), cat.get("green").getInt(), cat.get("blue").getInt()};
 				boolean enabled = cat.get("enabled").getBoolean(false);
 
-				FgtXRay.oredictOres.put(dictName, new OreInfo( guiName, id, meta, color, enabled ) );
+				XRay.oredictOres.put(dictName, new OreInfo( guiName, id, meta, color, enabled ) );
 
 			}
 			else if( category.startsWith("customores.") )
@@ -43,7 +43,7 @@ public class ConfigHandler
 				int[] color = {cat.get("red").getInt(), cat.get("green").getInt(), cat.get("blue").getInt()};
 				boolean enabled = cat.get("enabled").getBoolean(false);
 
-				FgtXRay.customOres.add( new OreInfo( name, id, meta, color, enabled ) );
+				XRay.customOres.add( new OreInfo( name, id, meta, color, enabled ) );
 			}
 		}
 		config.save();
@@ -89,7 +89,7 @@ public class ConfigHandler
 	public static void update(String string, boolean draw){
 		if( string.equals("searchdist") ) // Save the new render distance.
 		{
-			config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0).set( FgtXRay.distIndex );
+			config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0).set( XRay.distIndex );
 			config.save();
 			return;
 		}

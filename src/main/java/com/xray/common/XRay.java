@@ -26,7 +26,7 @@ import com.xray.common.config.DefaultConfig;
 import com.xray.common.config.ConfigHandler;
 
 @Mod(modid= Reference.MOD_ID, name= Reference.MOD_NAME, version=Reference.MOD_VERSION)
-public class FgtXRay
+public class XRay
 {
 	public static int localPlyX, localPlyY, localPlyZ, localPlyXPrev, localPlyZPrev; // For internal use in the ClientTick thread.
 	public static boolean drawOres = false; // Off by default
@@ -55,9 +55,7 @@ public class FgtXRay
 		"Open X-Ray Menu"
 	};
 	public static KeyBinding[] keyBind_keys = null;
-	
-	public static Configuration config = null;
-	
+
 	public static Map<String, OreInfo> oredictOres = new HashMap<String, OreInfo>();
 		/* Ores to check through the ore dictionary and add each instance found to the searchList. 
 		 * put( "oreType", new OreInfo(...) ) oreType is the ore dictionary string id. Press Print OreDict and check console to see list.
@@ -78,11 +76,11 @@ public class FgtXRay
 	
 	// The instance of your mod that Forge uses.
 	@Instance(Reference.MOD_ID)
-	public static FgtXRay instance;
+	public static XRay instance;
 	
 	// Says where the client and server 'proxy' code is loaded.
 	@SidedProxy(clientSide="com.xray.client.proxy.ClientProxy", serverSide="com.xray.common.proxy.ServerProxy")
-	public static ServerProxy proxy;
+	private static ServerProxy proxy;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)

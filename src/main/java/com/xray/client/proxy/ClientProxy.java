@@ -8,7 +8,7 @@ import com.xray.common.proxy.ServerProxy;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
-import com.xray.common.FgtXRay;
+import com.xray.common.XRay;
 
 public class ClientProxy extends ServerProxy
 {
@@ -16,11 +16,11 @@ public class ClientProxy extends ServerProxy
 	public void proxyInit()
 	{
 		// Setup Keybindings
-		FgtXRay.keyBind_keys = new KeyBinding[ FgtXRay.keyBind_descriptions.length ];
-		for( int i = 0; i < FgtXRay.keyBind_descriptions.length; ++i )
+		XRay.keyBind_keys = new KeyBinding[ XRay.keyBind_descriptions.length ];
+		for(int i = 0; i < XRay.keyBind_descriptions.length; ++i )
         {
-			FgtXRay.keyBind_keys[i] = new KeyBinding( FgtXRay.keyBind_descriptions[i], FgtXRay.keyBind_keyValues[i], "X-Ray" );
-			ClientRegistry.registerKeyBinding( FgtXRay.keyBind_keys[i] );
+			XRay.keyBind_keys[i] = new KeyBinding( XRay.keyBind_descriptions[i], XRay.keyBind_keyValues[i], "X-Ray" );
+			ClientRegistry.registerKeyBinding( XRay.keyBind_keys[i] );
 		}
 
 		MinecraftForge.EVENT_BUS.register( new KeyBindingHandler() );
