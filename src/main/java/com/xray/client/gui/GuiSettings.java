@@ -1,11 +1,11 @@
-package com.fgtxray.client.gui;
+package com.xray.client.gui;
 
-import com.fgtxray.FgtXRay;
-import com.fgtxray.OreButtons;
-import com.fgtxray.client.OresSearch;
-import com.fgtxray.config.ConfigHandler;
-import com.fgtxray.reference.OreInfo;
-import com.fgtxray.reference.Ref;
+import com.xray.common.FgtXRay;
+import com.xray.common.reference.OreButtons;
+import com.xray.client.OresSearch;
+import com.xray.common.config.ConfigHandler;
+import com.xray.common.reference.OreInfo;
+import com.xray.common.reference.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -261,7 +261,7 @@ public class GuiSettings extends GuiScreen
 	@Override
 	public void drawScreen( int x, int y, float f ) {
 		drawDefaultBackground();
-		mc.renderEngine.bindTexture(new ResourceLocation(Ref.PREFIX_GUI + "bg.png"));
+		mc.renderEngine.bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "bg.png"));
 		drawTexturedQuadFit(width / 2 - 110, height / 2 - 110, 229, 193, 0);
 
 		super.drawScreen(x, y, f);

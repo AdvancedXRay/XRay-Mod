@@ -1,12 +1,12 @@
-package com.fgtxray;
+package com.xray.common;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fgtxray.proxy.ServerProxy;
-import com.fgtxray.reference.Ref;
+import com.xray.common.proxy.ServerProxy;
+import com.xray.common.reference.Reference;
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.settings.KeyBinding;
@@ -21,11 +21,11 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-import com.fgtxray.reference.OreInfo;
-import com.fgtxray.config.DefaultConfig;
-import com.fgtxray.config.ConfigHandler;
+import com.xray.common.reference.OreInfo;
+import com.xray.common.config.DefaultConfig;
+import com.xray.common.config.ConfigHandler;
 
-@Mod(modid= Ref.MOD_ID, name="XRay", version="1.2.0")
+@Mod(modid= Reference.MOD_ID, name= Reference.MOD_NAME, version=Reference.MOD_VERSION)
 public class FgtXRay
 {
 	public static int localPlyX, localPlyY, localPlyZ, localPlyXPrev, localPlyZPrev; // For internal use in the ClientTick thread.
@@ -77,11 +77,11 @@ public class FgtXRay
 		 */
 	
 	// The instance of your mod that Forge uses.
-	@Instance(Ref.MOD_ID)
+	@Instance(Reference.MOD_ID)
 	public static FgtXRay instance;
 	
 	// Says where the client and server 'proxy' code is loaded.
-	@SidedProxy(clientSide="com.fgtxray.proxy.ClientProxy", serverSide="com.fgtxray.proxy.ServerProxy")
+	@SidedProxy(clientSide="com.xray.client.proxy.ClientProxy", serverSide="com.xray.common.proxy.ServerProxy")
 	public static ServerProxy proxy;
 	
 	@EventHandler

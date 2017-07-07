@@ -1,4 +1,4 @@
-package com.fgtxray.proxy;
+package com.xray.common.proxy;
 
 public class ServerProxy
 {

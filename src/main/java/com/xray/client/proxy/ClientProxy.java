@@ -1,14 +1,14 @@
 // Forge proxy for the client side.
-package com.fgtxray.proxy;
+package com.xray.client.proxy;
 
-import com.fgtxray.client.ClientTick;
-import com.fgtxray.client.KeyBindingHandler;
-import com.fgtxray.client.RenderTick;
+import com.xray.client.ClientTick;
+import com.xray.client.KeyBindingHandler;
+import com.xray.client.RenderTick;
+import com.xray.common.proxy.ServerProxy;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
-import com.fgtxray.FgtXRay;
+import com.xray.common.FgtXRay;
 
 public class ClientProxy extends ServerProxy
 {

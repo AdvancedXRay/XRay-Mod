@@ -1,4 +1,4 @@
-package com.fgtxray.client;
+package com.xray.client;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +11,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import com.fgtxray.reference.BlockInfo;
-import com.fgtxray.FgtXRay;
-import com.fgtxray.reference.OreInfo;
+import com.xray.common.reference.BlockInfo;
+import com.xray.common.FgtXRay;
+import com.xray.common.reference.OreInfo;
 
 public class ClientTick implements Runnable
 {

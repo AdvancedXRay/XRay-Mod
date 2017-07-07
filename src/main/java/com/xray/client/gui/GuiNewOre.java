@@ -1,16 +1,18 @@
-package com.fgtxray.client.gui;
+package com.xray.client.gui;
 
-import com.fgtxray.client.OresSearch;
-import com.fgtxray.reference.Ref;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
+import com.xray.client.OresSearch;
+import com.xray.common.reference.Reference;
+import net.minecraft.block.Block;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -169,7 +171,7 @@ public class GuiNewOre extends GuiScreen {
 	public void drawScreen( int x, int y, float f )
     {
         drawDefaultBackground();
-        mc.renderEngine.bindTexture( new ResourceLocation(Ref.PREFIX_GUI+"addorebg.png") );
+        mc.renderEngine.bindTexture( new ResourceLocation(Reference.PREFIX_GUI+"addorebg.png") );
         drawTexturedModalRect(width / 2 - 125, height / 2 - 95, 0, 0, 256, 205);
 
         FontRenderer fr = this.mc.fontRenderer;
@@ -195,6 +197,28 @@ public class GuiNewOre extends GuiScreen {
 		GlStateManager.disableBlend();
 
 		super.drawScreen(x, y, f);
+
+		RenderHelper.enableGUIStandardItemLighting();
+
+		int tmpX = 0, tmpY = 0, ss = 0;
+		for ( Block block : ForgeRegistries.BLOCKS ) {
+			NonNullList<ItemStack> subBlocks = NonNullList.create();
+			block.getSubBlocks( block.getCreativeTabToDisplayOn(), subBlocks );
+			for( ItemStack subBlock : subBlocks ) {
+				if (subBlock.isEmpty())
+					continue;
+				this.itemRender.renderItemAndEffectIntoGUI(subBlock, tmpX, tmpY);
+
+				ss++;
+				tmpX += 25;
+				if (ss % 27 == 0 && ss != 0) {
+					tmpY += 25;
+					tmpX = 0;
+				}
+			}
+		}
+
+		RenderHelper.disableStandardItemLighting();
 	}
 
 	@Override

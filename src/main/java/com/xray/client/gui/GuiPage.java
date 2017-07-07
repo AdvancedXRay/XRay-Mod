@@ -1,6 +1,6 @@
-package com.fgtxray.client.gui;
+package com.xray.client.gui;
 
-import com.fgtxray.reference.OreInfo;
+import com.xray.common.reference.OreInfo;
 import net.minecraft.client.gui.GuiButton;
 
 public class GuiPage

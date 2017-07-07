@@ -1,8 +1,8 @@
-package com.fgtxray.client;
+package com.xray.client;
 
 import java.util.*;
 
-import com.fgtxray.config.ConfigHandler;
+import com.xray.common.config.ConfigHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
@@ -11,8 +11,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.fgtxray.FgtXRay;
-import com.fgtxray.reference.OreInfo;
+import com.xray.common.FgtXRay;
+import com.xray.common.reference.OreInfo;
 
 public class OresSearch
 {

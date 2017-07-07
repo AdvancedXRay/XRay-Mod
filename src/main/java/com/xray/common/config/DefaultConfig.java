@@ -1,6 +1,6 @@
-package com.fgtxray.config;
+package com.xray.common.config;
 
-import com.fgtxray.reference.OreInfo;
+import com.xray.common.reference.OreInfo;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.common.config.Configuration;

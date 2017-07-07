@@ -1,12 +1,12 @@
-package com.fgtxray.client;
+package com.xray.client;
 
 /* Props goto CJB for the render functions and maths.
  * http://twitter.com/CJBMods
  * I pretty much copied this from his decompiled MoreInfo mod and bitbucket repo.
  */
 
-import com.fgtxray.FgtXRay;
-import com.fgtxray.reference.BlockInfo;
+import com.xray.common.FgtXRay;
+import com.xray.common.reference.BlockInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
