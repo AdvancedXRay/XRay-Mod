@@ -42,9 +42,9 @@ public class GuiNewOre extends GuiScreen {
 		greenSlider.sliderValue = 1.0F;
 		blueSlider.sliderValue  = 0.0F;
 
-		oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 108, height / 2 + 8, 220, 20 );
-		oreIdent = new GuiTextField( 0, this.fontRenderer, width / 2 - 108, height / 2 + 32, 185, 20 );
-		oreMeta = new GuiTextField( 3, this.fontRenderer, width / 2 + 82, height / 2 + 32, 30, 20 );
+		oreName = new GuiTextField( 1, this.fontRenderer, 0, height / 2 + 8, 220, 20 );
+		oreIdent = new GuiTextField( 0, this.fontRenderer, 0, height / 2 + 32, 185, 20 );
+		oreMeta = new GuiTextField( 3, this.fontRenderer, 0, height / 2 + 32, 30, 20 );
 		oreName.setText( "Gui Name");
 		oreIdent.setText( "minecraft:grass" );
 		oreMeta.setText( "Meta" );
