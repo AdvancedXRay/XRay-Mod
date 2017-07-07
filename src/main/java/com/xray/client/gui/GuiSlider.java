@@ -14,7 +14,7 @@ public class GuiSlider extends GuiButton
 
     GuiSlider(int id, int x, int y, String label, float startingValue, float maxValue)
     {
-        super(id, x, y, 150, 20, label);
+        super(id, x, y, 202, 20, label);
         this.label = label;
         this.sliderValue = startingValue;
         this.sliderMaxValue = maxValue;
