@@ -3,17 +3,14 @@ package com.xray.client.gui;
 import com.xray.common.XRay;
 import com.xray.common.reference.BlockContainer;
 import com.xray.common.reference.Reference;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import org.lwjgl.Sys;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,22 +23,25 @@ public class GuiBlocks extends GuiScreen {
     private GuiBlocksList blockList;
     private ArrayList<BlockContainer> blocks = new ArrayList<>();
     private GuiTextField search;
+    private String lastSearched = "";
     private int selected = -1;
 
     GuiBlocks() {
-        this.blocks = XRay.blockList;
+        setBlocks( XRay.blockList );
     }
 
-    public boolean blockSelected( int index ) {
+    boolean blockSelected(int index) {
         return index == this.selected;
     }
 
-    public void selectBlock(int index)
+    void selectBlock(int index)
     {
         if (index == this.selected)
             return;
 
         this.selected = index;
+        mc.player.closeScreen();
+        mc.displayGuiScreen( new GuiNewOre( blocks.get( this.selected ) ) );
     }
 
     @Override
@@ -49,7 +49,7 @@ public class GuiBlocks extends GuiScreen {
         this.render = this.itemRender;
         this.blockList = new GuiBlocksList( this, this.blocks );
 
-        search = new GuiTextField(0, getFontRender(), width / 2 -96, height / 2 + 85, 135, 18);
+        search = new GuiTextField(150, getFontRender(), width / 2 -96, height / 2 + 85, 135, 18);
         search.setFocused(true);
         search.setCanLoseFocus(true);
 
@@ -74,7 +74,8 @@ public class GuiBlocks extends GuiScreen {
     @Override
     protected void keyTyped( char charTyped, int hex ) throws IOException
     {
-
+        super.keyTyped(charTyped, hex);
+        search.textboxKeyTyped(charTyped, hex);
     }
 
     @Override
@@ -87,6 +88,21 @@ public class GuiBlocks extends GuiScreen {
     public void updateScreen()
     {
         search.updateCursorCounter();
+
+        if(!search.getText().equals(lastSearched))
+            reloadBlocks();
+    }
+
+    private void reloadBlocks() {
+        blocks = new ArrayList<>();
+        ArrayList<BlockContainer> tmpBlocks = new ArrayList<>();
+        for( BlockContainer block : XRay.blockList ) {
+            if( block.getName().toLowerCase().contains( search.getText().toLowerCase() ) )
+                tmpBlocks.add(block);
+        }
+        blocks = tmpBlocks;
+        this.blockList.updateBlockList( blocks );
+        lastSearched = search.getText();
     }
 
     @Override
@@ -102,10 +118,19 @@ public class GuiBlocks extends GuiScreen {
     }
 
     @Override
-    public void mouseClicked( int x, int y, int mouse ) throws IOException
+    public void mouseClicked( int x, int y, int button ) throws IOException
     {
-        super.mouseClicked( x, y, mouse );
+        super.mouseClicked( x, y, button );
+        search.mouseClicked(x, y, button );
         this.blockList.handleMouseInput(x, y);
+    }
+
+    public ArrayList<BlockContainer> getBlocks() {
+        return blocks;
+    }
+
+    public void setBlocks(ArrayList<BlockContainer> blocks) {
+        this.blocks = blocks;
     }
 
     FontRenderer getFontRender() {

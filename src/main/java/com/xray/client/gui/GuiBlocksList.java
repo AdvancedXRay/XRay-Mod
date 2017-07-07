@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraftforge.fml.client.GuiScrollingList;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by MiKeY on 07/07/17.
@@ -15,9 +16,9 @@ public class GuiBlocksList extends GuiScrollingList {
 
     private static final int HEIGHT = 35;
     private GuiBlocks parent;
-    private ArrayList<BlockContainer> blockList;
+    private List<BlockContainer> blockList;
 
-    GuiBlocksList(GuiBlocks parent, ArrayList<BlockContainer> blockList) {
+    GuiBlocksList(GuiBlocks parent, List<BlockContainer> blockList) {
         super( parent.getMinecraftInstance(), 200, 210, parent.height / 2 - 105, parent.height / 2 + 80, parent.width / 2 - 97, HEIGHT, parent.width, parent.height);
 
         this.parent = parent;
@@ -48,6 +49,10 @@ public class GuiBlocksList extends GuiScrollingList {
     protected int getContentHeight()
     {
         return (this.getSize() * HEIGHT);
+    }
+
+    public void updateBlockList(ArrayList<BlockContainer> blockList ) {
+        this.blockList = blockList;
     }
 
     @Override
