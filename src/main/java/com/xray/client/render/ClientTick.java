@@ -78,7 +78,7 @@ public class ClientTick implements Runnable
 				return true; // Skip the check if the player hasn't moved
 
 			List<BlockInfo> temp = new ArrayList<>();
-			int radius = XRay.distNumbers[ XRay.distIndex ]; // Get the radius around the player to search.
+			int radius = XRay.distNumbers[ XRay.currentDist]; // Get the radius around the player to search.
 
 			for (int y = Math.max( 0, py - 96 ); y < py + 32; y++) // Check the y axis. from 0 or the players y-96 to the players y + 32
 			{

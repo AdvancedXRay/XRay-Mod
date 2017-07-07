@@ -49,12 +49,7 @@ public class GuiSettings extends GuiScreen
 		this.listInfo.clear();
         pageIndex.clear();
 
-		GuiButton aNextButton = new GuiButton(-150, width / 2 + 75, height / 2 + 52, 30, 20, ">");
-		GuiButton aPrevButton = new GuiButton(-151, width / 2 - 100, height / 2 + 52, 30, 20, "<");
-		this.buttonList.add( aNextButton );
-		this.buttonList.add( aPrevButton );
-
-        int x = width / 2 - 100, y = height / 2 - 100;
+        int x = width / 2 - 100, y = height / 2 - 106;
         int Count = 0, Page = 0, CountPerPage = 0;
 
 		for( OreInfo ore : OresSearch.searchList )
@@ -69,27 +64,21 @@ public class GuiSettings extends GuiScreen
                 // Create the new button for this ore.
 				int id = Integer.parseInt( Integer.toString( ore.id ) + Integer.toString( ore.meta) );                     // Unique button id. int( str(id) + str(meta) )
                 // very hacky... Need to keep an eye on it.
-                if( Count % 7 == 0 && Count != 0 )
+                if( Count % 9 == 0 && Count != 0 )
                 {
                     Page++;
                     if( Page > pageMax )
                         pageMax++;
 
                     x = width / 2 - 100;
-                    y = height / 2 - 100;
+                    y = height / 2 - 106;
                     CountPerPage = 0;
                 }
-                GuiButton tmpButton = new GuiButton(id, x, y, 200, 20, ore.oreName + ": " + (ore.draw ? "On" : "Off"));
+                GuiButton tmpButton = new GuiButton(id, x+25, y, 160, 20, ore.oreName + ": " + (ore.draw ? "On" : "Off"));
                 pageIndex.add(new GuiPage(x, y, Page, tmpButton, ore)); // create new button and set the text to Name: On||Off
                 buttons.put( ore.oreName, new OreButtons( ore.oreName, id,  ore ) ); // Add this new button to the buttons hashmap.
 				y += 21.8; // Next button should be placed down from this one.
 
-				// this should reset each page to split the list :)
-                if( CountPerPage == 6 )
-                {
-					x+=105;
-                    y = height / 2 - 100; // Move next button to the right and reset the y.
-				}
                 Count++;
                 CountPerPage++;
 			}
@@ -104,8 +93,11 @@ public class GuiSettings extends GuiScreen
 			this.listInfo.add( new GuiList( page.x, page.y, page.ore, page.getButton(), page.getButton()) );
 		}
 
-		this.buttonList.add( new GuiButton(97, (width / 2) - 67, height / 2 + 52, 55, 20, "Add Ore" ) );
-		this.buttonList.add( new GuiButton(98, (width / 2) - 10, height / 2 + 52, 82, 20, "Distance: "+ XRay.distStrings[ XRay.distIndex ]) ); // Static button for printing the ore dictionary / searchList.
+		GuiButton aNextButton, aPrevButton;
+		this.buttonList.add( new GuiButton(97, (width / 2) - 67, height / 2 + 86, 55, 20, "Add Ore" ) );
+		this.buttonList.add( new GuiButton(98, (width / 2) - 10, height / 2 + 86, 82, 20, "Distance: "+ XRay.distNumbers[ XRay.currentDist]) ); // Static button for printing the ore dictionary / searchList.
+		this.buttonList.add( aNextButton = new GuiButton(-150, width / 2 + 75, height / 2 + 86, 30, 20, ">") );
+		this.buttonList.add( aPrevButton = new GuiButton(-151, width / 2 - 100, height / 2 + 86, 30, 20, "<") );
 		//this.buttonList.add( new GuiButton(99, this.width-102, this.height-22, 100, 20, "Print OreDict") ); // Static button for search distance.
 
         if( pageMax < 1 )
@@ -162,13 +154,13 @@ public class GuiSettings extends GuiScreen
 				break;
 
 			case 98: // Distance Button
-				if (XRay.distIndex < XRay.distNumbers.length - 1)
+				if (XRay.currentDist < XRay.distNumbers.length - 1)
 				{
-					XRay.distIndex++;
+					XRay.currentDist++;
 				}
 				else
 				{
-					XRay.distIndex = 0;
+					XRay.currentDist = 0;
 				}
 				ConfigHandler.update("searchdist", false);
 				break;
@@ -262,7 +254,7 @@ public class GuiSettings extends GuiScreen
 	public void drawScreen( int x, int y, float f ) {
 		drawDefaultBackground();
 		mc.renderEngine.bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "bg.png"));
-		drawTexturedQuadFit(width / 2 - 110, height / 2 - 110, 229, 193, 0);
+		drawTexturedQuadFit(width / 2 - 110, height / 2 - 118, 229, 235, 0);
 
 		super.drawScreen(x, y, f);
 
@@ -290,10 +282,10 @@ public class GuiSettings extends GuiScreen
 			for (GuiButton button : this.buttonList) {
 				if (button.isMouseOver()) {
 					if (button.id == 98) {
-						if (XRay.distIndex > 0)
-							XRay.distIndex--;
+						if (XRay.currentDist > 0)
+							XRay.currentDist--;
 						else
-							XRay.distIndex = XRay.distNumbers.length - 1;
+							XRay.currentDist = XRay.distNumbers.length - 1;
 
 						ConfigHandler.update("searchdist", false);
 						this.initGui();
