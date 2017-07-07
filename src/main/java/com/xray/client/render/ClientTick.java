@@ -1,8 +1,10 @@
-package com.xray.client;
+package com.xray.client.render;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.xray.client.OresSearch;
+import com.xray.client.render.RenderTick;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;

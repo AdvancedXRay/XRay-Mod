@@ -1,4 +1,4 @@
-package com.xray.client;
+package com.xray.client.render;
 
 /* Props goto CJB for the render functions and maths.
  * http://twitter.com/CJBMods

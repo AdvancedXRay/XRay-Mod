@@ -1,9 +1,9 @@
 // Forge proxy for the client side.
 package com.xray.client.proxy;
 
-import com.xray.client.ClientTick;
+import com.xray.client.render.ClientTick;
 import com.xray.client.KeyBindingHandler;
-import com.xray.client.RenderTick;
+import com.xray.client.render.RenderTick;
 import com.xray.common.proxy.ServerProxy;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraft.client.settings.KeyBinding;
