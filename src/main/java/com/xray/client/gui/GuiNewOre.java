@@ -13,6 +13,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
@@ -59,7 +61,8 @@ public class GuiNewOre extends GuiScreen {
 			case 98: // Add
 				int[] rgb = {(int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255)};
 
-//				OresSearch.add(oreIdent.getText(), oreMeta.getText(), oreName.getText(), rgb);
+				int tmpId = Block.getIdFromBlock(selectBlock.getBlock());
+				OresSearch.add(tmpId, selectBlock.getItemStack().getMetadata(), oreName.getText(), rgb);
 
 				mc.player.closeScreen();
 				mc.displayGuiScreen( new GuiSettings() );

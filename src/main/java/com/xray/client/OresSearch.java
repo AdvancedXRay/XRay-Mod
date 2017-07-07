@@ -31,54 +31,25 @@ public class OresSearch
 		return false;
 	}
 
-	public static void add( String oreIdent, String oreMeta, String name, int[] color ) // Takes a string of id:meta or oreName to add to our search list.
+	public static void add( int oreId, int oreMeta, String name, int[] color ) // Takes a string of id:meta or oreName to add to our search list.
 	{
-		oreIdent = oreIdent.replaceAll( "\\p{C}",  "?" );
-		int id, meta = 0;
-
-		if( oreIdent.equals("") || oreMeta.equals("") || name.equals("") ) {
+		if( name.equals("") ) {
 			mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString( "[XRay] You need to have all the inputs filled" ));
 			return;
 		}
 
-		if( oreIdent.contains( ":" ) ) {
-
-			Block tmpBlock = Block.getBlockFromName( oreIdent );
-			if( tmpBlock != null ) {
-				id = Block.getIdFromBlock( tmpBlock );
-				try {
-					meta = Integer.parseInt( oreMeta );
-				} catch( NumberFormatException e ) {
-					String notify = String.format( "[XRay] %s contains data other than numbers. Failed to add.", oreIdent );
-					mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify) );
-					return;
-				}
-
-			} else {
-				String notify = String.format( "[XRay] %s is not a valid block name", oreIdent );
-				mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify));
-				return;
-			}
-
-		} else {
-			String notify = String.format( "[XRay] %s is not a valid identifier. Try modname:blockname (example minecraft:stone for stone)", oreIdent );
-			mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify));
-			return;
-		}
-
-		//System.out.println( String.format( "Adding ore: %s", oreIdent ) );
 		for( OreInfo info : OresSearch.searchList ) {
-			if( info.getId() == id && info.getMeta() == meta ) {
+			if( info.getId() == oreId && info.getMeta() == oreMeta) {
 				mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString("[XRay] This block has already been added to the block list"));
 				return;
 			}
 		}
 
-		OresSearch.searchList.add( new OreInfo( name, id, meta, color, true ) );
-		String notify = String.format( "[XRay] successfully added %s.", oreIdent );
+		OresSearch.searchList.add( new OreInfo( name, oreId, oreMeta, color, true ) );
+		String notify = String.format( "[XRay] successfully added %s.", name );
 		mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(notify));
 
-		ConfigHandler.add(name, id, meta, color);
+		ConfigHandler.add(name, oreId, oreMeta, color);
 	}
 	
 	public static List<OreInfo> get() // Return the searchList, create it if needed.
