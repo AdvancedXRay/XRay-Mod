@@ -1,5 +1,6 @@
 package com.xray.client.gui;
 
+import com.xray.common.XRay;
 import com.xray.common.reference.BlockContainer;
 import com.xray.common.reference.Reference;
 import net.minecraft.block.Block;
@@ -25,19 +26,22 @@ public class GuiBlocks extends GuiScreen {
     private GuiBlocksList blockList;
     private ArrayList<BlockContainer> blocks = new ArrayList<>();
     private GuiTextField search;
+    private int selected = -1;
 
     GuiBlocks() {
-        for ( Block block : ForgeRegistries.BLOCKS ) {
-            NonNullList<ItemStack> subBlocks = NonNullList.create();
-            block.getSubBlocks( block.getCreativeTabToDisplayOn(), subBlocks );
-            for( ItemStack subBlock : subBlocks ) {
-                if (subBlock.isEmpty())
-                    continue;
+        this.blocks = XRay.blockList;
+    }
 
-                Block tmpBlock = Block.getBlockFromItem( subBlock.getItem() );
-                blocks.add( new BlockContainer( subBlock.getDisplayName(), tmpBlock, subBlock, subBlock.getItem(), subBlock.getItem().getRegistryName() ));
-            }
-        }
+    public boolean blockSelected( int index ) {
+        return index == this.selected;
+    }
+
+    public void selectBlock(int index)
+    {
+        if (index == this.selected)
+            return;
+
+        this.selected = index;
     }
 
     @Override
@@ -59,7 +63,7 @@ public class GuiBlocks extends GuiScreen {
         {
             case 0: // Cancel
                 mc.player.closeScreen();
-                mc.displayGuiScreen( new GuiNewOre() );
+                mc.displayGuiScreen( new GuiSettings() );
                 break;
 
             default:

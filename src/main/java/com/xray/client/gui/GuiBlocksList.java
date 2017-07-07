@@ -31,12 +31,12 @@ public class GuiBlocksList extends GuiScrollingList {
 
     @Override
     protected void elementClicked(int index, boolean doubleClick) {
-
+        this.parent.selectBlock( index );
     }
 
     @Override
     protected boolean isSelected(int index) {
-        return false;
+        return parent.blockSelected( index );
     }
 
     @Override
@@ -55,12 +55,12 @@ public class GuiBlocksList extends GuiScrollingList {
         BlockContainer block = blockList.get( idx );
         FontRenderer font = this.parent.getFontRender();
 
-        font.drawString(block.getName(), this.left + 30 , top +  2, 0xFFFFFF);
-        font.drawString(block.getResourceName().getResourceDomain(), this.left + 30 , top + 12, 0xD1CFCF);
+        font.drawString(block.getName(), this.left + 30 , top +  7, 0xFFFFFF);
+        font.drawString(block.getResourceName().getResourceDomain(), this.left + 30 , top + 17, 0xD1CFCF);
 
         if( block.getItemStack() != null ) {
             RenderHelper.enableGUIStandardItemLighting();
-            this.parent.getRender().renderItemAndEffectIntoGUI(block.getItemStack(), this.left + 5, top);
+            this.parent.getRender().renderItemAndEffectIntoGUI(block.getItemStack(), this.left + 5, top+7);
             RenderHelper.disableStandardItemLighting();
         }
     }

@@ -160,7 +160,7 @@ public class GuiSettings extends GuiScreen
 
 			case 97: // New Ore button
 				mc.player.closeScreen();
-				mc.displayGuiScreen( new GuiNewOre() );
+				mc.displayGuiScreen( new GuiBlocks() );
 				break;
 
 		  case -150:

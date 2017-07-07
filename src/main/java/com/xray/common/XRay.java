@@ -6,7 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.xray.common.proxy.ServerProxy;
+import com.xray.common.reference.BlockContainer;
 import com.xray.common.reference.Reference;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.settings.KeyBinding;
@@ -30,6 +35,7 @@ public class XRay
 {
 	public static int localPlyX, localPlyY, localPlyZ, localPlyXPrev, localPlyZPrev; // For internal use in the ClientTick thread.
 	public static boolean drawOres = false; // Off by default
+	public static ArrayList<BlockContainer> blockList = new ArrayList<>();
 
 	public static final String[] distStrings = new String[] // Strings for use in the GUI Render Distance button
 		{ "8", "16", "32", "48", "64", "80", "128", "256" };
@@ -105,5 +111,16 @@ public class XRay
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
     {
+		for ( Block block : ForgeRegistries.BLOCKS ) {
+			NonNullList<ItemStack> subBlocks = NonNullList.create();
+			block.getSubBlocks( block.getCreativeTabToDisplayOn(), subBlocks );
+			for( ItemStack subBlock : subBlocks ) {
+				if (subBlock.isEmpty())
+					continue;
+
+				Block tmpBlock = Block.getBlockFromItem( subBlock.getItem() );
+				blockList.add( new BlockContainer( subBlock.getDisplayName(), tmpBlock, subBlock, subBlock.getItem(), subBlock.getItem().getRegistryName() ));
+			}
+		}
 	}
 }

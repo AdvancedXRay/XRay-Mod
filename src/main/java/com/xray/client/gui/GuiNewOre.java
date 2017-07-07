@@ -1,7 +1,9 @@
 package com.xray.client.gui;
 
 import com.xray.client.OresSearch;
+import com.xray.common.reference.BlockContainer;
 import com.xray.common.reference.Reference;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -23,10 +25,15 @@ public class GuiNewOre extends GuiScreen {
 	private GuiSlider greenSlider;
 	private GuiSlider blueSlider;
 	private GuiButton addButton;
+	private BlockContainer selectBlock;
 
 	private boolean oreNameCleared  = false;
 	private boolean oreIdentCleared = false;
 	private boolean oreMetaCleared = false;
+
+	GuiNewOre(BlockContainer selectedBlock) {
+		this.selectBlock = selectedBlock;
+	}
 
 	@Override
 	public void initGui()
@@ -155,8 +162,8 @@ public class GuiNewOre extends GuiScreen {
         GuiSettings.drawTexturedQuadFit(width / 2 - 110, height / 2 - 118, 229, 235, 0);
 
         FontRenderer fr = this.mc.fontRenderer;
-        fr.drawString("Add an Ore", width / 2 - 108, height / 2 - 80, 0x404040);
-
+        fr.drawString("Configure your Block", width / 2 - 97, height / 2 - 105, 0x404040);
+		fr.drawString(selectBlock.getName(), width / 2 - 97, height / 2 - 80, 0xFFFFFF);
 
 		oreName.drawTextBox();
 		oreIdent.drawTextBox();
