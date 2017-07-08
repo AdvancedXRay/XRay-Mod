@@ -7,14 +7,12 @@ import java.util.Map;
 
 import com.xray.client.OresSearch;
 import com.xray.common.proxy.ServerProxy;
-import com.xray.common.reference.BlockContainer;
+import com.xray.client.gui.helper.HelperBlock;
 import com.xray.common.reference.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.oredict.OreDictionary;
-import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.settings.KeyBinding;
@@ -38,7 +36,7 @@ public class XRay
 {
 	public static int localPlyX, localPlyY, localPlyZ, localPlyXPrev, localPlyZPrev; // For internal use in the ClientTick thread.
 	public static boolean drawOres = false; // Off by default
-	public static ArrayList<BlockContainer> blockList = new ArrayList<>();
+	public static ArrayList<HelperBlock> blockList = new ArrayList<>();
 
 	public static final String[] distStrings = new String[] // Strings for use in the GUI Render Distance button
 		{ "8", "16", "32", "48", "64", "80", "128", "256" };
@@ -122,7 +120,7 @@ public class XRay
 					continue;
 
 				Block tmpBlock = Block.getBlockFromItem( subBlock.getItem() );
-				blockList.add( new BlockContainer( subBlock.getDisplayName(), tmpBlock, subBlock, subBlock.getItem(), subBlock.getItem().getRegistryName() ));
+				blockList.add( new HelperBlock( subBlock.getDisplayName(), tmpBlock, subBlock, subBlock.getItem(), subBlock.getItem().getRegistryName() ));
 			}
 		}
 

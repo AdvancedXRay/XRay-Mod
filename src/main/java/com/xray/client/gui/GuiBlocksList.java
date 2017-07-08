@@ -1,6 +1,6 @@
 package com.xray.client.gui;
 
-import com.xray.common.reference.BlockContainer;
+import com.xray.client.gui.helper.HelperBlock;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -16,9 +16,9 @@ public class GuiBlocksList extends GuiScrollingList {
 
     private static final int HEIGHT = 35;
     private GuiBlocks parent;
-    private List<BlockContainer> blockList;
+    private List<HelperBlock> blockList;
 
-    GuiBlocksList(GuiBlocks parent, List<BlockContainer> blockList) {
+    GuiBlocksList(GuiBlocks parent, List<HelperBlock> blockList) {
         super( parent.getMinecraftInstance(), 200, 210, parent.height / 2 - 105, parent.height / 2 + 80, parent.width / 2 - 97, HEIGHT, parent.width, parent.height);
 
         this.parent = parent;
@@ -50,13 +50,13 @@ public class GuiBlocksList extends GuiScrollingList {
         return (this.getSize() * HEIGHT);
     }
 
-    void updateBlockList(ArrayList<BlockContainer> blockList) {
+    void updateBlockList(ArrayList<HelperBlock> blockList) {
         this.blockList = blockList;
     }
 
     @Override
     protected void drawSlot(int idx, int right, int top, int height, Tessellator tess) {
-        BlockContainer block = blockList.get( idx );
+        HelperBlock block = blockList.get( idx );
         FontRenderer font = this.parent.getFontRender();
 
         font.drawString(block.getName(), this.left + 30 , top +  7, 0xFFFFFF);

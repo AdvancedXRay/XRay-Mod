@@ -1,7 +1,7 @@
 package com.xray.client.gui;
 
 import com.xray.client.OresSearch;
-import com.xray.common.reference.BlockContainer;
+import com.xray.client.gui.helper.HelperBlock;
 import com.xray.common.reference.OreInfo;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
@@ -18,7 +18,7 @@ public class GuiEditOre extends GuiContainer
     private GuiSlider redSlider;
     private GuiSlider greenSlider;
     private GuiSlider blueSlider;
-    private BlockContainer selectBlock;
+    private HelperBlock selectBlock;
     private OreInfo oreInfo;
 
     GuiEditOre(OreInfo oreInfo) {
@@ -29,7 +29,7 @@ public class GuiEditOre extends GuiContainer
         tmpBlock.getSubBlocks(tmpBlock.getCreativeTabToDisplayOn(), tmpStack);
         ItemStack stack = tmpStack.get( oreInfo.getMeta() );
 
-        this.selectBlock = new BlockContainer(
+        this.selectBlock = new HelperBlock(
                 stack.getDisplayName(), Block.getBlockFromItem( stack.getItem() ), stack, stack.getItem(), stack.getItem().getRegistryName()
         );
     }

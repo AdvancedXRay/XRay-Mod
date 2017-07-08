@@ -1,7 +1,7 @@
 package com.xray.client.gui;
 
 import com.xray.common.XRay;
-import com.xray.common.reference.BlockContainer;
+import com.xray.client.gui.helper.HelperBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class GuiBlocks extends GuiContainer {
     private RenderItem render;
     private GuiBlocksList blockList;
-    private ArrayList<BlockContainer> blocks = new ArrayList<>();
+    private ArrayList<HelperBlock> blocks = new ArrayList<>();
     private GuiTextField search;
     private String lastSearched = "";
     private int selected = -1;
@@ -84,8 +84,8 @@ public class GuiBlocks extends GuiContainer {
 
     private void reloadBlocks() {
         blocks = new ArrayList<>();
-        ArrayList<BlockContainer> tmpBlocks = new ArrayList<>();
-        for( BlockContainer block : XRay.blockList ) {
+        ArrayList<HelperBlock> tmpBlocks = new ArrayList<>();
+        for( HelperBlock block : XRay.blockList ) {
             if( block.getName().toLowerCase().contains( search.getText().toLowerCase() ) )
                 tmpBlocks.add(block);
         }
@@ -110,7 +110,7 @@ public class GuiBlocks extends GuiContainer {
         this.blockList.handleMouseInput(x, y);
     }
 
-    private void setBlocks(ArrayList<BlockContainer> blocks) {
+    private void setBlocks(ArrayList<HelperBlock> blocks) {
         this.blocks = blocks;
     }
 

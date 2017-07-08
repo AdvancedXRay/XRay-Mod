@@ -1,7 +1,7 @@
 package com.xray.client.gui;
 
 import com.xray.client.OresSearch;
-import com.xray.common.reference.BlockContainer;
+import com.xray.client.gui.helper.HelperBlock;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -19,10 +19,10 @@ public class GuiAdd extends GuiContainer {
 	private GuiSlider redSlider;
 	private GuiSlider greenSlider;
 	private GuiSlider blueSlider;
-	private BlockContainer selectBlock;
+	private HelperBlock selectBlock;
 	private boolean oreNameCleared  = false;
 
-	GuiAdd(BlockContainer selectedBlock) {
+	GuiAdd(HelperBlock selectedBlock) {
 		this.selectBlock = selectedBlock;
 	}
 

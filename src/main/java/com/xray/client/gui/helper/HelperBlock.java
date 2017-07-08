@@ -1,4 +1,4 @@
-package com.xray.common.reference;
+package com.xray.client.gui.helper;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 /**
  * Created by MiKeY on 07/07/17.
  */
-public class BlockContainer {
+public class HelperBlock {
 
     public String name;
     public Block block;
@@ -16,7 +16,7 @@ public class BlockContainer {
     public Item item;
     public ResourceLocation resourceName;
 
-    public BlockContainer(String name, Block block, ItemStack itemStack, Item item, ResourceLocation resourceName) {
+    public HelperBlock(String name, Block block, ItemStack itemStack, Item item, ResourceLocation resourceName) {
         this.name = name;
         this.block = block;
         this.itemStack = itemStack;
