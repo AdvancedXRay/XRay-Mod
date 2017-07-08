@@ -2,15 +2,10 @@ package com.xray.client.gui;
 
 import com.xray.common.XRay;
 import com.xray.common.reference.BlockContainer;
-import com.xray.common.reference.Reference;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.Sys;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,7 +13,7 @@ import java.util.ArrayList;
 /**
  * Created by MiKeY on 07/07/17.
  */
-public class GuiBlocks extends GuiScreen {
+public class GuiBlocks extends GuiContainer {
     private RenderItem render;
     private GuiBlocksList blockList;
     private ArrayList<BlockContainer> blocks = new ArrayList<>();
@@ -79,12 +74,6 @@ public class GuiBlocks extends GuiScreen {
     }
 
     @Override
-    public boolean doesGuiPauseGame() // Dont pause the game in single player.
-    {
-        return false;
-    }
-
-    @Override
     public void updateScreen()
     {
         search.updateCursorCounter();
@@ -108,10 +97,6 @@ public class GuiBlocks extends GuiScreen {
     @Override
     public void drawScreen( int x, int y, float f )
     {
-        drawDefaultBackground();
-        mc.renderEngine.bindTexture( new ResourceLocation(Reference.PREFIX_GUI+"bg.png") );
-        GuiSettings.drawTexturedQuadFit(width / 2 - 110, height / 2 - 118, 229, 235, 0);
-
         super.drawScreen(x, y, f);
         search.drawTextBox();
         this.blockList.drawScreen( x,  y,  f );
@@ -125,16 +110,8 @@ public class GuiBlocks extends GuiScreen {
         this.blockList.handleMouseInput(x, y);
     }
 
-    public ArrayList<BlockContainer> getBlocks() {
-        return blocks;
-    }
-
-    public void setBlocks(ArrayList<BlockContainer> blocks) {
+    private void setBlocks(ArrayList<BlockContainer> blocks) {
         this.blocks = blocks;
-    }
-
-    FontRenderer getFontRender() {
-        return mc.fontRenderer;
     }
 
     Minecraft getMinecraftInstance() {

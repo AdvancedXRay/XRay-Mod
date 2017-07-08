@@ -42,7 +42,6 @@ public class GuiBlocksList extends GuiScrollingList {
 
     @Override
     protected void drawBackground() {
-//        this.parent.drawDefaultBackground();
     }
 
     @Override
@@ -51,7 +50,7 @@ public class GuiBlocksList extends GuiScrollingList {
         return (this.getSize() * HEIGHT);
     }
 
-    public void updateBlockList(ArrayList<BlockContainer> blockList ) {
+    void updateBlockList(ArrayList<BlockContainer> blockList) {
         this.blockList = blockList;
     }
 

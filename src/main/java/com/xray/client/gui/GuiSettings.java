@@ -1,31 +1,21 @@
 package com.xray.client.gui;
 
-import com.xray.common.XRay;
-import com.xray.common.reference.OreButtons;
 import com.xray.client.OresSearch;
+import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
+import com.xray.common.reference.OreButtons;
 import com.xray.common.reference.OreInfo;
-import com.xray.common.reference.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.oredict.OreDictionary;
-import org.lwjgl.opengl.GL11;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GuiSettings extends GuiScreen
+public class GuiSettings extends GuiContainer
 {
 	private Map<String, OreButtons> buttons = new HashMap<>();
     private List<GuiPage> pageIndex = new ArrayList<>();
@@ -113,7 +103,7 @@ public class GuiSettings extends GuiScreen
 	@Override
 	public void actionPerformed( GuiButton button )
 	{
-			// Called on left click of GuiButton
+		// Called on left click of GuiButton
 		switch(button.id)
 		{
 			case 98: // Distance Button
@@ -131,23 +121,18 @@ public class GuiSettings extends GuiScreen
 
 		  case -150:
 			  if( pageCurrent < pageMax )
-			  {
 				  pageCurrent ++;
-			  }
 			  break;
 
 		  case -151:
 			  if( pageCurrent > 0 )
-			  {
 				  pageCurrent --;
-			  }
 			  break;
 
 		default:
 			for( Map.Entry<String, OreButtons> entry : buttons.entrySet() )
 			{
 				// Iterate through the buttons map and check what ores need to be toggled
-				String key = entry.getKey();            // Block name (Diamond)
 				OreButtons value = entry.getValue();    // OreButtons structure
 
 				if( value.id == button.id )
@@ -175,46 +160,7 @@ public class GuiSettings extends GuiScreen
 	}
 	
 	@Override
-	protected void keyTyped( char par1, int par2 )
-    {
-		try {
-			super.keyTyped( par1, par2 );
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if( (par2 == 1) || (par2 == mc.gameSettings.keyBindInventory.getKeyCode()) || par2 == XRay.keyBind_keys[ XRay.keyIndex_showXrayMenu ].getKeyCode() )
-        {
-            // Close on esc, inventory key or keybind
-			mc.player.closeScreen();
-		}
-	}
-	
-	@Override
-	public boolean doesGuiPauseGame()
-    {
-		return false;
-	}
-
-    // this should be moved to some sort of utility package but fuck it :).
-    // this removes the stupid power of 2 rule that comes with minecraft.
-    public static void drawTexturedQuadFit(double x, double y, double width, double height, double zLevel)
-    {
-    	Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder tessellate = tessellator.getBuffer();
-		tessellate.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        tessellate.pos(x + 0, y + height, zLevel).tex( 0,1).endVertex();
-        tessellate.pos(x + width, y + height, zLevel).tex( 1, 1).endVertex();
-        tessellate.pos(x + width, y + 0, zLevel).tex( 1,0).endVertex();
-        tessellate.pos(x + 0, y + 0, zLevel).tex( 0, 0).endVertex();
-		Tessellator.getInstance().draw();
-    }
-
-	@Override
 	public void drawScreen( int x, int y, float f ) {
-		drawDefaultBackground();
-
-		mc.renderEngine.bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "bg.png"));
-		drawTexturedQuadFit(width / 2 - 110, height / 2 - 118, 229, 235, 0);
 
 		super.drawScreen(x, y, f);
 
@@ -226,15 +172,5 @@ public class GuiSettings extends GuiScreen
 		}
 
 		RenderHelper.disableStandardItemLighting();
-	}
-	
-	@Override
-	public void mouseClicked( int x, int y, int mouse )
-    {
-		try {
-			super.mouseClicked( x, y, mouse );
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 }

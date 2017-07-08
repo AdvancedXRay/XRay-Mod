@@ -2,32 +2,25 @@ package com.xray.client.gui;
 
 import com.xray.client.OresSearch;
 import com.xray.common.reference.BlockContainer;
-import com.xray.common.reference.Reference;
 import net.minecraft.block.Block;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
 import java.util.Objects;
 
-public class GuiNewOre extends GuiScreen {
+public class GuiNewOre extends GuiContainer {
 	private GuiTextField oreName;
 	private GuiSlider redSlider;
 	private GuiSlider greenSlider;
 	private GuiSlider blueSlider;
 	private BlockContainer selectBlock;
 	private boolean oreNameCleared  = false;
-
 
 	GuiNewOre(BlockContainer selectedBlock) {
 		this.selectBlock = selectedBlock;
@@ -94,19 +87,10 @@ public class GuiNewOre extends GuiScreen {
 						oreName.setText("");
 					oreName.setFocused( true );
 					break;
-				case 1: // Exit on escape
-					mc.displayGuiScreen( new GuiSettings() );
-					mc.player.closeScreen();
 				default:
 					break;
 			}
 		}
-	}
-
-	@Override
-	public boolean doesGuiPauseGame() // Dont pause the game in single player.
-	{
-		return false;
 	}
 
 	@Override
@@ -118,13 +102,8 @@ public class GuiNewOre extends GuiScreen {
 	@Override
 	public void drawScreen( int x, int y, float f )
     {
-        drawDefaultBackground();
-        mc.renderEngine.bindTexture( new ResourceLocation(Reference.PREFIX_GUI+"bg.png") );
-        GuiSettings.drawTexturedQuadFit(width / 2 - 110, height / 2 - 118, 229, 235, 0);
-
-        FontRenderer fr = this.mc.fontRenderer;
-        fr.drawStringWithShadow("Configure your Block", width / 2 - 97, height / 2 - 105, 0xffff00);
-		fr.drawStringWithShadow(selectBlock.getName(), width / 2 - 97, height / 2 - 90, 0xffffff);
+		super.drawScreen(x, y, f);
+		getFontRender().drawStringWithShadow(selectBlock.getName(), width / 2 - 97, height / 2 - 90, 0xffffff);
 
 		oreName.drawTextBox();
 
@@ -142,12 +121,10 @@ public class GuiNewOre extends GuiScreen {
 		tessellator.draw();
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();
-		super.drawScreen(x, y, f);
 
 		RenderHelper.enableGUIStandardItemLighting();
 		this.itemRender.renderItemAndEffectIntoGUI( selectBlock.getItemStack(), width / 2 + 88, height / 2 - 105 );
 		RenderHelper.disableStandardItemLighting();
-
 	}
 
 	@Override
@@ -167,19 +144,15 @@ public class GuiNewOre extends GuiScreen {
 			oreNameCleared = false;
 			oreName.setText( "Gui Name");
 		}
+	}
 
-////
-//		if( mouse == 1 ) // Right clicked
-//		{
-//			for( int i = 0; i < this.buttonList.size(); i++ )
-//			{
-//				GuiButton button = (GuiButton)this.buttonList.get( i );
-//				if( button.func_146115_a() ) //func_146115_a() returns true if the button is being hovered
-//				{
-//					/*if( button.id == 99 ){
-//					}*/
-//				}
-//			}
-//		}
+	@Override
+	public boolean hasTitle() {
+		return true;
+	}
+
+	@Override
+	public String title() {
+		return "Configure Block";
 	}
 }
