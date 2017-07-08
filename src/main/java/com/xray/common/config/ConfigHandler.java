@@ -1,13 +1,12 @@
 package com.xray.common.config;
 
 import com.xray.common.XRay;
+import com.xray.common.reference.OreInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import com.xray.common.reference.OreInfo;
-import org.lwjgl.Sys;
 
 public class ConfigHandler
 {

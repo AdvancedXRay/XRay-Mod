@@ -1,6 +1,5 @@
 package com.xray.client.gui;
 
-import com.xray.common.XRay;
 import com.xray.common.reference.Reference;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;

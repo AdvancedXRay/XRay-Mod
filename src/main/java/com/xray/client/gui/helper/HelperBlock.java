@@ -10,11 +10,11 @@ import net.minecraft.util.ResourceLocation;
  */
 public class HelperBlock {
 
-    public String name;
+    private String name;
     public Block block;
-    public ItemStack itemStack;
-    public Item item;
-    public ResourceLocation resourceName;
+    private ItemStack itemStack;
+    private Item item;
+    private ResourceLocation resourceName;
 
     public HelperBlock(String name, Block block, ItemStack itemStack, Item item, ResourceLocation resourceName) {
         this.name = name;

@@ -1,18 +1,15 @@
 package com.xray.client;
 
-import java.util.*;
-
 import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
-import net.minecraft.block.Block;
+import com.xray.common.reference.OreInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.xray.common.reference.OreInfo;
+import java.util.*;
 
 public class OresSearch
 {
