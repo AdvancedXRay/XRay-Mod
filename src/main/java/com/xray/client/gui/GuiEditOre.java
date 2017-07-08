@@ -30,7 +30,7 @@ public class GuiEditOre extends GuiContainer
         ItemStack stack = tmpStack.get( oreInfo.getMeta() );
 
         this.selectBlock = new HelperBlock(
-                stack.getDisplayName(), Block.getBlockFromItem( stack.getItem() ), stack, stack.getItem(), stack.getItem().getRegistryName()
+                stack.isEmpty() ? oreInfo.getDisplayName() : stack.getDisplayName(), Block.getBlockFromItem( stack.getItem() ), stack, stack.getItem(), stack.getItem().getRegistryName()
         );
     }
 
