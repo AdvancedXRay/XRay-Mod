@@ -36,7 +36,7 @@ public class GuiBlocks extends GuiContainer {
 
         this.selected = index;
         mc.player.closeScreen();
-        mc.displayGuiScreen( new GuiNewOre( blocks.get( this.selected ) ) );
+        mc.displayGuiScreen( new GuiAdd( blocks.get( this.selected ) ) );
     }
 
     @Override

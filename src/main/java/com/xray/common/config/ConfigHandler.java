@@ -7,6 +7,7 @@ import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import com.xray.common.reference.OreInfo;
+import org.lwjgl.Sys;
 
 public class ConfigHandler
 {
@@ -26,7 +27,7 @@ public class ConfigHandler
 			if( category.startsWith( "oredict.") ) // Dont iterate over the base category and make sure were on the oredict category.
 			{
 				String dictName = cat.get("dictname").getString();
-				String guiName = cat.get("guiname").getString();
+				String guiName = cat.get("name").getString();
 				int id = cat.get("id").getInt();
 				int meta = cat.get("meta").getInt();
 				int[] color = {cat.get("red").getInt(), cat.get("green").getInt(), cat.get("blue").getInt()};
@@ -115,9 +116,27 @@ public class ConfigHandler
 		config.save();
 	}
 
-	// TODO: add remove option - AoKMiKeY
-	public static void remove( String name )
+	public static void updateInfo( OreInfo original, OreInfo newInfo )
 	{
+		String tmpCategory = "";
+		for( String category : config.getCategoryNames() ) {
+			String cleanStr = original.getOreName().replaceAll("\\s+", "").toLowerCase();
+			String[] splitCat = category.split("\\.");
 
+			if( splitCat.length == 2 && splitCat[1].equals( cleanStr ) ) {
+				if( splitCat[0].equals( "oredict" ) )
+					tmpCategory = "oredict."+cleanStr;
+				if( splitCat[0].equals( "customores" ) )
+					tmpCategory = "customores."+cleanStr;
+
+				if( !tmpCategory.isEmpty() ) {
+					config.get(tmpCategory, "red", "").set( newInfo.color[0] );
+					config.get(tmpCategory, "green", "").set( newInfo.color[1] );
+					config.get(tmpCategory, "blue", "").set( newInfo.color[2] );
+					config.get(tmpCategory, "name", "").set( newInfo.oreName );
+				}
+			}
+		}
+		config.save();
 	}
 }

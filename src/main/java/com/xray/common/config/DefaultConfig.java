@@ -57,7 +57,7 @@ public class DefaultConfig {
 			String category = value.oreName.replaceAll("\\s+", "").toLowerCase(); // No whitespace or capitals in the config file categories
 
 			config.get("oredict."+category, "dictname", "SOMETHINGBROKE").set( key ); // We need the capitals for the ore dictionary.
-			config.get("oredict."+category, "guiname", "SOMETHINGBROKE").set( value.oreName );
+			config.get("oredict."+category, "name", "SOMETHINGBROKE").set( value.oreName );
 			config.get("oredict."+category, "id", -1).set( OreDictionary.getOreID( key ) );
 			config.get("oredict."+category, "meta", -1).set( value.meta );
 			config.get("oredict."+category, "red", -1).set( value.color[0] );

@@ -107,12 +107,20 @@ public class GuiAdd extends GuiContainer {
 
 		oreName.drawTextBox();
 
+		renderPreview(width, height, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
+
+		RenderHelper.enableGUIStandardItemLighting();
+		this.itemRender.renderItemAndEffectIntoGUI( selectBlock.getItemStack(), width / 2 + 88, height / 2 - 105 );
+		RenderHelper.disableStandardItemLighting();
+	}
+
+	public static void renderPreview(int width, int height, float r, float g, float b) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder tessellate = tessellator.getBuffer();
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture2D();
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-		GlStateManager.color(redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue, 1);
+		GlStateManager.color(r, g, b, 1);
 		tessellate.begin(7, DefaultVertexFormats.POSITION);
 		tessellate.pos(width / 2 - 97, height / 2 - 40, 0.0D).endVertex();
 		tessellate.pos(width / 2 - 97, height / 2 + 4, 0.0D).endVertex();
@@ -121,10 +129,6 @@ public class GuiAdd extends GuiContainer {
 		tessellator.draw();
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();
-
-		RenderHelper.enableGUIStandardItemLighting();
-		this.itemRender.renderItemAndEffectIntoGUI( selectBlock.getItemStack(), width / 2 + 88, height / 2 - 105 );
-		RenderHelper.disableStandardItemLighting();
 	}
 
 	@Override

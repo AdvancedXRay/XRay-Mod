@@ -51,6 +51,32 @@ public class OresSearch
 
 		ConfigHandler.add(name, oreId, oreMeta, color);
 	}
+
+	public static void update( OreInfo original, String name, int[] color ) {
+		if( !OresSearch.searchList.contains( original ) ) {
+			// This really shouldn't happen but hay, lets support it anyway.
+			mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString( "[XRay] Looks like the Ore you've tried to edit does not exist?" ));
+			return;
+		}
+
+		OreInfo tmpNew = null;
+		for ( OreInfo ore : OresSearch.searchList ) {
+			if( ore == original ) {
+				ore.oreName = name;
+				ore.color = color;
+				tmpNew = ore;
+				break;
+			}
+		}
+
+		if( tmpNew != null ) {
+			ConfigHandler.updateInfo(original, tmpNew);
+			String notify = String.format( "[XRay] successfully updated %s.", original.getOreName() );
+			mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(notify));
+		} else {
+			mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString( "[XRay] Looks like the Ore you've tried to edit does not exist?" ));
+		}
+	}
 	
 	public static List<OreInfo> get() // Return the searchList, create it if needed.
 	{

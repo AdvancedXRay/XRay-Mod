@@ -11,9 +11,9 @@ public class HelperGuiList {
     public int id;
     public int x;
     public int y;
-    public int pageId;
+    private int pageId;
     public OreInfo ore;
-    public GuiButton button;
+    private GuiButton button;
 
     public HelperGuiList(int id, int pageId, int x, int y, OreInfo ore ) {
 
@@ -22,7 +22,7 @@ public class HelperGuiList {
         this.x = x;
         this.y = y;
         this.ore = ore;
-        this.button = new GuiButton(id, x+24, y, 180, 20, ore.oreName + ": " + (ore.draw ? "On" : "Off"));
+        this.button = new GuiButton(id, x+25, y, 181, 20, ore.oreName + ": " + (ore.draw ? "On" : "Off"));
 
     }
 
