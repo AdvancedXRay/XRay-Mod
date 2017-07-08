@@ -8,8 +8,8 @@ package com.xray.client.render;
 import com.xray.common.XRay;
 import com.xray.common.reference.BlockInfo;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -72,7 +72,7 @@ public class RenderTick
 		GL11.glLineWidth( 1f );
 
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder tessellate = tessellator.getBuffer();
+		VertexBuffer tessellate = tessellator.getBuffer();
 
 		ArrayList<BlockInfo> temp = new ArrayList<>();
 		temp.addAll(ores);

@@ -3,8 +3,8 @@ package com.xray.client.gui;
 import com.xray.common.reference.Reference;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -45,7 +45,7 @@ public class GuiContainer extends GuiScreen {
     private static void drawTexturedQuadFit(double x, double y)
     {
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder tessellate = tessellator.getBuffer();
+        VertexBuffer tessellate = tessellator.getBuffer();
         tessellate.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         tessellate.pos(x + 0, y + (double) 235, (double) 0).tex( 0,1).endVertex();
         tessellate.pos(x + (double) 229, y + (double) 235, (double) 0).tex( 1, 1).endVertex();
@@ -62,7 +62,7 @@ public class GuiContainer extends GuiScreen {
         drawTexturedQuadFit(width / 2 - 110, height / 2 - 118);
 
         if( hasTitle() ) {
-            FontRenderer fr = this.mc.fontRenderer;
+            FontRenderer fr = this.mc.fontRendererObj;
             fr.drawStringWithShadow(title(), width / 2 - 97, height / 2 - 105, 0xffff00);
         }
 
@@ -84,6 +84,6 @@ public class GuiContainer extends GuiScreen {
     }
 
     FontRenderer getFontRender() {
-        return this.mc.fontRenderer;
+        return this.mc.fontRendererObj;
     }
 }

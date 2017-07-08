@@ -142,7 +142,7 @@ public class GuiList extends GuiContainer
 		for ( HelperGuiList item : this.renderList ) {
 			NonNullList<ItemStack> tmpStack = NonNullList.create();
 			Block tmpBlock = Block.getBlockById(item.ore.getId());
-			tmpBlock.getSubBlocks(tmpBlock.getCreativeTabToDisplayOn(), tmpStack);
+			tmpBlock.getSubBlocks( new ItemStack(tmpBlock).getItem(),  tmpBlock.getCreativeTabToDisplayOn(), tmpStack);
 
 			this.itemRender.renderItemAndEffectIntoGUI(tmpStack.get( item.ore.getMeta() ), item.x + 2, item.y + 2);
 		}

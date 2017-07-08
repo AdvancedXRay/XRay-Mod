@@ -5,10 +5,10 @@ import com.xray.client.gui.helper.HelperBlock;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class GuiAdd extends GuiContainer {
 		greenSlider.sliderValue = 0.654F;
 		blueSlider.sliderValue  = 1.0F;
 
-		oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 97 ,  height / 2 - 63, 202, 20 );
+		oreName = new GuiTextField( 1, getFontRender(), width / 2 - 97 ,  height / 2 - 63, 202, 20 );
 		oreName.setText("Gui Name");
 
 		this.buttonList.add( new GuiButton( 99, width / 2 - 100, height / 2 + 86, 72, 20, "Cancel" ) ); // Cancel button
@@ -116,7 +116,7 @@ public class GuiAdd extends GuiContainer {
 
 	public static void renderPreview(int width, int height, float r, float g, float b) {
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder tessellate = tessellator.getBuffer();
+		VertexBuffer tessellate = tessellator.getBuffer();
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture2D();
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);

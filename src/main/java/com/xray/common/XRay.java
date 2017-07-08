@@ -114,7 +114,7 @@ public class XRay
     {
 		for ( Block block : ForgeRegistries.BLOCKS ) {
 			NonNullList<ItemStack> subBlocks = NonNullList.create();
-			block.getSubBlocks( block.getCreativeTabToDisplayOn(), subBlocks );
+			block.getSubBlocks( new ItemStack( block ).getItem(), block.getCreativeTabToDisplayOn(), subBlocks );
 			for( ItemStack subBlock : subBlocks ) {
 				if (subBlock.isEmpty())
 					continue;

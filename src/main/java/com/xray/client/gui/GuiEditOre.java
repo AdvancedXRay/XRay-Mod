@@ -26,11 +26,11 @@ public class GuiEditOre extends GuiContainer
 
         NonNullList<ItemStack> tmpStack = NonNullList.create();
         Block tmpBlock = Block.getBlockById(oreInfo.getId());
-        tmpBlock.getSubBlocks(tmpBlock.getCreativeTabToDisplayOn(), tmpStack);
+        tmpBlock.getSubBlocks(new ItemStack(tmpBlock).getItem(), tmpBlock.getCreativeTabToDisplayOn(), tmpStack);
         ItemStack stack = tmpStack.get( oreInfo.getMeta() );
 
         this.selectBlock = new HelperBlock(
-                stack.getDisplayName(), Block.getBlockFromItem( stack.getItem() ), stack, stack.getItem(), stack.getItem().getRegistryName()
+                stack.isEmpty() ? oreInfo.getDisplayName() : stack.getDisplayName(), Block.getBlockFromItem( stack.getItem() ), stack, stack.getItem(), stack.getItem().getRegistryName()
         );
     }
 
@@ -49,7 +49,7 @@ public class GuiEditOre extends GuiContainer
         greenSlider.sliderValue = (float)oreInfo.color[1]/255;
         blueSlider.sliderValue  = (float)oreInfo.color[2]/255;
 
-        oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 97 ,  height / 2 - 63, 202, 20 );
+        oreName = new GuiTextField( 1, this.fontRendererObj, width / 2 - 97 ,  height / 2 - 63, 202, 20 );
         oreName.setText(this.oreInfo.getDisplayName());
 
         this.buttonList.add( new GuiButton( 99, width / 2 - 100, height / 2 + 86, 72, 20, "Cancel" ) ); // Cancel button
