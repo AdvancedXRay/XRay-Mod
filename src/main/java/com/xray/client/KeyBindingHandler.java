@@ -1,13 +1,14 @@
-package com.fgtxray.client;
+package com.xray.client;
 
+import com.xray.client.render.RenderTick;
+import com.xray.common.XRay;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
-import com.fgtxray.FgtXRay;
-import com.fgtxray.client.gui.GuiSettings;
+import com.xray.client.gui.GuiList;
 
 public class KeyBindingHandler
 {
@@ -18,18 +19,14 @@ public class KeyBindingHandler
     {
 		if( (!FMLClientHandler.instance().isGUIOpen( GuiChat.class )) && (mc.currentScreen == null) && (mc.world != null) )
         {
-			if (OresSearch.searchList.isEmpty()) // Populate the OresSearch.searchList
+			if( XRay.keyBind_keys[ XRay.keyIndex_toggleXray ].isPressed() )
 			{
-				OresSearch.get();
-			}
-			if( FgtXRay.keyBind_keys[ FgtXRay.keyIndex_toggleXray ].isPressed() )
-			{
-				FgtXRay.drawOres = !FgtXRay.drawOres;
+				XRay.drawOres = !XRay.drawOres;
 				RenderTick.ores.clear();
 			}
-			else if( FgtXRay.keyBind_keys[ FgtXRay.keyIndex_showXrayMenu ].isPressed() )
+			else if( XRay.keyBind_keys[ XRay.keyIndex_showXrayMenu ].isPressed() )
 			{
-				mc.displayGuiScreen( new GuiSettings() );
+				mc.displayGuiScreen( new GuiList() );
 			}
 		}
 	}

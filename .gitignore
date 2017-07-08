@@ -21,15 +21,10 @@ build
 eclipse
 run
 
-LICENSE-fml.txt
+CREDITS-fml.txt
+*.txt
+gradle/wrapper/gradle-wrapper.jar
+gradle/wrapper/gradle-wrapper.properties
 gradlew
 gradlew.bat
-gradle/
-MinecraftForge-Credits.txt
-MinecraftForge-License.txt
-Paulscode IBXM Library License.txt
-forge-1.8.9-11.15.1.1722-changelog.txt
-src/main/java/com/example/examplemod/ExampleMod.java
-README.txt
-CREDITS-fml.txt
-Paulscode SoundSystem CodecIBXM License.txt
+gradle.properties
