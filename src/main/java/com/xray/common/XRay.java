@@ -1,24 +1,17 @@
 package com.xray.common;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.xray.client.OresSearch;
-import com.xray.common.proxy.ServerProxy;
 import com.xray.client.gui.helper.HelperBlock;
+import com.xray.common.config.ConfigHandler;
+import com.xray.common.config.DefaultConfig;
+import com.xray.common.proxy.ServerProxy;
+import com.xray.common.reference.OreInfo;
 import com.xray.common.reference.Reference;
+import com.xray.common.helper.ItemStackHelper;
 import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import org.lwjgl.input.Keyboard;
-
 import net.minecraft.client.settings.KeyBinding;
-
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
-
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -26,10 +19,13 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import org.lwjgl.input.Keyboard;
 
-import com.xray.common.reference.OreInfo;
-import com.xray.common.config.DefaultConfig;
-import com.xray.common.config.ConfigHandler;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Mod(modid= Reference.MOD_ID, name= Reference.MOD_NAME, version=Reference.MOD_VERSION)
 public class XRay
@@ -113,10 +109,11 @@ public class XRay
 	public void postInit(FMLPostInitializationEvent event)
     {
 		for ( Block block : ForgeRegistries.BLOCKS ) {
-			NonNullList<ItemStack> subBlocks = NonNullList.create();
-			block.getSubBlocks( block.getCreativeTabToDisplayOn(), subBlocks );
+			List<ItemStack> subBlocks = new ArrayList<>();
+			block.getSubBlocks( new ItemStack( block ).getItem(), block.getCreativeTabToDisplayOn(), subBlocks );
+
 			for( ItemStack subBlock : subBlocks ) {
-				if (subBlock.isEmpty())
+				if( ItemStackHelper.isEmpty(subBlock) )
 					continue;
 
 				Block tmpBlock = Block.getBlockFromItem( subBlock.getItem() );

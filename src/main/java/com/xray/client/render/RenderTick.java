@@ -8,8 +8,8 @@ package com.xray.client.render;
 import com.xray.common.XRay;
 import com.xray.common.reference.BlockInfo;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -27,15 +27,15 @@ public class RenderTick
 	@SubscribeEvent
 	public void onWorldRenderLast( RenderWorldLastEvent event ) // Called when drawing the world.
 	{
-		if ( mc.world != null && XRay.drawOres )
+		if ( mc.theWorld != null && XRay.drawOres )
 		{
 			float f = event.getPartialTicks();
-			float px = (float)mc.player.posX;
-			float py = (float)mc.player.posY;
-			float pz = (float)mc.player.posZ;
-			float mx = (float)mc.player.prevPosX;
-			float my = (float)mc.player.prevPosY;
-			float mz = (float)mc.player.prevPosZ;
+			float px = (float)mc.thePlayer.posX;
+			float py = (float)mc.thePlayer.posY;
+			float pz = (float)mc.thePlayer.posZ;
+			float mx = (float)mc.thePlayer.prevPosX;
+			float my = (float)mc.thePlayer.prevPosY;
+			float mz = (float)mc.thePlayer.prevPosZ;
 			float dx = mx + ( px - mx ) * f;
 			float dy = my + ( py - my ) * f;
 			float dz = mz + ( pz - mz ) * f;
@@ -45,7 +45,7 @@ public class RenderTick
 
     @SubscribeEvent
     public void pickupItem( BlockEvent.BreakEvent event ) {
-        if ( mc.world != null && XRay.drawOres )
+        if ( mc.theWorld != null && XRay.drawOres )
         {
             ClientTick.blockFinder( true );
         }
@@ -53,7 +53,7 @@ public class RenderTick
 
     @SubscribeEvent
     public void placeItem(BlockEvent.PlaceEvent event ) {
-        if ( mc.world != null && XRay.drawOres )
+        if ( mc.theWorld != null && XRay.drawOres )
         {
             ClientTick.blockFinder( true );
         }
@@ -72,7 +72,7 @@ public class RenderTick
 		GL11.glLineWidth( 1f );
 
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder tessellate = tessellator.getBuffer();
+		VertexBuffer tessellate = tessellator.getBuffer();
 
 		ArrayList<BlockInfo> temp = new ArrayList<>();
 		temp.addAll(ores);

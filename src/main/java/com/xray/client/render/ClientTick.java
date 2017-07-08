@@ -26,16 +26,16 @@ public class ClientTick implements Runnable
 	@SubscribeEvent
 	public void tickEnd( TickEvent.ClientTickEvent event )
 	{
-		if ( (event.phase == TickEvent.Phase.END) && (mc.player != null) )
+		if ( (event.phase == TickEvent.Phase.END) && (mc.thePlayer != null) )
 		{
-			XRay.localPlyX = MathHelper.floor( mc.player.posX );
-			XRay.localPlyY = MathHelper.floor( mc.player.posY );
-			XRay.localPlyZ = MathHelper.floor( mc.player.posZ );
-            XRay.localPlyXPrev = MathHelper.floor( mc.player.prevPosX );
-            XRay.localPlyZPrev = MathHelper.floor( mc.player.prevPosZ );
+			XRay.localPlyX = MathHelper.floor_double( mc.thePlayer.posX );
+			XRay.localPlyY = MathHelper.floor_double( mc.thePlayer.posY );
+			XRay.localPlyZ = MathHelper.floor_double( mc.thePlayer.posZ );
+            XRay.localPlyXPrev = MathHelper.floor_double( mc.thePlayer.prevPosX );
+            XRay.localPlyZPrev = MathHelper.floor_double( mc.thePlayer.prevPosZ );
 
 			if( XRay.drawOres && ((this.thread == null) || !this.thread.isAlive()) &&
-			( (mc.world != null) && (mc.player != null) ) ) // If we're in a world and want to start drawing create the thread.
+			( (mc.theWorld != null) && (mc.thePlayer != null) ) ) // If we're in a world and want to start drawing create the thread.
 			{
 				this.thread = new Thread( this );
 				this.thread.setDaemon( false );
@@ -66,7 +66,7 @@ public class ClientTick implements Runnable
 	}
 
 	public static boolean blockFinder(boolean ForceAdd) {
-		if (XRay.drawOres && !OresSearch.searchList.isEmpty() && mc.world != null && mc.player != null)
+		if (XRay.drawOres && !OresSearch.searchList.isEmpty() && mc.theWorld != null && mc.thePlayer != null)
 		{
 			if ( nextTimeMs > System.currentTimeMillis() ) // Delay to avoid spamming ore updates.
 				return true;
@@ -86,7 +86,7 @@ public class ClientTick implements Runnable
 				{
 					for (int z = pz - radius; z < pz + radius; z++) // z axis.
 					{
-						IBlockState state = mc.world.getBlockState(  new BlockPos(x, y, z) );
+						IBlockState state = mc.theWorld.getBlockState(  new BlockPos(x, y, z) );
 
 						int id = Block.getIdFromBlock( state.getBlock() );
 						int meta = state.getBlock().getMetaFromState(state);

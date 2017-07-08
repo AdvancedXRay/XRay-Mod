@@ -2,15 +2,18 @@ package com.xray.client.gui;
 
 import com.xray.client.OresSearch;
 import com.xray.client.gui.helper.HelperBlock;
+import com.xray.common.helper.ItemStackHelper;
 import com.xray.common.reference.OreInfo;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuiEditOre extends GuiContainer
 {
@@ -24,14 +27,22 @@ public class GuiEditOre extends GuiContainer
     GuiEditOre(OreInfo oreInfo) {
         this.oreInfo = oreInfo;
 
-        NonNullList<ItemStack> tmpStack = NonNullList.create();
+        List<ItemStack> tmpStack = new ArrayList<>();
         Block tmpBlock = Block.getBlockById(oreInfo.getId());
-        tmpBlock.getSubBlocks(tmpBlock.getCreativeTabToDisplayOn(), tmpStack);
-        ItemStack stack = tmpStack.get( oreInfo.getMeta() );
+        ItemStack stack = new ItemStack( tmpBlock );
+        tmpBlock.getSubBlocks(stack.getItem(), tmpBlock.getCreativeTabToDisplayOn(), tmpStack);
+        stack = tmpStack.get( oreInfo.getMeta() );
 
-        this.selectBlock = new HelperBlock(
-                stack.getDisplayName(), Block.getBlockFromItem( stack.getItem() ), stack, stack.getItem(), stack.getItem().getRegistryName()
-        );
+        if( !ItemStackHelper.isEmpty(stack) )
+            this.selectBlock = new HelperBlock(
+                    stack.getDisplayName(), Block.getBlockFromItem( stack.getItem() ), stack, stack.getItem(), stack.getItem().getRegistryName()
+            );
+        else {
+            stack = new ItemStack( Blocks.GRASS );
+            this.selectBlock = new HelperBlock(
+                oreInfo.getOreName(), Blocks.GRASS, stack, stack.getItem(), stack.getItem().getRegistryName()
+            );
+        }
     }
 
     @Override
@@ -49,7 +60,7 @@ public class GuiEditOre extends GuiContainer
         greenSlider.sliderValue = (float)oreInfo.color[1]/255;
         blueSlider.sliderValue  = (float)oreInfo.color[2]/255;
 
-        oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 97 ,  height / 2 - 63, 202, 20 );
+        oreName = new GuiTextField( 1, this.fontRendererObj, width / 2 - 97 ,  height / 2 - 63, 202, 20 );
         oreName.setText(this.oreInfo.getDisplayName());
 
         this.buttonList.add( new GuiButton( 99, width / 2 - 100, height / 2 + 86, 72, 20, "Cancel" ) ); // Cancel button
@@ -65,19 +76,19 @@ public class GuiEditOre extends GuiContainer
 
                 OresSearch.update(this.oreInfo, oreName.getText(), rgb);
 
-                mc.player.closeScreen();
+                mc.thePlayer.closeScreen();
                 mc.displayGuiScreen( new GuiList() );
                 break;
 
             case 100:
                 OresSearch.remove(this.oreInfo);
 
-                mc.player.closeScreen();
+                mc.thePlayer.closeScreen();
                 mc.displayGuiScreen( new GuiList() );
                 break;
 
             case 99: // Cancel
-                mc.player.closeScreen();
+                mc.thePlayer.closeScreen();
                 mc.displayGuiScreen( new GuiList() );
                 break;
 

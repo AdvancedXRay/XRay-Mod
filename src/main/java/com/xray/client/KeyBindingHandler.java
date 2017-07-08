@@ -17,7 +17,7 @@ public class KeyBindingHandler
 	@SubscribeEvent
 	public void onKeyInput( KeyInputEvent event )
     {
-		if( (!FMLClientHandler.instance().isGUIOpen( GuiChat.class )) && (mc.currentScreen == null) && (mc.world != null) )
+		if( (!FMLClientHandler.instance().isGUIOpen( GuiChat.class )) && (mc.currentScreen == null) && (mc.theWorld != null) )
         {
 			if( XRay.keyBind_keys[ XRay.keyIndex_toggleXray ].isPressed() )
 			{

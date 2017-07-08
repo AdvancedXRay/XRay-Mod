@@ -1,6 +1,7 @@
 package com.xray.client.gui;
 
 import com.xray.client.OresSearch;
+import com.xray.client.gui.helper.HelperBlock;
 import com.xray.client.gui.helper.HelperGuiList;
 import com.xray.client.render.ClientTick;
 import com.xray.common.XRay;
@@ -88,7 +89,7 @@ public class GuiList extends GuiContainer
 				break;
 
 			case 1: // New Ore button
-				mc.player.closeScreen();
+				mc.thePlayer.closeScreen();
 				mc.displayGuiScreen( new GuiBlocks() );
 				break;
 
@@ -125,7 +126,7 @@ public class GuiList extends GuiContainer
 		for ( HelperGuiList list : this.renderList ) {
 			if( list.getButton().mousePressed(this.mc, x, y) ) {
 				if( mouse == 1 ) {
-					mc.player.closeScreen();
+					mc.thePlayer.closeScreen();
 					mc.displayGuiScreen( new GuiEditOre( list.getOre() ) );
 				}
 			}
@@ -139,8 +140,11 @@ public class GuiList extends GuiContainer
 
 		RenderHelper.enableGUIStandardItemLighting();
 		for ( HelperGuiList item : this.renderList ) {
-			ItemStack items = new ItemStack(Block.getBlockById(item.ore.getId()), 64);
-			this.itemRender.renderItemAndEffectIntoGUI(items, item.x + 2, item.y + 2);
+			List<ItemStack> tmpStack = new ArrayList<>();
+			Block tmpBlock = Block.getBlockById(item.ore.getId());
+			tmpBlock.getSubBlocks(new ItemStack( tmpBlock ).getItem(), tmpBlock.getCreativeTabToDisplayOn(), tmpStack);
+
+			this.itemRender.renderItemAndEffectIntoGUI(tmpStack.get( item.ore.getMeta() ), item.x + 2, item.y + 2);
 		}
 		RenderHelper.disableStandardItemLighting();
 	}

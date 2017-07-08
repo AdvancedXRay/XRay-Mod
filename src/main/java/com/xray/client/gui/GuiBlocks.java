@@ -35,7 +35,7 @@ public class GuiBlocks extends GuiContainer {
             return;
 
         this.selected = index;
-        mc.player.closeScreen();
+        mc.thePlayer.closeScreen();
         mc.displayGuiScreen( new GuiAdd( blocks.get( this.selected ) ) );
     }
 
@@ -57,7 +57,7 @@ public class GuiBlocks extends GuiContainer {
         switch(button.id)
         {
             case 0: // Cancel
-                mc.player.closeScreen();
+                mc.thePlayer.closeScreen();
                 mc.displayGuiScreen( new GuiList() );
                 break;
 
