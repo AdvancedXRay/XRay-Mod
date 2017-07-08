@@ -119,7 +119,7 @@ public class ConfigHandler
 	{
 		String tmpCategory = "";
 		for( String category : config.getCategoryNames() ) {
-			String cleanStr = original.getOreName().replaceAll("\\s+", "").toLowerCase();
+			String cleanStr = original.getOreName().toLowerCase();
 			String[] splitCat = category.split("\\.");
 
 			if( splitCat.length == 2 && splitCat[1].equals( cleanStr ) ) {
@@ -142,7 +142,7 @@ public class ConfigHandler
 
 	public static void remove( OreInfo original ) {
 		for( String category : config.getCategoryNames() ) {
-			String cleanStr = original.getOreName().replaceAll("\\s+", "").toLowerCase();
+			String cleanStr = original.getOreName().toLowerCase();
 			String[] splitCat = category.split("\\.");
 			if( splitCat.length == 2 && splitCat[1].equals( cleanStr ) ) {
 				System.out.println(cleanStr);
