@@ -10,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -139,8 +140,11 @@ public class GuiList extends GuiContainer
 
 		RenderHelper.enableGUIStandardItemLighting();
 		for ( HelperGuiList item : this.renderList ) {
-			ItemStack items = new ItemStack(Block.getBlockById(item.ore.getId()), 64);
-			this.itemRender.renderItemAndEffectIntoGUI(items, item.x + 2, item.y + 2);
+			NonNullList<ItemStack> tmpStack = NonNullList.create();
+			Block tmpBlock = Block.getBlockById(item.ore.getId());
+			tmpBlock.getSubBlocks(tmpBlock.getCreativeTabToDisplayOn(), tmpStack);
+
+			this.itemRender.renderItemAndEffectIntoGUI(tmpStack.get( item.ore.getMeta() ), item.x + 2, item.y + 2);
 		}
 		RenderHelper.disableStandardItemLighting();
 	}
