@@ -32,7 +32,6 @@ public class DefaultConfig {
 		put("oreSilver", new OreInfo("Silver", 0, 0, new int[]{143,143,143}, false) );
 		put("oreQuartz", new OreInfo("Quartz", 0, 0, new int[]{30,74,0}, false) );
 		put("oreCoal", new OreInfo("Coal", 0, 0, new int[]{0, 0, 0}, false ) );
-		put("blockGlass", new OreInfo("Glass", 0, 0, new int[]{136, 136, 255}, false) );
 	}};
 
 	// Default block to add. Mostly just so people can add custom blocks manually through the config until I setup a gui for it.
