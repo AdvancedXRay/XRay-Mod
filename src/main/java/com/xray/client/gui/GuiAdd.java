@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import java.io.IOException;
 import java.util.Objects;
 
-public class GuiNewOre extends GuiContainer {
+public class GuiAdd extends GuiContainer {
 	private GuiTextField oreName;
 	private GuiSlider redSlider;
 	private GuiSlider greenSlider;
@@ -22,7 +22,7 @@ public class GuiNewOre extends GuiContainer {
 	private BlockContainer selectBlock;
 	private boolean oreNameCleared  = false;
 
-	GuiNewOre(BlockContainer selectedBlock) {
+	GuiAdd(BlockContainer selectedBlock) {
 		this.selectBlock = selectedBlock;
 	}
 
