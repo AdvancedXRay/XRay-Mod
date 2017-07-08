@@ -68,7 +68,7 @@ public class XRay
 		 * OreInfo( String "Gui Name", // The name to be displayed in the GUI.
 		 *     int id, int meta, // Leave these at 0. The OresSearch will set them through the ore dictionary.
 		 *     int color, // 0x RED GREEN BLUE (0xRRGGBB)
-		 *     bool enabled) // Should the be on by default. Its then set internally by GuiSettings.
+		 *     bool enabled) // Should the be on by default. Its then set internally by GuiList.
 		 * Open DefaultConfig.java for more info.
 		 */
 	

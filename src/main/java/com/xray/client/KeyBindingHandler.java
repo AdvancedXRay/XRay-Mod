@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
-import com.xray.client.gui.GuiSettings;
+import com.xray.client.gui.GuiList;
 
 public class KeyBindingHandler
 {
@@ -26,7 +26,7 @@ public class KeyBindingHandler
 			}
 			else if( XRay.keyBind_keys[ XRay.keyIndex_showXrayMenu ].isPressed() )
 			{
-				mc.displayGuiScreen( new GuiSettings() );
+				mc.displayGuiScreen( new GuiList() );
 			}
 		}
 	}

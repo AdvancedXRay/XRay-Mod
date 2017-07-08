@@ -58,7 +58,7 @@ public class GuiBlocks extends GuiContainer {
         {
             case 0: // Cancel
                 mc.player.closeScreen();
-                mc.displayGuiScreen( new GuiSettings() );
+                mc.displayGuiScreen( new GuiList() );
                 break;
 
             default:

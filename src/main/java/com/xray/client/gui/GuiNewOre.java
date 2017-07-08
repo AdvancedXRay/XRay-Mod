@@ -58,12 +58,12 @@ public class GuiNewOre extends GuiContainer {
 				OresSearch.add(tmpId, selectBlock.getItemStack().getMetadata(), oreName.getText(), rgb);
 
 				mc.player.closeScreen();
-				mc.displayGuiScreen( new GuiSettings() );
+				mc.displayGuiScreen( new GuiList() );
 				break;
 
 			case 99: // Cancel
 				mc.player.closeScreen();
-				mc.displayGuiScreen( new GuiSettings() );
+				mc.displayGuiScreen( new GuiList() );
 				break;
 
 			default:

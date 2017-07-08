@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiSettings extends GuiContainer
+public class GuiList extends GuiContainer
 {
 	private List<HelperGuiList> listHelper = new ArrayList<>();
 	private List<HelperGuiList> renderList = new ArrayList<>();
