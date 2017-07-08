@@ -9,7 +9,7 @@ public class Reference {
     // Mod Constants
     public static final String MOD_ID = "xray";
     public static final String MOD_NAME = "XRay";
-    public static final String MOD_VERSION = "1.2.1";
+    public static final String MOD_VERSION = "1.3.0";
 
     // UI Constants
     public static final String PREFIX_MOD = MOD_ID+":";
