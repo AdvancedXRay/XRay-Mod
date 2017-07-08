@@ -31,7 +31,7 @@ public class GuiContainer extends GuiScreen {
         super.keyTyped( par1, par2 );
 
         // Close on esc, inventory key or keybind
-        if( (par2 == 1) || (par2 == mc.gameSettings.keyBindInventory.getKeyCode()) || par2 == XRay.keyBind_keys[ XRay.keyIndex_showXrayMenu ].getKeyCode() )
+        if( par2 == 1 )
             mc.player.closeScreen();
     }
 
