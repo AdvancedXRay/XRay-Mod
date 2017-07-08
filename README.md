@@ -2,13 +2,15 @@
 Minecraft Forge XRay mod
 
 ### Feature:
-- Full Support for Forge
-- Clean and simple GUI to add blocks
-- Colour RGB Selector
-- Auto adds ores from other mods.
+- Build on Forge!
+- Simple and Clean UI For Adding, Deleting and Editing the blocks you want to see
+    - RGB Based color selector for full colour range
+    - Simple UI to add new blocks from a Searchable List layout
+    - Easy Editing and Deleting of blocks
+- Ore Dictionary Support
 
 ### How to use:
-Open settings -> controls and edit the button to open the GUI and the button to toggle the Overlay on and off. 
+Open settings -> controls and edit the button to open the GUI and the button to toggle the Overlay on and off.
 Then press your key to open the gui to edit the ores on the list. Then press your key to turn on the Overlay
 
 ### Previews:
