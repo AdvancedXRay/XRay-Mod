@@ -19,10 +19,6 @@ public class KeyBindingHandler
     {
 		if( (!FMLClientHandler.instance().isGUIOpen( GuiChat.class )) && (mc.currentScreen == null) && (mc.world != null) )
         {
-			if (OresSearch.searchList.isEmpty()) // Populate the OresSearch.searchList
-			{
-				OresSearch.get();
-			}
 			if( XRay.keyBind_keys[ XRay.keyIndex_toggleXray ].isPressed() )
 			{
 				XRay.drawOres = !XRay.drawOres;

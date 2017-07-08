@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.xray.client.OresSearch;
 import com.xray.common.proxy.ServerProxy;
 import com.xray.common.reference.BlockContainer;
 import com.xray.common.reference.Reference;
@@ -51,8 +52,8 @@ public class XRay
 	public static final int keyIndex_showXrayMenu = 1;
 	public static final int[] keyBind_keyValues = 
 	{
-		Keyboard.KEY_NONE,
-		Keyboard.KEY_NONE
+		Keyboard.KEY_BACKSLASH,
+		Keyboard.KEY_Z
 	};
 	public static final String[] keyBind_descriptions =
 	{
@@ -123,6 +124,11 @@ public class XRay
 				Block tmpBlock = Block.getBlockFromItem( subBlock.getItem() );
 				blockList.add( new BlockContainer( subBlock.getDisplayName(), tmpBlock, subBlock, subBlock.getItem(), subBlock.getItem().getRegistryName() ));
 			}
+		}
+
+		if (OresSearch.searchList.isEmpty()) // Populate the OresSearch.searchList
+		{
+			OresSearch.get();
 		}
 	}
 }
