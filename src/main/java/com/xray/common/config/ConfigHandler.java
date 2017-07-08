@@ -33,7 +33,6 @@ public class ConfigHandler
 				boolean enabled = cat.get("enabled").getBoolean(false);
 
 				XRay.oredictOres.put(dictName, new OreInfo( guiName, guiName.replaceAll("\\s+", ""), id, meta, color, enabled ) );
-
 			}
 			else if( category.startsWith("customores.") )
 			{

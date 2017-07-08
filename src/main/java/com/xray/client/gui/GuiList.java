@@ -55,7 +55,7 @@ public class GuiList extends GuiContainer
 
 		GuiButton aNextButton, aPrevButton;
 		this.buttonList.add( new GuiButton(1, (width / 2) - 67, height / 2 + 86, 55, 20, "Add Ore" ) );
-		this.buttonList.add( new GuiButton(2, (width / 2) - 10, height / 2 + 86, 82, 20, "Distance: "+ XRay.distStrings[ XRay.currentDist]) ); // Static button for printing the ore dictionary / searchList.
+		this.buttonList.add( new GuiButton(0, (width / 2) - 10, height / 2 + 86, 82, 20, "Distance: "+ XRay.distStrings[ XRay.currentDist]) ); // Static button for printing the ore dictionary / searchList.
 		this.buttonList.add( aNextButton = new GuiButton(2, width / 2 + 75, height / 2 + 86, 30, 20, ">") );
 		this.buttonList.add( aPrevButton = new GuiButton(3, width / 2 - 100, height / 2 + 86, 30, 20, "<") );
 
@@ -83,6 +83,7 @@ public class GuiList extends GuiContainer
 					XRay.currentDist++;
 				else
 					XRay.currentDist = 0;
+				ClientTick.blockFinder( true );
 				ConfigHandler.update("searchdist", false);
 				break;
 
