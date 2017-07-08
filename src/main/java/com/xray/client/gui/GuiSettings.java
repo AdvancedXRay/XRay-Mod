@@ -1,6 +1,7 @@
 package com.xray.client.gui;
 
 import com.xray.client.OresSearch;
+import com.xray.client.render.ClientTick;
 import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
 import com.xray.common.reference.OreButtons;
@@ -148,6 +149,7 @@ public class GuiSettings extends GuiContainer
 							{
 								ore.draw = !ore.draw; // Invert searchList.ore.draw
 								ConfigHandler.update( ore.oreName, ore.draw );
+								ClientTick.blockFinder( true ); // Update the current list
 							}
 						}
 					}

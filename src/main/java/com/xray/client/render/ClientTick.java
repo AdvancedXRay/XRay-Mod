@@ -65,7 +65,7 @@ public class ClientTick implements Runnable
 		}
 	}
 
-	static boolean blockFinder(boolean ForceAdd) {
+	public static boolean blockFinder(boolean ForceAdd) {
 		if (XRay.drawOres && !OresSearch.searchList.isEmpty() && mc.world != null && mc.player != null)
 		{
 			if ( nextTimeMs > System.currentTimeMillis() ) // Delay to avoid spamming ore updates.
