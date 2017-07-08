@@ -116,40 +116,6 @@ public class GuiSettings extends GuiScreen
 			// Called on left click of GuiButton
 		switch(button.id)
 		{
-			case 99: // Print OreDict
-				for ( String name : OreDictionary.getOreNames() ) // Print the ore dictionary.
-				{
-					List<ItemStack> oreStack = OreDictionary.getOres( name);
-					System.out.print( String.format("[OreDict] %-40.40s [%d types] ( ", name, oreStack.size() ) );
-					StringBuilder idMetaCsv = new StringBuilder();
-					if( oreStack.size() < 1 )
-					{
-						idMetaCsv.append( " )" );
-					}
-
-					for( ItemStack stack : oreStack )
-					{
-						if( stack == oreStack.get( oreStack.size() - 1 ) )
-						{
-							idMetaCsv.append( String.format( "%d:%d )", Item.getIdFromItem( stack.getItem() ), stack.getItemDamage() ) );
-						}
-						else
-						{
-							idMetaCsv.append( String.format( "%d:%d, ", Item.getIdFromItem( stack.getItem() ), stack.getItemDamage() ) );
-						}
-					}
-					System.out.println( idMetaCsv.toString() );
-				}
-
-				if (!OresSearch.searchList.isEmpty()) // Print out the searchList.
-				{
-					for (OreInfo ore : OresSearch.searchList)
-					{
-						System.out.println(String.format("[XRay] OreInfo( %s, %d, %d, 0x%x, %b )", ore.oreName, ore.id, ore.meta, ore.color[0], ore.draw));
-					}
-				}
-				break;
-
 			case 98: // Distance Button
 				if (XRay.currentDist < XRay.distNumbers.length - 1)
 					XRay.currentDist++;
