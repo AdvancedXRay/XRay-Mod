@@ -19,14 +19,14 @@ Then press your key to open the gui to edit the ores on the list. Then press you
 The [Imgur Album](http://imgur.com/a/23dX5)
 
 ### Supports
-|Minecraft Version   | Forge Version | Branch | Author
-|---|---|---|---
-|1.12 | 14.21.0.2334 | [XRay-Mod/tree/master](https://github.com/MichaelHillcox/XRay-Mod/tree/master) | [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.11.2 | 13.20.0.2224 | [XRay-Mod/tree/1.11.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.11.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.10.2 | 12.18.3.2185 | [XRay-Mod/tree/1.10.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.10.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.9.4 | 12.17.0.2051 | [XRay-Mod/tree/1.9.4](https://github.com/MichaelHillcox/XRay-Mod/tree/1.9.4) | [BondarenkoArtur](https://github.com/BondarenkoArtur) & [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.8.9 | 11.15.1.1722 | [XRay-Mod/tree/1.8.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.8.x) | [Michael Hillcox](https://github.com/MichaelHillcox) With help from  [BondarenkoArtur](https://github.com/BondarenkoArtur)
-|1.7.10 | 10.13.2.1291 | [XRay-Mod/tree/1.7.10](https://github.com/MichaelHillcox/XRay-Mod/tree/1.7.10) | [mcd1992](https://github.com/mcd1992) ([mcd1992 / GitLab](https://gitlab.com/mcd1992)) & [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.6.4 | 9.11.1.953 |  [XRay-Mod/tree/1.6.4](https://github.com/MichaelHillcox/XRay-Mod/tree/1.6.4) | [mcd1992](https://github.com/mcd1992) ([mcd1992 / GitLab](https://gitlab.com/mcd1992))
+|Minecraft Version   | Mod Version | Forge Version | Branch | Author
+|---|---|---|---|---
+|1.12 | [1.3.0](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.12-v1.3.0) | 14.21.0.2334 | [XRay-Mod/tree/master](https://github.com/MichaelHillcox/XRay-Mod/tree/master) | [Michael Hillcox](https://github.com/MichaelHillcox)
+|1.11.2 | [1.1.0](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.11.2-v1.1.0) | 13.20.0.2224 | [XRay-Mod/tree/1.11.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.11.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
+|1.10.2 | [1.2.1](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.10.2-v1.2.1) | 12.18.3.2185 | [XRay-Mod/tree/1.10.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.10.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
+|1.9.4 | [1.0.9 - *No longer maintained*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.9.4-v1.0.9) | 12.17.0.2051 | [XRay-Mod/tree/1.9.4](https://github.com/MichaelHillcox/XRay-Mod/tree/1.9.4) | [BondarenkoArtur](https://github.com/BondarenkoArtur) & [Michael Hillcox](https://github.com/MichaelHillcox)
+|1.8.9 | [1.1.0 - *No longer maintained*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.8.9-v1.1.0) | 11.15.1.1722 | [XRay-Mod/tree/1.8.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.8.x) | [Michael Hillcox](https://github.com/MichaelHillcox) With help from  [BondarenkoArtur](https://github.com/BondarenkoArtur)
+|1.7.10 | [1.0.1.75 - *No longer maintained*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.0.1.75) | 10.13.2.1291 | [XRay-Mod/tree/1.7.10](https://github.com/MichaelHillcox/XRay-Mod/tree/1.7.10) | [mcd1992](https://github.com/mcd1992) ([mcd1992 / GitLab](https://gitlab.com/mcd1992)) & [Michael Hillcox](https://github.com/MichaelHillcox)
+|1.6.4 | 1.0.0 - *No longer maintained* | 9.11.1.953 |  [XRay-Mod/tree/1.6.4](https://github.com/MichaelHillcox/XRay-Mod/tree/1.6.4) | [mcd1992](https://github.com/mcd1992) ([mcd1992 / GitLab](https://gitlab.com/mcd1992))
 
 > A big thanks CJB for his rendering system.
