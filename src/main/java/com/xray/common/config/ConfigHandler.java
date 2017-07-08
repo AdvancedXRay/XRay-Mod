@@ -133,7 +133,25 @@ public class ConfigHandler
 					config.get(tmpCategory, "green", "").set( newInfo.color[1] );
 					config.get(tmpCategory, "blue", "").set( newInfo.color[2] );
 					config.get(tmpCategory, "name", "").set( newInfo.oreName );
+					break;
 				}
+			}
+		}
+		config.save();
+	}
+
+	public static void remove( OreInfo original ) {
+		for( String category : config.getCategoryNames() ) {
+			String cleanStr = original.getOreName().replaceAll("\\s+", "").toLowerCase();
+			String[] splitCat = category.split("\\.");
+			if( splitCat.length == 2 && splitCat[1].equals( cleanStr ) ) {
+				System.out.println(cleanStr);
+
+				if( splitCat[0].equals( "oredict" ) )
+					config.removeCategory( config.getCategory("oredict."+cleanStr) );
+				if( splitCat[0].equals( "customores" ) )
+					config.removeCategory( config.getCategory("customores."+cleanStr) );
+				break;
 			}
 		}
 		config.save();

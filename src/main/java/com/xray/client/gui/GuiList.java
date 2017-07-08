@@ -24,13 +24,6 @@ public class GuiList extends GuiContainer
 	@Override
 	public void initGui()
     {
-        // Called when the gui should be (re)created.
-		if( OresSearch.searchList.isEmpty() )
-        {
-			System.out.println( "[XRay] Error: searchList is empty inside initGui call!" );
-			return;
-		}
-
 		this.buttonList.clear();
 		this.listHelper.clear();
 		this.renderList.clear();

@@ -69,6 +69,13 @@ public class GuiEditOre extends GuiContainer
                 mc.displayGuiScreen( new GuiList() );
                 break;
 
+            case 100:
+                OresSearch.remove(this.oreInfo);
+
+                mc.player.closeScreen();
+                mc.displayGuiScreen( new GuiList() );
+                break;
+
             case 99: // Cancel
                 mc.player.closeScreen();
                 mc.displayGuiScreen( new GuiList() );

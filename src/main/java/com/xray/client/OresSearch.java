@@ -74,7 +74,21 @@ public class OresSearch
 			mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString( "[XRay] Looks like the Ore you've tried to edit does not exist?" ));
 		}
 	}
-	
+
+	public static void remove( OreInfo original ) {
+		if( !OresSearch.searchList.contains( original ) ) {
+			// This really shouldn't happen but hay, lets support it anyway.
+			mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString( "[XRay] Looks like the Ore you've tried to edit does not exist?" ));
+			return;
+		}
+
+		OresSearch.searchList.remove( original );
+		ConfigHandler.remove(original);
+
+		String notify = String.format( "[XRay] successfully removed %s.", original.getOreName() );
+		mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(notify));
+	}
+
 	public static List<OreInfo> get() // Return the searchList, create it if needed.
 	{
 		if( OresSearch.searchList.isEmpty() )
