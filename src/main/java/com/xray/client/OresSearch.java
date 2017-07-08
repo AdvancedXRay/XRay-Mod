@@ -42,7 +42,7 @@ public class OresSearch
 			}
 		}
 
-		OresSearch.searchList.add( new OreInfo( name, oreId, oreMeta, color, true ) );
+		OresSearch.searchList.add( new OreInfo( name, name.replaceAll("\\s+", ""), oreId, oreMeta, color, true ) );
 		String notify = String.format( "[XRay] successfully added %s.", name );
 		mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(notify));
 
@@ -56,10 +56,12 @@ public class OresSearch
 			return;
 		}
 
+		OreInfo preserve = new OreInfo( original.getDisplayName(), original.getOreName(), original.getId(), original.getMeta(), original.color, original.draw );
+
 		OreInfo tmpNew = null;
 		for ( OreInfo ore : OresSearch.searchList ) {
 			if( ore == original ) {
-				ore.oreName = name;
+				ore.displayName = name;
 				ore.color = color;
 				tmpNew = ore;
 				break;
@@ -67,8 +69,8 @@ public class OresSearch
 		}
 
 		if( tmpNew != null ) {
-			ConfigHandler.updateInfo(original, tmpNew);
-			String notify = String.format( "[XRay] successfully updated %s.", original.getOreName() );
+			ConfigHandler.updateInfo(preserve, tmpNew);
+			String notify = String.format( "[XRay] successfully updated %s.", preserve.getOreName() );
 			mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(notify));
 		} else {
 			mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString( "[XRay] Looks like the Ore you've tried to edit does not exist?" ));
@@ -137,7 +139,7 @@ public class OresSearch
 						System.out.println("[XRay] Duplicate ore found in Ore Dictionary!!! (" + key + ")");
 						continue;
 					}
-					temp.add(new OreInfo(value.oreName, Item.getIdFromItem(oreItem.getItem()), oreItem.getItemDamage(), value.color, value.draw));
+					temp.add(new OreInfo(value.displayName, value.oreName, Item.getIdFromItem(oreItem.getItem()), oreItem.getItemDamage(), value.color, value.draw));
 					//System.out.println( String.format("[Fgt XRay] Adding OreInfo( %s, %d, %d, %s, %b ) ", value.oreName, Item.getIdFromItem( oreItem.getItem() ), oreItem.getItemDamage(), value.color[0], value.draw ) );
 				}
 			}

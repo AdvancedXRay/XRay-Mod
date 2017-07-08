@@ -22,7 +22,7 @@ public class HelperGuiList {
         this.x = x;
         this.y = y;
         this.ore = ore;
-        this.button = new GuiButton(id, x+25, y, 181, 20, ore.oreName + ": " + (ore.draw ? "On" : "Off"));
+        this.button = new GuiButton(id, x+25, y, 181, 20, ore.displayName + ": " + (ore.draw ? "On" : "Off"));
 
     }
 

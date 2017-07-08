@@ -50,7 +50,7 @@ public class GuiEditOre extends GuiContainer
         blueSlider.sliderValue  = (float)oreInfo.color[2]/255;
 
         oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 97 ,  height / 2 - 63, 202, 20 );
-        oreName.setText(this.oreInfo.getOreName());
+        oreName.setText(this.oreInfo.getDisplayName());
 
         this.buttonList.add( new GuiButton( 99, width / 2 - 100, height / 2 + 86, 72, 20, "Cancel" ) ); // Cancel button
     }

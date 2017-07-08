@@ -32,7 +32,7 @@ public class ConfigHandler
 				int[] color = {cat.get("red").getInt(), cat.get("green").getInt(), cat.get("blue").getInt()};
 				boolean enabled = cat.get("enabled").getBoolean(false);
 
-				XRay.oredictOres.put(dictName, new OreInfo( guiName, id, meta, color, enabled ) );
+				XRay.oredictOres.put(dictName, new OreInfo( guiName, guiName.replaceAll("\\s+", ""), id, meta, color, enabled ) );
 
 			}
 			else if( category.startsWith("customores.") )
@@ -43,7 +43,7 @@ public class ConfigHandler
 				int[] color = {cat.get("red").getInt(), cat.get("green").getInt(), cat.get("blue").getInt()};
 				boolean enabled = cat.get("enabled").getBoolean(false);
 
-				XRay.customOres.add( new OreInfo( name, id, meta, color, enabled ) );
+				XRay.customOres.add( new OreInfo( name, name.replaceAll("\\s+", ""), id, meta, color, enabled ) );
 			}
 		}
 		config.save();
@@ -52,7 +52,7 @@ public class ConfigHandler
 	public static void add( String oreName, Integer id, Integer meta, int[] color )
 	{
 		config.load();
-		String formattedname = oreName.replace("\\s+", "").toLowerCase();
+		String formattedname = oreName.replaceAll("\\s+", "").toLowerCase();
 
 		// check if entry exists
 		for( String category : config.getCategoryNames() )
@@ -132,7 +132,7 @@ public class ConfigHandler
 					config.get(tmpCategory, "red", "").set( newInfo.color[0] );
 					config.get(tmpCategory, "green", "").set( newInfo.color[1] );
 					config.get(tmpCategory, "blue", "").set( newInfo.color[2] );
-					config.get(tmpCategory, "name", "").set( newInfo.oreName );
+					config.get(tmpCategory, "name", "").set( newInfo.displayName );
 					break;
 				}
 			}
