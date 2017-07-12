@@ -21,7 +21,7 @@ public class GuiEditOre extends GuiContainer
     private GuiSlider redSlider;
     private GuiSlider greenSlider;
     private GuiSlider blueSlider;
-    private HelperBlock selectBlock;
+    private HelperBlock selectBlock = null;
     private OreInfo oreInfo;
 
     GuiEditOre(OreInfo oreInfo) {
@@ -31,16 +31,22 @@ public class GuiEditOre extends GuiContainer
         Block tmpBlock = Block.getBlockById(oreInfo.getId());
         ItemStack stack = new ItemStack( tmpBlock );
         tmpBlock.getSubBlocks(stack.getItem(), tmpBlock.getCreativeTabToDisplayOn(), tmpStack);
-        stack = tmpStack.get( oreInfo.getMeta() );
+        stack = null;
+        try {
+            stack = tmpStack.get(oreInfo.getMeta());
+        } catch ( IndexOutOfBoundsException ignore ) {}
 
-        if( !ItemStackHelper.isEmpty(stack) )
-            this.selectBlock = new HelperBlock(
-                    stack.getDisplayName(), Block.getBlockFromItem( stack.getItem() ), stack, stack.getItem(), stack.getItem().getRegistryName()
-            );
-        else {
+        if( stack != null ) {
+            if (!ItemStackHelper.isEmpty(stack))
+                this.selectBlock = new HelperBlock(
+                        stack.getDisplayName(), Block.getBlockFromItem(stack.getItem()), stack, stack.getItem(), stack.getItem().getRegistryName()
+                );
+        }
+
+        if( this.selectBlock == null ) {
             stack = new ItemStack( Blocks.GRASS );
             this.selectBlock = new HelperBlock(
-                oreInfo.getOreName(), Blocks.GRASS, stack, stack.getItem(), stack.getItem().getRegistryName()
+                    oreInfo.getOreName(), Blocks.GRASS, stack, stack.getItem(), stack.getItem().getRegistryName()
             );
         }
     }

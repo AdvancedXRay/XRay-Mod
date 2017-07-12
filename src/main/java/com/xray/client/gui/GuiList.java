@@ -135,7 +135,6 @@ public class GuiList extends GuiContainer
 	
 	@Override
 	public void drawScreen( int x, int y, float f ) {
-
 		super.drawScreen(x, y, f);
 
 		RenderHelper.enableGUIStandardItemLighting();
@@ -143,8 +142,10 @@ public class GuiList extends GuiContainer
 			List<ItemStack> tmpStack = new ArrayList<>();
 			Block tmpBlock = Block.getBlockById(item.ore.getId());
 			tmpBlock.getSubBlocks(new ItemStack( tmpBlock ).getItem(), tmpBlock.getCreativeTabToDisplayOn(), tmpStack);
-
-			this.itemRender.renderItemAndEffectIntoGUI(tmpStack.get( item.ore.getMeta() ), item.x + 2, item.y + 2);
+			try {
+				this.itemRender.renderItemAndEffectIntoGUI(tmpStack.get(item.ore.getMeta()), item.x + 2, item.y + 2);
+			} catch ( IndexOutOfBoundsException ignored ) {
+			}
 		}
 		RenderHelper.disableStandardItemLighting();
 	}
