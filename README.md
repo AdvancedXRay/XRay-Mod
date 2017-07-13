@@ -14,9 +14,8 @@ Open settings -> controls and edit the button to open the GUI and the button to 
 Then press your key to open the GUI to edit the ores on the list. Then press your key to turn on the Overlay
 
 ### Previews:
-![XRAY](http://i.imgur.com/N3KOEaE.png)
-
 The [Imgur Album](http://imgur.com/a/23dX5)
+![XRAY](http://i.imgur.com/N3KOEaE.png)
 
 ### Supports
 
