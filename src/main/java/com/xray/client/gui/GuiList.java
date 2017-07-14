@@ -30,7 +30,7 @@ public class GuiList extends GuiContainer
 		this.renderList.clear();
 		int x = width / 2 - 100, y = height / 2 - 106, count = 0, page = 0;
 
-		for( OreInfo ore : OresSearch.searchList ) {
+		for( OreInfo ore : XRay.searchList ) {
 			if( count % 9 == 0 && count != 0 )
 			{
 				page++;
@@ -144,7 +144,10 @@ public class GuiList extends GuiContainer
 			Block tmpBlock = Block.getBlockById(item.ore.getId());
 			tmpBlock.getSubBlocks(tmpBlock.getCreativeTabToDisplayOn(), tmpStack);
 
-			this.itemRender.renderItemAndEffectIntoGUI(tmpStack.get( item.ore.getMeta() ), item.x + 2, item.y + 2);
+			try {
+				this.itemRender.renderItemAndEffectIntoGUI(tmpStack.get(item.ore.getMeta()), item.x + 2, item.y + 2);
+			} catch ( IndexOutOfBoundsException ignored ) {
+			}
 		}
 		RenderHelper.disableStandardItemLighting();
 	}

@@ -66,7 +66,7 @@ public class ClientTick implements Runnable
 	}
 
 	public static boolean blockFinder(boolean ForceAdd) {
-		if (XRay.drawOres && !OresSearch.searchList.isEmpty() && mc.world != null && mc.player != null)
+		if (XRay.drawOres && !XRay.searchList.isEmpty() && mc.world != null && mc.player != null)
 		{
 			if ( nextTimeMs > System.currentTimeMillis() ) // Delay to avoid spamming ore updates.
 				return true;
@@ -94,7 +94,7 @@ public class ClientTick implements Runnable
 						if( state.getBlock().hasTileEntity( state ) )
 							meta = 0;
 
-						for( OreInfo ore : OresSearch.searchList ) // Now we're actually checking if the current x,y,z block is in our searchList.
+						for( OreInfo ore : XRay.searchList ) // Now we're actually checking if the current x,y,z block is in our searchList.
 						{
 							if ( (ore.draw) && (id == ore.id) && (meta == ore.meta) ) // Dont check meta if its -1 (custom)
 							{

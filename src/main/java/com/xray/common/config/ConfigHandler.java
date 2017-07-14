@@ -8,6 +8,8 @@ import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
+import java.util.Objects;
+
 public class ConfigHandler
 {
 	private static Configuration config = null; // Save the config file handle for use later.
@@ -23,18 +25,7 @@ public class ConfigHandler
 		{
 			ConfigCategory cat = config.getCategory( category );
 
-			if( category.startsWith( "oredict.") ) // Dont iterate over the base category and make sure were on the oredict category.
-			{
-				String dictName = cat.get("dictname").getString();
-				String guiName = cat.get("name").getString();
-				int id = cat.get("id").getInt();
-				int meta = cat.get("meta").getInt();
-				int[] color = {cat.get("red").getInt(), cat.get("green").getInt(), cat.get("blue").getInt()};
-				boolean enabled = cat.get("enabled").getBoolean(false);
-
-				XRay.oredictOres.put(dictName, new OreInfo( guiName, guiName.replaceAll("\\s+", ""), id, meta, color, enabled ) );
-			}
-			else if( category.startsWith("customores.") )
+			if( category.startsWith("ores.") )
 			{
 				String name = cat.get("name").getString();
 				int id = cat.get("id").getInt();
@@ -42,44 +33,41 @@ public class ConfigHandler
 				int[] color = {cat.get("red").getInt(), cat.get("green").getInt(), cat.get("blue").getInt()};
 				boolean enabled = cat.get("enabled").getBoolean(false);
 
-				XRay.customOres.add( new OreInfo( name, name.replaceAll("\\s+", ""), id, meta, color, enabled ) );
+				XRay.searchList.add( new OreInfo( name, name.replaceAll("\\s+", ""), id, meta, color, enabled ) );
 			}
 		}
+
 		config.save();
 	}
 
 	public static void add( String oreName, Integer id, Integer meta, int[] color )
 	{
 		config.load();
-		String formattedname = oreName.replaceAll("\\s+", "").toLowerCase();
+		String cleanName = oreName.replaceAll("\\s+", "").toLowerCase();
 
 		// check if entry exists
-		for( String category : config.getCategoryNames() )
+		for( String ignored : config.getCategoryNames() )
 		{
-			if( category.startsWith("customores.") )
+			if(Objects.equals(config.get("ores." + cleanName, "name", "").getString(), cleanName))
 			{
-				if( config.get("customores."+formattedname, "name", "").getString() == formattedname )
-				{
-					String notify = String.format( "[XRay] %s already exists. Please enter a different name. ", oreName );
-					mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify));
-					return;
-				}
+				String notify = String.format( "[XRay] %s already exists. Please enter a different name. ", oreName );
+				mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify));
+				return;
 			}
 		}
 
 		for( String category : config.getCategoryNames() )
 		{
-			if( category.startsWith("customores.") )
-			{
-				config.get("customores."+formattedname, "red", "").set( color[0] );
-				config.get("customores."+formattedname, "green", "").set( color[1] );
-				config.get("customores."+formattedname, "blue", "").set( color[2] );
-				config.get("customores."+formattedname, "enabled", "false").set( true );
-				config.get("customores."+formattedname, "id", "").set( id );
-				config.get("customores."+formattedname, "meta", "").set( meta );
-				config.get("customores." + formattedname, "name", "").set(oreName);
+			if( !category.startsWith("ores.") )
+				continue;
 
-			}
+			config.get("ores."+cleanName, "name", "").set(oreName);
+			config.get("ores."+cleanName, "enabled", "false").set( true );
+			config.get("ores."+cleanName, "id", "").set( id );
+			config.get("ores."+cleanName, "meta", "").set( meta );
+			config.get("ores."+cleanName, "red", "").set( color[0] );
+			config.get("ores."+cleanName, "green", "").set( color[1] );
+			config.get("ores."+cleanName, "blue", "").set( color[2] );
 		}
 		config.save();
 	}
@@ -100,14 +88,10 @@ public class ConfigHandler
 
 			if( splitCat.length == 2 )
 			{
-				if( splitCat[0].equals( "oredict" ) && splitCat[1].equals( cleanStr ) ) // Check if the current iteration is the correct category (oredict.emerald)
+				if( splitCat[0].equals( "ores" ) && splitCat[1].equals( cleanStr ) ) // Check if the current iteration is the correct category (oredict.emerald)
 				{
-					config.get("oredict."+cleanStr, "enabled", false).set( draw );
+					config.get("ores."+cleanStr, "enabled", false).set( draw );
 
-				}
-				else if ( splitCat[0].equals( "customores" ) && splitCat[1].equals( cleanStr ) )
-				{
-					config.get("customores."+cleanStr, "enabled", false).set( draw );
 				}
 			}
 		}
@@ -116,24 +100,17 @@ public class ConfigHandler
 
 	public static void updateInfo( OreInfo original, OreInfo newInfo )
 	{
-		String tmpCategory = "";
 		for( String category : config.getCategoryNames() ) {
 			String cleanStr = original.getOreName().toLowerCase();
 			String[] splitCat = category.split("\\.");
 
 			if( splitCat.length == 2 && splitCat[1].equals( cleanStr ) ) {
-				if( splitCat[0].equals( "oredict" ) )
-					tmpCategory = "oredict."+cleanStr;
-				if( splitCat[0].equals( "customores" ) )
-					tmpCategory = "customores."+cleanStr;
-
-				if( !tmpCategory.isEmpty() ) {
-					config.get(tmpCategory, "red", "").set( newInfo.color[0] );
-					config.get(tmpCategory, "green", "").set( newInfo.color[1] );
-					config.get(tmpCategory, "blue", "").set( newInfo.color[2] );
-					config.get(tmpCategory, "name", "").set( newInfo.displayName );
-					break;
-				}
+				String tmpCategory = "ores."+cleanStr;
+				config.get(tmpCategory, "red", "").set( newInfo.color[0] );
+				config.get(tmpCategory, "green", "").set( newInfo.color[1] );
+				config.get(tmpCategory, "blue", "").set( newInfo.color[2] );
+				config.get(tmpCategory, "name", "").set( newInfo.displayName );
+				break;
 			}
 		}
 		config.save();
@@ -144,12 +121,7 @@ public class ConfigHandler
 			String cleanStr = original.getOreName().toLowerCase();
 			String[] splitCat = category.split("\\.");
 			if( splitCat.length == 2 && splitCat[1].equals( cleanStr ) ) {
-				System.out.println(cleanStr);
-
-				if( splitCat[0].equals( "oredict" ) )
-					config.removeCategory( config.getCategory("oredict."+cleanStr) );
-				if( splitCat[0].equals( "customores" ) )
-					config.removeCategory( config.getCategory("customores."+cleanStr) );
+				config.removeCategory( config.getCategory("ores."+cleanStr) );
 				break;
 			}
 		}

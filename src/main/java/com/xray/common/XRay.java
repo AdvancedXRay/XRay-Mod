@@ -60,24 +60,8 @@ public class XRay
 	};
 	public static KeyBinding[] keyBind_keys = null;
 
-	public static Map<String, OreInfo> oredictOres = new HashMap<String, OreInfo>();
-		/* Ores to check through the ore dictionary and add each instance found to the searchList. 
-		 * put( "oreType", new OreInfo(...) ) oreType is the ore dictionary string id. Press Print OreDict and check console to see list.
-		 * OreInfo( String "Gui Name", // The name to be displayed in the GUI.
-		 *     int id, int meta, // Leave these at 0. The OresSearch will set them through the ore dictionary.
-		 *     int color, // 0x RED GREEN BLUE (0xRRGGBB)
-		 *     bool enabled) // Should the be on by default. Its then set internally by GuiList.
-		 * Open DefaultConfig.java for more info.
-		 */
-	
-	public static List<OreInfo> customOres = new ArrayList<OreInfo>();
-		/* List of custom id:meta to add.
-		 * OreInfo( String "Gui Name", // Displayed in the GUI.
-		 *     int id, int meta, // Set these to whatever the id:meta is for your block.
-		 *     int color, // color 0xRRGGBB
-		 *     bool enabled) // On by default? 
-		 */
-	
+	public static ArrayList<OreInfo> searchList = new ArrayList<>(); // List of ores/blocks to search for.
+
 	// The instance of your mod that Forge uses.
 	@Instance(Reference.MOD_ID)
 	public static XRay instance;
