@@ -12,7 +12,7 @@ public class OresSearch
 
 	public static void add( int oreId, int oreMeta, String name, int[] color ) // Takes a string of id:meta or oreName to add to our search list.
 	{
-		if( name.equals("") ) {
+		if( name.equals("") || name.toLowerCase().equals( "gui name" ) || name.isEmpty() ) {
 			mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString( "[XRay] You need to have all the inputs filled" ));
 			return;
 		}
