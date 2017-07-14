@@ -1,6 +1,5 @@
 package com.xray.client.gui;
 
-import com.xray.client.OresSearch;
 import com.xray.client.gui.helper.HelperGuiList;
 import com.xray.client.render.ClientTick;
 import com.xray.common.XRay;
@@ -30,7 +29,7 @@ public class GuiList extends GuiContainer
 		this.renderList.clear();
 		int x = width / 2 - 100, y = height / 2 - 106, count = 0, page = 0;
 
-		for( OreInfo ore : OresSearch.searchList ) {
+		for( OreInfo ore : XRay.searchList ) {
 			if( count % 9 == 0 && count != 0 )
 			{
 				page++;

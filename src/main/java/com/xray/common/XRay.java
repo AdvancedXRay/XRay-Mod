@@ -1,24 +1,16 @@
 package com.xray.common;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.xray.client.OresSearch;
-import com.xray.common.proxy.ServerProxy;
 import com.xray.client.gui.helper.HelperBlock;
+import com.xray.common.config.ConfigHandler;
+import com.xray.common.config.DefaultConfig;
+import com.xray.common.proxy.ServerProxy;
+import com.xray.common.reference.OreInfo;
 import com.xray.common.reference.Reference;
 import net.minecraft.block.Block;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import org.lwjgl.input.Keyboard;
-
-import net.minecraft.client.settings.KeyBinding;
-
 import net.minecraftforge.common.config.Configuration;
-
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -26,10 +18,10 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import org.lwjgl.input.Keyboard;
 
-import com.xray.common.reference.OreInfo;
-import com.xray.common.config.DefaultConfig;
-import com.xray.common.config.ConfigHandler;
+import java.util.ArrayList;
 
 @Mod(modid= Reference.MOD_ID, name= Reference.MOD_NAME, version=Reference.MOD_VERSION)
 public class XRay
@@ -60,24 +52,8 @@ public class XRay
 	};
 	public static KeyBinding[] keyBind_keys = null;
 
-	public static Map<String, OreInfo> oredictOres = new HashMap<String, OreInfo>();
-		/* Ores to check through the ore dictionary and add each instance found to the searchList. 
-		 * put( "oreType", new OreInfo(...) ) oreType is the ore dictionary string id. Press Print OreDict and check console to see list.
-		 * OreInfo( String "Gui Name", // The name to be displayed in the GUI.
-		 *     int id, int meta, // Leave these at 0. The OresSearch will set them through the ore dictionary.
-		 *     int color, // 0x RED GREEN BLUE (0xRRGGBB)
-		 *     bool enabled) // Should the be on by default. Its then set internally by GuiList.
-		 * Open DefaultConfig.java for more info.
-		 */
-	
-	public static List<OreInfo> customOres = new ArrayList<OreInfo>();
-		/* List of custom id:meta to add.
-		 * OreInfo( String "Gui Name", // Displayed in the GUI.
-		 *     int id, int meta, // Set these to whatever the id:meta is for your block.
-		 *     int color, // color 0xRRGGBB
-		 *     bool enabled) // On by default? 
-		 */
-	
+	public static ArrayList<OreInfo> searchList = new ArrayList<>(); // List of ores/blocks to search for.
+
 	// The instance of your mod that Forge uses.
 	@Instance(Reference.MOD_ID)
 	public static XRay instance;
@@ -122,11 +98,6 @@ public class XRay
 				Block tmpBlock = Block.getBlockFromItem( subBlock.getItem() );
 				blockList.add( new HelperBlock( subBlock.getDisplayName(), tmpBlock, subBlock, subBlock.getItem(), subBlock.getItem().getRegistryName() ));
 			}
-		}
-
-		if (OresSearch.searchList.isEmpty()) // Populate the OresSearch.searchList
-		{
-			OresSearch.get();
 		}
 	}
 }
