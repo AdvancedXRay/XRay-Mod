@@ -73,11 +73,8 @@ public class RenderTick
 
 		Tessellator tessellator = Tessellator.getInstance();
 		VertexBuffer tessellate = tessellator.getBuffer();
-
-		ArrayList<BlockInfo> temp = new ArrayList<>();
-		temp.addAll(ores);
 		
-		for ( BlockInfo b : temp )
+		for ( BlockInfo b : ores )
 		{
 			bx = b.x;
 			by = b.y;

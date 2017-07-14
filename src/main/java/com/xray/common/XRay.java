@@ -4,10 +4,10 @@ import com.xray.client.OresSearch;
 import com.xray.client.gui.helper.HelperBlock;
 import com.xray.common.config.ConfigHandler;
 import com.xray.common.config.DefaultConfig;
+import com.xray.common.helper.ItemStackHelper;
 import com.xray.common.proxy.ServerProxy;
 import com.xray.common.reference.OreInfo;
 import com.xray.common.reference.Reference;
-import com.xray.common.helper.ItemStackHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
@@ -23,9 +23,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Mod(modid= Reference.MOD_ID, name= Reference.MOD_NAME, version=Reference.MOD_VERSION)
 public class XRay
@@ -33,6 +31,8 @@ public class XRay
 	public static int localPlyX, localPlyY, localPlyZ, localPlyXPrev, localPlyZPrev; // For internal use in the ClientTick thread.
 	public static boolean drawOres = false; // Off by default
 	public static ArrayList<HelperBlock> blockList = new ArrayList<>();
+
+	public static ArrayList<OreInfo> searchList = new ArrayList<>(); // List of ores/blocks to search for.
 
 	public static final String[] distStrings = new String[] // Strings for use in the GUI Render Distance button
 		{ "8", "16", "32", "48", "64", "80", "128", "256" };
@@ -56,24 +56,6 @@ public class XRay
 	};
 	public static KeyBinding[] keyBind_keys = null;
 
-	public static Map<String, OreInfo> oredictOres = new HashMap<String, OreInfo>();
-		/* Ores to check through the ore dictionary and add each instance found to the searchList. 
-		 * put( "oreType", new OreInfo(...) ) oreType is the ore dictionary string id. Press Print OreDict and check console to see list.
-		 * OreInfo( String "Gui Name", // The name to be displayed in the GUI.
-		 *     int id, int meta, // Leave these at 0. The OresSearch will set them through the ore dictionary.
-		 *     int color, // 0x RED GREEN BLUE (0xRRGGBB)
-		 *     bool enabled) // Should the be on by default. Its then set internally by GuiList.
-		 * Open DefaultConfig.java for more info.
-		 */
-	
-	public static List<OreInfo> customOres = new ArrayList<OreInfo>();
-		/* List of custom id:meta to add.
-		 * OreInfo( String "Gui Name", // Displayed in the GUI.
-		 *     int id, int meta, // Set these to whatever the id:meta is for your block.
-		 *     int color, // color 0xRRGGBB
-		 *     bool enabled) // On by default? 
-		 */
-	
 	// The instance of your mod that Forge uses.
 	@Instance(Reference.MOD_ID)
 	public static XRay instance;
@@ -121,9 +103,5 @@ public class XRay
 			}
 		}
 
-		if (OresSearch.searchList.isEmpty()) // Populate the OresSearch.searchList
-		{
-			OresSearch.get();
-		}
 	}
 }
