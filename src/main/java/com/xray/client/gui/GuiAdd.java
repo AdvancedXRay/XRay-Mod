@@ -55,8 +55,7 @@ public class GuiAdd extends GuiContainer {
 				int[] rgb = {(int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255)};
 
 				int tmpId = Block.getIdFromBlock(selectBlock.getBlock());
-				String name = oreName.getText();
-				OresSearch.add(tmpId, selectBlock.getItemStack().getMetadata(), name, rgb);
+				OresSearch.add(tmpId, selectBlock.getItemStack().getMetadata(), oreName.getText(), rgb);
 
 				mc.thePlayer.closeScreen();
 				mc.displayGuiScreen( new GuiList() );
