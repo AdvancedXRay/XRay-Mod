@@ -9,7 +9,16 @@ public class OreInfo
 	public int[] color;	   // Color in 0xRRGGBB to draw.
 	public boolean draw;   // Should we draw this ore?
 	public String displayName;
-	
+
+	public OreInfo(  int[] color, boolean draw ) {
+		this.oreName = "";
+		this.displayName = "";
+		this.id = 0;
+		this.meta = 0;
+		this.color = color;
+		this.draw = draw;
+	}
+
 	public OreInfo( String displayName,  String name, int id, int meta, int[] color, boolean draw )
 	{
 		this.oreName = name;
