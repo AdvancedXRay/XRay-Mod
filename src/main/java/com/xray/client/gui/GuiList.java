@@ -143,7 +143,10 @@ public class GuiList extends GuiContainer
 			Block tmpBlock = Block.getBlockById(item.ore.getId());
 			tmpBlock.getSubBlocks( new ItemStack(tmpBlock).getItem(),  tmpBlock.getCreativeTabToDisplayOn(), tmpStack);
 
-			this.itemRender.renderItemAndEffectIntoGUI(tmpStack.get( item.ore.getMeta() ), item.x + 2, item.y + 2);
+			try {
+				this.itemRender.renderItemAndEffectIntoGUI(tmpStack.get(item.ore.getMeta()), item.x + 2, item.y + 2);
+			} catch ( IndexOutOfBoundsException ignored ) {
+			}
 		}
 		RenderHelper.disableStandardItemLighting();
 	}
