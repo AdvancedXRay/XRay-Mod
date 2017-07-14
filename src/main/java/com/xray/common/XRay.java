@@ -107,10 +107,5 @@ public class XRay
 				blockList.add( new HelperBlock( subBlock.getDisplayName(), tmpBlock, subBlock, subBlock.getItem(), subBlock.getItem().getRegistryName() ));
 			}
 		}
-
-		if (OresSearch.searchList.isEmpty()) // Populate the OresSearch.searchList
-		{
-			OresSearch.get();
-		}
 	}
 }
