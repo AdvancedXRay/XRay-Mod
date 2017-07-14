@@ -12,22 +12,22 @@ public class DefaultConfig {
 	// Below are the 'default' ores/blocks to add through the ore dictionary.
 	private final static Map<String, OreInfo> defaults = new HashMap<String, OreInfo>()
 	{{
-		put("oreLapis", new OreInfo("Lapis", "Lapis", 0, 0, new int[]{0, 0, 255}, false) );
-		put("oreCopper", new OreInfo("Copper", "Copper", 0, 0, new int[]{204, 102, 0}, true) );
-		put("oreTin", new OreInfo("Tin", "Tin", 0, 0, new int[]{161, 161, 161}, true) );
-		put("oreCobalt", new OreInfo("Cobalt", "Cobalt", 0, 0, new int[]{0, 0, 255}, false) );
-		put("oreArdite", new OreInfo("Ardite", "Ardite", 0, 0, new int[]{255, 153, 0}, false) );
-		put("oreCertusQuartz", new OreInfo("Certus Quartz", "CertusQuartz", 0, 0, new int[]{255, 255, 255}, false) );
-		put("oreUranium", new OreInfo("Uranium", "Uranium", 0, 0, new int[]{0, 255, 0}, true) );
-		put("oreDiamond", new OreInfo("Diamond", "Diamond", 0, 0, new int[]{136, 136, 255}, false) );
-		put("blockDiamond", new OreInfo("Diamond Block",  "DiamondBlock", 0, 0, new int[]{136, 136, 255}, false) );
-		put("oreEmerald", new OreInfo("Emerald", "Emerald", 0, 0, new int[]{0, 136, 10}, true) );
-		put("oreGold", new OreInfo("Gold", "Gold", 0, 0, new int[]{255, 255, 0}, false) );
-		put("oreRedstone", new OreInfo("Redstone", "Redstone", 0, 0, new int[]{255, 0, 0}, false) );
-		put("oreIron", new OreInfo("Iron", "Iron", 0, 0, new int[]{170, 117, 37}, false) );
-		put("oreSilver", new OreInfo("Silver", "Silver", 0, 0, new int[]{143,143,143}, false) );
-		put("oreQuartz", new OreInfo("Quartz", "Quartz", 0, 0, new int[]{30,74,0}, false) );
-		put("oreCoal", new OreInfo("Coal", "Coal", 0, 0, new int[]{0, 0, 0}, false ) );
+		put("oreLapis", 		new OreInfo("Lapis", "Lapis", 0, 0, new int[]{0, 0, 255}, false) );
+		put("oreCopper", 		new OreInfo("Copper", "Copper", 0, 0, new int[]{204, 102, 0}, true) );
+		put("oreTin", 			new OreInfo("Tin", "Tin", 0, 0, new int[]{161, 161, 161}, true) );
+		put("oreCobalt", 		new OreInfo("Cobalt", "Cobalt", 0, 0, new int[]{0, 0, 255}, false) );
+		put("oreArdite", 		new OreInfo("Ardite", "Ardite", 0, 0, new int[]{255, 153, 0}, false) );
+		put("oreCertusQuartz", 	new OreInfo("Certus Quartz", "CertusQuartz", 0, 0, new int[]{255, 255, 255}, false) );
+		put("oreUranium", 		new OreInfo("Uranium", "Uranium", 0, 0, new int[]{0, 255, 0}, true) );
+		put("oreDiamond", 		new OreInfo("Diamond", "Diamond", 0, 0, new int[]{136, 136, 255}, false) );
+		put("blockDiamond", 	new OreInfo("Diamond Block",  "DiamondBlock", 0, 0, new int[]{136, 136, 255}, false) );
+		put("oreEmerald", 		new OreInfo("Emerald", "Emerald", 0, 0, new int[]{0, 136, 10}, true) );
+		put("oreGold", 			new OreInfo("Gold", "Gold", 0, 0, new int[]{255, 255, 0}, false) );
+		put("oreRedstone", 		new OreInfo("Redstone", "Redstone", 0, 0, new int[]{255, 0, 0}, false) );
+		put("oreIron", 			new OreInfo("Iron", "Iron", 0, 0, new int[]{170, 117, 37}, false) );
+		put("oreSilver", 		new OreInfo("Silver", "Silver", 0, 0, new int[]{143,143,143}, false) );
+		put("oreQuartz", 		new OreInfo("Quartz", "Quartz", 0, 0, new int[]{30,74,0}, false) );
+		put("oreCoal", 			new OreInfo("Coal", "Coal", 0, 0, new int[]{0, 0, 0}, false ) );
 	}};
 
 	public static void create(Configuration config) // Put default blocks and settings into the config file.
