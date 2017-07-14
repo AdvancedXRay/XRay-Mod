@@ -1,4 +1,3 @@
-// Structure for damn near everything.
 package com.xray.common.reference;
 
 public class OreInfo
@@ -10,8 +9,8 @@ public class OreInfo
 	public boolean draw;   // Should we draw this ore?
 	public String displayName;
 
-	public OreInfo(  int[] color, boolean draw ) {
-		this.oreName = "";
+	public OreInfo( String name, int[] color, boolean draw ) {
+		this.oreName = name;
 		this.displayName = "";
 		this.id = 0;
 		this.meta = 0;
