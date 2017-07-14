@@ -7,7 +7,7 @@
   "mcversion": "${mcversion}",
   "url": "https://github.com/michaelhillcox/XRay-Mod",
   "updateJSON": "https://raw.githubusercontent.com/MichaelHillcox/XRay-Mod/master/versions.json",
-  "authorList": ["mcd1992, MiKeY"],
+  "authorList": ["MiKeY", "mcd1992"],
   "credits": "A Special thanks to uaBArt for the 1.7.10 -> 1.8.9 update :)",
   "logoFile": "",
   "screenshots": [
