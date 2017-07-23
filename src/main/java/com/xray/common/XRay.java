@@ -10,6 +10,7 @@ import com.xray.common.proxy.ServerProxy;
 import com.xray.client.gui.helper.HelperBlock;
 import com.xray.common.reference.Reference;
 import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -84,7 +85,7 @@ public class XRay
 		}
 		
 		ConfigHandler.setup( event ); // Read the config file and setup environment.
-        System.out.println("[XRay] PreInit ");
+        System.out.println(I18n.format("xray.debug.init"));
 	}
 
 	@EventHandler
