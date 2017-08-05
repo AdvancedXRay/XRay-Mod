@@ -79,6 +79,9 @@ public class RenderTick
 		
 		for ( BlockInfo b : temp )
 		{
+		    if( b == null )
+		        continue;
+
 			bx = b.x;
 			by = b.y;
 			bz = b.z;
