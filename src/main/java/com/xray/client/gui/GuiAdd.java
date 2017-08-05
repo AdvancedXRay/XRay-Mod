@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.I18n;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -30,20 +31,20 @@ public class GuiAdd extends GuiContainer {
 	public void initGui()
 	{
 		// Called when the gui should be (re)created
-		this.buttonList.add( new GuiButton( 98, width / 2 -25, height / 2 + 86, 130, 20, "Add" ));
+		this.buttonList.add( new GuiButton( 98, width / 2 -25, height / 2 + 86, 130, 20, I18n.format("xray.single.add") ));
 
-		this.buttonList.add( redSlider = new GuiSlider( 3, width / 2 - 97, height / 2 + 7, "Red", 0, 255 ));
-		this.buttonList.add( greenSlider = new GuiSlider( 2, width / 2 - 97, height / 2 + 30, "Green", 0, 255 ));
-		this.buttonList.add( blueSlider = new GuiSlider( 1, width / 2 - 97, height / 2 + 53, "Blue", 0, 255 ) );
+		this.buttonList.add( redSlider = new GuiSlider( 3, width / 2 - 97, height / 2 + 7, I18n.format("xray.color.red"), 0, 255 ));
+		this.buttonList.add( greenSlider = new GuiSlider( 2, width / 2 - 97, height / 2 + 30, I18n.format("xray.color.green"), 0, 255 ));
+		this.buttonList.add( blueSlider = new GuiSlider( 1, width / 2 - 97, height / 2 + 53, I18n.format("xray.color.blue"), 0, 255 ) );
 
 		redSlider.sliderValue   = 0.0F;
 		greenSlider.sliderValue = 0.654F;
 		blueSlider.sliderValue  = 1.0F;
 
 		oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 97 ,  height / 2 - 63, 202, 20 );
-		oreName.setText("Gui Name");
+		oreName.setText(I18n.format("xray.input.gui"));
 
-		this.buttonList.add( new GuiButton( 99, width / 2 - 100, height / 2 + 86, 72, 20, "Cancel" ) ); // Cancel button
+		this.buttonList.add( new GuiButton( 99, width / 2 - 100, height / 2 + 86, 72, 20, I18n.format("xray.single.cancel") ) ); // Cancel button
 	}
 
 	@Override
@@ -114,7 +115,7 @@ public class GuiAdd extends GuiContainer {
 		RenderHelper.disableStandardItemLighting();
 	}
 
-	public static void renderPreview(int width, int height, float r, float g, float b) {
+	static void renderPreview(int width, int height, float r, float g, float b) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder tessellate = tessellator.getBuffer();
 		GlStateManager.enableBlend();
@@ -146,7 +147,7 @@ public class GuiAdd extends GuiContainer {
 		if( !oreName.isFocused() && oreNameCleared && Objects.equals(oreName.getText(), ""))
 		{
 			oreNameCleared = false;
-			oreName.setText( "Gui Name");
+			oreName.setText( I18n.format("xray.input.gui") );
 		}
 	}
 
@@ -157,6 +158,6 @@ public class GuiAdd extends GuiContainer {
 
 	@Override
 	public String title() {
-		return "Configure Block";
+		return I18n.format("xray.title.config");
 	}
 }

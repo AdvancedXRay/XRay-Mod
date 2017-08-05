@@ -1,1 +1,30 @@
+// Debug stuff. Much less important than the normal stuff
 xray.debug.init=XRay Initialised
+
+// Normal stuff
+// Single words
+xray.single.cancel=Cancel
+xray.single.add=Add
+xray.single.delete=Delete
+xray.single.save=Save
+
+xray.color.red=Red
+xray.color.green=Green
+xray.color.blue=Blue
+
+xray.input.gui=Gui Name
+xray.input.add=Add Ore
+xray.input.distance=Distance
+
+xray.title.config=Configure Block
+xray.title.edit=Edit Block
+
+xray.message.missing_input=You need to have all the inputs filled in
+xray.message.already_exists=This block has already been added to the block list
+xray.message.added_block=Successfully added %s.
+xray.message.unknown=Looks like the Block you've tried to edit doesn't exist?
+xray.message.removed=Successfully removed %s.
+xray.message.config_missing=Config file not found. Creating now.
+
+xray.config.toggle=Toggle XRay
+xray.config.open=Open XRay Menu

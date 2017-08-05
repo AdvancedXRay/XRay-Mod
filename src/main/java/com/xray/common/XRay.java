@@ -1,25 +1,17 @@
 package com.xray.common;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.xray.client.OresSearch;
-import com.xray.common.proxy.ServerProxy;
 import com.xray.client.gui.helper.HelperBlock;
+import com.xray.common.config.ConfigHandler;
+import com.xray.common.config.DefaultConfig;
+import com.xray.common.proxy.ServerProxy;
+import com.xray.common.reference.OreInfo;
 import com.xray.common.reference.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import org.lwjgl.input.Keyboard;
-
-import net.minecraft.client.settings.KeyBinding;
-
 import net.minecraftforge.common.config.Configuration;
-
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -27,10 +19,10 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import org.lwjgl.input.Keyboard;
 
-import com.xray.common.reference.OreInfo;
-import com.xray.common.config.DefaultConfig;
-import com.xray.common.config.ConfigHandler;
+import java.util.ArrayList;
 
 @Mod(modid= Reference.MOD_ID, name= Reference.MOD_NAME, version=Reference.MOD_VERSION)
 public class XRay
@@ -56,8 +48,8 @@ public class XRay
 	};
 	public static final String[] keyBind_descriptions =
 	{
-		"Toggle X-Ray",
-		"Open X-Ray Menu"
+		I18n.format("xray.config.toggle"),
+		I18n.format("xray.config.open")
 	};
 	public static KeyBinding[] keyBind_keys = null;
 
@@ -79,7 +71,7 @@ public class XRay
 		
 		if( config.getCategoryNames().isEmpty() )
         {
-			System.out.println("[XRay] Config file not found. Creating now.");
+			System.out.println("[XRay] "+I18n.format("xray.message.config_missing"));
 			DefaultConfig.create( config );
 			config.save();
 		}

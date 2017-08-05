@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
@@ -38,12 +39,12 @@ public class GuiEditOre extends GuiContainer
     public void initGui()
     {
         // Called when the gui should be (re)created
-        this.buttonList.add( new GuiButton( 98, width / 2 +16, height / 2 + 86, 90, 20, "Save" ));
-        this.buttonList.add( new GuiButton( 100, width / 2 -26, height / 2 + 86, 40, 20, "Delete" ));
+        this.buttonList.add( new GuiButton( 98, width / 2 +16, height / 2 + 86, 90, 20, I18n.format("xray.single.save") ));
+        this.buttonList.add( new GuiButton( 100, width / 2 -26, height / 2 + 86, 40, 20, I18n.format("xray.single.delete") ));
 
-        this.buttonList.add( redSlider = new GuiSlider( 3, width / 2 - 97, height / 2 + 7, "Red", 0, 255 ));
-        this.buttonList.add( greenSlider = new GuiSlider( 2, width / 2 - 97, height / 2 + 30, "Green", 0, 255 ));
-        this.buttonList.add( blueSlider = new GuiSlider( 1, width / 2 - 97, height / 2 + 53, "Blue", 0, 255 ) );
+        this.buttonList.add( redSlider = new GuiSlider( 3, width / 2 - 97, height / 2 + 7, I18n.format("xray.color.red"), 0, 255 ));
+        this.buttonList.add( greenSlider = new GuiSlider( 2, width / 2 - 97, height / 2 + 30, I18n.format("xray.color.green"), 0, 255 ));
+        this.buttonList.add( blueSlider = new GuiSlider( 1, width / 2 - 97, height / 2 + 53, I18n.format("xray.color.blue"), 0, 255 ) );
 
         redSlider.sliderValue   = (float)oreInfo.color[0]/255;
         greenSlider.sliderValue = (float)oreInfo.color[1]/255;
@@ -52,7 +53,7 @@ public class GuiEditOre extends GuiContainer
         oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 97 ,  height / 2 - 63, 202, 20 );
         oreName.setText(this.oreInfo.getDisplayName());
 
-        this.buttonList.add( new GuiButton( 99, width / 2 - 100, height / 2 + 86, 72, 20, "Cancel" ) ); // Cancel button
+        this.buttonList.add( new GuiButton( 99, width / 2 - 100, height / 2 + 86, 72, 20, I18n.format("xray.single.cancel") ) ); // Cancel button
     }
 
     @Override
@@ -130,6 +131,6 @@ public class GuiEditOre extends GuiContainer
 
     @Override
     public String title() {
-        return "Edit Block";
+        return I18n.format("xray.title.edit");
     }
 }

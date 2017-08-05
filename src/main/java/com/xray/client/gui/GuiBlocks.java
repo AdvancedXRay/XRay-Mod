@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.resources.I18n;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class GuiBlocks extends GuiContainer {
         search.setFocused(true);
         search.setCanLoseFocus(true);
 
-        this.buttonList.add( new GuiButton( 0, width / 2 +43, height / 2 + 84, 60, 20, "Cancel" ) );
+        this.buttonList.add( new GuiButton( 0, width / 2 +43, height / 2 + 84, 60, 20, I18n.format("xray.single.cancel")) );
     }
 
     @Override

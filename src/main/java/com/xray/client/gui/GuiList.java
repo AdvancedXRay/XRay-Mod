@@ -1,6 +1,5 @@
 package com.xray.client.gui;
 
-import com.xray.client.OresSearch;
 import com.xray.client.gui.helper.HelperGuiList;
 import com.xray.client.render.ClientTick;
 import com.xray.common.XRay;
@@ -9,6 +8,7 @@ import com.xray.common.reference.OreInfo;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
@@ -55,8 +55,8 @@ public class GuiList extends GuiContainer
 		}
 
 		GuiButton aNextButton, aPrevButton;
-		this.buttonList.add( new GuiButton(1, (width / 2) - 67, height / 2 + 86, 55, 20, "Add Ore" ) );
-		this.buttonList.add( new GuiButton(0, (width / 2) - 10, height / 2 + 86, 82, 20, "Distance: "+ XRay.distStrings[ XRay.currentDist]) ); // Static button for printing the ore dictionary / searchList.
+		this.buttonList.add( new GuiButton(1, (width / 2) - 67, height / 2 + 86, 55, 20, I18n.format("xray.input.add") ) );
+		this.buttonList.add( new GuiButton(0, (width / 2) - 10, height / 2 + 86, 82, 20, I18n.format("xray.input.distance")+": "+ XRay.distStrings[ XRay.currentDist]) ); // Static button for printing the ore dictionary / searchList.
 		this.buttonList.add( aNextButton = new GuiButton(2, width / 2 + 75, height / 2 + 86, 30, 20, ">") );
 		this.buttonList.add( aPrevButton = new GuiButton(3, width / 2 - 100, height / 2 + 86, 30, 20, "<") );
 

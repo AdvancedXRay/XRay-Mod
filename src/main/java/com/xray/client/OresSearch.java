@@ -4,6 +4,7 @@ import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
 import com.xray.common.reference.OreInfo;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentString;
 
 public class OresSearch
@@ -12,20 +13,20 @@ public class OresSearch
 
 	public static void add( int oreId, int oreMeta, String name, int[] color ) // Takes a string of id:meta or oreName to add to our search list.
 	{
-		if( name.equals("") || name.toLowerCase().equals( "gui name" ) || name.isEmpty() ) {
-			mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString( "[XRay] You need to have all the inputs filled" ));
+		if( name.equals("") || name.toLowerCase().equals( I18n.format("xray.input.gui").toLowerCase() ) || name.isEmpty() ) {
+			mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.missing_input") ));
 			return;
 		}
 
 		for( OreInfo info : XRay.searchList ) {
 			if( info.getId() == oreId && info.getMeta() == oreMeta) {
-				mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString("[XRay] This block has already been added to the block list"));
+				mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString("[XRay] "+I18n.format("xray.message.already_exists")));
 				return;
 			}
 		}
 
 		XRay.searchList.add( new OreInfo( name, name.replaceAll("\\s+", ""), oreId, oreMeta, color, true ) );
-		String notify = String.format( "[XRay] successfully added %s.", name );
+		String notify = "[XRay] "+I18n.format( "xray.message.added_block", name );
 		mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(notify));
 
 		ConfigHandler.add(name, oreId, oreMeta, color);
@@ -34,7 +35,7 @@ public class OresSearch
 	public static void update( OreInfo original, String name, int[] color ) {
 		if( !XRay.searchList.contains( original ) ) {
 			// This really shouldn't happen but hay, lets support it anyway.
-			mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString( "[XRay] Looks like the Ore you've tried to edit does not exist?" ));
+			mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.unknown") ));
 			return;
 		}
 
@@ -52,24 +53,24 @@ public class OresSearch
 
 		if( tmpNew != null ) {
 			ConfigHandler.updateInfo(preserve, tmpNew);
-			String notify = String.format( "[XRay] successfully updated %s.", preserve.getOreName() );
+			String notify = "[XRay] "+I18n.format( "xray.message.added_block", preserve.getOreName() );
 			mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(notify));
 		} else {
-			mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString( "[XRay] Looks like the Ore you've tried to edit does not exist?" ));
+			mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString( I18n.format("xray.message.unknown") ));
 		}
 	}
 
 	public static void remove( OreInfo original ) {
 		if( !XRay.searchList.contains( original ) ) {
 			// This really shouldn't happen but hay, lets support it anyway.
-			mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString( "[XRay] Looks like the Ore you've tried to edit does not exist?" ));
+			mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString( I18n.format("xray.message.unknown") ));
 			return;
 		}
 
 		XRay.searchList.remove( original );
 		ConfigHandler.remove(original);
 
-		String notify = String.format( "[XRay] successfully removed %s.", original.getOreName() );
+		String notify = "[XRay] "+I18n.format( "xray.message.added_block", original.getOreName() );
 		mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(notify));
 	}
 }
