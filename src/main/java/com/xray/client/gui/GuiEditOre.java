@@ -27,7 +27,12 @@ public class GuiEditOre extends GuiContainer
         NonNullList<ItemStack> tmpStack = NonNullList.create();
         Block tmpBlock = Block.getBlockById(oreInfo.getId());
         tmpBlock.getSubBlocks(new ItemStack(tmpBlock).getItem(), tmpBlock.getCreativeTabToDisplayOn(), tmpStack);
-        ItemStack stack = tmpStack.get( oreInfo.getMeta() );
+
+        int meta = 0;
+        if( oreInfo.getMeta() <= tmpStack.size() )
+            meta = oreInfo.getMeta();
+
+        ItemStack stack = tmpStack.get( meta );
 
         this.selectBlock = new HelperBlock(
                 stack.isEmpty() ? oreInfo.getDisplayName() : stack.getDisplayName(), Block.getBlockFromItem( stack.getItem() ), stack, stack.getItem(), stack.getItem().getRegistryName()
