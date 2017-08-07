@@ -23,7 +23,7 @@ The [Imgur Album](http://imgur.com/a/23dX5)
 |Minecraft Version   | Mod Version | Forge Version | Branch | Author
 |---|---|---|---|---
 |1.12 | [1.3.3](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.12-v1.3.3) | 14.21.0.2334 | [/master](https://github.com/MichaelHillcox/XRay-Mod/tree/master) | [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.11.2 | [1.3.1 *limited support*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.11.2-v1.3.1) | 13.20.0.2224 | [/1.11.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.11.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
+|1.11.2 | [1.3.3 *limited support*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.11.2-v1.3.3) | 13.20.0.2224 | [/1.11.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.11.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
 |1.10.2 | [1.3.1 *limited support*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.10.2-v1.3.1) | 12.18.3.2185 | [/1.10.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.10.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
 |1.9.4 | [1.0.9 - *Discontinued*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.9.4-v1.0.9) | 12.17.0.2051 | [/1.9.4](https://github.com/MichaelHillcox/XRay-Mod/tree/1.9.4) | [BondarenkoArtur](https://github.com/BondarenkoArtur) & [Michael Hillcox](https://github.com/MichaelHillcox)
 |1.8.9 | [1.1.0 - *Discontinued*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.8.9-v1.1.0) | 11.15.1.1722 | [/1.8.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.8.x) | [Michael Hillcox](https://github.com/MichaelHillcox) With help from  [BondarenkoArtur](https://github.com/BondarenkoArtur)
