@@ -1,4 +1,4 @@
-![XRay Logo](https://www.dropbox.com/s/2l5yh3r38fvltn6/logo-large.jpg?dl=0https://www.dropbox.com/s/2l5yh3r38fvltn6/logo-large.jpg?dl=0)
+![XRay Logo](https://www.dropbox.com/s/2l5yh3r38fvltn6/logo-large.jpg?dl=1)
 # XRay Mod - [![Forge Downloads](http://cf.way2muchnoise.eu/advanced-xray.svg)](https://mods.curse.com/mc-mods/minecraft/256256-advanced-xray) [![Forge Available For](http://cf.way2muchnoise.eu/versions/advanced-xray.svg)](https://mods.curse.com/mc-mods/minecraft/256256-advanced-xray)
 Minecraft Forge XRay mod
 
