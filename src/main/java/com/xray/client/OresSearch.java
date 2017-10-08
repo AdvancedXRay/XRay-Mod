@@ -4,6 +4,8 @@ import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
 import com.xray.common.reference.OreInfo;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.toasts.GuiToast;
+import net.minecraft.client.gui.toasts.IToast;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentString;
 

@@ -11,9 +11,9 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = "1.3.3"
+version = "1.3.4"
 group= "com.xray.xray" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "xray-1.12"
+archivesBaseName = "xray-1.12.1"
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {
@@ -21,9 +21,9 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12-14.21.1.2396"
+    version = "1.12.1-14.22.1.2478"
     runDir = "run"
-
+    
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
     // stable_#            stables are built at the discretion of the MCP team.
