@@ -22,6 +22,8 @@ public class GuiList extends GuiContainer
 	private List<HelperGuiList> renderList = new ArrayList<>();
 	private int pageCurrent, pageMax = 0;
 
+	private GuiButton distButtons;
+
 	@Override
 	public void initGui()
     {
@@ -56,7 +58,7 @@ public class GuiList extends GuiContainer
 
 		GuiButton aNextButton, aPrevButton;
 		this.buttonList.add( new GuiButton(1, (width / 2) - 67, height / 2 + 86, 55, 20, I18n.format("xray.input.add") ) );
-		this.buttonList.add( new GuiButton(0, (width / 2) - 10, height / 2 + 86, 82, 20, I18n.format("xray.input.distance")+": "+ XRay.distStrings[ XRay.currentDist]) ); // Static button for printing the ore dictionary / searchList.
+		this.buttonList.add( distButtons = new GuiButton(0, (width / 2) - 10, height / 2 + 86, 82, 20, I18n.format("xray.input.distance")+": "+ XRay.distStrings[ XRay.currentDist]) ); // Static button for printing the ore dictionary / searchList.
 		this.buttonList.add( aNextButton = new GuiButton(2, width / 2 + 75, height / 2 + 86, 30, 20, ">") );
 		this.buttonList.add( aPrevButton = new GuiButton(3, width / 2 - 100, height / 2 + 86, 30, 20, "<") );
 
@@ -76,6 +78,7 @@ public class GuiList extends GuiContainer
 	@Override
 	public void actionPerformed( GuiButton button )
 	{
+
 		// Called on left click of GuiButton
 		switch(button.id)
 		{
@@ -84,6 +87,7 @@ public class GuiList extends GuiContainer
 					XRay.currentDist++;
 				else
 					XRay.currentDist = 0;
+
 				ClientTick.blockFinder( true );
 				ConfigHandler.update("searchdist", false);
 				break;
@@ -123,12 +127,24 @@ public class GuiList extends GuiContainer
 	{
 		super.mouseClicked( x, y, mouse );
 
-		for ( HelperGuiList list : this.renderList ) {
-			if( list.getButton().mousePressed(this.mc, x, y) ) {
-				if( mouse == 1 ) {
+		if( mouse == 1 ) {
+			for (HelperGuiList list : this.renderList) {
+				if (list.getButton().mousePressed(this.mc, x, y)) {
 					mc.player.closeScreen();
-					mc.displayGuiScreen( new GuiEditOre( list.getOre() ) );
+					mc.displayGuiScreen(new GuiEditOre(list.getOre()));
 				}
+			}
+
+			if( distButtons.mousePressed(this.mc, x, y) ) {
+
+				if (XRay.currentDist > 0)
+					XRay.currentDist--;
+				else
+					XRay.currentDist = XRay.distNumbers.length - 1;
+
+				distButtons.displayString = I18n.format("xray.input.distance")+": "+ XRay.distStrings[ XRay.currentDist];
+				ClientTick.blockFinder( true );
+				ConfigHandler.update("searchdist", false);
 			}
 		}
 	}
