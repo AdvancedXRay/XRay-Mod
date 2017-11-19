@@ -1,5 +1,6 @@
 package com.xray.client.gui;
 
+import com.sun.istack.internal.NotNull;
 import com.xray.client.gui.helper.HelperBlock;
 import com.xray.client.gui.helper.HelperGuiList;
 import com.xray.client.render.ClientTick;
@@ -7,6 +8,7 @@ import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
 import com.xray.common.reference.OreInfo;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
@@ -15,6 +17,8 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 import org.lwjgl.Sys;
 
@@ -75,6 +79,7 @@ public class GuiList extends GuiContainer
 		// side bar buttons
 		this.buttonList.add( new GuiButton(1, (width / 2) + 78, height / 2 - 60, 120, 20, I18n.format("xray.input.add") ) );
 		this.buttonList.add( new GuiButton(4, width / 2 + 78, height / 2 - 35, 120, 20,"Add Block from hand") );
+		this.buttonList.add( new GuiButton(5, width / 2 + 78, height / 2 - 10, 120, 20,"Add Block in crosshair") );
 
         if( pageMax < 1 )
         {
@@ -138,6 +143,26 @@ public class GuiList extends GuiContainer
 						handItem.getItem().getRegistryName());
 
 				mc.displayGuiScreen( new GuiAdd(handBlock) );
+				break;
+
+			case 5:
+				mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.invalid_hand", "fuck") ));
+				try {
+					RayTraceResult ray = mc.player.rayTrace(100, 20);
+					if( ray != null && ray.typeOfHit == RayTraceResult.Type.BLOCK ) {
+						IBlockState state = mc.world.getBlockState(ray.getBlockPos());
+						Block lookingAt = mc.world.getBlockState(ray.getBlockPos()).getBlock();
+
+						ItemStack lookingStack = lookingAt.getPickBlock(state, ray, mc.world, ray.getBlockPos(), mc.player);
+
+						System.out.println(lookingStack.getDisplayName());
+					}
+				}
+				catch ( NullPointerException ex ) {
+
+//					mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.invalid_hand", handItem.getDisplayName()) ));
+				}
+
 				break;
 
 			default:
