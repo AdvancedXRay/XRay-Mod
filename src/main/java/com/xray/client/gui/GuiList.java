@@ -126,7 +126,7 @@ public class GuiList extends GuiContainer
 				ItemStack handItem = mc.player.getHeldItem(EnumHand.MAIN_HAND);
 				// Check if the hand item is a block or not
 				if(!(handItem.getItem() instanceof ItemBlock)) {
-					
+					mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.invalid_hand", handItem.getDisplayName()) ));
 					return;
 				}
 
