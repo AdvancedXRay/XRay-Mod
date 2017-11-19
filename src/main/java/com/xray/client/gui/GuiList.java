@@ -1,5 +1,6 @@
 package com.xray.client.gui;
 
+import com.xray.client.gui.helper.HelperBlock;
 import com.xray.client.gui.helper.HelperGuiList;
 import com.xray.client.render.ClientTick;
 import com.xray.common.XRay;
@@ -9,8 +10,13 @@ import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.TextComponentString;
+import org.lwjgl.Sys;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,7 +74,7 @@ public class GuiList extends GuiContainer
 
 		// side bar buttons
 		this.buttonList.add( new GuiButton(1, (width / 2) + 78, height / 2 - 60, 120, 20, I18n.format("xray.input.add") ) );
-		this.buttonList.add( new GuiButton(5, width / 2 + 78, height / 2 - 35, 120, 20,"Add Block from hand") );
+		this.buttonList.add( new GuiButton(4, width / 2 + 78, height / 2 - 35, 120, 20,"Add Block from hand") );
 
         if( pageMax < 1 )
         {
@@ -105,24 +111,43 @@ public class GuiList extends GuiContainer
 				mc.displayGuiScreen( new GuiBlocks() );
 				break;
 
-		  case 2:
-			  if( pageCurrent < pageMax )
-				  pageCurrent ++;
-			  break;
+			case 2:
+				if( pageCurrent < pageMax )
+					pageCurrent ++;
+				break;
 
-		  case 3:
-			  if( pageCurrent > 0 )
-				  pageCurrent --;
-			  break;
+			case 3:
+				if( pageCurrent > 0 )
+			  		pageCurrent --;
+				break;
 
-		default:
-			for ( HelperGuiList list : this.renderList ) {
-				if( list.getButton().id == button.id ) {
-					list.getOre().draw = !list.getOre().draw;
-					ConfigHandler.update( list.getOre().getOreName(), list.getOre().draw );
-					ClientTick.blockFinder( true );
+			case 4:
+				mc.player.closeScreen();
+				ItemStack handItem = mc.player.getHeldItem(EnumHand.MAIN_HAND);
+				// Check if the hand item is a block or not
+				if(!(handItem.getItem() instanceof ItemBlock)) {
+					
+					return;
 				}
-			}
+
+				// create a selected block from main hand item
+				HelperBlock handBlock = new HelperBlock(handItem.getDisplayName(),
+						Block.getBlockFromItem(handItem.getItem()),
+						handItem,
+						handItem.getItem(),
+						handItem.getItem().getRegistryName());
+
+				mc.displayGuiScreen( new GuiAdd(handBlock) );
+				break;
+
+			default:
+				for ( HelperGuiList list : this.renderList ) {
+					if( list.getButton().id == button.id ) {
+						list.getOre().draw = !list.getOre().draw;
+						ConfigHandler.update( list.getOre().getOreName(), list.getOre().draw );
+						ClientTick.blockFinder( true );
+					}
+				}
 			break;
 		}
 
