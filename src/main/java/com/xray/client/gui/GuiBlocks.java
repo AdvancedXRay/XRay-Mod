@@ -23,6 +23,7 @@ public class GuiBlocks extends GuiContainer {
     private int selected = -1;
 
     GuiBlocks() {
+        super(false);
         setBlocks( XRay.blockList );
     }
 

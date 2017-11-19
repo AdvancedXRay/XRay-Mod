@@ -24,6 +24,7 @@ public class GuiAdd extends GuiContainer {
 	private boolean oreNameCleared  = false;
 
 	GuiAdd(HelperBlock selectedBlock) {
+		super(false);
 		this.selectBlock = selectedBlock;
 	}
 

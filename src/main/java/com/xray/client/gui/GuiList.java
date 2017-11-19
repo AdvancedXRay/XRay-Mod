@@ -24,13 +24,18 @@ public class GuiList extends GuiContainer
 
 	private GuiButton distButtons;
 
+	public GuiList() {
+		super(true);
+		setSideTitle("Tools");
+	}
+
 	@Override
 	public void initGui()
     {
 		this.buttonList.clear();
 		this.listHelper.clear();
 		this.renderList.clear();
-		int x = width / 2 - 100, y = height / 2 - 106, count = 0, page = 0;
+		int x = width / 2 - 140, y = height / 2 - 106, count = 0, page = 0;
 
 		for( OreInfo ore : XRay.searchList ) {
 			if( count % 9 == 0 && count != 0 )
@@ -39,7 +44,7 @@ public class GuiList extends GuiContainer
 				if( page > pageMax )
 					pageMax++;
 
-				x = width / 2 - 100;
+				x = width / 2 - 140;
 				y = height / 2 - 106;
 			}
 			listHelper.add( new HelperGuiList( 10+count, page, x, y, ore) );
@@ -57,10 +62,13 @@ public class GuiList extends GuiContainer
 		}
 
 		GuiButton aNextButton, aPrevButton;
-		this.buttonList.add( new GuiButton(1, (width / 2) - 67, height / 2 + 86, 55, 20, I18n.format("xray.input.add") ) );
-		this.buttonList.add( distButtons = new GuiButton(0, (width / 2) - 10, height / 2 + 86, 82, 20, I18n.format("xray.input.distance")+": "+ XRay.distStrings[ XRay.currentDist]) ); // Static button for printing the ore dictionary / searchList.
-		this.buttonList.add( aNextButton = new GuiButton(2, width / 2 + 75, height / 2 + 86, 30, 20, ">") );
-		this.buttonList.add( aPrevButton = new GuiButton(3, width / 2 - 100, height / 2 + 86, 30, 20, "<") );
+		this.buttonList.add( distButtons = new GuiButton(0, (width / 2) - 108, height / 2 + 86, 140, 20, I18n.format("xray.input.distance")+": "+ XRay.distStrings[ XRay.currentDist]) ); // Static button for printing the ore dictionary / searchList.
+		this.buttonList.add( aNextButton = new GuiButton(2, width / 2 + 35, height / 2 + 86, 30, 20, ">") );
+		this.buttonList.add( aPrevButton = new GuiButton(3, width / 2 - 140, height / 2 + 86, 30, 20, "<") );
+
+		// side bar buttons
+		this.buttonList.add( new GuiButton(1, (width / 2) + 78, height / 2 - 60, 120, 20, I18n.format("xray.input.add") ) );
+		this.buttonList.add( new GuiButton(5, width / 2 + 78, height / 2 - 35, 120, 20,"Add Block from hand") );
 
         if( pageMax < 1 )
         {

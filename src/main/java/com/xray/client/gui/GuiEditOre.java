@@ -23,6 +23,7 @@ public class GuiEditOre extends GuiContainer
     private OreInfo oreInfo;
 
     GuiEditOre(OreInfo oreInfo) {
+        super(false);
         this.oreInfo = oreInfo;
 
         NonNullList<ItemStack> tmpStack = NonNullList.create();
