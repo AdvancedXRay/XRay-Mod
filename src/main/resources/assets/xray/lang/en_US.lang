@@ -14,6 +14,8 @@ xray.color.blue=Blue
 
 xray.input.gui=GUI Name
 xray.input.add=Add Block
+xray.input.add_hand=Add Block in hand
+xray.input.add_look=Add Looking at
 xray.input.distance=Distance
 
 xray.title.config=Configure Block
