@@ -24,7 +24,7 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 
-@Mod(modid= Reference.MOD_ID, name= Reference.MOD_NAME, version=Reference.MOD_VERSION, /*guiFactory = Reference.GUI_FACTORY*/)
+@Mod(modid= Reference.MOD_ID, name= Reference.MOD_NAME, version=Reference.MOD_VERSION /*guiFactory = Reference.GUI_FACTORY*/)
 public class XRay
 {
 	public static int localPlyX, localPlyY, localPlyZ, localPlyXPrev, localPlyZPrev; // For internal use in the ClientTick thread.
