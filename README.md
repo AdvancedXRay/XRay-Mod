@@ -22,7 +22,7 @@ The [Imgur Album](http://imgur.com/a/23dX5)
 
 |Minecraft Version   | Mod Version | Forge Version | Branch | Author
 |---|---|---|---|---
-|1.12.2 | [1.3.4](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.12.2-v1.3.4) | 14.23.0.2491 | [/master](https://github.com/MichaelHillcox/XRay-Mod/tree/master) | [Michael Hillcox](https://github.com/MichaelHillcox)
+|1.12.2 | [1.4.0](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.12.2-v1.4.0) | 14.23.0.2491 | [/master](https://github.com/MichaelHillcox/XRay-Mod/tree/master) | [Michael Hillcox](https://github.com/MichaelHillcox)
 |1.12.1 | [1.3.4](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.12.1-v1.3.4) | 14.22.1.2478 | [/1.12.1](https://github.com/MichaelHillcox/XRay-Mod/tree/1.12.1) | [Michael Hillcox](https://github.com/MichaelHillcox)
 |1.12 | [1.3.3](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.12-v1.3.3) | 14.21.0.2334 | [/1.12.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.12.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
 |1.11.2 | [1.3.3 *limited support*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.11.2-v1.3.3) | 13.20.0.2224 | [/1.11.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.11.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
