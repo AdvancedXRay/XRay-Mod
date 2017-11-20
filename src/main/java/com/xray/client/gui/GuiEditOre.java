@@ -47,15 +47,15 @@ public class GuiEditOre extends GuiContainer
         this.buttonList.add( new GuiButton( 99, width / 2 - 100, height / 2 + 86, 120, 20, I18n.format("xray.single.cancel") ) ); // Cancel button
 
 
-        this.buttonList.add( redSlider = new GuiSlider( 3, width / 2 - 97, height / 2 + 7, I18n.format("xray.color.red"), 0, 255 ));
-        this.buttonList.add( greenSlider = new GuiSlider( 2, width / 2 - 97, height / 2 + 30, I18n.format("xray.color.green"), 0, 255 ));
-        this.buttonList.add( blueSlider = new GuiSlider( 1, width / 2 - 97, height / 2 + 53, I18n.format("xray.color.blue"), 0, 255 ) );
+        this.buttonList.add( redSlider = new GuiSlider( 3, width / 2 - 140, height / 2 + 7, I18n.format("xray.color.red"), 0, 255 ));
+        this.buttonList.add( greenSlider = new GuiSlider( 2, width / 2 - 140, height / 2 + 30, I18n.format("xray.color.green"), 0, 255 ));
+        this.buttonList.add( blueSlider = new GuiSlider( 1, width / 2 - 140, height / 2 + 53, I18n.format("xray.color.blue"), 0, 255 ) );
 
         redSlider.sliderValue   = (float)oreInfo.color[0]/255;
         greenSlider.sliderValue = (float)oreInfo.color[1]/255;
         blueSlider.sliderValue  = (float)oreInfo.color[2]/255;
 
-        oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 97 ,  height / 2 - 63, 202, 20 );
+        oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 138 ,  height / 2 - 63, 202, 20 );
         oreName.setText(this.oreInfo.getDisplayName());
 
     }
@@ -110,11 +110,11 @@ public class GuiEditOre extends GuiContainer
     public void drawScreen( int x, int y, float f )
     {
         super.drawScreen(x, y, f);
-        getFontRender().drawStringWithShadow(selectBlock.getName(), width / 2 - 97, height / 2 - 90, 0xffffff);
+        getFontRender().drawStringWithShadow(selectBlock.getName(), width / 2 - 138, height / 2 - 90, 0xffffff);
 
         oreName.drawTextBox();
 
-        GuiAdd.renderPreview(width, height, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
+        GuiAdd.renderPreview(width / 2 - 138, height / 2 - 40, 203, 45, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
 
         RenderHelper.enableGUIStandardItemLighting();
         this.itemRender.renderItemAndEffectIntoGUI( selectBlock.getItemStack(), width / 2 + 88, height / 2 - 105 );

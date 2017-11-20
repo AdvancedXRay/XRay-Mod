@@ -82,8 +82,12 @@ public class GuiContainer extends GuiScreen {
             drawTexturedQuadFit(width / 2 - 110, height / 2 - 118, 229, 235);
         }
 
-        if( hasTitle() )
-            fr.drawStringWithShadow(title(), width / 2 - 97, height / 2 - 105, 0xffff00);
+        if( hasTitle() ) {
+            if( this.hasSide )
+                fr.drawStringWithShadow(title(), width / 2 - 138, height / 2 - 105, 0xffff00);
+            else
+                fr.drawStringWithShadow(title(), width / 2 - 97, height / 2 - 105, 0xffff00);
+        }
 
 
         super.drawScreen(x, y, f);
@@ -105,6 +109,7 @@ public class GuiContainer extends GuiScreen {
 
     public boolean hasSideTitle() { return !this.sideTitle.isEmpty(); }
     public void setSideTitle( String title ) { this.sideTitle = title; }
+    public boolean hasSide() { return this.hasSide; }
 
     FontRenderer getFontRender() {
         return this.mc.fontRenderer;
