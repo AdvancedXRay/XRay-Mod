@@ -46,8 +46,8 @@ public class ConfigHandler
 		config.setCategoryComment(Configuration.CATEGORY_GENERAL, "Use the in-game config editor.");
 
 		//getInt(String name, String category, int defaultValue, int minValue, int maxValue, String comment, String langKey)
-		config.getInt("range", Configuration.CATEGORY_GENERAL,10, 1, 60, "The range that magnet will pick up blocks");
-		config.getFloat("speed", Configuration.CATEGORY_GENERAL,0.02f, 0.01f, 0.1f, "The Speed that the item will be brought to you");
+		config.getInt("outline-thickness", Configuration.CATEGORY_GENERAL,10, 1, 60, "Something something cookiues");
+		config.getFloat("outline-opacity", Configuration.CATEGORY_GENERAL,1.0f, 0.01f, 1.0f, "Something something cookiues");
 
 		if( config.hasChanged() )
 			config.save();
