@@ -77,7 +77,7 @@ public class GuiEditOre extends GuiContainer
             case 98:
                 int[] rgb = {(int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255)};
 
-                OresSearch.update(this.oreInfo, oreName.getText(), rgb);
+                OresSearch.update(this.oreInfo, oreName.getText(), rgb, this.oreInfo.meta);
 
                 mc.player.closeScreen();
                 mc.displayGuiScreen( new GuiList() );

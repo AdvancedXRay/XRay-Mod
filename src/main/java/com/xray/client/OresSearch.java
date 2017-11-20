@@ -32,7 +32,7 @@ public class OresSearch
 		ConfigHandler.add(name, oreId, oreMeta, color);
 	}
 
-	public static void update( OreInfo original, String name, int[] color ) {
+	public static void update( OreInfo original, String name, int[] color, int meta ) {
 		if( !XRay.searchList.contains( original ) ) {
 			// This really shouldn't happen but hay, lets support it anyway.
 			mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.unknown") ));
@@ -46,6 +46,7 @@ public class OresSearch
 			if( ore == original ) {
 				ore.displayName = name;
 				ore.color = color;
+				ore.meta = meta;
 				tmpNew = ore;
 				break;
 			}
@@ -53,7 +54,7 @@ public class OresSearch
 
 		if( tmpNew != null ) {
 			ConfigHandler.updateInfo(preserve, tmpNew);
-			String notify = "[XRay] "+I18n.format( "xray.message.added_block", preserve.getOreName() );
+			String notify = "[XRay] "+I18n.format( "xray.message.updated_block", preserve.getOreName() );
 			mc.player.sendMessage(new TextComponentString(notify));
 		} else {
 			mc.player.sendMessage( new TextComponentString( I18n.format("xray.message.unknown") ));
@@ -70,7 +71,7 @@ public class OresSearch
 		XRay.searchList.remove( original );
 		ConfigHandler.remove(original);
 
-		String notify = "[XRay] "+I18n.format( "xray.message.added_block", original.getOreName() );
+		String notify = "[XRay] "+I18n.format( "xray.message.remove_block", original.getOreName() );
 		mc.player.sendMessage(new TextComponentString(notify));
 	}
 }

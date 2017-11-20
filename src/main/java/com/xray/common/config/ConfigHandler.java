@@ -86,8 +86,7 @@ public class ConfigHandler
 		{
 			if(Objects.equals(config.get("ores." + cleanName, "name", "").getString(), cleanName))
 			{
-				String notify = String.format( "[XRay] %s already exists. Please enter a different name. ", oreName );
-				mc.player.sendMessage( new TextComponentString(notify));
+				mc.player.sendMessage( new TextComponentString("[XRay] "+ I18n.format("xray.message.block_exists", oreName) ));
 				return;
 			}
 		}
@@ -145,6 +144,7 @@ public class ConfigHandler
 				config.get(tmpCategory, "green", "").set( newInfo.color[1] );
 				config.get(tmpCategory, "blue", "").set( newInfo.color[2] );
 				config.get(tmpCategory, "name", "").set( newInfo.displayName );
+				config.get(tmpCategory, "meta", "").set( newInfo.meta );
 				break;
 			}
 		}

@@ -1,5 +1,6 @@
 package com.xray.client.gui;
 
+import com.xray.client.OresSearch;
 import com.xray.client.gui.helper.HelperBlock;
 import com.xray.common.reference.OreInfo;
 import net.minecraft.block.Block;
@@ -9,8 +10,8 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.TextComponentString;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.lwjgl.Sys;
 
 import java.io.IOException;
 
@@ -61,18 +62,25 @@ public class GuiChangeMeta extends GuiContainer {
                     // Hacky way to check if our index exists in our subBlocks
                     try {
                         ItemStack stack = tmpStack.get( newMeta );
+                        OresSearch.update(this.info, this.info.displayName, this.info.color, newMeta);
 
-                        // Did it work? Cool, Lets move on to update the config and oreList
-                        System.out.println("Looks Like we're all good. Lets change it");
+                        // Update the selected block so we can give the item back to the edit UI
+                        this.info.meta = newMeta;
+
+                        // This could likely just be reconstructed but for now lets just edit the original
+                        this.selectedBlock.setBlock( Block.getBlockFromItem( stack.getItem() ) );
+                        this.selectedBlock.setItem( stack.getItem() );
+                        this.selectedBlock.setName( stack.getDisplayName() );
+                        this.selectedBlock.setItemStack( stack );
                     } catch ( IndexOutOfBoundsException e ) {
-                        System.out.println("That index doesn't exist");
+                        mc.player.sendMessage( new TextComponentString("[XRay] "+ I18n.format("xray.message.meta_not_supported", oreMeta.getText(), this.selectedBlock.getName()) ));
                     }
-                } else {
-                    System.out.println("Fuck");
-                }
-//
-//                mc.player.closeScreen();
-//                mc.displayGuiScreen( new GuiEditOre( this.info, this.selectedBlock ) );
+                } else
+                    mc.player.sendMessage( new TextComponentString("[XRay] "+ I18n.format("xray.message.not_a_number", oreMeta.getText()) ));
+
+                // No matter what close the UI and start again. Otherwise people can't see that an error may have happened 
+                mc.player.closeScreen();
+                mc.displayGuiScreen( new GuiEditOre( this.info, this.selectedBlock ) );
                 break;
 
             default:
