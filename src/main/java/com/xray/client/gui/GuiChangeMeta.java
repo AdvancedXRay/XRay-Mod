@@ -1,7 +1,6 @@
 package com.xray.client.gui;
 
 import com.xray.client.gui.helper.HelperBlock;
-import com.xray.common.XRay;
 import com.xray.common.reference.OreInfo;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -18,7 +17,7 @@ public class GuiChangeMeta extends GuiContainer {
 
     GuiChangeMeta(HelperBlock selectedBlock, OreInfo info) {
         super(false);
-        setSize( 160, 100);
+        setSize( 218, 108);
 
         this.selectedBlock = selectedBlock;
         this.info = info;
@@ -27,14 +26,11 @@ public class GuiChangeMeta extends GuiContainer {
     @Override
     public void initGui()
     {
-        oreMeta = new GuiTextField( 1, this.fontRenderer, width / 2 - 138 ,  height / 2 - 63, 202, 20 );
-        oreMeta.setText( selectedBlock.getName() );
+        oreMeta = new GuiTextField( 1, this.fontRenderer, width / 2 - 95 ,  height / 2 - 5, 190, 20 );
+        oreMeta.setText( String.valueOf(info.getMeta()) );
 
-        this.buttonList.add( new GuiButton( 1, (width / 2) + 78, height / 2 + 58, 120, 20, I18n.format("xray.single.save") ));
-
-        // Bottom buttons
-        this.buttonList.add( new GuiButton( 2, width / 2 - 138, height / 2 + 83, 202, 20, I18n.format("xray.single.cancel") ) ); // Cancel button
-
+        this.buttonList.add( new GuiButton( 1, (width / 2) - 95, height / 2 + 20, 119, 20, I18n.format("xray.single.save") ));
+        this.buttonList.add( new GuiButton( 2, width / 2 + 26, height / 2 + 20, 70, 20, I18n.format("xray.single.cancel") ) ); // Cancel button
     }
 
     @Override
@@ -76,12 +72,12 @@ public class GuiChangeMeta extends GuiContainer {
     public void drawScreen( int x, int y, float f )
     {
         super.drawScreen(x, y, f);
-        getFontRender().drawStringWithShadow(this.selectedBlock.getName(), width / 2 - 138, height / 2 - 90, 0xffffff);
+        getFontRender().drawStringWithShadow(this.selectedBlock.getName(), width / 2 - 95, height / 2 - 27, 0xffffff);
 
         oreMeta.drawTextBox();
 
         RenderHelper.enableGUIStandardItemLighting();
-        this.itemRender.renderItemAndEffectIntoGUI( this.selectedBlock.getItemStack(), width / 2 + 50, height / 2 - 105 );
+        this.itemRender.renderItemAndEffectIntoGUI( this.selectedBlock.getItemStack(), width / 2 + 79, height / 2 - 40 );
         RenderHelper.disableStandardItemLighting();
     }
 

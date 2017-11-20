@@ -22,6 +22,7 @@ xray.input.change_meta=Change Meta
 
 xray.title.config=Configure Block
 xray.title.edit=Edit Block
+xray.title.edit_meta=Edit Meta
 
 xray.message.missing_input=You need to have all the inputs filled in
 xray.message.already_exists=This block has already been added to the block list
