@@ -13,7 +13,7 @@ xray.color.green=Green
 xray.color.blue=Blue
 
 xray.input.gui=GUI Name
-xray.input.add=Add Ore
+xray.input.add=Add Block
 xray.input.distance=Distance
 
 xray.title.config=Configure Block
@@ -26,6 +26,8 @@ xray.message.unknown=Looks like the block you've tried to edit doesn't exist.
 xray.message.removed=Successfully removed %s.
 xray.message.config_missing=Config file not found. Creating now.
 xray.message.invalid_hand=%s needs to be a block
+xray.message.thats_odd=Something went wrong? Sorry about that. Make an issue if this continues to happen
+xray.message.nothing_infront=You're not looking at anything are you?
 
 xray.config.toggle=Toggle XRay
 xray.config.open=Open XRay Menu

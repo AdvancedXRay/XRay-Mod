@@ -78,8 +78,8 @@ public class GuiList extends GuiContainer
 
 		// side bar buttons
 		this.buttonList.add( new GuiButton(1, (width / 2) + 78, height / 2 - 60, 120, 20, I18n.format("xray.input.add") ) );
-		this.buttonList.add( new GuiButton(4, width / 2 + 78, height / 2 - 35, 120, 20,"Add Block from hand") );
-		this.buttonList.add( new GuiButton(5, width / 2 + 78, height / 2 - 10, 120, 20,"Add Block in crosshair") );
+		this.buttonList.add( new GuiButton(4, width / 2 + 78, height / 2 - 38, 120, 20,"Add Block in hand") );
+		this.buttonList.add( new GuiButton(5, width / 2 + 78, height / 2 - 16, 120, 20,"Add Looking at") );
 
         if( pageMax < 1 )
         {
@@ -146,7 +146,7 @@ public class GuiList extends GuiContainer
 				break;
 
 			case 5:
-				mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.invalid_hand", "fuck") ));
+				mc.player.closeScreen();
 				try {
 					RayTraceResult ray = mc.player.rayTrace(100, 20);
 					if( ray != null && ray.typeOfHit == RayTraceResult.Type.BLOCK ) {
@@ -155,12 +155,26 @@ public class GuiList extends GuiContainer
 
 						ItemStack lookingStack = lookingAt.getPickBlock(state, ray, mc.world, ray.getBlockPos(), mc.player);
 
-						System.out.println(lookingStack.getDisplayName());
+						// Double super check that we've got ourselves a block
+						if(!(lookingStack.getItem() instanceof ItemBlock)) {
+							mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.invalid_hand", lookingStack.getDisplayName()) ));
+							return;
+						}
+
+						// create a selected block from main hand item
+						HelperBlock seeBlock = new HelperBlock(lookingStack.getDisplayName(),
+								Block.getBlockFromItem(lookingStack.getItem()),
+								lookingStack,
+								lookingStack.getItem(),
+								lookingStack.getItem().getRegistryName());
+
+						mc.displayGuiScreen( new GuiAdd(seeBlock) );
 					}
+					else
+						mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.nothing_infront") ));
 				}
 				catch ( NullPointerException ex ) {
-
-//					mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.invalid_hand", handItem.getDisplayName()) ));
+					mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.thats_odd") ));
 				}
 
 				break;
