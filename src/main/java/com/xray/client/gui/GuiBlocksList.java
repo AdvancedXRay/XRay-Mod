@@ -19,7 +19,7 @@ public class GuiBlocksList extends GuiScrollingList {
     private List<HelperBlock> blockList;
 
     GuiBlocksList(GuiBlocks parent, List<HelperBlock> blockList) {
-        super( parent.getMinecraftInstance(), 200, 210, parent.height / 2 - 105, parent.height / 2 + 80, parent.width / 2 - 97, HEIGHT, parent.width, parent.height);
+        super( parent.getMinecraftInstance(), 202, 210, parent.height / 2 - 105, parent.height / 2 + 80, parent.width / 2 - 100, HEIGHT, parent.width, parent.height);
 
         this.parent = parent;
         this.blockList = blockList;

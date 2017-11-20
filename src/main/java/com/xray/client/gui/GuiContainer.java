@@ -87,7 +87,7 @@ public class GuiContainer extends GuiScreen {
             if( this.hasSide )
                 fr.drawStringWithShadow(title(), width / 2 - 138, height / 2 - 105, 0xffff00);
             else
-                fr.drawStringWithShadow(title(), width / 2 - 97, height / 2 - 105, 0xffff00);
+                fr.drawStringWithShadow(title(), width / 2 - 100, height / 2 - 105, 0xffff00);
         }
 
 

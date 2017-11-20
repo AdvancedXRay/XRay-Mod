@@ -32,20 +32,19 @@ public class GuiAdd extends GuiContainer {
 	public void initGui()
 	{
 		// Called when the gui should be (re)created
-		this.buttonList.add( new GuiButton( 98, width / 2 -25, height / 2 + 86, 130, 20, I18n.format("xray.single.add") ));
+		this.buttonList.add( new GuiButton( 98, width / 2 - 100, height / 2 + 85, 128, 20, I18n.format("xray.single.add") ));
+		this.buttonList.add( new GuiButton( 99, width / 2 + 30, height / 2 + 85, 72, 20, I18n.format("xray.single.cancel") ) ); // Cancel button
 
-		this.buttonList.add( redSlider = new GuiSlider( 3, width / 2 - 97, height / 2 + 7, I18n.format("xray.color.red"), 0, 255 ));
-		this.buttonList.add( greenSlider = new GuiSlider( 2, width / 2 - 97, height / 2 + 30, I18n.format("xray.color.green"), 0, 255 ));
-		this.buttonList.add( blueSlider = new GuiSlider( 1, width / 2 - 97, height / 2 + 53, I18n.format("xray.color.blue"), 0, 255 ) );
+		this.buttonList.add( redSlider = new GuiSlider( 3, width / 2 - 100, height / 2 + 7, I18n.format("xray.color.red"), 0, 255 ));
+		this.buttonList.add( greenSlider = new GuiSlider( 2, width / 2 - 100, height / 2 + 30, I18n.format("xray.color.green"), 0, 255 ));
+		this.buttonList.add( blueSlider = new GuiSlider( 1, width / 2 - 100, height / 2 + 53, I18n.format("xray.color.blue"), 0, 255 ) );
 
 		redSlider.sliderValue   = 0.0F;
 		greenSlider.sliderValue = 0.654F;
 		blueSlider.sliderValue  = 1.0F;
 
-		oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 97 ,  height / 2 - 63, 202, 20 );
+		oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 100 ,  height / 2 - 63, 202, 20 );
 		oreName.setText(I18n.format("xray.input.gui"));
-
-		this.buttonList.add( new GuiButton( 99, width / 2 - 100, height / 2 + 86, 72, 20, I18n.format("xray.single.cancel") ) ); // Cancel button
 	}
 
 	@Override
@@ -105,14 +104,14 @@ public class GuiAdd extends GuiContainer {
 	public void drawScreen( int x, int y, float f )
     {
 		super.drawScreen(x, y, f);
-		getFontRender().drawStringWithShadow(selectBlock.getName(), width / 2 - 97, height / 2 - 90, 0xffffff);
+		getFontRender().drawStringWithShadow(selectBlock.getName(), width / 2 - 100, height / 2 - 90, 0xffffff);
 
 		oreName.drawTextBox();
 
-		renderPreview(width / 2 - 97, height / 2 - 40, 202, 45, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
+		renderPreview(width / 2 - 100, height / 2 - 40, 202, 45, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
 
 		RenderHelper.enableGUIStandardItemLighting();
-		this.itemRender.renderItemAndEffectIntoGUI( selectBlock.getItemStack(), width / 2 + 88, height / 2 - 105 );
+		this.itemRender.renderItemAndEffectIntoGUI( selectBlock.getItemStack(), width / 2 + 85, height / 2 - 105 );
 		RenderHelper.disableStandardItemLighting();
 	}
 
