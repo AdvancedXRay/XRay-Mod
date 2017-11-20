@@ -2,10 +2,15 @@ package com.xray.client.gui;
 
 import com.xray.client.gui.helper.HelperBlock;
 import com.xray.common.reference.OreInfo;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.lwjgl.Sys;
 
 import java.io.IOException;
 
@@ -29,8 +34,8 @@ public class GuiChangeMeta extends GuiContainer {
         oreMeta = new GuiTextField( 1, this.fontRenderer, width / 2 - 95 ,  height / 2 - 5, 190, 20 );
         oreMeta.setText( String.valueOf(info.getMeta()) );
 
-        this.buttonList.add( new GuiButton( 1, (width / 2) - 95, height / 2 + 20, 119, 20, I18n.format("xray.single.save") ));
-        this.buttonList.add( new GuiButton( 2, width / 2 + 26, height / 2 + 20, 70, 20, I18n.format("xray.single.cancel") ) ); // Cancel button
+        this.buttonList.add( new GuiButton( 2, (width / 2) - 95, height / 2 + 20, 119, 20, I18n.format("xray.single.save") ));
+        this.buttonList.add( new GuiButton( 1, width / 2 + 26, height / 2 + 20, 70, 20, I18n.format("xray.single.cancel") ) ); // Cancel button
     }
 
     @Override
@@ -44,8 +49,30 @@ public class GuiChangeMeta extends GuiContainer {
                 break;
 
             case 2: // edit meta
-                mc.player.closeScreen();
-                mc.displayGuiScreen( new GuiEditOre( this.info, this.selectedBlock ) );
+                if( !oreMeta.getText().isEmpty() && NumberUtils.isDigits( oreMeta.getText() )) {
+
+                    int newMeta = Integer.valueOf( oreMeta.getText() );
+
+                    // Get all possible blocks and see if our new meta exists
+                    NonNullList<ItemStack> tmpStack = NonNullList.create();
+                    Block tmpBlock = this.selectedBlock.block;
+                    tmpBlock.getSubBlocks(tmpBlock.getCreativeTabToDisplayOn(), tmpStack);
+
+                    // Hacky way to check if our index exists in our subBlocks
+                    try {
+                        ItemStack stack = tmpStack.get( newMeta );
+
+                        // Did it work? Cool, Lets move on to update the config and oreList
+                        System.out.println("Looks Like we're all good. Lets change it");
+                    } catch ( IndexOutOfBoundsException e ) {
+                        System.out.println("That index doesn't exist");
+                    }
+                } else {
+                    System.out.println("Fuck");
+                }
+//
+//                mc.player.closeScreen();
+//                mc.displayGuiScreen( new GuiEditOre( this.info, this.selectedBlock ) );
                 break;
 
             default:
