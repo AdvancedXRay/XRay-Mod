@@ -71,7 +71,7 @@ public class GuiContainer extends GuiScreen {
             mc.renderEngine.bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "bg.png"));
             drawTexturedQuadFit(width / 2 + 60, height / 2 -(180/2), 150, 180);
 
-            drawTexturedQuadFit(width / 2 - (this.backgroundWidth / 2), height / 2 - (this.backgroundHeight / 2), this.backgroundWidth, this.backgroundHeight);
+            drawTexturedQuadFit(width / 2 - 150, height / 2 - 118, this.backgroundWidth, this.backgroundHeight);
 
             if( hasSideTitle() )
                 fr.drawStringWithShadow(this.sideTitle, width / 2 + 80, height / 2 - 77, 0xffff00);
@@ -80,7 +80,7 @@ public class GuiContainer extends GuiScreen {
 
         if( !this.hasSide ) {
             mc.renderEngine.bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "bg.png"));
-            drawTexturedQuadFit(width / 2 - (this.backgroundWidth / 2), height / 2 - (this.backgroundHeight / 2), this.backgroundWidth, this.backgroundHeight);
+            drawTexturedQuadFit(width / 2 - (this.backgroundWidth / 2) + 1, height / 2 - (this.backgroundHeight / 2), this.backgroundWidth, this.backgroundHeight);
         }
 
         if( hasTitle() ) {
