@@ -1,9 +1,11 @@
 package com.xray.common.config;
 
+import com.xray.client.render.RenderTick;
 import com.xray.common.XRay;
 import com.xray.common.reference.OreInfo;
 import com.xray.common.reference.Reference;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.config.ConfigCategory;
@@ -43,11 +45,8 @@ public class ConfigHandler
 
 
 	private static void SyncConfig( Configuration config ) {
-		config.setCategoryComment(Configuration.CATEGORY_GENERAL, "Use the in-game config editor.");
+//		config.setCategoryComment(Configuration.CATEGORY_GENERAL, "Use the in-game config editor.");
 
-		//getInt(String name, String category, int defaultValue, int minValue, int maxValue, String comment, String langKey)
-		config.getInt("outline-thickness", Configuration.CATEGORY_GENERAL,10, 1, 60, "Something something cookiues");
-		config.getFloat("outline-opacity", Configuration.CATEGORY_GENERAL,1.0f, 0.01f, 1.0f, "Something something cookiues");
 
 		if( config.hasChanged() )
 			config.save();
