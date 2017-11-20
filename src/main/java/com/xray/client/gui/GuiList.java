@@ -80,6 +80,7 @@ public class GuiList extends GuiContainer
 		this.buttonList.add( new GuiButton(1, (width / 2) + 78, height / 2 - 60, 120, 20, I18n.format("xray.input.add") ) );
 		this.buttonList.add( new GuiButton(4, width / 2 + 78, height / 2 - 38, 120, 20, I18n.format("xray.input.add_hand") ) );
 		this.buttonList.add( new GuiButton(5, width / 2 + 78, height / 2 - 16, 120, 20, I18n.format("xray.input.add_look") ) );
+		this.buttonList.add( new GuiButton(6, width / 2 + 78, height / 2 + 58, 120, 20, I18n.format("xray.single.close") ) );
 
         if( pageMax < 1 )
         {
@@ -177,6 +178,10 @@ public class GuiList extends GuiContainer
 					mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.thats_odd") ));
 				}
 
+				break;
+
+			case 6:
+				mc.player.closeScreen();
 				break;
 
 			default:

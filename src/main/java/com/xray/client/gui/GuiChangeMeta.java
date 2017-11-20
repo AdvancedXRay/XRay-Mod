@@ -78,7 +78,7 @@ public class GuiChangeMeta extends GuiContainer {
                 } else
                     mc.player.sendMessage( new TextComponentString("[XRay] "+ I18n.format("xray.message.not_a_number", oreMeta.getText()) ));
 
-                // No matter what close the UI and start again. Otherwise people can't see that an error may have happened 
+                // No matter what close the UI and start again. Otherwise people can't see that an error may have happened
                 mc.player.closeScreen();
                 mc.displayGuiScreen( new GuiEditOre( this.info, this.selectedBlock ) );
                 break;

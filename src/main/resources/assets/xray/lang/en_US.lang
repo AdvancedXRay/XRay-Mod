@@ -8,6 +8,7 @@ xray.single.add=Add
 xray.single.delete=Delete
 xray.single.save=Save
 xray.single.tools=Tools
+xray.single.close=Close
 
 xray.color.red=Red
 xray.color.green=Green
