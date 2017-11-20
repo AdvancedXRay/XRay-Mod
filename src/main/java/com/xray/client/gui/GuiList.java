@@ -72,7 +72,7 @@ public class GuiList extends GuiContainer
 		}
 
 		GuiButton aNextButton, aPrevButton;
-		this.buttonList.add( distButtons = new GuiButton(0, (width / 2) - 108, height / 2 + 86, 140, 20, I18n.format("xray.input.distance")+": "+ XRay.distStrings[ XRay.currentDist]) ); // Static button for printing the ore dictionary / searchList.
+		this.buttonList.add( distButtons = new GuiButton(0, (width / 2) - 108, height / 2 + 86, 140, 20, I18n.format("xray.input.distance")+": "+ String.valueOf(XRay.distNumbers[XRay.currentDist])) ); // Static button for printing the ore dictionary / searchList.
 		this.buttonList.add( aNextButton = new GuiButton(2, width / 2 + 35, height / 2 + 86, 30, 20, ">") );
 		this.buttonList.add( aPrevButton = new GuiButton(3, width / 2 - 140, height / 2 + 86, 30, 20, "<") );
 
@@ -219,7 +219,7 @@ public class GuiList extends GuiContainer
 				else
 					XRay.currentDist = XRay.distNumbers.length - 1;
 
-				distButtons.displayString = I18n.format("xray.input.distance")+": "+ XRay.distStrings[ XRay.currentDist];
+				distButtons.displayString = I18n.format("xray.input.distance")+": "+ String.valueOf(XRay.distNumbers[XRay.currentDist]);
 				ClientTick.blockFinder( true );
 				ConfigHandler.update("searchdist", false);
 			}
