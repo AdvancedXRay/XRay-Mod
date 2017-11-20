@@ -79,7 +79,7 @@ public class GuiList extends GuiContainer
 		// side bar buttons
 		this.buttonList.add( new GuiButton(1, (width / 2) + 78, height / 2 - 60, 120, 20, I18n.format("xray.input.add") ) );
 		this.buttonList.add( new GuiButton(4, width / 2 + 78, height / 2 - 38, 120, 20, I18n.format("xray.input.add_hand") ) );
-		this.buttonList.add( new GuiButton(5, width / 2 + 78, height / 2 - 16, 120, 20, I18n.format("xray.input.add_looking") ) );
+		this.buttonList.add( new GuiButton(5, width / 2 + 78, height / 2 - 16, 120, 20, I18n.format("xray.input.add_look") ) );
 
         if( pageMax < 1 )
         {
