@@ -16,6 +16,7 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +59,7 @@ public class RenderTick
             ClientTick.blockFinder( true );
         }
     }
-	
+
 	private void drawOres( float px, float py, float pz )
 	{
 		int bx, by, bz;
@@ -91,6 +92,7 @@ public class RenderTick
 
 			tessellate.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 
+			// TOP
 			tessellate.pos(bx-px + f, by-py + f1, bz-pz + f).color(red, green, blue, 255).endVertex();
 			tessellate.pos(bx-px + f1, by-py + f1, bz-pz + f).color(red, green, blue, 255).endVertex();
 			tessellate.pos(bx-px + f1, by-py + f1, bz-pz + f).color(red, green, blue, 255).endVertex();
@@ -100,6 +102,7 @@ public class RenderTick
 			tessellate.pos(bx-px + f, by-py + f1, bz-pz + f1).color(red, green, blue, 255).endVertex();
 			tessellate.pos(bx-px + f, by-py + f1, bz-pz + f).color(red, green, blue, 255).endVertex();
 
+			// BOTTOM
 			tessellate.pos(bx-px + f1, by-py + f, bz-pz + f).color(red, green, blue, 255).endVertex();
 			tessellate.pos(bx-px + f1, by-py + f, bz-pz + f1).color(red, green, blue, 255).endVertex();
 			tessellate.pos(bx-px + f1, by-py + f, bz-pz + f1).color(red, green, blue, 255).endVertex();
@@ -109,12 +112,19 @@ public class RenderTick
 			tessellate.pos(bx-px + f, by-py + f, bz-pz + f).color(red, green, blue, 255).endVertex();
 			tessellate.pos(bx-px + f1, by-py + f, bz-pz + f).color(red, green, blue, 255).endVertex();
 
+			// Edge 1
 			tessellate.pos(bx-px + f1, by-py + f, bz-pz + f1).color(red, green, blue, 255).endVertex();
 			tessellate.pos(bx-px + f1, by-py + f1, bz-pz + f1).color(red, green, blue, 255).endVertex();
+
+			// Edge 2
 			tessellate.pos(bx-px + f1, by-py + f, bz-pz + f).color(red, green, blue, 255).endVertex();
 			tessellate.pos(bx-px + f1, by-py + f1, bz-pz + f).color(red, green, blue, 255).endVertex();
+
+			// Edge 3
 			tessellate.pos(bx-px + f, by-py + f, bz-pz + f1).color(red, green, blue, 255).endVertex();
 			tessellate.pos(bx-px + f, by-py + f1, bz-pz + f1).color(red, green, blue, 255).endVertex();
+
+			// Edge 4
 			tessellate.pos(bx-px + f, by-py + f, bz-pz + f).color(red, green, blue, 255).endVertex();
 			tessellate.pos(bx-px + f, by-py + f1, bz-pz + f).color(red, green, blue, 255).endVertex();
 
