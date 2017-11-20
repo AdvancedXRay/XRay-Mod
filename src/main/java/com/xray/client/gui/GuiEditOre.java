@@ -22,21 +22,25 @@ public class GuiEditOre extends GuiContainer
     private HelperBlock selectBlock;
     private OreInfo oreInfo;
 
-    GuiEditOre(OreInfo oreInfo) {
+    GuiEditOre(OreInfo oreInfo, HelperBlock givenBlock) {
         super(true); // Has a sidebar
         this.setSideTitle( I18n.format("xray.single.tools") );
 
         this.oreInfo = oreInfo;
 
-        // Get the block for the ore info
-        NonNullList<ItemStack> tmpStack = NonNullList.create();
-        Block tmpBlock = Block.getBlockById(oreInfo.getId());
-        tmpBlock.getSubBlocks(tmpBlock.getCreativeTabToDisplayOn(), tmpStack);
-        ItemStack stack = tmpStack.get( oreInfo.getMeta() );
+        if( givenBlock == null ) {
+            // Get the block for the ore info
+            NonNullList<ItemStack> tmpStack = NonNullList.create();
+            Block tmpBlock = Block.getBlockById(oreInfo.getId());
+            tmpBlock.getSubBlocks(tmpBlock.getCreativeTabToDisplayOn(), tmpStack);
+            ItemStack stack = tmpStack.get(oreInfo.getMeta());
 
-        this.selectBlock = new HelperBlock(
-                stack.isEmpty() ? oreInfo.getDisplayName() : stack.getDisplayName(), Block.getBlockFromItem( stack.getItem() ), stack, stack.getItem(), stack.getItem().getRegistryName()
-        );
+            this.selectBlock = new HelperBlock(
+                    stack.isEmpty() ? oreInfo.getDisplayName() : stack.getDisplayName(), Block.getBlockFromItem(stack.getItem()), stack, stack.getItem(), stack.getItem().getRegistryName()
+            );
+        }
+        else
+            this.selectBlock = givenBlock;
     }
 
     @Override
@@ -89,6 +93,11 @@ public class GuiEditOre extends GuiContainer
             case 99: // Cancel
                 mc.player.closeScreen();
                 mc.displayGuiScreen( new GuiList() );
+                break;
+
+            case 101: // edit meta
+                mc.player.closeScreen();
+                mc.displayGuiScreen( new GuiChangeMeta( this.selectBlock, this.oreInfo ) );
                 break;
 
             default:

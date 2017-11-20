@@ -203,7 +203,7 @@ public class GuiList extends GuiContainer
 			for (HelperGuiList list : this.renderList) {
 				if (list.getButton().mousePressed(this.mc, x, y)) {
 					mc.player.closeScreen();
-					mc.displayGuiScreen(new GuiEditOre(list.getOre()));
+					mc.displayGuiScreen(new GuiEditOre(list.getOre(), null));
 				}
 			}
 
