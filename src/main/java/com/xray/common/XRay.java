@@ -32,31 +32,19 @@ public class XRay
 	public static ArrayList<HelperBlock> blockList = new ArrayList<>();
 
 	// Config settings
+	public static Configuration config;
     public static int currentDist = 0; // Index for the distNumers array. Default search distance.
 	public static float outlineThickness = 1f;
 	public static float outlineOpacity = 1f;
 
-//    // Strings for use in the GUI Render Distance button
-//	public static final String[] s = new String[] { "8", "16", "32", "48", "64", "80", "128", "256" };
-
     // Radius +/- around the player to search. So 8 is 8 on left and right of player plus under the player. So 17x17 area.
     public static final int[] distNumbers = new int[] {8, 16, 32, 48, 64, 80, 128, 256};
 
-	public static Configuration config;
-
-	// Keybindings
+    // Keybindings
 	public static final int keyIndex_toggleXray = 0;
 	public static final int keyIndex_showXrayMenu = 1;
-	public static final int[] keyBind_keyValues = 
-	{
-		Keyboard.KEY_BACKSLASH,
-		Keyboard.KEY_Z
-	};
-	public static final String[] keyBind_descriptions =
-	{
-		I18n.format("xray.config.toggle"),
-		I18n.format("xray.config.open")
-	};
+	public static final int[] keyBind_keyValues = { Keyboard.KEY_BACKSLASH, Keyboard.KEY_Z };
+	public static final String[] keyBind_descriptions = { I18n.format("xray.config.toggle"), I18n.format("xray.config.open")};
 	public static KeyBinding[] keyBind_keys = null;
 
 	public static ArrayList<OreInfo> searchList = new ArrayList<>(); // List of ores/blocks to search for.
