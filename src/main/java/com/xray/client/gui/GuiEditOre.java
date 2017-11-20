@@ -23,9 +23,10 @@ public class GuiEditOre extends GuiContainer
     private OreInfo oreInfo;
 
     GuiEditOre(OreInfo oreInfo) {
-        super(false);
+        super(true); // Has a sidebar
         this.oreInfo = oreInfo;
 
+        // Get the block for the ore info
         NonNullList<ItemStack> tmpStack = NonNullList.create();
         Block tmpBlock = Block.getBlockById(oreInfo.getId());
         tmpBlock.getSubBlocks(tmpBlock.getCreativeTabToDisplayOn(), tmpStack);
@@ -40,8 +41,11 @@ public class GuiEditOre extends GuiContainer
     public void initGui()
     {
         // Called when the gui should be (re)created
-        this.buttonList.add( new GuiButton( 98, width / 2 +16, height / 2 + 86, 90, 20, I18n.format("xray.single.save") ));
-        this.buttonList.add( new GuiButton( 100, width / 2 -26, height / 2 + 86, 40, 20, I18n.format("xray.single.delete") ));
+        // Sidebar buttons for now
+        this.buttonList.add( new GuiButton( 98, width / 2 +16, height / 2 + 86, 120, 20, I18n.format("xray.single.save") ));
+        this.buttonList.add( new GuiButton( 100, width / 2 -26, height / 2 + 86, 120, 20, I18n.format("xray.single.delete") ));
+        this.buttonList.add( new GuiButton( 99, width / 2 - 100, height / 2 + 86, 120, 20, I18n.format("xray.single.cancel") ) ); // Cancel button
+
 
         this.buttonList.add( redSlider = new GuiSlider( 3, width / 2 - 97, height / 2 + 7, I18n.format("xray.color.red"), 0, 255 ));
         this.buttonList.add( greenSlider = new GuiSlider( 2, width / 2 - 97, height / 2 + 30, I18n.format("xray.color.green"), 0, 255 ));
@@ -54,7 +58,6 @@ public class GuiEditOre extends GuiContainer
         oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 97 ,  height / 2 - 63, 202, 20 );
         oreName.setText(this.oreInfo.getDisplayName());
 
-        this.buttonList.add( new GuiButton( 99, width / 2 - 100, height / 2 + 86, 72, 20, I18n.format("xray.single.cancel") ) ); // Cancel button
     }
 
     @Override

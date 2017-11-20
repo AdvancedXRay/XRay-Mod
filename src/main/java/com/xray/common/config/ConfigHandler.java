@@ -53,8 +53,7 @@ public class ConfigHandler
 			config.save();
 	}
 
-	public static void setup(FMLPreInitializationEvent event )
-	{
+	public static void setup(FMLPreInitializationEvent event ) {
 		config = new Configuration( event.getSuggestedConfigurationFile() );
 		config.load();
 		XRay.currentDist = config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0).getInt(); // Get our search distance.
@@ -78,8 +77,7 @@ public class ConfigHandler
 		config.save();
 	}
 
-	public static void add( String oreName, Integer id, Integer meta, int[] color )
-	{
+	public static void add( String oreName, Integer id, Integer meta, int[] color ) {
 		config.load();
 		String cleanName = oreName.replaceAll("\\s+", "").toLowerCase();
 
@@ -111,7 +109,7 @@ public class ConfigHandler
 	}
 
 	// For updating single options
-	public static void update(String string, boolean draw){
+	public static void update(String string, boolean draw) {
 		if( string.equals("searchdist") ) // Save the new render distance.
 		{
 			config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0).set( XRay.currentDist);
@@ -136,8 +134,7 @@ public class ConfigHandler
 		config.save();
 	}
 
-	public static void updateInfo( OreInfo original, OreInfo newInfo )
-	{
+	public static void updateInfo( OreInfo original, OreInfo newInfo ) {
 		for( String category : config.getCategoryNames() ) {
 			String cleanStr = original.getOreName().toLowerCase();
 			String[] splitCat = category.split("\\.");
