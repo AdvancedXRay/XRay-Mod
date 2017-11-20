@@ -24,6 +24,7 @@ public class GuiAdd extends GuiContainer {
 	private boolean oreNameCleared  = false;
 
 	GuiAdd(HelperBlock selectedBlock) {
+		super(false);
 		this.selectBlock = selectedBlock;
 	}
 
@@ -31,20 +32,19 @@ public class GuiAdd extends GuiContainer {
 	public void initGui()
 	{
 		// Called when the gui should be (re)created
-		this.buttonList.add( new GuiButton( 98, width / 2 -25, height / 2 + 86, 130, 20, I18n.format("xray.single.add") ));
+		this.buttonList.add( new GuiButton( 98, width / 2 - 100, height / 2 + 85, 128, 20, I18n.format("xray.single.add") ));
+		this.buttonList.add( new GuiButton( 99, width / 2 + 30, height / 2 + 85, 72, 20, I18n.format("xray.single.cancel") ) ); // Cancel button
 
-		this.buttonList.add( redSlider = new GuiSlider( 3, width / 2 - 97, height / 2 + 7, I18n.format("xray.color.red"), 0, 255 ));
-		this.buttonList.add( greenSlider = new GuiSlider( 2, width / 2 - 97, height / 2 + 30, I18n.format("xray.color.green"), 0, 255 ));
-		this.buttonList.add( blueSlider = new GuiSlider( 1, width / 2 - 97, height / 2 + 53, I18n.format("xray.color.blue"), 0, 255 ) );
+		this.buttonList.add( redSlider = new GuiSlider( 3, width / 2 - 100, height / 2 + 7, I18n.format("xray.color.red"), 0, 255 ));
+		this.buttonList.add( greenSlider = new GuiSlider( 2, width / 2 - 100, height / 2 + 30, I18n.format("xray.color.green"), 0, 255 ));
+		this.buttonList.add( blueSlider = new GuiSlider( 1, width / 2 - 100, height / 2 + 53, I18n.format("xray.color.blue"), 0, 255 ) );
 
 		redSlider.sliderValue   = 0.0F;
 		greenSlider.sliderValue = 0.654F;
 		blueSlider.sliderValue  = 1.0F;
 
-		oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 97 ,  height / 2 - 63, 202, 20 );
-		oreName.setText(I18n.format("xray.input.gui"));
-
-		this.buttonList.add( new GuiButton( 99, width / 2 - 100, height / 2 + 86, 72, 20, I18n.format("xray.single.cancel") ) ); // Cancel button
+		oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 100 ,  height / 2 - 63, 202, 20 );
+		oreName.setText( this.selectBlock.getItemStack().getDisplayName() );
 	}
 
 	@Override
@@ -104,18 +104,18 @@ public class GuiAdd extends GuiContainer {
 	public void drawScreen( int x, int y, float f )
     {
 		super.drawScreen(x, y, f);
-		getFontRender().drawStringWithShadow(selectBlock.getName(), width / 2 - 97, height / 2 - 90, 0xffffff);
+		getFontRender().drawStringWithShadow(selectBlock.getName(), width / 2 - 100, height / 2 - 90, 0xffffff);
 
 		oreName.drawTextBox();
 
-		renderPreview(width, height, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
+		renderPreview(width / 2 - 100, height / 2 - 40, 202, 45, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
 
 		RenderHelper.enableGUIStandardItemLighting();
-		this.itemRender.renderItemAndEffectIntoGUI( selectBlock.getItemStack(), width / 2 + 88, height / 2 - 105 );
+		this.itemRender.renderItemAndEffectIntoGUI( selectBlock.getItemStack(), width / 2 + 85, height / 2 - 105 );
 		RenderHelper.disableStandardItemLighting();
 	}
 
-	static void renderPreview(int width, int height, float r, float g, float b) {
+	static void renderPreview(int x, int y, int width, int height, float r, float g, float b) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder tessellate = tessellator.getBuffer();
 		GlStateManager.enableBlend();
@@ -123,10 +123,10 @@ public class GuiAdd extends GuiContainer {
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		GlStateManager.color(r, g, b, 1);
 		tessellate.begin(7, DefaultVertexFormats.POSITION);
-		tessellate.pos(width / 2 - 97, height / 2 - 40, 0.0D).endVertex();
-		tessellate.pos(width / 2 - 97, height / 2 + 4, 0.0D).endVertex();
-		tessellate.pos(width / 2 + 105, height / 2 + 4, 0.0D).endVertex();
-		tessellate.pos(width / 2 + 105, height / 2 - 40, 0.0D).endVertex();
+		tessellate.pos(x, y, 0.0D).endVertex();
+		tessellate.pos(x, y + height, 0.0D).endVertex();
+		tessellate.pos(x + width, y + height, 0.0D).endVertex();
+		tessellate.pos(x+ width, y, 0.0D).endVertex();
 		tessellator.draw();
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();

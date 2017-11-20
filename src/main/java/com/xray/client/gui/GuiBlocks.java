@@ -23,6 +23,7 @@ public class GuiBlocks extends GuiContainer {
     private int selected = -1;
 
     GuiBlocks() {
+        super(false);
         setBlocks( XRay.blockList );
     }
 
@@ -45,7 +46,7 @@ public class GuiBlocks extends GuiContainer {
         this.render = this.itemRender;
         this.blockList = new GuiBlocksList( this, this.blocks );
 
-        search = new GuiTextField(150, getFontRender(), width / 2 -96, height / 2 + 85, 135, 18);
+        search = new GuiTextField(150, getFontRender(), width / 2 - 100, height / 2 + 85, 140, 18);
         search.setFocused(true);
         search.setCanLoseFocus(true);
 

@@ -1,13 +1,20 @@
 package com.xray.common.config;
 
+import com.xray.client.render.RenderTick;
 import com.xray.common.XRay;
 import com.xray.common.reference.OreInfo;
+import com.xray.common.reference.Reference;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.io.File;
 import java.util.Objects;
 
 public class ConfigHandler
@@ -15,8 +22,37 @@ public class ConfigHandler
 	private static Configuration config = null; // Save the config file handle for use later.
 	private static Minecraft mc = Minecraft.getMinecraft();
 
-	public static void setup(FMLPreInitializationEvent event )
-	{
+	@SubscribeEvent
+	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+		if( event.getModID().equals(Reference.MOD_ID) )
+			SyncConfig( XRay.config );
+	}
+
+	public static void init(File suggestedConfig, Configuration config) {
+		config = new Configuration( suggestedConfig );
+		config.load();
+
+		if( config.getCategoryNames().isEmpty() )
+		{
+			System.out.println("[XRay] "+ I18n.format("xray.message.config_missing"));
+			DefaultConfig.create( config );
+			config.save();
+		}
+
+		System.out.println(I18n.format("xray.debug.init"));
+		SyncConfig(config);
+	}
+
+
+	private static void SyncConfig( Configuration config ) {
+//		config.setCategoryComment(Configuration.CATEGORY_GENERAL, "Use the in-game config editor.");
+
+
+		if( config.hasChanged() )
+			config.save();
+	}
+
+	public static void setup(FMLPreInitializationEvent event ) {
 		config = new Configuration( event.getSuggestedConfigurationFile() );
 		config.load();
 		XRay.currentDist = config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0).getInt(); // Get our search distance.
@@ -40,8 +76,7 @@ public class ConfigHandler
 		config.save();
 	}
 
-	public static void add( String oreName, Integer id, Integer meta, int[] color )
-	{
+	public static void add( String oreName, Integer id, Integer meta, int[] color ) {
 		config.load();
 		String cleanName = oreName.replaceAll("\\s+", "").toLowerCase();
 
@@ -50,8 +85,7 @@ public class ConfigHandler
 		{
 			if(Objects.equals(config.get("ores." + cleanName, "name", "").getString(), cleanName))
 			{
-				String notify = String.format( "[XRay] %s already exists. Please enter a different name. ", oreName );
-				mc.ingameGUI.getChatGUI().printChatMessage( new TextComponentString(notify));
+				mc.player.sendMessage( new TextComponentString("[XRay] "+ I18n.format("xray.message.block_exists", oreName) ));
 				return;
 			}
 		}
@@ -73,7 +107,7 @@ public class ConfigHandler
 	}
 
 	// For updating single options
-	public static void update(String string, boolean draw){
+	public static void update(String string, boolean draw) {
 		if( string.equals("searchdist") ) // Save the new render distance.
 		{
 			config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0).set( XRay.currentDist);
@@ -98,8 +132,7 @@ public class ConfigHandler
 		config.save();
 	}
 
-	public static void updateInfo( OreInfo original, OreInfo newInfo )
-	{
+	public static void updateInfo( OreInfo original, OreInfo newInfo ) {
 		for( String category : config.getCategoryNames() ) {
 			String cleanStr = original.getOreName().toLowerCase();
 			String[] splitCat = category.split("\\.");
@@ -110,6 +143,7 @@ public class ConfigHandler
 				config.get(tmpCategory, "green", "").set( newInfo.color[1] );
 				config.get(tmpCategory, "blue", "").set( newInfo.color[2] );
 				config.get(tmpCategory, "name", "").set( newInfo.displayName );
+				config.get(tmpCategory, "meta", "").set( newInfo.meta );
 				break;
 			}
 		}

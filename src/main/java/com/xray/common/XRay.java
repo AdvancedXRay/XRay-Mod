@@ -24,33 +24,27 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 
-@Mod(modid= Reference.MOD_ID, name= Reference.MOD_NAME, version=Reference.MOD_VERSION)
+@Mod(modid= Reference.MOD_ID, name= Reference.MOD_NAME, version=Reference.MOD_VERSION /*guiFactory = Reference.GUI_FACTORY*/)
 public class XRay
 {
 	public static int localPlyX, localPlyY, localPlyZ, localPlyXPrev, localPlyZPrev; // For internal use in the ClientTick thread.
 	public static boolean drawOres = false; // Off by default
 	public static ArrayList<HelperBlock> blockList = new ArrayList<>();
 
-	public static final String[] distStrings = new String[] // Strings for use in the GUI Render Distance button
-		{ "8", "16", "32", "48", "64", "80", "128", "256" };
-    public static final int[] distNumbers = new int[] // Radius +/- around the player to search. So 8 is 8 on left and right of player plus under the player. So 17x17 area.
-		{8, 16, 32, 48, 64, 80, 128, 256};
-
+	// Config settings
+	public static Configuration config;
     public static int currentDist = 0; // Index for the distNumers array. Default search distance.
+	public static float outlineThickness = 1f;
+	public static float outlineOpacity = 1f;
 
-	// Keybindings
+    // Radius +/- around the player to search. So 8 is 8 on left and right of player plus under the player. So 17x17 area.
+    public static final int[] distNumbers = new int[] {8, 16, 32, 48, 64, 80, 128, 256};
+
+    // Keybindings
 	public static final int keyIndex_toggleXray = 0;
 	public static final int keyIndex_showXrayMenu = 1;
-	public static final int[] keyBind_keyValues = 
-	{
-		Keyboard.KEY_BACKSLASH,
-		Keyboard.KEY_Z
-	};
-	public static final String[] keyBind_descriptions =
-	{
-		I18n.format("xray.config.toggle"),
-		I18n.format("xray.config.open")
-	};
+	public static final int[] keyBind_keyValues = { Keyboard.KEY_BACKSLASH, Keyboard.KEY_Z };
+	public static final String[] keyBind_descriptions = { I18n.format("xray.config.toggle"), I18n.format("xray.config.open")};
 	public static KeyBinding[] keyBind_keys = null;
 
 	public static ArrayList<OreInfo> searchList = new ArrayList<>(); // List of ores/blocks to search for.
@@ -66,16 +60,10 @@ public class XRay
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
     {
-		Configuration config = new Configuration( event.getSuggestedConfigurationFile() );
-		config.load();
-		
-		if( config.getCategoryNames().isEmpty() )
-        {
-			System.out.println("[XRay] "+I18n.format("xray.message.config_missing"));
-			DefaultConfig.create( config );
-			config.save();
-		}
-		
+		config = new Configuration( event.getSuggestedConfigurationFile() );
+
+		ConfigHandler.init(event.getSuggestedConfigurationFile(), config);
+
 		ConfigHandler.setup( event ); // Read the config file and setup environment.
         System.out.println(I18n.format("xray.debug.init"));
 	}

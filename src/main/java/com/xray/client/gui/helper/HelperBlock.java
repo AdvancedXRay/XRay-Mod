@@ -43,4 +43,20 @@ public class HelperBlock {
     public ResourceLocation getResourceName() {
         return resourceName;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBlock(Block block) {
+        this.block = block;
+    }
+
+    public void setItemStack(ItemStack itemStack) {
+        this.itemStack = itemStack;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
 }
