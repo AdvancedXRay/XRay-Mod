@@ -24,7 +24,7 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 
-@Mod(modid= Reference.MOD_ID, name= Reference.MOD_NAME, version=Reference.MOD_VERSION)
+@Mod(modid= Reference.MOD_ID, name= Reference.MOD_NAME, version=Reference.MOD_VERSION, guiFactory = Reference.GUI_FACTORY)
 public class XRay
 {
 	public static int localPlyX, localPlyY, localPlyZ, localPlyXPrev, localPlyZPrev; // For internal use in the ClientTick thread.
@@ -37,6 +37,7 @@ public class XRay
 		{8, 16, 32, 48, 64, 80, 128, 256};
 
     public static int currentDist = 0; // Index for the distNumers array. Default search distance.
+	public static Configuration config;
 
 	// Keybindings
 	public static final int keyIndex_toggleXray = 0;
@@ -66,16 +67,10 @@ public class XRay
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
     {
-		Configuration config = new Configuration( event.getSuggestedConfigurationFile() );
-		config.load();
-		
-		if( config.getCategoryNames().isEmpty() )
-        {
-			System.out.println("[XRay] "+I18n.format("xray.message.config_missing"));
-			DefaultConfig.create( config );
-			config.save();
-		}
-		
+		config = new Configuration( event.getSuggestedConfigurationFile() );
+
+		ConfigHandler.init(event.getSuggestedConfigurationFile(), config);
+
 		ConfigHandler.setup( event ); // Read the config file and setup environment.
         System.out.println(I18n.format("xray.debug.init"));
 	}

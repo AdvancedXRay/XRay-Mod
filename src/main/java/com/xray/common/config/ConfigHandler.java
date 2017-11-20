@@ -2,18 +2,56 @@ package com.xray.common.config;
 
 import com.xray.common.XRay;
 import com.xray.common.reference.OreInfo;
+import com.xray.common.reference.Reference;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.io.File;
 import java.util.Objects;
 
 public class ConfigHandler
 {
 	private static Configuration config = null; // Save the config file handle for use later.
 	private static Minecraft mc = Minecraft.getMinecraft();
+
+	@SubscribeEvent
+	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+		if( event.getModID().equals(Reference.MOD_ID) )
+			SyncConfig( XRay.config );
+	}
+
+	public static void init(File suggestedConfig, Configuration config) {
+		config = new Configuration( suggestedConfig );
+		config.load();
+
+		if( config.getCategoryNames().isEmpty() )
+		{
+			System.out.println("[XRay] "+ I18n.format("xray.message.config_missing"));
+			DefaultConfig.create( config );
+			config.save();
+		}
+
+		System.out.println(I18n.format("xray.debug.init"));
+		SyncConfig(config);
+	}
+
+
+	private static void SyncConfig( Configuration config ) {
+		config.setCategoryComment(Configuration.CATEGORY_GENERAL, "Use the in-game config editor.");
+
+		//getInt(String name, String category, int defaultValue, int minValue, int maxValue, String comment, String langKey)
+		config.getInt("range", Configuration.CATEGORY_GENERAL,10, 1, 60, "The range that magnet will pick up blocks");
+		config.getFloat("speed", Configuration.CATEGORY_GENERAL,0.02f, 0.01f, 0.1f, "The Speed that the item will be brought to you");
+
+		if( config.hasChanged() )
+			config.save();
+	}
 
 	public static void setup(FMLPreInitializationEvent event )
 	{
