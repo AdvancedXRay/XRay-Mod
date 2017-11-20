@@ -44,7 +44,7 @@ public class GuiAdd extends GuiContainer {
 		blueSlider.sliderValue  = 1.0F;
 
 		oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 100 ,  height / 2 - 63, 202, 20 );
-		oreName.setText( this.selectBlock.getItemStack().getDisplayName() );
+		oreName.setText( this.selectBlock.getName() );
 	}
 
 	@Override
