@@ -7,6 +7,7 @@ xray.single.cancel=Cancel
 xray.single.add=Add
 xray.single.delete=Delete
 xray.single.save=Save
+xray.single.tools=Tools
 
 xray.color.red=Red
 xray.color.green=Green
@@ -17,6 +18,7 @@ xray.input.add=Add Block
 xray.input.add_hand=Add Block in hand
 xray.input.add_look=Add Looking at
 xray.input.distance=Distance
+xray.input.change_meta=Change Meta
 
 xray.title.config=Configure Block
 xray.title.edit=Edit Block

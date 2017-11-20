@@ -36,7 +36,7 @@ public class GuiList extends GuiContainer
 
 	public GuiList() {
 		super(true);
-		setSideTitle("Tools");
+		this.setSideTitle( I18n.format("xray.single.tools") );
 	}
 
 	@Override

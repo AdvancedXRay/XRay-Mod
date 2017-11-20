@@ -24,7 +24,7 @@ public class GuiEditOre extends GuiContainer
 
     GuiEditOre(OreInfo oreInfo) {
         super(true); // Has a sidebar
-        
+        this.setSideTitle( I18n.format("xray.single.tools") );
 
         this.oreInfo = oreInfo;
 
@@ -44,10 +44,13 @@ public class GuiEditOre extends GuiContainer
     {
         // Called when the gui should be (re)created
         // Sidebar buttons for now
-        this.buttonList.add( new GuiButton( 98, (width / 2) + 78, height / 2 - 60, 120, 20, I18n.format("xray.single.save") ));
-        this.buttonList.add( new GuiButton( 100, width / 2 -26, height / 2 + 86, 120, 20, I18n.format("xray.single.delete") ));
-        this.buttonList.add( new GuiButton( 99, width / 2 - 100, height / 2 + 86, 120, 20, I18n.format("xray.single.cancel") ) ); // Cancel button
+        this.buttonList.add( new GuiButton( 100, (width / 2) + 78, height / 2 - 60, 120, 20, I18n.format("xray.single.delete") ));
+        this.buttonList.add( new GuiButton( 101, (width / 2) + 78, height / 2 - 38, 120, 20, I18n.format("xray.input.change_meta") ));
 
+        this.buttonList.add( new GuiButton( 98, (width / 2) + 78, height / 2 + 58, 120, 20, I18n.format("xray.single.save") ));
+
+        // Bottom buttons
+        this.buttonList.add( new GuiButton( 99, width / 2 - 138, height / 2 + 83, 202, 20, I18n.format("xray.single.cancel") ) ); // Cancel button
 
         this.buttonList.add( redSlider = new GuiSlider( 3, width / 2 - 138, height / 2 + 7, I18n.format("xray.color.red"), 0, 255 ));
         this.buttonList.add( greenSlider = new GuiSlider( 2, width / 2 - 138, height / 2 + 30, I18n.format("xray.color.green"), 0, 255 ));

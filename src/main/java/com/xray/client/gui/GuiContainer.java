@@ -20,6 +20,8 @@ public class GuiContainer extends GuiScreen {
     private String title = "";
     private boolean hasSide = false;
     private String sideTitle = "";
+    private int backgroundWidth = 229;
+    private int backgroundHeight = 235;
 
     GuiContainer( boolean hasSide ) {
         this.hasSide = hasSide;
@@ -47,7 +49,6 @@ public class GuiContainer extends GuiScreen {
     }
 
     // this should be moved to some sort of utility package but fuck it :).
-    // this removes the stupid power of 2 rule that comes with minecraft.
     private static void drawTexturedQuadFit(double x, double y, double width, double height)
     {
         Tessellator tessellator = Tessellator.getInstance();
@@ -70,7 +71,7 @@ public class GuiContainer extends GuiScreen {
             mc.renderEngine.bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "bg.png"));
             drawTexturedQuadFit(width / 2 + 60, height / 2 -(180/2), 150, 180);
 
-            drawTexturedQuadFit(width / 2 - 150, height / 2 - 118, 229, 235);
+            drawTexturedQuadFit(width / 2 - (this.backgroundWidth / 2), height / 2 - (this.backgroundHeight / 2), this.backgroundWidth, this.backgroundHeight);
 
             if( hasSideTitle() )
                 fr.drawStringWithShadow(this.sideTitle, width / 2 + 80, height / 2 - 77, 0xffff00);
@@ -79,7 +80,7 @@ public class GuiContainer extends GuiScreen {
 
         if( !this.hasSide ) {
             mc.renderEngine.bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "bg.png"));
-            drawTexturedQuadFit(width / 2 - 110, height / 2 - 118, 229, 235);
+            drawTexturedQuadFit(width / 2 - (this.backgroundWidth / 2), height / 2 - (this.backgroundHeight / 2), this.backgroundWidth, this.backgroundHeight);
         }
 
         if( hasTitle() ) {
@@ -110,6 +111,11 @@ public class GuiContainer extends GuiScreen {
     public boolean hasSideTitle() { return !this.sideTitle.isEmpty(); }
     public void setSideTitle( String title ) { this.sideTitle = title; }
     public boolean hasSide() { return this.hasSide; }
+
+    public void setSize( int width, int height ) {
+        this.backgroundWidth = width;
+        this.backgroundHeight = height;
+    }
 
     FontRenderer getFontRender() {
         return this.mc.fontRenderer;
