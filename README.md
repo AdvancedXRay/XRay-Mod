@@ -1,6 +1,6 @@
 ![XRay Logo](http://i.imgur.com/002LJvM.jpg)
 # XRay Mod - [![Forge Downloads](http://cf.way2muchnoise.eu/advanced-xray.svg)](https://mods.curse.com/mc-mods/minecraft/256256-advanced-xray) [![Forge Available For](http://cf.way2muchnoise.eu/versions/advanced-xray.svg)](https://mods.curse.com/mc-mods/minecraft/256256-advanced-xray)
-Minecraft Forge XRay mod
+Minecraft Forge based XRay mod designed to aid players who don't like the ore searching process.
 
 ### Feature:
 - Build on Forge!
