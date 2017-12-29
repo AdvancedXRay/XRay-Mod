@@ -1,11 +1,9 @@
 package com.xray.common.config;
 
-import com.xray.client.render.RenderTick;
 import com.xray.common.XRay;
 import com.xray.common.reference.OreInfo;
 import com.xray.common.reference.Reference;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.config.ConfigCategory;

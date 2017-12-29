@@ -3,7 +3,6 @@ package com.xray.client.render;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.xray.client.OresSearch;
 import com.xray.common.XRay;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
@@ -74,7 +73,7 @@ public class ClientTick implements Runnable
 			int px = XRay.localPlyX;
 			int py = XRay.localPlyY;
 			int pz = XRay.localPlyZ;
-			if( ( ( px == XRay.localPlyXPrev && pz == XRay.localPlyZPrev ) && RenderTick.ores.size() > 0 ) && !ForceAdd )
+			if( ( ( px == XRay.localPlyXPrev && pz == XRay.localPlyZPrev ) && XrayRenderer.ores.size() > 0 ) && !ForceAdd )
 				return true; // Skip the check if the player hasn't moved
 
 			List<BlockInfo> temp = new ArrayList<>();
@@ -105,8 +104,8 @@ public class ClientTick implements Runnable
 					}
 				}
 			}
-			RenderTick.ores.clear();
-			RenderTick.ores.addAll(temp); // Add all our found blocks to the RenderTick.ores list. To be use by RenderTick when drawing.
+			XrayRenderer.ores.clear();
+			XrayRenderer.ores.addAll(temp); // Add all our found blocks to the XrayRenderer.ores list. To be use by XrayRenderer when drawing.
 			nextTimeMs = System.currentTimeMillis() + delayMs; // Update the delay.
 		}
 		else

@@ -11,12 +11,11 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 // TODO: Please refactor of all this file :heart:
-public class RenderTick
+public class XrayRenderer
 {
 	private final Minecraft mc = Minecraft.getMinecraft();
 	public static List<BlockInfo> ores = new ArrayList<>();

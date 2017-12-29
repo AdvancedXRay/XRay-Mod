@@ -1,8 +1,7 @@
 package com.xray.client;
 
-import com.xray.client.render.RenderTick;
+import com.xray.client.render.XrayRenderer;
 import com.xray.common.XRay;
-import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
@@ -23,7 +22,7 @@ public class KeyBindingHandler
 			if( XRay.keyBind_keys[ XRay.keyIndex_toggleXray ].isPressed() )
 			{
 				XRay.drawOres = !XRay.drawOres;
-				RenderTick.ores.clear();
+				XrayRenderer.ores.clear();
 			}
 			else if( XRay.keyBind_keys[ XRay.keyIndex_showXrayMenu ].isPressed() )
 			{
