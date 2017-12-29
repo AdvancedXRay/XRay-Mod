@@ -29,6 +29,7 @@ public class XRay
 {
 	public static int localPlyX, localPlyY, localPlyZ, localPlyXPrev, localPlyZPrev; // For internal use in the ClientTick thread.
 	public static boolean drawOres = false; // Off by default
+	public static boolean drawCaves = false;
 	public static ArrayList<HelperBlock> blockList = new ArrayList<>();
 
 	// Config settings

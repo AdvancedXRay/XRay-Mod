@@ -2,6 +2,7 @@ package com.xray.client.render;
 
 import com.xray.common.XRay;
 import com.xray.common.reference.BlockInfo;
+import com.xray.common.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -60,12 +61,6 @@ public class XrayRenderer
 
 	private void drawOres( float px, float py, float pz )
 	{
-		int bx, by, bz;
-		float f = 0.0f;
-		float f1 = 1.0f;
-
-		int opac = (int)opacity;
-
 		GL11.glDisable( GL11.GL_TEXTURE_2D );
 		GL11.glDisable( GL11.GL_DEPTH_TEST );
 		GL11.glDisable( GL11.GL_CULL_FACE );
@@ -75,7 +70,7 @@ public class XrayRenderer
 		GL11.glLineWidth( XRay.outlineThickness );
 
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder tessellate = tessellator.getBuffer();
+		BufferBuilder buffer = tessellator.getBuffer();
 
 		ArrayList<BlockInfo> temp = new ArrayList<>();
 		temp.addAll(ores);
@@ -85,50 +80,7 @@ public class XrayRenderer
 		    if( b == null )
 		        continue;
 
-			bx = b.x;
-			by = b.y;
-			bz = b.z;
-			int red =  b.color[0], green =  b.color[1], blue =  b.color[2];
-
-			tessellate.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
-
-			// TOP
-			tessellate.pos(bx-px + f, by-py + f1, bz-pz + f).color(red, green, blue, opac).endVertex();
-			tessellate.pos(bx-px + f1, by-py + f1, bz-pz + f).color(red, green, blue, opac).endVertex();
-			tessellate.pos(bx-px + f1, by-py + f1, bz-pz + f).color(red, green, blue, opac).endVertex();
-			tessellate.pos(bx-px + f1, by-py + f1, bz-pz + f1).color(red, green, blue, opac).endVertex();
-			tessellate.pos(bx-px + f1, by-py + f1, bz-pz + f1).color(red, green, blue, opac).endVertex();
-			tessellate.pos(bx-px + f, by-py + f1, bz-pz + f1).color(red, green, blue, opac).endVertex();
-			tessellate.pos(bx-px + f, by-py + f1, bz-pz + f1).color(red, green, blue, opac).endVertex();
-			tessellate.pos(bx-px + f, by-py + f1, bz-pz + f).color(red, green, blue, opac).endVertex();
-
-			// BOTTOM
-			tessellate.pos(bx-px + f1, by-py + f, bz-pz + f).color(red, green, blue, opac).endVertex();
-			tessellate.pos(bx-px + f1, by-py + f, bz-pz + f1).color(red, green, blue, opac).endVertex();
-			tessellate.pos(bx-px + f1, by-py + f, bz-pz + f1).color(red, green, blue, opac).endVertex();
-			tessellate.pos(bx-px + f, by-py + f, bz-pz + f1).color(red, green, blue, opac).endVertex();
-			tessellate.pos(bx-px + f, by-py + f, bz-pz + f1).color(red, green, blue, opac).endVertex();
-			tessellate.pos(bx-px + f, by-py + f, bz-pz + f).color(red, green, blue, opac).endVertex();
-			tessellate.pos(bx-px + f, by-py + f, bz-pz + f).color(red, green, blue, opac).endVertex();
-			tessellate.pos(bx-px + f1, by-py + f, bz-pz + f).color(red, green, blue, opac).endVertex();
-
-			// Edge 1
-			tessellate.pos(bx-px + f1, by-py + f, bz-pz + f1).color(red, green, blue, opac).endVertex();
-			tessellate.pos(bx-px + f1, by-py + f1, bz-pz + f1).color(red, green, blue, opac).endVertex();
-
-			// Edge 2
-			tessellate.pos(bx-px + f1, by-py + f, bz-pz + f).color(red, green, blue, opac).endVertex();
-			tessellate.pos(bx-px + f1, by-py + f1, bz-pz + f).color(red, green, blue, opac).endVertex();
-
-			// Edge 3
-			tessellate.pos(bx-px + f, by-py + f, bz-pz + f1).color(red, green, blue, opac).endVertex();
-			tessellate.pos(bx-px + f, by-py + f1, bz-pz + f1).color(red, green, blue, opac).endVertex();
-
-			// Edge 4
-			tessellate.pos(bx-px + f, by-py + f, bz-pz + f).color(red, green, blue, opac).endVertex();
-			tessellate.pos(bx-px + f, by-py + f1, bz-pz + f).color(red, green, blue, opac).endVertex();
-
-			tessellator.draw();
+			Utils.renderBlockBounding(tessellator, buffer, b.x-px, b.y-py, b.z-pz, b.color[0], b.color[1], b.color[2], (int)opacity, true);
 		}
 		
 		GL11.glDepthMask(true);
