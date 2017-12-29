@@ -1,6 +1,8 @@
 // Forge proxy for the client side.
 package com.xray.client.proxy;
 
+import com.xray.client.render.CaveFinder;
+import com.xray.client.render.CaveRenderer;
 import com.xray.client.render.ClientTick;
 import com.xray.client.KeyBindingHandler;
 import com.xray.client.render.XrayRenderer;
@@ -25,6 +27,8 @@ public class ClientProxy extends ServerProxy
 
 		MinecraftForge.EVENT_BUS.register( new KeyBindingHandler() );
 		MinecraftForge.EVENT_BUS.register( new ClientTick() );
+		MinecraftForge.EVENT_BUS.register( new CaveRenderer() );
+		MinecraftForge.EVENT_BUS.register( new CaveFinder() );
 		MinecraftForge.EVENT_BUS.register( new XrayRenderer() );	// XrayRenderer is forge subscribed to onRenderEvent. Which is called when drawing the world.
 	}
 }

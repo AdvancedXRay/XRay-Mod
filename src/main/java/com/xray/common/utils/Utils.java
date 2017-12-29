@@ -15,7 +15,7 @@ public class Utils {
         float f1 = 1.0f;
 
         buffer.begin(
-                (isLines ? GL11.GL_LINES : GL11.GL_FILL),
+                (isLines ? GL11.GL_LINES : GL11.GL_QUADS),
                 DefaultVertexFormats.POSITION_COLOR
         );
 

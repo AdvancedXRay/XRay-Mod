@@ -76,6 +76,7 @@ public class GuiList extends GuiContainer
 		this.buttonList.add( new GuiButton(1, (width / 2) + 78, height / 2 - 60, 120, 20, I18n.format("xray.input.add") ) );
 		this.buttonList.add( new GuiButton(4, width / 2 + 78, height / 2 - 38, 120, 20, I18n.format("xray.input.add_hand") ) );
 		this.buttonList.add( new GuiButton(5, width / 2 + 78, height / 2 - 16, 120, 20, I18n.format("xray.input.add_look") ) );
+		this.buttonList.add( new GuiButton(1500, width / 2 + 78, height / 2 + 5, 120, 20, "Cave Finder") );
 		this.buttonList.add( new GuiButton(6, width / 2 + 78, height / 2 + 58, 120, 20, I18n.format("xray.single.close") ) );
 
         if( pageMax < 1 )
@@ -121,6 +122,12 @@ public class GuiList extends GuiContainer
 			case 3:
 				if( pageCurrent > 0 )
 			  		pageCurrent --;
+				break;
+
+			case 1500:
+				mc.player.closeScreen();
+				XRay.drawCaves = !XRay.drawCaves;
+				System.out.println(XRay.drawCaves);
 				break;
 
 			case 4:
