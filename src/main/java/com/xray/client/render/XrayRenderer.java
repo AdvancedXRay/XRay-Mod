@@ -30,16 +30,13 @@ public class XrayRenderer
 		if ( mc.world != null && XRay.drawOres )
 		{
 			float f = event.getPartialTicks();
-			float px = (float)mc.player.posX;
-			float py = (float)mc.player.posY;
-			float pz = (float)mc.player.posZ;
-			float mx = (float)mc.player.prevPosX;
-			float my = (float)mc.player.prevPosY;
-			float mz = (float)mc.player.prevPosZ;
-			float dx = mx + ( px - mx ) * f;
-			float dy = my + ( py - my ) * f;
-			float dz = mz + ( pz - mz ) * f;
-			drawOres( dx, dy, dz ); // this is a world pos of the player
+
+			// this is a world pos of the player
+			drawOres(
+				(float)mc.player.prevPosX + ( (float)mc.player.posX - (float)mc.player.prevPosX ) * f,
+				(float)mc.player.prevPosY + ( (float)mc.player.posY - (float)mc.player.prevPosY ) * f,
+				(float)mc.player.prevPosZ + ( (float)mc.player.posZ - (float)mc.player.prevPosZ ) * f
+			);
 		}
 	}
 
@@ -59,7 +56,7 @@ public class XrayRenderer
         }
     }
 
-	private void drawOres( float px, float py, float pz )
+	private void drawOres( float playerX, float playerY, float playerZ )
 	{
 		GL11.glDisable( GL11.GL_TEXTURE_2D );
 		GL11.glDisable( GL11.GL_DEPTH_TEST );
@@ -80,7 +77,19 @@ public class XrayRenderer
 		    if( b == null )
 		        continue;
 
-			Utils.renderBlockBounding(tessellator, buffer, b.x-px, b.y-py, b.z-pz, b.color[0], b.color[1], b.color[2], (int)opacity, true);
+			Utils.renderBlockBounding(
+				tessellator,
+				buffer,
+				b.x-playerX,
+				b.y-playerY,
+				b.z-playerZ,
+				b.color[0],
+				b.color[1],
+				b.color[2],
+				(int)opacity,
+				true
+			);
+
 		}
 		
 		GL11.glDepthMask(true);
