@@ -3,6 +3,7 @@ package com.xray.common;
 import com.xray.client.gui.helper.HelperBlock;
 import com.xray.common.config.ConfigHandler;
 import com.xray.common.config.DefaultConfig;
+import com.xray.common.proxy.CommonProxy;
 import com.xray.common.proxy.ServerProxy;
 import com.xray.common.reference.OreInfo;
 import com.xray.common.reference.Reference;
@@ -55,8 +56,8 @@ public class XRay
 	public static XRay instance;
 	
 	// Says where the client and server 'proxy' code is loaded.
-	@SidedProxy(clientSide="com.xray.client.proxy.ClientProxy", serverSide="com.xray.common.proxy.ServerProxy")
-	private static ServerProxy proxy;
+	@SidedProxy(clientSide="com.xray.common.proxy.ClientProxy", serverSide="com.xray.common.proxy.ServerProxy")
+	private static CommonProxy proxy;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -67,12 +68,14 @@ public class XRay
 
 		ConfigHandler.setup( event ); // Read the config file and setup environment.
         System.out.println(I18n.format("xray.debug.init"));
+
+		proxy.preInit( event );
 	}
 
 	@EventHandler
-	public void load(FMLInitializationEvent event)
+	public void init(FMLInitializationEvent event)
     {
-		proxy.proxyInit();
+		proxy.init( event );
 	}
 	
 	@EventHandler
@@ -89,5 +92,7 @@ public class XRay
 				blockList.add( new HelperBlock( subBlock.getDisplayName(), tmpBlock, subBlock, subBlock.getItem(), subBlock.getItem().getRegistryName() ));
 			}
 		}
+
+		proxy.postInit( event );
 	}
 }

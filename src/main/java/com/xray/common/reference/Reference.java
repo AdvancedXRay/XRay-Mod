@@ -14,5 +14,5 @@ public class Reference {
     // UI Constants
     public static final String PREFIX_MOD = MOD_ID+":";
     public static final String PREFIX_GUI = PREFIX_MOD+"textures/gui/";
-    public static final String GUI_FACTORY = "com.xray.common.proxy.GuiFactory";
+    public static final String GUI_FACTORY = "com.xray.client.gui.GuiFactory";
 }

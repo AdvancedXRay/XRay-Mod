@@ -1,6 +1,5 @@
-package com.xray.common.proxy;
+package com.xray.client.gui;
 
-import com.xray.client.gui.GuiConfigScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.IModGuiFactory;
