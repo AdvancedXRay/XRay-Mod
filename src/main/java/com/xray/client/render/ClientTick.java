@@ -53,7 +53,7 @@ public class ClientTick implements Runnable
 			while( !this.thread.isInterrupted() ) // Check the internal interrupt flag. Exit thread if set.
 			{
 				if( blockFinder( false ) )
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                 else
                     this.thread.interrupt(); // Kill the thread if we turn off xray or the player/world object becomes null.
             }
