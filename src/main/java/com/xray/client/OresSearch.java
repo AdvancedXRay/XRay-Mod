@@ -25,7 +25,7 @@ public class OresSearch
 			}
 		}
 
-		XRay.searchList.add( new OreInfo( name, name.replaceAll("\\s+", ""), oreId, oreMeta, color, true ) );
+//		XRay.searchList.add( new OreInfo( name, name.replaceAll("\\s+", ""), oreId, oreMeta, color, true ) );
 		String notify = "[XRay] "+I18n.format( "xray.message.added_block", name );
 		mc.player.sendMessage(new TextComponentString(notify));
 
@@ -39,7 +39,7 @@ public class OresSearch
 			return;
 		}
 
-		OreInfo preserve = new OreInfo( original.getDisplayName(), original.getOreName(), original.getId(), original.getMeta(), original.color, original.draw );
+		OreInfo preserve = new OreInfo( original.getDisplayName(), original.getCatName(), original.getOreName(), original.getId(), original.getMeta(), original.color, original.draw );
 
 		OreInfo tmpNew = null;
 		for ( OreInfo ore : XRay.searchList ) {

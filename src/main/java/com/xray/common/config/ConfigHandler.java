@@ -11,6 +11,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.lwjgl.Sys;
 
 import java.io.File;
 import java.util.Objects;
@@ -67,7 +68,7 @@ public class ConfigHandler
 				int[] color = {cat.get("red").getInt(), cat.get("green").getInt(), cat.get("blue").getInt()};
 				boolean enabled = cat.get("enabled").getBoolean(false);
 
-				XRay.searchList.add( new OreInfo( name, name.replaceAll("\\s+", ""), id, meta, color, enabled ) );
+				XRay.searchList.add( new OreInfo( name, cat.getName(), name.replaceAll("\\s+", ""), id, meta, color, enabled ) );
 			}
 		}
 
@@ -131,20 +132,22 @@ public class ConfigHandler
 	}
 
 	public static void updateInfo( OreInfo original, OreInfo newInfo ) {
-		for( String category : config.getCategoryNames() ) {
-			String cleanStr = original.getOreName().toLowerCase();
-			String[] splitCat = category.split("\\.");
+		for( String category : config.getCategoryNames() ) // Iterate through each category in our config file.
+		{
+			ConfigCategory cat = config.getCategory( category );
+			if(Objects.equals(cat.getName(), original.getCatName())) {
+				String[] splitCat = category.split("\\.");
+				String catN = splitCat[0]+"."+cat.getName();
 
-			if( splitCat.length == 2 && splitCat[1].equals( cleanStr ) ) {
-				String tmpCategory = "ores."+cleanStr;
-				config.get(tmpCategory, "red", "").set( newInfo.color[0] );
-				config.get(tmpCategory, "green", "").set( newInfo.color[1] );
-				config.get(tmpCategory, "blue", "").set( newInfo.color[2] );
-				config.get(tmpCategory, "name", "").set( newInfo.displayName );
-				config.get(tmpCategory, "meta", "").set( newInfo.meta );
+				config.get(catN, "red", "").set( newInfo.color[0] );
+				config.get(catN, "green", "").set( newInfo.color[1] );
+				config.get(catN, "blue", "").set( newInfo.color[2] );
+				config.get(catN, "name", "").set( newInfo.displayName );
+				config.get(catN, "meta", "").set( newInfo.meta );
 				break;
 			}
 		}
+
 		config.save();
 	}
 

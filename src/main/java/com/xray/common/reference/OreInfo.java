@@ -8,17 +8,19 @@ public class OreInfo
 	public int[] color;	   // Color in 0xRRGGBB to draw.
 	public boolean draw;   // Should we draw this ore?
 	public String displayName;
+	public String catName;
 
 	public OreInfo( String name, int[] color, boolean draw ) {
 		this.oreName = name;
 		this.displayName = "";
+		this.catName = "";
 		this.id = 0;
 		this.meta = 0;
 		this.color = color;
 		this.draw = draw;
 	}
 
-	public OreInfo( String displayName,  String name, int id, int meta, int[] color, boolean draw )
+	public OreInfo( String displayName, String catName, String name, int id, int meta, int[] color, boolean draw )
 	{
 		this.oreName = name;
 		this.displayName = displayName;
@@ -26,6 +28,15 @@ public class OreInfo
 		this.meta = meta;
 		this.color = color;
 		this.draw = draw;
+		this.catName = catName;
+	}
+
+	public String getCatName() {
+		return catName;
+	}
+
+	public void setCatName(String catName) {
+		this.catName = catName;
 	}
 
 	public String getDisplayName() {
