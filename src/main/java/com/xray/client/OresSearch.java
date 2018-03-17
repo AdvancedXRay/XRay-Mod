@@ -25,7 +25,7 @@ public class OresSearch
 			}
 		}
 
-//		XRay.searchList.add( new OreInfo( name, name.replaceAll("\\s+", ""), oreId, oreMeta, color, true ) );
+		XRay.searchList.add( new OreInfo( name, name.replaceAll("\\s+", "").toLowerCase(), name.replaceAll("\\s+", ""), oreId, oreMeta, color, true ) );
 		String notify = "[XRay] "+I18n.format( "xray.message.added_block", name );
 		mc.player.sendMessage(new TextComponentString(notify));
 
