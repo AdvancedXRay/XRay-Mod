@@ -3,16 +3,29 @@
 Minecraft Forge based XRay mod designed to aid players who don't like the ore searching process.
 
 ### Feature:
-- Build on Forge!
+- Built using Forge!
 - Simple and Clean UI For Adding, Deleting and Editing the blocks you want to see
-    - RGB Based color selector for full colour range
-    - Simple UI to add new blocks from a Searchable List layout
-    - Easy Editing and Deleting of blocks
+    - Full RGB Colour selector
+    - Searchable List to find Blocks
+    - Add Blocks from your hand
+    - Add Blocks you're looking at! 
+    - Rightclick Editing with support for custom Meta Data
 - Ore Dictionary Support
+    - Partial! Requires more work but it can do some mods ores. 
+    - Looks for help with this feature
 
 ### How to use:
-Open settings -> controls and edit the button to open the GUI and the button to toggle the Overlay on and off.
-Then press your key to open the GUI to edit the ores on the list. Then press your key to turn on the Overlay
+#### Using XRay
+- Press `[Default] Backslash` to toggle Xray on and off
+- Press `[Default] Z` to open the in-game GUI
+#### Adding Ores
+- Open the GUI Editor pressing `[Default] Z`
+- Select the method you'd like to use to add a block, either From hand, What you can see, or By searching a list
+- Modify the Name, Color, and anything else you'd like to change
+- Click add and Enable the Block
+#### Editing Ores
+- Right click on any item in the GUI and edit as needed
+- Click save and the changed will be applied
 
 ### Previews:
 The [Imgur Album](http://imgur.com/a/23dX5)
@@ -22,7 +35,7 @@ The [Imgur Album](http://imgur.com/a/23dX5)
 
 |Minecraft Version   | Mod Version | Forge Version | Branch | Author
 |---|---|---|---|---
-|1.12.2 | [1.4.0](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.12.2-v1.4.0) | 14.23.0.2491 | [/master](https://github.com/MichaelHillcox/XRay-Mod/tree/master) | [Michael Hillcox](https://github.com/MichaelHillcox)
+|1.12.2 | [1.4.1](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.12.2-v1.4.1) | 14.23.0.2491 | [/master](https://github.com/MichaelHillcox/XRay-Mod/tree/master) | [Michael Hillcox](https://github.com/MichaelHillcox)
 |1.12.1 | [1.3.4](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.12.1-v1.3.4) | 14.22.1.2478 | [/1.12.1](https://github.com/MichaelHillcox/XRay-Mod/tree/1.12.1) | [Michael Hillcox](https://github.com/MichaelHillcox)
 |1.12 | [1.3.3](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.12-v1.3.3) | 14.21.0.2334 | [/1.12.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.12.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
 |1.11.2 | [1.3.3 *limited support*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.11.2-v1.3.3) | 13.20.0.2224 | [/1.11.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.11.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
