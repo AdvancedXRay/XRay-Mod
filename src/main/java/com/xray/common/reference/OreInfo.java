@@ -10,6 +10,12 @@ public class OreInfo
 	public String displayName;
 	public String catName;
 
+        public OreInfo( int id, int meta)
+        {
+            this.id = id;
+            this.meta = meta;
+        }
+
 	public OreInfo( String name, int[] color, boolean draw ) {
 		this.oreName = name;
 		this.displayName = "";
@@ -64,4 +70,20 @@ public class OreInfo
 	{
 		this.draw = true;
 	}
+
+        @Override
+        public int hashCode()
+        {
+                return 37 * id + meta;
+        }
+
+        @Override
+        public boolean equals(Object o)
+        {
+                if (o == null) return false;
+                if (this == o) return true;
+                if (!(o instanceof OreInfo)) return false;
+                OreInfo t = (OreInfo) o;
+                return id == t.id && meta == t.meta;
+        }
 }
