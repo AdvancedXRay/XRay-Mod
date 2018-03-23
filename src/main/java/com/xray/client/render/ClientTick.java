@@ -14,6 +14,10 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import com.xray.common.reference.BlockInfo;
 import com.xray.common.reference.OreInfo;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import net.minecraft.util.math.BlockPos.MutableBlockPos;
 
 public class ClientTick implements Runnable
 {
@@ -72,40 +76,49 @@ public class ClientTick implements Runnable
 			if ( nextTimeMs > System.currentTimeMillis() ) // Delay to avoid spamming ore updates.
 				return true;
 
-			int px = XRay.localPlyX;
-			int py = XRay.localPlyY;
-			int pz = XRay.localPlyZ;
+			final int px = XRay.localPlyX;
+			final int py = XRay.localPlyY;
+			final int pz = XRay.localPlyZ;
 			if( ( ( px == XRay.localPlyXPrev && pz == XRay.localPlyZPrev ) && XrayRenderer.ores.size() > 0 ) && !ForceAdd )
 				return true; // Skip the check if the player hasn't moved
 
-			List<BlockInfo> temp = new ArrayList<>();
-			int radius = XRay.distNumbers[ XRay.currentDist]; // Get the radius around the player to search.
+			final List<BlockInfo> temp = new ArrayList<>();
+			final int radius = XRay.distNumbers[ XRay.currentDist]; // Get the radius around the player to search.
 
-			for (int y = Math.max( 0, py - 96 ); y < py + 32; y++) // Check the y axis. from 0 or the players y-96 to the players y + 32
-			{
-				for (int x = px - radius; x < px + radius; x++) // Iterate the x axis around the player in radius.
-				{
-					for (int z = pz - radius; z < pz + radius; z++) // z axis.
-					{
-						IBlockState state = mc.world.getBlockState(  new BlockPos(x, y, z) );
+                        final Map<OreInfo, int[]> ores = new HashMap<>(); // Searches in Set/Map are faster than looping on List
+                        for( OreInfo ore : XRay.searchList )
+                        {
+                                if (ore.draw) // We can handle this condition right here rather than doing it in the big loop
+                                {
+                                        ores.put( ore, ore.color ); // Using a Map to get the ore color since Set does not have a get() method
+                                }
+                        }
 
-						int id = Block.getIdFromBlock( state.getBlock() );
-						int meta = state.getBlock().getMetaFromState(state);
+                        // Minecraft already has a method to get a bunch of blocks. Using the mutable version is faster.
+                        BlockPos start = new BlockPos(px - radius, Math.max( 0, py - 96 ), pz - radius);
+                        BlockPos end = new BlockPos(px + radius, py + 32, pz + radius);
+                        Iterator<MutableBlockPos> it = BlockPos.getAllInBoxMutable(start, end).iterator();
 
-						if( state.getBlock().hasTileEntity( state ) )
-							meta = 0;
+                        final OreInfo buff = new OreInfo(0, 0); // Avoids instanciating tons of objects
 
-						for( OreInfo ore : XRay.searchList ) // Now we're actually checking if the current x,y,z block is in our searchList.
-						{
-							if ( (ore.draw) && (id == ore.id) && (meta == ore.meta) ) // Dont check meta if its -1 (custom)
-							{
-								temp.add( new BlockInfo( x, y, z, ore.color) ); // Add this block to the temp list
-								break; // Found a match, move on to the next block.
-							}
-						}
-					}
-				}
-			}
+                        while (it.hasNext())
+                        {
+                                MutableBlockPos pos = it.next();
+                                IBlockState state = mc.world.getBlockState( pos );
+
+                                Block block = state.getBlock();
+                                buff.id = Block.getIdFromBlock( block );
+                                buff.meta = block.getMetaFromState( state );
+
+                                if( block.hasTileEntity( state ) )
+                                        buff.meta = 0;
+
+                                if ( ores.containsKey(buff) ) // The reason for using Set/Map
+                                {
+                                        temp.add( new BlockInfo( pos.getX(), pos.getY(), pos.getZ(), ores.get(buff)) ); // Add this block to the temp list
+                                }
+                        }
+
 			XrayRenderer.ores.clear();
 			XrayRenderer.ores.addAll(temp); // Add all our found blocks to the XrayRenderer.ores list. To be use by XrayRenderer when drawing.
 			nextTimeMs = System.currentTimeMillis() + delayMs; // Update the delay.
