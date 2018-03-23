@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.xray.common.XRay;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -15,9 +14,9 @@ import net.minecraft.client.Minecraft;
 import com.xray.common.reference.BlockInfo;
 import com.xray.common.reference.OreInfo;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
 public class ClientTick implements Runnable
 {
@@ -88,34 +87,72 @@ public class ClientTick implements Runnable
                         final Map<OreInfo, int[]> ores = new HashMap<>(); // Searches in Set/Map are faster than looping on List
                         for( OreInfo ore : XRay.searchList )
                         {
-                                if (ore.draw) // We can handle this condition right here rather than doing it in the big loop
+                                if ( ore.draw ) // We can handle this condition right here rather than doing it in the big loop
                                 {
                                         ores.put( ore, ore.color ); // Using a Map to get the ore color since Set does not have a get() method
                                 }
                         }
+                        final OreInfo buff = new OreInfo( 0, 0 ); // Search key for the map
 
-                        // Minecraft already has a method to get a bunch of blocks. Using the mutable version is faster.
-                        BlockPos start = new BlockPos(px - radius, Math.max( 0, py - 96 ), pz - radius);
-                        BlockPos end = new BlockPos(px + radius, py + 32, pz + radius);
-                        Iterator<MutableBlockPos> it = BlockPos.getAllInBoxMutable(start, end).iterator();
+                        // Convert world coordinates into chunk coordinates
+                        int minX = (px - radius) >> 4;
+                        int maxX = (px + radius) >> 4;
+                        int minZ = (pz - radius) >> 4;
+                        int maxZ = (pz + radius) >> 4;
+                        int minY = Math.max(0, (py - 92 >> 4));
+                        int maxY = Math.min(15, (py + 32 >> 4));
 
-                        final OreInfo buff = new OreInfo(0, 0); // Avoids instanciating tons of objects
+                        int blockPosX, blockPosY, blockPosZ; // little buffers to avoid useless computations
 
-                        while (it.hasNext())
+                        // Loop on chunks (x, z)
+                        for ( int x = minX; x <= maxX; x++ )
                         {
-                                MutableBlockPos pos = it.next();
-                                IBlockState state = mc.world.getBlockState( pos );
-
-                                Block block = state.getBlock();
-                                buff.id = Block.getIdFromBlock( block );
-                                buff.meta = block.getMetaFromState( state );
-
-                                if( block.hasTileEntity( state ) )
-                                        buff.meta = 0;
-
-                                if ( ores.containsKey(buff) ) // The reason for using Set/Map
+                                blockPosX = x << 4;
+                                for ( int z = minZ; z <= maxZ; z++ )
                                 {
-                                        temp.add( new BlockInfo( pos.getX(), pos.getY(), pos.getZ(), ores.get(buff)) ); // Add this block to the temp list
+                                        blockPosZ = z << 4;
+
+                                        // Time to get the chunk (16x256x16) and split it into 16 vertical extends (16x16x16)
+                                        Chunk chunk = mc.world.getChunkFromChunkCoords( x, z );
+                                        if ( chunk == null || !chunk.isLoaded() ) {
+                                                continue;
+                                        }
+                                        ExtendedBlockStorage[] extendsList = chunk.getBlockStorageArray();
+
+                                        // Loop on the extends around the player's layer (6 down, 2 up)
+                                        for ( int y = minY; y <= maxY; y++ )
+                                        {
+                                                blockPosY = y << 4;
+
+                                                ExtendedBlockStorage ebs = extendsList[y];
+                                                if ( ebs == null ) { // happens quite often!
+                                                        continue;
+                                                }
+
+                                                // Now that we have an extend, let's check all its blocks
+                                                for ( int i = 0; i < 16; i++ )
+                                                {
+                                                        for ( int j = 0; j < 16; j++ )
+                                                        {
+                                                                for ( int k = 0; k < 16; k++ )
+                                                                {
+                                                                        IBlockState state = ebs.get(i, j, k); // this one seems a lot faster than asking the world directly
+
+                                                                        Block block = state.getBlock();
+                                                                        buff.id = Block.getIdFromBlock( block );
+                                                                        buff.meta = block.getMetaFromState( state );
+
+                                                                        if( block.hasTileEntity( state ) )
+                                                                                buff.meta = 0;
+
+                                                                        if ( ores.containsKey(buff) ) // The reason for using Set/Map
+                                                                        {
+                                                                                temp.add( new BlockInfo( blockPosX + i, blockPosY + j, blockPosZ + k, ores.get(buff)) ); // Add this block to the temp list using world coordinates
+                                                                        }
+                                                                }
+                                                        }
+                                                }
+                                        }
                                 }
                         }
 
