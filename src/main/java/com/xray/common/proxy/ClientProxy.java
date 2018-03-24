@@ -5,7 +5,6 @@ import com.xray.client.KeyBindingHandler;
 import com.xray.client.render.ClientTick;
 import com.xray.client.render.XrayRenderer;
 import com.xray.common.XRay;
-import com.xray.common.proxy.CommonProxy;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;

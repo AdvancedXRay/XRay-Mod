@@ -13,7 +13,7 @@ import com.xray.client.gui.GuiList;
 public class KeyBindingHandler
 {
 	private Minecraft mc = Minecraft.getMinecraft();
-	
+
 	@SubscribeEvent
 	public void onKeyInput( KeyInputEvent event )
     {
@@ -21,8 +21,8 @@ public class KeyBindingHandler
         {
 			if( XRay.keyBind_keys[ XRay.keyIndex_toggleXray ].isPressed() )
 			{
-				XRay.drawOres = !XRay.drawOres;
 				XrayRenderer.ores.clear();
+				XRay.toggleDrawOres();
 			}
 			else if( XRay.keyBind_keys[ XRay.keyIndex_showXrayMenu ].isPressed() )
 			{

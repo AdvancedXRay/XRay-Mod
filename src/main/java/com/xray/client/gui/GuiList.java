@@ -2,7 +2,6 @@ package com.xray.client.gui;
 
 import com.xray.client.gui.helper.HelperBlock;
 import com.xray.client.gui.helper.HelperGuiList;
-import com.xray.client.render.ClientTick;
 import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
 import com.xray.common.reference.OreInfo;
@@ -87,11 +86,11 @@ public class GuiList extends GuiContainer
 
         if( pageCurrent == 0 )
         	aPrevButton.enabled = false;
-        
+
         if( pageCurrent == pageMax )
             aNextButton.enabled = false;
     }
-	
+
 	@Override
 	public void actionPerformed( GuiButton button )
 	{
@@ -105,7 +104,7 @@ public class GuiList extends GuiContainer
 				else
 					XRay.currentDist = 0;
 
-				ClientTick.blockFinder( true );
+				XRay.requestBlockFinder( true );
 				ConfigHandler.update("searchdist", false);
 				break;
 
@@ -192,7 +191,7 @@ public class GuiList extends GuiContainer
 					if( list.getButton().id == button.id ) {
 						list.getOre().draw = !list.getOre().draw;
 						ConfigHandler.update( list.getOre().getOreName(), list.getOre().draw );
-						ClientTick.blockFinder( true );
+						XRay.requestBlockFinder( true );
 					}
 				}
 			break;
@@ -223,12 +222,12 @@ public class GuiList extends GuiContainer
 					XRay.currentDist = XRay.distNumbers.length - 1;
 
 				distButtons.displayString = I18n.format("xray.input.distance")+": "+ String.valueOf(XRay.distNumbers[XRay.currentDist]);
-				ClientTick.blockFinder( true );
+				XRay.requestBlockFinder( true );
 				ConfigHandler.update("searchdist", false);
 			}
 		}
 	}
-	
+
 	@Override
 	public void drawScreen( int x, int y, float f ) {
 
