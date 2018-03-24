@@ -94,47 +94,55 @@ public class ClientTick implements Runnable
                         }
                         final OreInfo buff = new OreInfo( 0, 0 ); // Search key for the map
 
-                        // Convert world coordinates into chunk coordinates
-                        int minX = (px - radius) >> 4;
-                        int maxX = (px + radius) >> 4;
-                        int minZ = (pz - radius) >> 4;
-                        int maxZ = (pz + radius) >> 4;
-                        int minY = Math.max(0, (py - 92 >> 4));
-                        int maxY = Math.min(15, (py + 32 >> 4));
-
-                        int blockPosX, blockPosY, blockPosZ; // little buffers to avoid useless computations
+                        final int minX = px - radius;
+                        final int maxX = px + radius;
+                        final int minY = Math.max( 0, py - 92 );
+                        final int maxY = Math.min( 255, py + 32 );
+                        final int minZ = pz - radius;
+                        final int maxZ = pz + radius;
+                        int lowBoundX, highBoundX, lowBoundY, highBoundY, lowBoundZ, highBoundZ;
 
                         // Loop on chunks (x, z)
-                        for ( int x = minX; x <= maxX; x++ )
+                        for ( int chunkX = (minX >> 4); chunkX <= (maxX >> 4); chunkX++ ) // Using bitshift because negative numbers divided by 16 will give a wrong chunk
                         {
-                                blockPosX = x << 4;
-                                for ( int z = minZ; z <= maxZ; z++ )
-                                {
-                                        blockPosZ = z << 4;
+                                // Pre-compute the extend bounds on X
+                                int x = chunkX << 4; // lowest x coord of the chunk in block/work coordinates
+                                lowBoundX = ( x < minX ) ? minX - x : 0; // lower bound for x within the extend
+                                highBoundX = ( x + 15 > maxX ) ? maxX - x : 15;// and higher bound. Basically, we clamp it to fit the radius.
 
+                                for ( int chunkZ = (minZ >> 4); chunkZ <= (maxZ >> 4); chunkZ++ )
+                                {
                                         // Time to get the chunk (16x256x16) and split it into 16 vertical extends (16x16x16)
-                                        Chunk chunk = mc.world.getChunkFromChunkCoords( x, z );
+                                        Chunk chunk = mc.world.getChunkFromChunkCoords( chunkX, chunkZ );
                                         if ( chunk == null || !chunk.isLoaded() ) {
                                                 continue;
                                         }
                                         ExtendedBlockStorage[] extendsList = chunk.getBlockStorageArray();
 
-                                        // Loop on the extends around the player's layer (6 down, 2 up)
-                                        for ( int y = minY; y <= maxY; y++ )
-                                        {
-                                                blockPosY = y << 4;
+                                        // Pre-compute the extend bounds on Z
+                                        int z = chunkZ << 4;
+                                        lowBoundZ = ( z < minZ ) ? minZ - z : 0;
+                                        highBoundZ = ( z + 15> maxZ ) ? maxZ - z : 15;
 
-                                                ExtendedBlockStorage ebs = extendsList[y];
+                                        // Loop on the extends around the player's layer (6 down, 2 up)
+                                        for ( int curExtend = (minY >> 4); curExtend <= (maxY >> 4); curExtend++ )
+                                        {
+                                                ExtendedBlockStorage ebs = extendsList[curExtend];
                                                 if ( ebs == null ) { // happens quite often!
                                                         continue;
                                                 }
 
+                                                // Pre-compute the extend bounds on Y
+                                                int y = curExtend << 4;
+                                                lowBoundY = ( y < minY ) ? minY - y : 0;
+                                                highBoundY = ( y + 15 > maxY ) ? maxY - y : 15;
+
                                                 // Now that we have an extend, let's check all its blocks
-                                                for ( int i = 0; i < 16; i++ )
+                                                for ( int i = lowBoundX; i <= highBoundX; i++ )
                                                 {
-                                                        for ( int j = 0; j < 16; j++ )
+                                                        for ( int j = lowBoundY; j <= highBoundY; j++ )
                                                         {
-                                                                for ( int k = 0; k < 16; k++ )
+                                                                for ( int k = lowBoundZ; k <= highBoundZ; k++ )
                                                                 {
                                                                         IBlockState state = ebs.get(i, j, k); // this one seems a lot faster than asking the world directly
 
@@ -147,7 +155,7 @@ public class ClientTick implements Runnable
 
                                                                         if ( ores.containsKey(buff) ) // The reason for using Set/Map
                                                                         {
-                                                                                temp.add( new BlockInfo( blockPosX + i, blockPosY + j, blockPosZ + k, ores.get(buff)) ); // Add this block to the temp list using world coordinates
+                                                                                temp.add( new BlockInfo( x + i, y + j, z + k, ores.get(buff)) ); // Add this block to the temp list using world coordinates
                                                                         }
                                                                 }
                                                         }
@@ -165,4 +173,5 @@ public class ClientTick implements Runnable
 
 		return true;
 	}
+
 }
