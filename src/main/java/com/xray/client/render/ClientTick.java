@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.xray.common.XRay;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -15,9 +14,9 @@ import net.minecraft.client.Minecraft;
 import com.xray.common.reference.BlockInfo;
 import com.xray.common.reference.OreInfo;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
 public class ClientTick implements Runnable
 {
@@ -88,34 +87,80 @@ public class ClientTick implements Runnable
                         final Map<OreInfo, int[]> ores = new HashMap<>(); // Searches in Set/Map are faster than looping on List
                         for( OreInfo ore : XRay.searchList )
                         {
-                                if (ore.draw) // We can handle this condition right here rather than doing it in the big loop
+                                if ( ore.draw ) // We can handle this condition right here rather than doing it in the big loop
                                 {
                                         ores.put( ore, ore.color ); // Using a Map to get the ore color since Set does not have a get() method
                                 }
                         }
+                        final OreInfo buff = new OreInfo( 0, 0 ); // Search key for the map
 
-                        // Minecraft already has a method to get a bunch of blocks. Using the mutable version is faster.
-                        BlockPos start = new BlockPos(px - radius, Math.max( 0, py - 96 ), pz - radius);
-                        BlockPos end = new BlockPos(px + radius, py + 32, pz + radius);
-                        Iterator<MutableBlockPos> it = BlockPos.getAllInBoxMutable(start, end).iterator();
+                        final int minX = px - radius;
+                        final int maxX = px + radius;
+                        final int minY = Math.max( 0, py - 92 );
+                        final int maxY = Math.min( 255, py + 32 );
+                        final int minZ = pz - radius;
+                        final int maxZ = pz + radius;
+                        int lowBoundX, highBoundX, lowBoundY, highBoundY, lowBoundZ, highBoundZ;
 
-                        final OreInfo buff = new OreInfo(0, 0); // Avoids instanciating tons of objects
-
-                        while (it.hasNext())
+                        // Loop on chunks (x, z)
+                        for ( int chunkX = (minX >> 4); chunkX <= (maxX >> 4); chunkX++ ) // Using bitshift because negative numbers divided by 16 will give a wrong chunk
                         {
-                                MutableBlockPos pos = it.next();
-                                IBlockState state = mc.world.getBlockState( pos );
+                                // Pre-compute the extend bounds on X
+                                int x = chunkX << 4; // lowest x coord of the chunk in block/work coordinates
+                                lowBoundX = ( x < minX ) ? minX - x : 0; // lower bound for x within the extend
+                                highBoundX = ( x + 15 > maxX ) ? maxX - x : 15;// and higher bound. Basically, we clamp it to fit the radius.
 
-                                Block block = state.getBlock();
-                                buff.id = Block.getIdFromBlock( block );
-                                buff.meta = block.getMetaFromState( state );
-
-                                if( block.hasTileEntity( state ) )
-                                        buff.meta = 0;
-
-                                if ( ores.containsKey(buff) ) // The reason for using Set/Map
+                                for ( int chunkZ = (minZ >> 4); chunkZ <= (maxZ >> 4); chunkZ++ )
                                 {
-                                        temp.add( new BlockInfo( pos.getX(), pos.getY(), pos.getZ(), ores.get(buff)) ); // Add this block to the temp list
+                                        // Time to get the chunk (16x256x16) and split it into 16 vertical extends (16x16x16)
+                                        Chunk chunk = mc.world.getChunkFromChunkCoords( chunkX, chunkZ );
+                                        if ( chunk == null || !chunk.isLoaded() ) {
+                                                continue;
+                                        }
+                                        ExtendedBlockStorage[] extendsList = chunk.getBlockStorageArray();
+
+                                        // Pre-compute the extend bounds on Z
+                                        int z = chunkZ << 4;
+                                        lowBoundZ = ( z < minZ ) ? minZ - z : 0;
+                                        highBoundZ = ( z + 15> maxZ ) ? maxZ - z : 15;
+
+                                        // Loop on the extends around the player's layer (6 down, 2 up)
+                                        for ( int curExtend = (minY >> 4); curExtend <= (maxY >> 4); curExtend++ )
+                                        {
+                                                ExtendedBlockStorage ebs = extendsList[curExtend];
+                                                if ( ebs == null ) { // happens quite often!
+                                                        continue;
+                                                }
+
+                                                // Pre-compute the extend bounds on Y
+                                                int y = curExtend << 4;
+                                                lowBoundY = ( y < minY ) ? minY - y : 0;
+                                                highBoundY = ( y + 15 > maxY ) ? maxY - y : 15;
+
+                                                // Now that we have an extend, let's check all its blocks
+                                                for ( int i = lowBoundX; i <= highBoundX; i++ )
+                                                {
+                                                        for ( int j = lowBoundY; j <= highBoundY; j++ )
+                                                        {
+                                                                for ( int k = lowBoundZ; k <= highBoundZ; k++ )
+                                                                {
+                                                                        IBlockState state = ebs.get(i, j, k); // this one seems a lot faster than asking the world directly
+
+                                                                        Block block = state.getBlock();
+                                                                        buff.id = Block.getIdFromBlock( block );
+                                                                        buff.meta = block.getMetaFromState( state );
+
+                                                                        if( block.hasTileEntity( state ) )
+                                                                                buff.meta = 0;
+
+                                                                        if ( ores.containsKey(buff) ) // The reason for using Set/Map
+                                                                        {
+                                                                                temp.add( new BlockInfo( x + i, y + j, z + k, ores.get(buff)) ); // Add this block to the temp list using world coordinates
+                                                                        }
+                                                                }
+                                                        }
+                                                }
+                                        }
                                 }
                         }
 
@@ -128,4 +173,5 @@ public class ClientTick implements Runnable
 
 		return true;
 	}
+
 }
