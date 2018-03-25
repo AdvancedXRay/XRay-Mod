@@ -6,20 +6,21 @@ import com.xray.common.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 // TODO: Please refactor of all this file :heart:
 public class XrayRenderer
 {
 	private final Minecraft mc = Minecraft.getMinecraft();
-	public static List<BlockInfo> ores = new ArrayList<>();
+	public static List<BlockInfo> ores = Collections.synchronizedList( new ArrayList<>() ); // this is accessed by threads
 
 	// Opacity is weird as all hell. We save it as 0 - 1 / off -> full so we need to convert that value
 	private static float opacity = ( XRay.outlineOpacity > 1 ? 255 : XRay.outlineOpacity < 0 ? 1 : ( XRay.outlineOpacity  * 255 ) ); // Pretty simple :D
@@ -27,7 +28,7 @@ public class XrayRenderer
 	@SubscribeEvent
 	public void onWorldRenderLast( RenderWorldLastEvent event ) // Called when drawing the world.
 	{
-		if ( mc.world != null && XRay.drawOres )
+		if ( mc.world != null && XRay.drawOres() )
 		{
 			float f = event.getPartialTicks();
 
@@ -40,21 +41,20 @@ public class XrayRenderer
 		}
 	}
 
-    @SubscribeEvent
-    public void pickupItem( BlockEvent.BreakEvent event ) {
-        if ( mc.world != null && XRay.drawOres )
-        {
-            ClientTick.blockFinder( true );
-        }
-    }
+	@SubscribeEvent
+	public void tickEnd( TickEvent.ClientTickEvent event )
+	{
+		if ( (event.phase == TickEvent.Phase.END) && (mc.player != null) )
+		{
+			XRay.localPlyX = MathHelper.floor( mc.player.posX );
+			XRay.localPlyY = MathHelper.floor( mc.player.posY );
+			XRay.localPlyZ = MathHelper.floor( mc.player.posZ );
+			XRay.localPlyXPrev = MathHelper.floor( mc.player.prevPosX );
+			XRay.localPlyZPrev = MathHelper.floor( mc.player.prevPosZ );
 
-    @SubscribeEvent
-    public void placeItem(BlockEvent.PlaceEvent event ) {
-        if ( mc.world != null && XRay.drawOres )
-        {
-            ClientTick.blockFinder( true );
-        }
-    }
+			XRay.requestBlockFinder( false );
+		}
+	}
 
 	private void drawOres( float playerX, float playerY, float playerZ )
 	{
@@ -71,7 +71,7 @@ public class XrayRenderer
 
 		ArrayList<BlockInfo> temp = new ArrayList<>();
 		temp.addAll(ores);
-		
+
 		for ( BlockInfo b : temp )
 		{
 		    if( b == null )
@@ -80,9 +80,9 @@ public class XrayRenderer
 			Utils.renderBlockBounding(
 				tessellator,
 				buffer,
-				b.x-playerX,
-				b.y-playerY,
-				b.z-playerZ,
+				b.getX()-playerX,
+				b.getY()-playerY,
+				b.getZ()-playerZ,
 				b.color[0],
 				b.color[1],
 				b.color[2],
@@ -91,7 +91,7 @@ public class XrayRenderer
 			);
 
 		}
-		
+
 		GL11.glDepthMask(true);
 		GL11.glDisable( GL11.GL_BLEND );
 		GL11.glEnable( GL11.GL_TEXTURE_2D );
