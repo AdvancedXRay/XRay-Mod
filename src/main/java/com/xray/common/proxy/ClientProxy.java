@@ -2,6 +2,7 @@
 package com.xray.common.proxy;
 
 import com.xray.client.KeyBindingHandler;
+import com.xray.client.XRayEventHandler;
 import com.xray.client.render.ClientTick;
 import com.xray.client.render.XrayRenderer;
 import com.xray.common.XRay;
@@ -27,7 +28,7 @@ public class ClientProxy extends CommonProxy
 		}
 
 		MinecraftForge.EVENT_BUS.register( new KeyBindingHandler() );
-		MinecraftForge.EVENT_BUS.register( new ClientTick() );
+		MinecraftForge.EVENT_BUS.register( new XRayEventHandler() );
 		MinecraftForge.EVENT_BUS.register( new XrayRenderer() );	// XrayRenderer is forge subscribed to onRenderEvent. Which is called when drawing the world.
 	}
 

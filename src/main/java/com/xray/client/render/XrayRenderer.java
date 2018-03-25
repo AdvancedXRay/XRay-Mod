@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 // TODO: Please refactor of all this file :heart:
@@ -57,16 +56,6 @@ public class XrayRenderer
 		}
 	}
 
-	@SubscribeEvent
-	public void pickupItem( BlockEvent.BreakEvent event ) {
-		XRay.requestBlockFinder( true );
-	}
-
-	@SubscribeEvent
-	public void placeItem(BlockEvent.PlaceEvent event ) {
-		XRay.requestBlockFinder( true );
-	}
-
 	private void drawOres( float playerX, float playerY, float playerZ )
 	{
 		GL11.glDisable( GL11.GL_TEXTURE_2D );
@@ -91,9 +80,9 @@ public class XrayRenderer
 			Utils.renderBlockBounding(
 				tessellator,
 				buffer,
-				b.x-playerX,
-				b.y-playerY,
-				b.z-playerZ,
+				b.getX()-playerX,
+				b.getY()-playerY,
+				b.getZ()-playerZ,
 				b.color[0],
 				b.color[1],
 				b.color[2],
