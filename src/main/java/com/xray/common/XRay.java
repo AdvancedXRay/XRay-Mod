@@ -1,11 +1,8 @@
 package com.xray.common;
 
 import com.xray.client.gui.helper.HelperBlock;
-import com.xray.client.render.ClientTick;
-import com.xray.client.render.XrayRenderer;
 import com.xray.common.config.ConfigHandler;
 import com.xray.common.proxy.CommonProxy;
-import com.xray.common.reference.OreInfo;
 import com.xray.common.reference.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
@@ -24,16 +21,12 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import net.minecraft.client.Minecraft;
 
 @Mod(modid= Reference.MOD_ID, name= Reference.MOD_NAME, version=Reference.MOD_VERSION /*guiFactory = Reference.GUI_FACTORY*/)
 public class XRay
 {
-	public static int localPlyX, localPlyY, localPlyZ, localPlyXPrev, localPlyZPrev; // For internal use in the ClientTick thread.
-	private static boolean drawOres = false; // Off by default
-	public static boolean drawCaves = false;
+
 	public static ArrayList<HelperBlock> blockList = new ArrayList<>();
         private static Minecraft mc = Minecraft.getMinecraft();
 
@@ -52,12 +45,6 @@ public class XRay
 	public static final int[] keyBind_keyValues = { Keyboard.KEY_BACKSLASH, Keyboard.KEY_Z };
 	public static final String[] keyBind_descriptions = { I18n.format("xray.config.toggle"), I18n.format("xray.config.open")};
 	public static KeyBinding[] keyBind_keys = null;
-
-	public static ArrayList<OreInfo> searchList = new ArrayList<>(); // List of ores/blocks to search for.
-
-        // ClientTick thread management
-        private static volatile boolean findingBlocks = false;
-        private static ExecutorService EXECUTOR;
 
 	// The instance of your mod that Forge uses.
 	@Instance(Reference.MOD_ID)
@@ -104,44 +91,4 @@ public class XRay
 		proxy.postInit( event );
 	}
 
-	public static boolean drawOres()
-	{
-		return drawOres;
-	}
-
-	public static void toggleDrawOres()
-	{
-		drawOres = !drawOres;
-		if ( drawOres )
-			EXECUTOR = Executors.newSingleThreadExecutor();
-		else
-			EXECUTOR.shutdownNow();
-	}
-
-	/**
-	 * Starts the ClientTick thread if it's not already running.
-	 *
-	 * @param force should we force a block scan even if the player hasn't moved?
-	 */
-	public static synchronized void requestBlockFinder( boolean force )
-	{
-		if ( !findingBlocks && drawOres && mc.world != null && mc.player != null )
-		{
-			if ( force )
-			{
-				XrayRenderer.ores.clear(); // This forces blockFinder() execution
-			}
-			findingBlocks = true; // Prevents other executions until this thread finishes. The thread itself resets it on completion.
-			EXECUTOR.execute( new ClientTick() );
-		}
-	}
-
-	/**
-	 * Should only be called by ClientTick! Maybe a security token to mimic
-	 * 'friend' methods would be useful here.
-	 */
-	public void doneFindingBlocks()
-	{
-		findingBlocks = false;
-	}
 }

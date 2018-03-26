@@ -1,75 +1,63 @@
 package com.xray.client.render;
 
+import com.xray.client.XRayController;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.xray.common.XRay;
 import net.minecraft.block.state.IBlockState;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import com.xray.common.reference.BlockInfo;
 import com.xray.common.reference.OreInfo;
-import java.util.HashMap;
+import com.xray.common.utils.WorldRegion;
 import java.util.Map;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
 public class ClientTick implements Runnable
 {
 	private static final Minecraft mc = Minecraft.getMinecraft();
+	private final WorldRegion box;
+
+	public ClientTick( WorldRegion region )
+	{
+		box = region;
+	}
 
         @Override
 	public void run() // Our thread code for finding ores near the player.
 	{
                 blockFinder();
-                XRay.instance.doneFindingBlocks(); // Inform the mod that we're done finding blocks
 	}
 
 	/**
-	 * Should only be called by requestBlockFinder() as it manages the
-	 * threads and checks the preconditions (drawOres, player not null ...)
+	 * Use XRayController.requestBlockFinder() to trigger a scan.
 	 */
 	private void blockFinder() {
+		Map<OreInfo, OreInfo> ores = XRayController.getDrawableOres();
+		if ( ores.isEmpty() )
+			return; // no need to scan the region if there's nothing to find
 
-		final int px = XRay.localPlyX;
-		final int py = XRay.localPlyY;
-		final int pz = XRay.localPlyZ;
-		if ( px == XRay.localPlyXPrev && pz == XRay.localPlyZPrev && XrayRenderer.ores.size() > 0 ) {
-			return; // Skip the check if the player hasn't moved
-		}
+		final World world = mc.world;
 		final List<BlockInfo> temp = new ArrayList<>();
-		final int radius = XRay.distNumbers[ XRay.currentDist ]; // Get the radius around the player to search.
-
-		final Map<OreInfo, int[]> ores = new HashMap<>(); // Searches in Set/Map are faster than looping on List
-		for ( OreInfo ore : XRay.searchList ) {
-			if ( ore.draw ) // We can handle this condition right here rather than doing it in the big loop
-			{
-				ores.put( ore, ore.color ); // Using a Map to get the ore color since Set does not have a get() method
-			}
-		}
 		final OreInfo buff = new OreInfo( 0, 0 ); // Search key for the map
-
-		final int minX = px - radius;
-		final int maxX = px + radius;
-		final int minY = Math.max(0, py - 92);
-		final int maxY = Math.min(255, py + 32);
-		final int minZ = pz - radius;
-		final int maxZ = pz + radius;
 		int lowBoundX, highBoundX, lowBoundY, highBoundY, lowBoundZ, highBoundZ;
 
 		// Loop on chunks (x, z)
-		for ( int chunkX = (minX >> 4); chunkX <= (maxX >> 4); chunkX++ ) // Using bitshift because negative numbers divided by 16 will give a wrong chunk
+		for ( int chunkX = box.minChunkX; chunkX <= box.maxChunkX; chunkX++ ) // Using bitshift because negative numbers divided by 16 will give a wrong chunk
 		{
 			// Pre-compute the extend bounds on X
 			int x = chunkX << 4; // lowest x coord of the chunk in block/world coordinates
-			lowBoundX = (x < minX) ? minX - x : 0; // lower bound for x within the extend
-			highBoundX = (x + 15 > maxX) ? maxX - x : 15;// and higher bound. Basically, we clamp it to fit the radius.
+			lowBoundX = (x < box.minX) ? box.minX - x : 0; // lower bound for x within the extend
+			highBoundX = (x + 15 > box.maxX) ? box.maxX - x : 15;// and higher bound. Basically, we clamp it to fit the radius.
 
-			for ( int chunkZ = (minZ >> 4); chunkZ <= (maxZ >> 4); chunkZ++ )
+			for ( int chunkZ = box.minChunkZ; chunkZ <= box.maxChunkZ; chunkZ++ )
 			{
 				// Time to get the chunk (16x256x16) and split it into 16 vertical extends (16x16x16)
-				Chunk chunk = mc.world.getChunkFromChunkCoords( chunkX, chunkZ );
+				Chunk chunk = world.getChunkFromChunkCoords( chunkX, chunkZ );
 				if ( chunk == null || !chunk.isLoaded() ) {
 					continue; // We won't find anything interesting in unloaded chunks
 				}
@@ -77,11 +65,11 @@ public class ClientTick implements Runnable
 
 				// Pre-compute the extend bounds on Z
 				int z = chunkZ << 4;
-				lowBoundZ = (z < minZ) ? minZ - z : 0;
-				highBoundZ = (z + 15 > maxZ) ? maxZ - z : 15;
+				lowBoundZ = (z < box.minZ) ? box.minZ - z : 0;
+				highBoundZ = (z + 15 > box.maxZ) ? box.maxZ - z : 15;
 
 				// Loop on the extends around the player's layer (6 down, 2 up)
-				for ( int curExtend = (minY >> 4); curExtend <= (maxY >> 4); curExtend++ )
+				for ( int curExtend = box.minChunkY; curExtend <= box.maxChunkY; curExtend++ )
 				{
 					ExtendedBlockStorage ebs = extendsList[curExtend];
 					if (ebs == null) // happens quite often!
@@ -89,8 +77,8 @@ public class ClientTick implements Runnable
 
 					// Pre-compute the extend bounds on Y
 					int y = curExtend << 4;
-					lowBoundY = (y < minY) ? minY - y : 0;
-					highBoundY = (y + 15 > maxY) ? maxY - y : 15;
+					lowBoundY = (y < box.minY) ? box.minY - y : 0;
+					highBoundY = (y + 15 > box.maxY) ? box.maxY - y : 15;
 
 					// Now that we have an extend, let's check all its blocks
 					for ( int i = lowBoundX; i <= highBoundX; i++ ) {
@@ -108,7 +96,7 @@ public class ClientTick implements Runnable
 
 								if (ores.containsKey( buff )) // The reason for using Set/Map
 								{
-									temp.add( new BlockInfo(x + i, y + j, z + k, ores.get(buff)) ); // Add this block to the temp list using world coordinates
+									temp.add( new BlockInfo(x + i, y + j, z + k, ores.get(buff).color) ); // Add this block to the temp list using world coordinates
 								}
 							}
 						}
@@ -119,6 +107,32 @@ public class ClientTick implements Runnable
 
 		XrayRenderer.ores.clear();
 		XrayRenderer.ores.addAll( temp ); // Add all our found blocks to the XrayRenderer.ores list. To be use by XrayRenderer when drawing.
+	}
 
+	/**
+	 * Single-block version of blockFinder. Can safely be called directly
+	 * for quick block check.
+	 * @param pos the BlockPos to check
+	 * @param state the current state of the block
+	 * @param add true if the block was added to world, false if it was removed
+	 */
+	public static void checkBlock( BlockPos pos, IBlockState state, boolean add )
+	{
+		if ( !XRayController.drawOres() ) return; // just pass
+
+		// Let's start with getting data (id, meta)
+		Block block = state.getBlock();
+		int id = Block.getIdFromBlock( block );
+		int meta = block.getMetaFromState( state );
+
+		// Let's see if the block to check is an ore we monitor
+		OreInfo ore = XRayController.getDrawableOres().get( new OreInfo(id, meta) );
+		if ( ore != null ) // it's a block we are monitoring
+		{
+			if ( add )	// the block was added to the world, let's add it to the drawing buffer
+				XrayRenderer.ores.add( new BlockInfo(pos, ore.color) );
+			else		// it was removed from the world, let's remove it from the buffer as well
+				XrayRenderer.ores.remove( new BlockInfo(pos, null) );
+		}
 	}
 }
