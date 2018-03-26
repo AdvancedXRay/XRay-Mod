@@ -1,5 +1,6 @@
 package com.xray.common.config;
 
+import com.xray.client.XRayController;
 import com.xray.common.XRay;
 import com.xray.common.reference.OreInfo;
 import com.xray.common.reference.Reference;
@@ -11,7 +12,6 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.lwjgl.Sys;
 
 import java.io.File;
 import java.util.Objects;
@@ -68,7 +68,7 @@ public class ConfigHandler
 				int[] color = {cat.get("red").getInt(), cat.get("green").getInt(), cat.get("blue").getInt()};
 				boolean enabled = cat.get("enabled").getBoolean(false);
 
-				XRay.searchList.add( new OreInfo( name, cat.getName(), name.replaceAll("\\s+", ""), id, meta, color, enabled ) );
+				XRayController.searchList.add( new OreInfo( name, cat.getName(), name.replaceAll("\\s+", ""), id, meta, color, enabled ) );
 			}
 		}
 

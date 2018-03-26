@@ -1,5 +1,6 @@
 package com.xray.client.gui;
 
+import com.xray.client.XRayController;
 import com.xray.client.gui.helper.HelperBlock;
 import com.xray.client.gui.helper.HelperGuiList;
 import com.xray.common.XRay;
@@ -42,7 +43,7 @@ public class GuiList extends GuiContainer
 		this.renderList.clear();
 		int x = width / 2 - 140, y = height / 2 - 106, count = 0, page = 0;
 
-		for( OreInfo ore : XRay.searchList ) {
+		for( OreInfo ore : XRayController.searchList ) {
 			if( count % 9 == 0 && count != 0 )
 			{
 				page++;
@@ -104,7 +105,7 @@ public class GuiList extends GuiContainer
 				else
 					XRay.currentDist = 0;
 
-				XRay.requestBlockFinder( true );
+				XRayController.requestBlockFinder( true );
 				ConfigHandler.update("searchdist", false);
 				break;
 
@@ -125,8 +126,8 @@ public class GuiList extends GuiContainer
 
 			case 1500:
 				mc.player.closeScreen();
-				XRay.drawCaves = !XRay.drawCaves;
-				System.out.println(XRay.drawCaves);
+				XRayController.toggleDrawCaves();
+				System.out.println(XRayController.drawCaves());
 				break;
 
 			case 4:
@@ -191,7 +192,7 @@ public class GuiList extends GuiContainer
 					if( list.getButton().id == button.id ) {
 						list.getOre().draw = !list.getOre().draw;
 						ConfigHandler.update( list.getOre().getOreName(), list.getOre().draw );
-						XRay.requestBlockFinder( true );
+						XRayController.requestBlockFinder( true );
 					}
 				}
 			break;
@@ -222,7 +223,7 @@ public class GuiList extends GuiContainer
 					XRay.currentDist = XRay.distNumbers.length - 1;
 
 				distButtons.displayString = I18n.format("xray.input.distance")+": "+ String.valueOf(XRay.distNumbers[XRay.currentDist]);
-				XRay.requestBlockFinder( true );
+				XRayController.requestBlockFinder( true );
 				ConfigHandler.update("searchdist", false);
 			}
 		}
