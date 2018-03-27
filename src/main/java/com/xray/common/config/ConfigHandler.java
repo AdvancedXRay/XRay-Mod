@@ -116,18 +116,10 @@ public class ConfigHandler
 
 		for( String category : config.getCategoryNames() ) // Figure out if this is a custom or dictionary ore.
 		{
-			String cleanStr = string.replaceAll("\\s+", "").toLowerCase(); // No whitespace or capitals in the config file categories.
-			String[] splitCat = category.split("\\.");
-
-			if( splitCat.length == 2 )
-			{
-				if( splitCat[0].equals( "ores" ) && splitCat[1].equals( cleanStr ) ) // Check if the current iteration is the correct category (oredict.emerald)
-				{
-					config.get("ores."+cleanStr, "enabled", false).set( draw );
-
-				}
-			}
+			if( config.getCategory( category ).getName().equals(string) )
+				config.get("ores."+string, "enabled", false).set( draw );
 		}
+
 		config.save();
 	}
 
