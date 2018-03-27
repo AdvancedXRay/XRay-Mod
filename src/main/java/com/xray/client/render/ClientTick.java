@@ -1,6 +1,7 @@
 package com.xray.client.render;
 
-import com.xray.client.XRayController;
+import com.xray.client.xray.XrayController;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,10 +35,10 @@ public class ClientTick implements Runnable
 	}
 
 	/**
-	 * Use XRayController.requestBlockFinder() to trigger a scan.
+	 * Use XrayController.requestBlockFinder() to trigger a scan.
 	 */
 	private void blockFinder() {
-		Map<OreInfo, OreInfo> ores = XRayController.getDrawableOres();
+		Map<OreInfo, OreInfo> ores = XrayController.getDrawableOres();
 		if ( ores.isEmpty() )
 			return; // no need to scan the region if there's nothing to find
 
@@ -118,7 +119,7 @@ public class ClientTick implements Runnable
 	 */
 	public static void checkBlock( BlockPos pos, IBlockState state, boolean add )
 	{
-		if ( !XRayController.drawOres() ) return; // just pass
+		if ( !XrayController.drawOres() ) return; // just pass
 
 		// Let's start with getting data (id, meta)
 		Block block = state.getBlock();
@@ -126,7 +127,7 @@ public class ClientTick implements Runnable
 		int meta = block.getMetaFromState( state );
 
 		// Let's see if the block to check is an ore we monitor
-		OreInfo ore = XRayController.getDrawableOres().get( new OreInfo(id, meta) );
+		OreInfo ore = XrayController.getDrawableOres().get( new OreInfo(id, meta) );
 		if ( ore != null ) // it's a block we are monitoring
 		{
 			if ( add )	// the block was added to the world, let's add it to the drawing buffer

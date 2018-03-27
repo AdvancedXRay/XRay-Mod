@@ -1,6 +1,6 @@
 package com.xray.client.gui;
 
-import com.xray.client.OresSearch;
+import com.xray.client.xray.OresSearch;
 import com.xray.client.gui.helper.HelperBlock;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;

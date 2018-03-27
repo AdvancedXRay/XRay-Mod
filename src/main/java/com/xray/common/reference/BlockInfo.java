@@ -6,9 +6,9 @@ public class BlockInfo extends Vec3i // so we benefit from Vec3i's hashCode() an
 {
 	public int[] color;
 
-	public BlockInfo( int bx, int by, int bz, int[] c )
+	public BlockInfo( int x, int y, int z, int[] c )
 	{
-		super( bx, by, bz );
+		super( x, y, z );
 		this.color = c;
 	}
 

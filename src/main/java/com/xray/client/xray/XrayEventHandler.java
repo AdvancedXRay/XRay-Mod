@@ -1,4 +1,4 @@
-package com.xray.client;
+package com.xray.client.xray;
 
 import com.xray.client.render.ClientTick;
 import com.xray.client.render.XrayRenderer;
@@ -9,7 +9,7 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-public class XRayEventHandler
+public class XrayEventHandler
 {
 	private static final Minecraft mc = Minecraft.getMinecraft();
 
@@ -29,7 +29,7 @@ public class XRayEventHandler
 	@SubscribeEvent
 	public void chunkLoad( ChunkEvent.Load event )
 	{
-		XRayController.requestBlockFinder( true );
+		XrayController.requestBlockFinder( true );
 	}
 
 	@SubscribeEvent
@@ -37,14 +37,14 @@ public class XRayEventHandler
 	{
 		if ( event.phase == TickEvent.Phase.END )
 		{
-			XRayController.requestBlockFinder( false );
+			XrayController.requestBlockFinder( false );
 		}
 	}
 
 	@SubscribeEvent
 	public void onWorldRenderLast( RenderWorldLastEvent event ) // Called when drawing the world.
 	{
-		if ( XRayController.drawOres() )
+		if ( XrayController.drawOres() )
 		{
 			float f = event.getPartialTicks();
 

@@ -1,5 +1,6 @@
 package com.xray.client;
 
+import com.xray.client.xray.XrayController;
 import com.xray.common.XRay;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -20,7 +21,7 @@ public class KeyBindingHandler
         {
 			if( XRay.keyBind_keys[ XRay.keyIndex_toggleXray ].isPressed() )
 			{
-				XRayController.toggleDrawOres();
+				XrayController.toggleDrawOres();
 			}
 			else if( XRay.keyBind_keys[ XRay.keyIndex_showXrayMenu ].isPressed() )
 			{

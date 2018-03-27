@@ -29,8 +29,7 @@ public class XrayRenderer
 		GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA );
 		GL11.glLineWidth( XRay.outlineThickness );
 
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buffer = tessellator.getBuffer();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
 		ArrayList<BlockInfo> temp = new ArrayList<>();
 		temp.addAll(ores);
@@ -41,8 +40,7 @@ public class XrayRenderer
 		        continue;
 
 			Utils.renderBlockBounding(
-				tessellator,
-				buffer,
+                    buffer,
 				b.getX()-playerX,
 				b.getY()-playerY,
 				b.getZ()-playerZ,

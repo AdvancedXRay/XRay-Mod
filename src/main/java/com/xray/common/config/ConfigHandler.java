@@ -1,6 +1,6 @@
 package com.xray.common.config;
 
-import com.xray.client.XRayController;
+import com.xray.client.xray.XrayController;
 import com.xray.common.XRay;
 import com.xray.common.reference.OreInfo;
 import com.xray.common.reference.Reference;
@@ -68,7 +68,7 @@ public class ConfigHandler
 				int[] color = {cat.get("red").getInt(), cat.get("green").getInt(), cat.get("blue").getInt()};
 				boolean enabled = cat.get("enabled").getBoolean(false);
 
-				XRayController.searchList.add( new OreInfo( name, cat.getName(), name.replaceAll("\\s+", ""), id, meta, color, enabled ) );
+				XrayController.searchList.add( new OreInfo( name, cat.getName(), name.replaceAll("\\s+", ""), id, meta, color, enabled ) );
 			}
 		}
 

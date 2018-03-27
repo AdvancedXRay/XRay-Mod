@@ -1,4 +1,4 @@
-package com.xray.client;
+package com.xray.client.xray;
 
 import com.xray.common.config.ConfigHandler;
 import com.xray.common.reference.OreInfo;
@@ -17,14 +17,14 @@ public class OresSearch
 			return;
 		}
 
-		for( OreInfo info : XRayController.searchList ) {
+		for( OreInfo info : XrayController.searchList ) {
 			if( info.getId() == oreId && info.getMeta() == oreMeta) {
 				mc.player.sendMessage(new TextComponentString("[XRay] "+I18n.format("xray.message.already_exists")));
 				return;
 			}
 		}
 
-		XRayController.searchList.add( new OreInfo( name, name.replaceAll("\\s+", "").toLowerCase(), name.replaceAll("\\s+", ""), oreId, oreMeta, color, true ) );
+		XrayController.searchList.add( new OreInfo( name, name.replaceAll("\\s+", "").toLowerCase(), name.replaceAll("\\s+", ""), oreId, oreMeta, color, true ) );
 		String notify = "[XRay] "+I18n.format( "xray.message.added_block", name );
 		mc.player.sendMessage(new TextComponentString(notify));
 
@@ -32,7 +32,7 @@ public class OresSearch
 	}
 
 	public static void update( OreInfo original, String name, int[] color, int meta ) {
-		if( !XRayController.searchList.contains( original ) ) {
+		if( !XrayController.searchList.contains( original ) ) {
 			// This really shouldn't happen but hay, lets support it anyway.
 			mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.unknown") ));
 			return;
@@ -41,7 +41,7 @@ public class OresSearch
 		OreInfo preserve = new OreInfo( original.getDisplayName(), original.getCatName(), original.getOreName(), original.getId(), original.getMeta(), original.color, original.draw );
 
 		OreInfo tmpNew = null;
-		for ( OreInfo ore : XRayController.searchList ) {
+		for ( OreInfo ore : XrayController.searchList ) {
 			if( ore == original ) {
 				ore.displayName = name;
 				ore.color = color;
@@ -61,13 +61,13 @@ public class OresSearch
 	}
 
 	public static void remove( OreInfo original ) {
-		if( !XRayController.searchList.contains( original ) ) {
+		if( !XrayController.searchList.contains( original ) ) {
 			// This really shouldn't happen but hay, lets support it anyway.
 			mc.player.sendMessage( new TextComponentString( I18n.format("xray.message.unknown") ));
 			return;
 		}
 
-		XRayController.searchList.remove( original );
+		XrayController.searchList.remove( original );
 		ConfigHandler.remove(original);
 
 		String notify = "[XRay] "+I18n.format( "xray.message.remove_block", original.getOreName() );

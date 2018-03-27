@@ -1,4 +1,4 @@
-package com.xray.client;
+package com.xray.client.xray;
 
 import com.xray.client.render.ClientTick;
 import com.xray.client.render.XrayRenderer;
@@ -15,7 +15,7 @@ import java.util.concurrent.Future;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.Vec3i;
 
-public class XRayController
+public class XrayController
 {
 	static Minecraft mc = Minecraft.getMinecraft();
 

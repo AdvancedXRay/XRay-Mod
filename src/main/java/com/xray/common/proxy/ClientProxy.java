@@ -2,7 +2,7 @@
 package com.xray.common.proxy;
 
 import com.xray.client.KeyBindingHandler;
-import com.xray.client.XRayEventHandler;
+import com.xray.client.xray.XrayEventHandler;
 import com.xray.common.XRay;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
@@ -26,7 +26,7 @@ public class ClientProxy extends CommonProxy
 		}
 
 		MinecraftForge.EVENT_BUS.register( new KeyBindingHandler() );
-		MinecraftForge.EVENT_BUS.register( new XRayEventHandler() );
+		MinecraftForge.EVENT_BUS.register( new XrayEventHandler() );
 	}
 
 	@Override
