@@ -1,7 +1,7 @@
 package com.xray.client.gui;
 
-import com.xray.client.xray.OresSearch;
 import com.xray.client.gui.helper.HelperBlock;
+import com.xray.client.xray.XrayController;
 import com.xray.common.reference.OreInfo;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
@@ -62,7 +62,7 @@ public class GuiChangeMeta extends GuiContainer {
                     // Hacky way to check if our index exists in our subBlocks
                     try {
                         ItemStack stack = tmpStack.get( newMeta );
-                        OresSearch.update(this.info, this.info.displayName, this.info.color, newMeta);
+                        XrayController.update(this.info, this.info.displayName, this.info.color, newMeta);
 
                         // Update the selected block so we can give the item back to the edit UI
                         this.info.meta = newMeta;

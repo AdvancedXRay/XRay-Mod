@@ -191,7 +191,7 @@ public class GuiList extends GuiContainer
 				for ( HelperGuiList list : this.renderList ) {
 					if( list.getButton().id == button.id ) {
 						list.getOre().draw = !list.getOre().draw;
-						ConfigHandler.update( list.getOre().getOreName(), list.getOre().draw );
+						ConfigHandler.update( list.getOre().getCatName(), list.getOre().draw );
 						XrayController.requestBlockFinder( true );
 					}
 				}

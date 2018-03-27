@@ -3,6 +3,7 @@ package com.xray.client.xray;
 import com.xray.client.render.ClientTick;
 import com.xray.client.render.XrayRenderer;
 import com.xray.common.XRay;
+import com.xray.common.config.ConfigHandler;
 import com.xray.common.reference.OreInfo;
 import com.xray.common.utils.WorldRegion;
 import java.util.ArrayList;
@@ -13,7 +14,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.text.TextComponentString;
 
 public class XrayController
 {
@@ -106,4 +109,46 @@ public class XrayController
 		}
 	}
 
+	/**
+	 * Add's the ore to the Config and adds to the Searchlist
+	 * @param oreId
+	 * @param oreMeta
+	 * @param name
+	 * @param color
+	 */
+	public static void add( int oreId, int oreMeta, String name, int[] color ) // Takes a string of id:meta or oreName to add to our search list.
+	{
+		if( searchList.contains( new OreInfo(oreId, oreMeta) ) ) {
+			mc.player.sendMessage(new TextComponentString("[XRay] "+ I18n.format("xray.message.already_exists")));
+			return;
+		}
+
+		searchList.add( new OreInfo( name, name.replaceAll("\\s+", "").toLowerCase(), name.replaceAll("\\s+", ""), oreId, oreMeta, color, true ) );
+		ConfigHandler.add(name, oreId, oreMeta, color);
+
+		mc.player.sendMessage(new TextComponentString("[XRay] "+I18n.format( "xray.message.added_block", name )));
+	}
+
+	public static void update( OreInfo original, String name, int[] color, int meta ) {
+		if( !searchList.contains( original ) )
+			return;
+
+		OreInfo current = searchList.get(searchList.indexOf(original));
+		current.displayName = name;
+		current.color = color;
+		current.meta = meta;
+
+		ConfigHandler.updateInfo(original, current);
+		mc.player.sendMessage(new TextComponentString("[XRay] "+I18n.format( "xray.message.updated_block" )));
+	}
+
+	public static void remove( OreInfo original ) {
+		if( !searchList.contains( original ) )
+			return;
+
+		searchList.remove( original );
+		ConfigHandler.remove(original);
+
+		mc.player.sendMessage(new TextComponentString("[XRay] "+I18n.format( "xray.message.remove_block", original.getOreName() )));
+	}
 }

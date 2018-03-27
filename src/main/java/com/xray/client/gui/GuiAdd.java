@@ -1,7 +1,8 @@
 package com.xray.client.gui;
 
-import com.xray.client.xray.OresSearch;
 import com.xray.client.gui.helper.HelperBlock;
+import com.xray.client.xray.XrayController;
+import com.xray.common.reference.OreInfo;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -11,6 +12,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextComponentString;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -55,9 +57,12 @@ public class GuiAdd extends GuiContainer {
 			case 98: // Add
 				int[] rgb = {(int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255)};
 
-				int tmpId = Block.getIdFromBlock(selectBlock.getBlock());
-				OresSearch.add(tmpId, selectBlock.getItemStack().getMetadata(), oreName.getText(), rgb);
+				if( oreName.getText().isEmpty() || oreName.getText().equals("") ) {
+					mc.player.sendMessage(new TextComponentString("[XRay] " + I18n.format("xray.message.missing_input")));
+					return;
+				}
 
+				XrayController.add(Block.getIdFromBlock(selectBlock.getBlock()), selectBlock.getItemStack().getMetadata(), oreName.getText(), rgb);
 				mc.player.closeScreen();
 				mc.displayGuiScreen( new GuiList() );
 				break;
