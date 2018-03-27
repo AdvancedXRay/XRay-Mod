@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 public class Utils {
 
     public static void renderBlockBounding(BufferBuilder buffer, float x, float y, float z, int red, int green, int blue, int opacity, boolean isLines) {
-        float height = 1.0f;
+        final float size = 1.0f;
 
         buffer.begin(
                 (isLines ? GL11.GL_LINES : GL11.GL_QUADS),
@@ -19,40 +19,40 @@ public class Utils {
         );
 
         // TOP
-        buffer.pos(x, y + height, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + height, y + height, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + height, y + height, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + height, y + height, z + height).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + height, y + height, z + height).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y + height, z + height).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y + height, z + height).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y + height, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y + size, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y + size, z).color(red, green, blue, opacity).endVertex();
 
         // BOTTOM
-        buffer.pos(x + height, y, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + height, y, z + height).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + height, y, z + height).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y, z + height).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y, z + height).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y, z + size).color(red, green, blue, opacity).endVertex();
         buffer.pos(x, y, z).color(red, green, blue, opacity).endVertex();
         buffer.pos(x, y, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + height, y, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y, z).color(red, green, blue, opacity).endVertex();
 
         // Edge 1
-        buffer.pos(x + height, y, z + height).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + height, y + height, z + height).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
 
         // Edge 2
-        buffer.pos(x + height, y, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + height, y + height, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
 
         // Edge 3
-        buffer.pos(x, y, z + height).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y + height, z + height).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
 
         // Edge 4
         buffer.pos(x, y, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y + height, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y + size, z).color(red, green, blue, opacity).endVertex();
 
         Tessellator.getInstance().draw();
     }
