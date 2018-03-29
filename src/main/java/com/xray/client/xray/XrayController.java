@@ -14,7 +14,7 @@ import net.minecraft.util.math.Vec3i;
 
 public class XrayController
 {
-	static Minecraft mc = Minecraft.getMinecraft();
+	private static Minecraft mc = Minecraft.getMinecraft();
 
 	// Data
 	private static int currentDist = 0; // Index for the distNumers array. Default search distance.
@@ -23,7 +23,7 @@ public class XrayController
 
 	// Thread management
 	private static Future task;
-        private static ExecutorService executor;
+    private static ExecutorService executor;
 
 	// Mod state, cannot be made public because we need to know when the values change
 	private static boolean drawOres = false; // Off by default
@@ -79,14 +79,14 @@ public class XrayController
 	 * calls yield the same result.
 	 * @return true if the player has moved since the last blockFinder call
 	 */
-	public static boolean playerHasMoved()
+	private static boolean playerHasMoved()
 	{
 		return lastPlayerPos == null
 			|| lastPlayerPos.getX() != mc.player.getPosition().getX()
 			|| lastPlayerPos.getZ() != mc.player.getPosition().getZ();
 	}
 
-	public static void updatePlayerPosition()
+	private static void updatePlayerPosition()
 	{
 		lastPlayerPos = mc.player.getPosition();
 	}

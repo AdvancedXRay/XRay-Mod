@@ -24,15 +24,15 @@ public class OreInfo implements Comparable<OreInfo>
 	private final int meta;    // the metadata
 	int[] color;               // RGB color (3 bytes)
 	boolean draw;
-	boolean useOredict; // if true, XRayController will use all ore alternatives for scanning chunks
+	private boolean useOreDict; // if true, XRayController will use all ore alternatives for scanning chunks
 
-	public OreInfo( String name, int meta, int[] color, boolean draw, boolean useOredict )
+	public OreInfo( String name, int meta, int[] color, boolean draw, boolean useOreDict)
 	{
 		this.name = name;
 		this.meta = meta;
 		this.color = color;
 		this.draw = draw;
-		this.useOredict = useOredict;
+		this.useOreDict = useOreDict;
 	}
 
 	public OreInfo( String name, int meta )
@@ -40,9 +40,9 @@ public class OreInfo implements Comparable<OreInfo>
 		this( name, meta, DEFAULT_COLOR, false, false );
 	}
 
-	private OreInfo( ItemStack stack, int[] color, boolean draw, boolean useOredict )
+	private OreInfo( ItemStack stack, int[] color, boolean draw, boolean useOreDict)
 	{
-		this( stack.getItem().getRegistryName().toString(), stack.getItemDamage(), color, draw, useOredict );
+		this( stack.getItem().getRegistryName().toString(), stack.getItemDamage(), color, draw, useOreDict);
 	}
 
 	public OreInfo( ItemStack stack )
@@ -73,13 +73,13 @@ public class OreInfo implements Comparable<OreInfo>
 		return new OreInfo( stack, color, draw, true );
 	}
 
-// Accessors
+	// Public Accessors
 	public String getName() { return name; }
 	public int getMeta() { return meta; }
 	public int[] getColor() { return color; }
 	public boolean isDrawable() { return draw; }
-	public boolean useOredict() { return useOredict; }
-	public void toggleOredict() { useOredict = !useOredict; }
+	public boolean useOredict() { return useOreDict; }
+	public void toggleOredict() { useOreDict = !useOreDict; }
 	public Block getBlock() { return Block.getBlockFromName( getName() ); }
 	public int getId() { return Block.getIdFromBlock( getBlock() ); }
 	public ItemStack getItemStack() { return new ItemStack( getBlock(), 1, getMeta() ); }
@@ -103,7 +103,7 @@ public class OreInfo implements Comparable<OreInfo>
 		}
 	}
 
-// Config
+	// Config
 	public void addToConfig( ConfigCategory parent )
 	{
 		ConfigCategory cat = new ConfigCategory( getName() + ":" + meta, parent);
@@ -113,7 +113,7 @@ public class OreInfo implements Comparable<OreInfo>
 		cat.put("green", new Property("green", "" + color[1], Property.Type.INTEGER));
 		cat.put("blue", new Property("blue", "" + color[2], Property.Type.INTEGER));
 		cat.put("enabled", new Property("enabled", "" + draw, Property.Type.BOOLEAN));
-		cat.put("useoredict", new Property("useoredict", "" + useOredict, Property.Type.BOOLEAN));
+		cat.put("useoredict", new Property("useoredict", "" + useOreDict, Property.Type.BOOLEAN));
 		cat.setPropertyOrder( ConfigHandler.ORDER );
 	}
 
@@ -130,13 +130,12 @@ public class OreInfo implements Comparable<OreInfo>
 		return new OreInfo( name, meta, new int[] {red, green, blue}, draw, useOredict );
 	}
 
-	public static int clampColor( int c )
+	private static int clampColor(int c)
 	{
 		return c < 0 ? 0 : c > 255 ? 255 : c;
 	}
 
-
-// Comparable Interfaces
+	// Comparable Interfaces
 	@Override
 	public int hashCode()
 	{

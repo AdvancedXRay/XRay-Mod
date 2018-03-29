@@ -6,6 +6,8 @@ import net.minecraft.client.gui.GuiButton;
 /**
  * Created by MiKeY on 08/07/17.
  */
+
+// TODO: refactor / remove this and merge it into page handler
 public class HelperGuiList {
 
     public int id;

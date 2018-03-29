@@ -30,10 +30,11 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(modid= Reference.MOD_ID, name= Reference.MOD_NAME, version=Reference.MOD_VERSION /*guiFactory = Reference.GUI_FACTORY*/)
 public class XRay
-{public static Set<BlockId> lst = new HashSet();
+{
+	public static Set<BlockId> lst = new HashSet();
 
 	public static ArrayList<OreInfo> blockList = new ArrayList<>();
-        private static Minecraft mc = Minecraft.getMinecraft();
+	private static Minecraft mc = Minecraft.getMinecraft();
 
 	// Config settings
 	public static Configuration config;
@@ -84,23 +85,16 @@ public class XRay
 		for ( Block block : ForgeRegistries.BLOCKS ) {
 			NonNullList<ItemStack> subBlocks = NonNullList.create();
 			block.getSubBlocks( block.getCreativeTabToDisplayOn(), subBlocks );
-			if ( !Blocks.AIR.equals( block ) ) // avoids troubles
-				for( ItemStack subBlock : subBlocks ) {
-					String name;
-					int meta;
-					if (subBlock.isEmpty()) // Funny blocks like liquids and things that don't give itemStacks
-					{
-						name = block.getRegistryName().toString();
-						meta = 0;
-					}
-					else
-					{
-						name = subBlock.getItem().getRegistryName().toString();
-						meta = subBlock.getItemDamage();
-					}
-					if ( Block.getBlockFromName(name) != null ) // some blocks like minecraft:banner return null and break everything
-						blockList.add( new OreInfo( name, meta ) );
-				}
+			if ( Blocks.AIR.equals( block ) )
+				continue; // avoids troubles
+
+			for( ItemStack subBlock : subBlocks ) {
+				String name = subBlock.isEmpty() ? block.getRegistryName().toString() : subBlock.getItem().getRegistryName().toString();
+				int meta	= subBlock.isEmpty() ? 0 : subBlock.getItemDamage();
+
+				if ( Block.getBlockFromName(name) != null ) // some blocks like minecraft:banner return null and break everything
+					blockList.add( new OreInfo( name, meta ) );
+			}
 		}
 		proxy.postInit( event );
 	}
