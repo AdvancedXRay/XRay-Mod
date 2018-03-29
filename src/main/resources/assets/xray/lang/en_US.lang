@@ -19,7 +19,7 @@ xray.input.add=Add Block
 xray.input.add_hand=Add Block in hand
 xray.input.add_look=Add Looking at
 xray.input.distance=Distance
-xray.input.change_meta=Change Meta
+xray.input.toggle_oredict=Use Dictionary
 
 xray.title.config=Configure Block
 xray.title.edit=Edit Block

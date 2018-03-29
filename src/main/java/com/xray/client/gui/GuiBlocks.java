@@ -1,7 +1,7 @@
 package com.xray.client.gui;
 
 import com.xray.common.XRay;
-import com.xray.client.gui.helper.HelperBlock;
+import com.xray.common.reference.OreInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -17,10 +17,12 @@ import java.util.ArrayList;
 public class GuiBlocks extends GuiContainer {
     private RenderItem render;
     private GuiBlocksList blockList;
-    private ArrayList<HelperBlock> blocks = new ArrayList<>();
+    private ArrayList<OreInfo> blocks = new ArrayList<>();
     private GuiTextField search;
     private String lastSearched = "";
     private int selected = -1;
+
+    private static final int BUTTON_CANCEL = 0;
 
     GuiBlocks() {
         super(false);
@@ -50,7 +52,7 @@ public class GuiBlocks extends GuiContainer {
         search.setFocused(true);
         search.setCanLoseFocus(true);
 
-        this.buttonList.add( new GuiButton( 0, width / 2 +43, height / 2 + 84, 60, 20, I18n.format("xray.single.cancel")) );
+        this.buttonList.add( new GuiButton( BUTTON_CANCEL, width / 2 +43, height / 2 + 84, 60, 20, I18n.format("xray.single.cancel")) );
     }
 
     @Override
@@ -58,7 +60,7 @@ public class GuiBlocks extends GuiContainer {
     {
         switch(button.id)
         {
-            case 0: // Cancel
+            case BUTTON_CANCEL:
                 mc.player.closeScreen();
                 mc.displayGuiScreen( new GuiList() );
                 break;
@@ -86,9 +88,10 @@ public class GuiBlocks extends GuiContainer {
 
     private void reloadBlocks() {
         blocks = new ArrayList<>();
-        ArrayList<HelperBlock> tmpBlocks = new ArrayList<>();
-        for( HelperBlock block : XRay.blockList ) {
-            if( block.getName().toLowerCase().contains( search.getText().toLowerCase() ) )
+        ArrayList<OreInfo> tmpBlocks = new ArrayList<>();
+        for( OreInfo block : XRay.blockList ) {
+            if( block.getName().toLowerCase().contains( search.getText().toLowerCase() )
+		    || block.getDisplayName().toLowerCase().contains( search.getText().toLowerCase() ) )
                 tmpBlocks.add(block);
         }
         blocks = tmpBlocks;
@@ -112,7 +115,7 @@ public class GuiBlocks extends GuiContainer {
         this.blockList.handleMouseInput(x, y);
     }
 
-    private void setBlocks(ArrayList<HelperBlock> blocks) {
+    private void setBlocks(ArrayList<OreInfo> blocks) {
         this.blocks = blocks;
     }
 

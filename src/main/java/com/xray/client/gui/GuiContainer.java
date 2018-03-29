@@ -16,8 +16,6 @@ import java.io.IOException;
  */
 public class GuiContainer extends GuiScreen {
 
-    private boolean hasTitle = false;
-    private String title = "";
     private boolean hasSide = false;
     private String sideTitle = "";
     private int backgroundWidth = 229;
