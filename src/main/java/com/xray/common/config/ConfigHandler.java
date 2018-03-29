@@ -91,6 +91,8 @@ public class ConfigHandler
 		XRay.config.save();
 	}
 
+	// TODO: Remove by version 2.0, this will be unneeded by that point, if we detect and old config
+	// TODO: we should remove it and start again, with the addition of mods this will likely be the smartest move
 	private static Collection<OreInfo> parseOldConfig( String version )
 	{
 		Collection<OreInfo> ores = new HashSet();
