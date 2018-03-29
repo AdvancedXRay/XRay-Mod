@@ -15,6 +15,7 @@ xray.color.blue=Bleu
 xray.input.gui=Nom GUI
 xray.input.add=Ajouter un minerai
 xray.input.distance=Distance
+xray.input.toggle_oredict=Substitutions
 
 xray.title.config=Configurer le bloc
 xray.title.edit=Modifier le bloc

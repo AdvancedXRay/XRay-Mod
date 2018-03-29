@@ -1,31 +1,25 @@
 package com.xray.client.gui;
 
-import com.xray.client.gui.helper.HelperBlock;
-import com.xray.client.xray.XrayController;
 import com.xray.common.reference.OreInfo;
-import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextComponentString;
-import org.apache.commons.lang3.math.NumberUtils;
 
 import java.io.IOException;
 
 public class GuiChangeMeta extends GuiContainer {
 
-    private HelperBlock selectedBlock;
     private OreInfo info;
     private GuiTextField oreMeta;
 
-    GuiChangeMeta(HelperBlock selectedBlock, OreInfo info) {
+    private static final int BUTTON_SAVE = 2;
+    private static final int BUTTON_CANCEL = 1;
+
+    GuiChangeMeta(OreInfo info) {
         super(false);
         setSize( 218, 108);
 
-        this.selectedBlock = selectedBlock;
         this.info = info;
     }
 
@@ -33,10 +27,10 @@ public class GuiChangeMeta extends GuiContainer {
     public void initGui()
     {
         oreMeta = new GuiTextField( 1, this.fontRenderer, width / 2 - 95 ,  height / 2 - 5, 190, 20 );
-        oreMeta.setText( String.valueOf(info.getMeta()) );
+        oreMeta.setText( "" + info.getMeta() );// TODO temp fix
 
-        this.buttonList.add( new GuiButton( 2, (width / 2) - 95, height / 2 + 20, 119, 20, I18n.format("xray.single.save") ));
-        this.buttonList.add( new GuiButton( 1, width / 2 + 26, height / 2 + 20, 70, 20, I18n.format("xray.single.cancel") ) ); // Cancel button
+        this.buttonList.add( new GuiButton( BUTTON_SAVE, (width / 2) - 95, height / 2 + 20, 119, 20, I18n.format("xray.single.save") ));
+        this.buttonList.add( new GuiButton( BUTTON_CANCEL, width / 2 + 26, height / 2 + 20, 70, 20, I18n.format("xray.single.cancel") ) ); // Cancel button
     }
 
     @Override
@@ -44,12 +38,13 @@ public class GuiChangeMeta extends GuiContainer {
     {
         switch(button.id)
         {
-            case 1: // Cancel
+            case BUTTON_CANCEL:
                 mc.player.closeScreen();
-                mc.displayGuiScreen( new GuiEditOre( this.info, this.selectedBlock ) );
+                mc.displayGuiScreen( new GuiEditOre( this.info ) );
                 break;
 
-            case 2: // edit meta
+            case BUTTON_SAVE: // edit meta
+		    /* TODO
                 if( !oreMeta.getText().isEmpty() && NumberUtils.isDigits( oreMeta.getText() )) {
 
                     int newMeta = Integer.valueOf( oreMeta.getText() );
@@ -62,10 +57,10 @@ public class GuiChangeMeta extends GuiContainer {
                     // Hacky way to check if our index exists in our subBlocks
                     try {
                         ItemStack stack = tmpStack.get( newMeta );
-                        XrayController.update(this.info, this.info.displayName, this.info.color, newMeta);
+                        XRayController.searchList.setOreColor( info.getName(), info.color );
 
                         // Update the selected block so we can give the item back to the edit UI
-                        this.info.meta = newMeta;
+                        //this.info.meta = newMeta; //TODO fix
 
                         // This could likely just be reconstructed but for now lets just edit the original
                         this.selectedBlock.setBlock( Block.getBlockFromItem( stack.getItem() ) );
@@ -81,6 +76,7 @@ public class GuiChangeMeta extends GuiContainer {
                 // No matter what close the UI and start again. Otherwise people can't see that an error may have happened
                 mc.player.closeScreen();
                 mc.displayGuiScreen( new GuiEditOre( this.info, this.selectedBlock ) );
+*/
                 break;
 
             default:
@@ -107,12 +103,12 @@ public class GuiChangeMeta extends GuiContainer {
     public void drawScreen( int x, int y, float f )
     {
         super.drawScreen(x, y, f);
-        getFontRender().drawStringWithShadow(this.selectedBlock.getName(), width / 2 - 95, height / 2 - 27, 0xffffff);
+        getFontRender().drawStringWithShadow(info.getName(), width / 2 - 95, height / 2 - 27, 0xffffff);
 
         oreMeta.drawTextBox();
 
         RenderHelper.enableGUIStandardItemLighting();
-        this.itemRender.renderItemAndEffectIntoGUI( this.selectedBlock.getItemStack(), width / 2 + 79, height / 2 - 40 );
+        this.itemRender.renderItemAndEffectIntoGUI( info.getItemStack(), width / 2 + 79, height / 2 - 40 );
         RenderHelper.disableStandardItemLighting();
     }
 

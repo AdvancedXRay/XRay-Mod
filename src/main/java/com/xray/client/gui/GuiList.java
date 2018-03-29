@@ -1,7 +1,6 @@
 package com.xray.client.gui;
 
 import com.xray.client.xray.XrayController;
-import com.xray.client.gui.helper.HelperBlock;
 import com.xray.client.gui.helper.HelperGuiList;
 import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
@@ -14,7 +13,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 
@@ -24,11 +22,19 @@ import java.util.List;
 
 public class GuiList extends GuiContainer
 {
-	private List<HelperGuiList> listHelper = new ArrayList<>();
-	private List<HelperGuiList> renderList = new ArrayList<>();
+	private final List<HelperGuiList> listHelper = new ArrayList<>();
+	private final List<HelperGuiList> renderList = new ArrayList<>();
 	private int pageCurrent, pageMax = 0;
 
 	private GuiButton distButtons;
+	private static final int BUTTON_RADIUS = 0;
+	private static final int BUTTON_NEXT = 2;
+	private static final int BUTTON_PREVIOUS = 3;
+	private static final int BUTTON_ADD_BLOCK = 1;
+	private static final int BUTTON_ADD_HAND = 4;
+	private static final int BUTTON_ADD_LOOK = 5;
+	private static final int BUTTON_CAVE_FINDER = 1500;
+	private static final int BUTTON_CLOSE = 6;
 
 	public GuiList() {
 		super(true);
@@ -43,7 +49,7 @@ public class GuiList extends GuiContainer
 		this.renderList.clear();
 		int x = width / 2 - 140, y = height / 2 - 106, count = 0, page = 0;
 
-		for( OreInfo ore : XrayController.searchList ) {
+		for( OreInfo ore : XrayController.searchList.getOres() ) {
 			if( count % 9 == 0 && count != 0 )
 			{
 				page++;
@@ -68,16 +74,16 @@ public class GuiList extends GuiContainer
 		}
 
 		GuiButton aNextButton, aPrevButton;
-		this.buttonList.add( distButtons = new GuiButton(0, (width / 2) - 108, height / 2 + 86, 140, 20, I18n.format("xray.input.distance")+": "+ String.valueOf(XRay.distNumbers[XRay.currentDist])) ); // Static button for printing the ore dictionary / searchList.
-		this.buttonList.add( aNextButton = new GuiButton(2, width / 2 + 35, height / 2 + 86, 30, 20, ">") );
-		this.buttonList.add( aPrevButton = new GuiButton(3, width / 2 - 140, height / 2 + 86, 30, 20, "<") );
+		this.buttonList.add( distButtons = new GuiButton(BUTTON_RADIUS, (width / 2) - 108, height / 2 + 86, 140, 20, I18n.format("xray.input.distance")+": "+ XrayController.getRadius()) );
+		this.buttonList.add( aNextButton = new GuiButton(BUTTON_NEXT, width / 2 + 35, height / 2 + 86, 30, 20, ">") );
+		this.buttonList.add( aPrevButton = new GuiButton(BUTTON_PREVIOUS, width / 2 - 140, height / 2 + 86, 30, 20, "<") );
 
 		// side bar buttons
-		this.buttonList.add( new GuiButton(1, (width / 2) + 78, height / 2 - 60, 120, 20, I18n.format("xray.input.add") ) );
-		this.buttonList.add( new GuiButton(4, width / 2 + 78, height / 2 - 38, 120, 20, I18n.format("xray.input.add_hand") ) );
-		this.buttonList.add( new GuiButton(5, width / 2 + 78, height / 2 - 16, 120, 20, I18n.format("xray.input.add_look") ) );
-		this.buttonList.add( new GuiButton(1500, width / 2 + 78, height / 2 + 5, 120, 20, "Cave Finder") );
-		this.buttonList.add( new GuiButton(6, width / 2 + 78, height / 2 + 58, 120, 20, I18n.format("xray.single.close") ) );
+		this.buttonList.add( new GuiButton(BUTTON_ADD_BLOCK, (width / 2) + 78, height / 2 - 60, 120, 20, I18n.format("xray.input.add") ) );
+		this.buttonList.add( new GuiButton(BUTTON_ADD_HAND, width / 2 + 78, height / 2 - 38, 120, 20, I18n.format("xray.input.add_hand") ) );
+		this.buttonList.add( new GuiButton(BUTTON_ADD_LOOK, width / 2 + 78, height / 2 - 16, 120, 20, I18n.format("xray.input.add_look") ) );
+		this.buttonList.add( new GuiButton(BUTTON_CAVE_FINDER, width / 2 + 78, height / 2 + 5, 120, 20, "Cave Finder") );
+		this.buttonList.add( new GuiButton(BUTTON_CLOSE, width / 2 + 78, height / 2 + 58, 120, 20, I18n.format("xray.single.close") ) );
 
         if( pageMax < 1 )
         {
@@ -99,57 +105,45 @@ public class GuiList extends GuiContainer
 		// Called on left click of GuiButton
 		switch(button.id)
 		{
-			case 0: // Distance Button
-				if (XRay.currentDist < XRay.distNumbers.length - 1)
-					XRay.currentDist++;
-				else
-					XRay.currentDist = 0;
-
-				XrayController.requestBlockFinder( true );
-				ConfigHandler.update("searchdist", false);
+			case BUTTON_RADIUS:
+				XrayController.incrementCurrentDist();
 				break;
 
-			case 1: // New Ore button
+			case BUTTON_ADD_BLOCK:
 				mc.player.closeScreen();
 				mc.displayGuiScreen( new GuiBlocks() );
 				break;
 
-			case 2:
+			case BUTTON_NEXT:
 				if( pageCurrent < pageMax )
 					pageCurrent ++;
 				break;
 
-			case 3:
+			case BUTTON_PREVIOUS:
 				if( pageCurrent > 0 )
 			  		pageCurrent --;
 				break;
 
-			case 1500:
+			case BUTTON_CAVE_FINDER:
 				mc.player.closeScreen();
 				XrayController.toggleDrawCaves();
-				System.out.println(XrayController.drawCaves());
+				XRay.logger.debug( "Draw caves: " + XrayController.drawCaves() );
 				break;
 
-			case 4:
+			case BUTTON_ADD_HAND:
 				mc.player.closeScreen();
 				ItemStack handItem = mc.player.getHeldItem(EnumHand.MAIN_HAND);
+				OreInfo handBlock = null;
 				// Check if the hand item is a block or not
 				if(!(handItem.getItem() instanceof ItemBlock)) {
 					mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.invalid_hand", handItem.getDisplayName()) ));
 					return;
 				}
-
-				// create a selected block from main hand item
-				HelperBlock handBlock = new HelperBlock(handItem.getDisplayName(),
-						Block.getBlockFromItem(handItem.getItem()),
-						handItem,
-						handItem.getItem(),
-						handItem.getItem().getRegistryName());
-
+				handBlock = new OreInfo( handItem );
 				mc.displayGuiScreen( new GuiAdd(handBlock) );
 				break;
 
-			case 5:
+			case BUTTON_ADD_LOOK:
 				mc.player.closeScreen();
 				try {
 					RayTraceResult ray = mc.player.rayTrace(100, 20);
@@ -158,20 +152,14 @@ public class GuiList extends GuiContainer
 						Block lookingAt = mc.world.getBlockState(ray.getBlockPos()).getBlock();
 
 						ItemStack lookingStack = lookingAt.getPickBlock(state, ray, mc.world, ray.getBlockPos(), mc.player);
+						OreInfo seeBlock = null;
 
 						// Double super check that we've got ourselves a block
 						if(!(lookingStack.getItem() instanceof ItemBlock)) {
 							mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.invalid_hand", lookingStack.getDisplayName()) ));
 							return;
 						}
-
-						// create a selected block from main hand item
-						HelperBlock seeBlock = new HelperBlock(lookingStack.getDisplayName(),
-								Block.getBlockFromItem(lookingStack.getItem()),
-								lookingStack,
-								lookingStack.getItem(),
-								lookingStack.getItem().getRegistryName());
-
+						seeBlock = new OreInfo( lookingStack );
 						mc.displayGuiScreen( new GuiAdd(seeBlock) );
 					}
 					else
@@ -183,19 +171,16 @@ public class GuiList extends GuiContainer
 
 				break;
 
-			case 6:
+			case BUTTON_CLOSE:
 				mc.player.closeScreen();
 				break;
 
 			default:
 				for ( HelperGuiList list : this.renderList ) {
 					if( list.getButton().id == button.id ) {
-						list.getOre().draw = !list.getOre().draw;
-						ConfigHandler.update( list.getOre().getCatName(), list.getOre().draw );
-						XrayController.requestBlockFinder( true );
+						XrayController.searchList.toggleOreDrawable(list.getOre()); // no need to update list.getOre() as it is referenced in searchList
 					}
 				}
-			break;
 		}
 
 		this.initGui();
@@ -211,20 +196,14 @@ public class GuiList extends GuiContainer
 			for (HelperGuiList list : this.renderList) {
 				if (list.getButton().mousePressed(this.mc, x, y)) {
 					mc.player.closeScreen();
-					mc.displayGuiScreen(new GuiEditOre(list.getOre(), null));
+					mc.displayGuiScreen(new GuiEditOre(list.getOre()));
 				}
 			}
 
-			if( distButtons.mousePressed(this.mc, x, y) ) {
-
-				if (XRay.currentDist > 0)
-					XRay.currentDist--;
-				else
-					XRay.currentDist = XRay.distNumbers.length - 1;
-
-				distButtons.displayString = I18n.format("xray.input.distance")+": "+ String.valueOf(XRay.distNumbers[XRay.currentDist]);
-				XrayController.requestBlockFinder( true );
-				ConfigHandler.update("searchdist", false);
+			if( distButtons.mousePressed(this.mc, x, y) )
+			{
+				XrayController.decrementCurrentDist();
+				distButtons.displayString = I18n.format("xray.input.distance")+": "+ XrayController.getRadius();
 			}
 		}
 	}
@@ -236,15 +215,22 @@ public class GuiList extends GuiContainer
 
 		RenderHelper.enableGUIStandardItemLighting();
 		for ( HelperGuiList item : this.renderList ) {
-			NonNullList<ItemStack> tmpStack = NonNullList.create();
-			Block tmpBlock = Block.getBlockById(item.ore.getId());
-			tmpBlock.getSubBlocks(tmpBlock.getCreativeTabToDisplayOn(), tmpStack);
-
 			try {
-				this.itemRender.renderItemAndEffectIntoGUI(tmpStack.get(item.ore.getMeta()), item.x + 2, item.y + 2);
-			} catch ( IndexOutOfBoundsException ignored ) {
+				this.itemRender.renderItemAndEffectIntoGUI( item.getOre().getItemStack(), item.x + 2, item.y + 2 );
+			} catch ( Exception ignored ) {
 			}
 		}
 		RenderHelper.disableStandardItemLighting();
+	}
+
+	@Override
+	public void onGuiClosed()
+	{
+		// First, save all changes made to the config
+		ConfigHandler.syncConfig();
+		XRay.config.save();
+
+		// And force a scan
+		XrayController.requestBlockFinder( true );
 	}
 }

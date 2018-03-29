@@ -16,7 +16,7 @@ public class HelperBlock {
     private Item item;
     private ResourceLocation resourceName;
 
-    public HelperBlock(String name, Block block, ItemStack itemStack, Item item, ResourceLocation resourceName) {
+    public HelperBlock(Object XXX,String name, Block block, ItemStack itemStack, Item item, ResourceLocation resourceName) {
         this.name = name;
         this.block = block;
         this.itemStack = itemStack;

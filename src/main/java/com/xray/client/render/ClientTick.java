@@ -1,16 +1,14 @@
 package com.xray.client.render;
 
 import com.xray.client.xray.XrayController;
-
+import com.xray.common.reference.BlockId;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.state.IBlockState;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import com.xray.common.reference.BlockInfo;
-import com.xray.common.reference.OreInfo;
 import com.xray.common.utils.WorldRegion;
 import java.util.Map;
 import net.minecraft.util.math.BlockPos;
@@ -28,23 +26,23 @@ public class ClientTick implements Runnable
 		box = region;
 	}
 
-        @Override
+	@Override
 	public void run() // Our thread code for finding ores near the player.
 	{
-                blockFinder();
+		blockFinder();
 	}
 
 	/**
 	 * Use XrayController.requestBlockFinder() to trigger a scan.
 	 */
 	private void blockFinder() {
-		Map<OreInfo, OreInfo> ores = XrayController.getDrawableOres();
+		Map<BlockId, int[]> ores = XrayController.searchList.getDrawableBlocks();
 		if ( ores.isEmpty() )
 			return; // no need to scan the region if there's nothing to find
 
 		final World world = mc.world;
 		final List<BlockInfo> temp = new ArrayList<>();
-		final OreInfo buff = new OreInfo( 0, 0 ); // Search key for the map
+		BlockId key; // Search key for the map
 		int lowBoundX, highBoundX, lowBoundY, highBoundY, lowBoundZ, highBoundZ;
 
 		// Loop on chunks (x, z)
@@ -85,19 +83,11 @@ public class ClientTick implements Runnable
 					for ( int i = lowBoundX; i <= highBoundX; i++ ) {
 						for ( int j = lowBoundY; j <= highBoundY; j++ ) {
 							for ( int k = lowBoundZ; k <= highBoundZ; k++ ) {
-								IBlockState state = ebs.get( i, j, k ); // this one seems a lot faster than asking the world directly
+								key = BlockId.fromBlockState( ebs.get(i, j, k) );
 
-								Block block = state.getBlock();
-								buff.id = Block.getIdFromBlock( block );      // prepare the search key according to OreInfo.equals()
-								buff.meta = block.getMetaFromState( state );  // and OreInfo.hashCode()
-
-								if (block.hasTileEntity( state )) {
-									buff.meta = 0;
-								}
-
-								if (ores.containsKey( buff )) // The reason for using Set/Map
+								if (ores.containsKey( key )) // The reason for using Set/Map
 								{
-									temp.add( new BlockInfo(x + i, y + j, z + k, ores.get(buff).color) ); // Add this block to the temp list using world coordinates
+									temp.add( new BlockInfo(x + i, y + j, z + k, ores.get(key)) ); // Add this block to the temp list using world coordinates
 								}
 							}
 						}
@@ -121,17 +111,12 @@ public class ClientTick implements Runnable
 	{
 		if ( !XrayController.drawOres() ) return; // just pass
 
-		// Let's start with getting data (id, meta)
-		Block block = state.getBlock();
-		int id = Block.getIdFromBlock( block );
-		int meta = block.getMetaFromState( state );
-
 		// Let's see if the block to check is an ore we monitor
-		OreInfo ore = XrayController.getDrawableOres().get( new OreInfo(id, meta) );
-		if ( ore != null ) // it's a block we are monitoring
+		int[] color = XrayController.searchList.getDrawableBlocks().get( BlockId.fromBlockState(state) );
+		if ( color != null ) // it's a block we are monitoring
 		{
 			if ( add )	// the block was added to the world, let's add it to the drawing buffer
-				XrayRenderer.ores.add( new BlockInfo(pos, ore.color) );
+				XrayRenderer.ores.add( new BlockInfo(pos, color) );
 			else		// it was removed from the world, let's remove it from the buffer as well
 				XrayRenderer.ores.remove( new BlockInfo(pos, null) );
 		}

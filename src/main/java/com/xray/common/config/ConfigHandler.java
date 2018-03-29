@@ -4,154 +4,126 @@ import com.xray.client.xray.XrayController;
 import com.xray.common.XRay;
 import com.xray.common.reference.OreInfo;
 import com.xray.common.reference.Reference;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.File;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.config.Property;
 
 public class ConfigHandler
 {
-	private static Configuration config = null; // Save the config file handle for use later.
-	private static Minecraft mc = Minecraft.getMinecraft();
+	public static final String CATEGORY_PREFIX_ORES = "ores";
+	public static final List<String> ORDER = new ArrayList<String>() {{ // Sort properties in config file
+		add("name");
+		add("meta");
+		add("red");
+		add("green");
+		add("blue");
+		add("enabled");
+		add("useoredict");
+	}};
 
-	@SubscribeEvent
-	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-		if( event.getModID().equals(Reference.MOD_ID) )
-			SyncConfig( XRay.config );
+	public static void init(File suggestedConfig) {
+		// Creates the config
+		XRay.config = new Configuration( suggestedConfig, Reference.CONFIG_VERSION );
+		XRay.config.load();
 	}
 
-	public static void init(File suggestedConfig, Configuration config) {
-		config = new Configuration( suggestedConfig );
-		config.load();
+	public static void storeCurrentDist()
+	{
+		XRay.config.getCategory( Configuration.CATEGORY_GENERAL ).put("searchdist", new Property("searchdist", "" + XrayController.getCurrentDist(), Property.Type.INTEGER) );
+	}
 
-		if( config.getCategoryNames().isEmpty() )
+	public static void syncConfig()
+	{
+		ConfigCategory oresCat = XRay.config.getCategory( CATEGORY_PREFIX_ORES );
+		XRay.config.removeCategory(oresCat); // Cannot rely on ConfigCategory.clear()
+		oresCat = XRay.config.getCategory( CATEGORY_PREFIX_ORES );
+
+		for ( OreInfo ore : XrayController.searchList.getOres() )
 		{
-			System.out.println("[XRay] "+ I18n.format("xray.message.config_missing"));
-			DefaultConfig.create( config );
-			config.save();
+			ore.addToConfig(oresCat);
 		}
-
-		System.out.println(I18n.format("xray.debug.init"));
-		SyncConfig(config);
 	}
 
+	public static void setup()
+	{
+		XrayController.setCurrentDist( XRay.config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0).getInt() );
+		List<OreInfo> oresToAdd = new ArrayList<>();
 
-	private static void SyncConfig( Configuration config ) {
-//		config.setCategoryComment(Configuration.CATEGORY_GENERAL, "Use the in-game config editor.");
+		String definedVersion = XRay.config.getDefinedConfigVersion();
+		String version = XRay.config.getLoadedConfigVersion();
 
-
-		if( config.hasChanged() )
-			config.save();
-	}
-
-	public static void setup(FMLPreInitializationEvent event ) {
-		config = new Configuration( event.getSuggestedConfigurationFile() );
-		config.load();
-		XRay.currentDist = config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0).getInt(); // Get our search distance.
-
-		for( String category : config.getCategoryNames() ) // Iterate through each category in our config file.
+		if ( !XRay.config.getCategoryNames().contains("ores") ) // No config file (not that here, version always equals definedVersion ...
 		{
-			ConfigCategory cat = config.getCategory( category );
-
-			if( category.startsWith("ores.") )
+			oresToAdd.addAll( DefaultConfig.DEFAULT_ORES );
+		}
+		else if ( !definedVersion.equals( version ) ) // Old config found
+		{
+			Collection<OreInfo> oresFound = parseOldConfig( version );
+			if ( !oresFound.isEmpty() )
+				oresToAdd.addAll( oresFound );
+			else
+				oresToAdd.addAll( DefaultConfig.DEFAULT_ORES );
+		}
+		else // We have a valid config file
+		{
+			ConfigCategory oresCat = XRay.config.getCategory( "ores" );
+			for ( ConfigCategory oreCat : oresCat.getChildren() )
 			{
-				String name = cat.get("name").getString();
-				int id = cat.get("id").getInt();
-				int meta = cat.get("meta").getInt();
-				int[] color = {cat.get("red").getInt(), cat.get("green").getInt(), cat.get("blue").getInt()};
-				boolean enabled = cat.get("enabled").getBoolean(false);
-
-				XrayController.searchList.add( new OreInfo( name, cat.getName(), name.replaceAll("\\s+", ""), id, meta, color, enabled ) );
+				try { oresToAdd.add( OreInfo.fromConfigCategory( oreCat ) ); }
+				catch (Exception e) // Relying on exceptions is very bad but it saves 400 lines of code
+				{
+					XRay.logger.warn("Invalid or missing parameter in config" );
+				}
 			}
 		}
 
-		config.save();
+		XrayController.searchList.addOres( oresToAdd );
+		syncConfig();
+		XRay.config.save();
 	}
 
-	public static void add( String oreName, Integer id, Integer meta, int[] color ) {
-		config.load();
-		String cleanName = oreName.replaceAll("\\s+", "").toLowerCase();
+	private static Collection<OreInfo> parseOldConfig( String version )
+	{
+		Collection<OreInfo> ores = new HashSet();
 
-		// check if entry exists
-		for( String ignored : config.getCategoryNames() )
+		if ( version == null || version.isEmpty() || "null".equals( version ) ) // No version number (v1.4.0 and before)
 		{
-			if(Objects.equals(config.get("ores." + cleanName, "name", "").getString(), cleanName))
+
+			ConfigCategory oresCat = XRay.config.getCategory( "ores" );
+			for ( ConfigCategory cat : oresCat.getChildren() )
 			{
-				mc.player.sendMessage( new TextComponentString("[XRay] "+ I18n.format("xray.message.block_exists", oreName) ));
-				return;
+				try
+				{
+					Map<String, Property> props = cat.getValues();
+					String disp = props.get("name").getString();
+					int r = props.get("red").getInt();
+					int g = props.get("green").getInt();
+					int b = props.get("blue").getInt();
+					boolean enabled = props.get("enabled").getBoolean();
+					int id = props.get("id").getInt();
+					int meta = props.get("meta").getInt();
+
+					Block block = Block.getBlockById( id );
+					String name = block.getRegistryName().toString();
+					ItemStack stack = new ItemStack(block, 1, meta);
+					if ( !stack.isEmpty() )
+						name = stack.getItem().getRegistryName().toString();
+
+					String nameFound = stack.isEmpty() ? name : stack.getDisplayName();
+					if ( disp.equals(nameFound) )
+						ores.add( new OreInfo(name, meta, new int[]{r, g, b}, enabled, false) );
+				} catch (Exception ignored) {}
 			}
 		}
-
-		for( String category : config.getCategoryNames() )
-		{
-			if( !category.startsWith("ores.") )
-				continue;
-
-			config.get("ores."+cleanName, "name", "").set(oreName);
-			config.get("ores."+cleanName, "enabled", "false").set( true );
-			config.get("ores."+cleanName, "id", "").set( id );
-			config.get("ores."+cleanName, "meta", "").set( meta );
-			config.get("ores."+cleanName, "red", "").set( color[0] );
-			config.get("ores."+cleanName, "green", "").set( color[1] );
-			config.get("ores."+cleanName, "blue", "").set( color[2] );
-		}
-		config.save();
-	}
-
-	// For updating single options
-	public static void update(String string, boolean draw) {
-		if( string.equals("searchdist") ) // Save the new render distance.
-		{
-			config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0).set( XRay.currentDist);
-			config.save();
-			return;
-		}
-
-		for( String category : config.getCategoryNames() ) // Figure out if this is a custom or dictionary ore.
-		{
-			if( config.getCategory( category ).getName().equals(string) )
-				config.get("ores."+string, "enabled", false).set( draw );
-		}
-
-		config.save();
-	}
-
-	public static void updateInfo( OreInfo original, OreInfo newInfo ) {
-		for( String category : config.getCategoryNames() ) // Iterate through each category in our config file.
-		{
-			ConfigCategory cat = config.getCategory( category );
-			if(Objects.equals(cat.getName(), original.getCatName())) {
-				String[] splitCat = category.split("\\.");
-				String catN = splitCat[0]+"."+cat.getName();
-
-				config.get(catN, "red", "").set( newInfo.color[0] );
-				config.get(catN, "green", "").set( newInfo.color[1] );
-				config.get(catN, "blue", "").set( newInfo.color[2] );
-				config.get(catN, "name", "").set( newInfo.displayName );
-				config.get(catN, "meta", "").set( newInfo.meta );
-				break;
-			}
-		}
-
-		config.save();
-	}
-
-	public static void remove( OreInfo original ) {
-		for( String category : config.getCategoryNames() ) {
-			String cleanStr = original.getOreName().toLowerCase();
-			String[] splitCat = category.split("\\.");
-			if( splitCat.length == 2 && splitCat[1].equals( cleanStr ) ) {
-				config.removeCategory( config.getCategory("ores."+cleanStr) );
-				break;
-			}
-		}
-		config.save();
+		return ores;
 	}
 }

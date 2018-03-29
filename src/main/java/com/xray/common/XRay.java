@@ -1,14 +1,12 @@
 package com.xray.common;
 
-import com.xray.client.gui.helper.HelperBlock;
 import com.xray.common.config.ConfigHandler;
 import com.xray.common.proxy.CommonProxy;
+import com.xray.common.reference.BlockId;
+import com.xray.common.reference.OreInfo;
 import com.xray.common.reference.Reference;
-import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -17,22 +15,28 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import org.apache.logging.log4j.Logger;
 
 @Mod(modid= Reference.MOD_ID, name= Reference.MOD_NAME, version=Reference.MOD_VERSION /*guiFactory = Reference.GUI_FACTORY*/)
 public class XRay
-{
+{public static Set<BlockId> lst = new HashSet();
 
-	public static ArrayList<HelperBlock> blockList = new ArrayList<>();
+	public static ArrayList<OreInfo> blockList = new ArrayList<>();
         private static Minecraft mc = Minecraft.getMinecraft();
 
 	// Config settings
 	public static Configuration config;
-    public static int currentDist = 0; // Index for the distNumers array. Default search distance.
 	public static float outlineThickness = 1f;
 	public static float outlineOpacity = 1f;
 
@@ -46,6 +50,8 @@ public class XRay
 	public static final String[] keyBind_descriptions = { I18n.format("xray.config.toggle"), I18n.format("xray.config.open")};
 	public static KeyBinding[] keyBind_keys = null;
 
+	public static Logger logger;
+
 	// The instance of your mod that Forge uses.
 	@Instance(Reference.MOD_ID)
 	public static XRay instance;
@@ -56,38 +62,46 @@ public class XRay
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
-    {
-		config = new Configuration( event.getSuggestedConfigurationFile() );
+	{
+		logger = event.getModLog();
+		ConfigHandler.init(event.getSuggestedConfigurationFile());
 
-		ConfigHandler.init(event.getSuggestedConfigurationFile(), config);
-
-		ConfigHandler.setup( event ); // Read the config file and setup environment.
-        System.out.println(I18n.format("xray.debug.init"));
-
+		logger.debug(I18n.format("xray.debug.init"));
 		proxy.preInit( event );
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event)
-    {
+	{
+		ConfigHandler.setup(); // Read the config file and setup environment.
+
 		proxy.init( event );
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
-    {
+	{
 		for ( Block block : ForgeRegistries.BLOCKS ) {
 			NonNullList<ItemStack> subBlocks = NonNullList.create();
 			block.getSubBlocks( block.getCreativeTabToDisplayOn(), subBlocks );
-			for( ItemStack subBlock : subBlocks ) {
-				if (subBlock.isEmpty())
-					continue;
-
-				Block tmpBlock = Block.getBlockFromItem( subBlock.getItem() );
-				blockList.add( new HelperBlock( subBlock.getDisplayName(), tmpBlock, subBlock, subBlock.getItem(), subBlock.getItem().getRegistryName() ));
-			}
+			if ( !Blocks.AIR.equals( block ) ) // avoids troubles
+				for( ItemStack subBlock : subBlocks ) {
+					String name;
+					int meta;
+					if (subBlock.isEmpty()) // Funny blocks like liquids and things that don't give itemStacks
+					{
+						name = block.getRegistryName().toString();
+						meta = 0;
+					}
+					else
+					{
+						name = subBlock.getItem().getRegistryName().toString();
+						meta = subBlock.getItemDamage();
+					}
+					if ( Block.getBlockFromName(name) != null ) // some blocks like minecraft:banner return null and break everything
+						blockList.add( new OreInfo( name, meta ) );
+				}
 		}
-
 		proxy.postInit( event );
 	}
 
