@@ -1,6 +1,5 @@
 package com.xray.common;
 
-import com.xray.common.config.ConfigHandler;
 import com.xray.common.proxy.CommonProxy;
 import com.xray.common.reference.BlockId;
 import com.xray.common.reference.OreInfo;
@@ -20,12 +19,8 @@ import org.lwjgl.input.Keyboard;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import org.apache.logging.log4j.Logger;
 
 @Mod(modid= Reference.MOD_ID, name= Reference.MOD_NAME, version=Reference.MOD_VERSION /*guiFactory = Reference.GUI_FACTORY*/)
@@ -65,7 +60,6 @@ public class XRay
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		logger = event.getModLog();
-		ConfigHandler.init(event.getSuggestedConfigurationFile());
 
 		logger.debug(I18n.format("xray.debug.init"));
 		proxy.preInit( event );
@@ -80,23 +74,12 @@ public class XRay
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		ConfigHandler.setup(); // Read the config file and setup environment.
-
-		for ( Block block : ForgeRegistries.BLOCKS ) {
-			NonNullList<ItemStack> subBlocks = NonNullList.create();
-			block.getSubBlocks( block.getCreativeTabToDisplayOn(), subBlocks );
-			if ( Blocks.AIR.equals( block ) )
-				continue; // avoids troubles
-
-			for( ItemStack subBlock : subBlocks ) {
-				String name = subBlock.isEmpty() ? block.getRegistryName().toString() : subBlock.getItem().getRegistryName().toString();
-				int meta	= subBlock.isEmpty() ? 0 : subBlock.getItemDamage();
-
-				if ( Block.getBlockFromName(name) != null ) // some blocks like minecraft:banner return null and break everything
-					blockList.add( new OreInfo( name, meta ) );
-			}
-		}
 		proxy.postInit( event );
 	}
 
+	@EventHandler
+	public void onExit(FMLServerStoppingEvent event)
+	{
+		proxy.onExit(event);
+	}
 }
