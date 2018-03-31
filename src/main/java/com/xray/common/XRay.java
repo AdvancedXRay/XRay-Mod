@@ -74,14 +74,14 @@ public class XRay
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		ConfigHandler.setup(); // Read the config file and setup environment.
-
 		proxy.init( event );
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
+		ConfigHandler.setup(); // Read the config file and setup environment.
+
 		for ( Block block : ForgeRegistries.BLOCKS ) {
 			NonNullList<ItemStack> subBlocks = NonNullList.create();
 			block.getSubBlocks( block.getCreativeTabToDisplayOn(), subBlocks );
