@@ -38,14 +38,13 @@ public class XrayController
 		if ( !drawOres ) // enable drawing
 		{
 			XrayRenderer.ores.clear(); // first, clear the buffer
-			drawOres = true; // then, enable drawing
 			executor = Executors.newSingleThreadExecutor();
+			drawOres = true; // then, enable drawing
 			requestBlockFinder( true ); // finally, force a refresh
 		}
 		else // disable drawing
 		{
-			drawOres = false;
-			executor.shutdownNow(); // no need to have a thread pool running if we don't draw ores
+			shutdownExecutor();
 		}
 	}
 	public static int getCurrentDist() { return currentDist; }
@@ -108,5 +107,16 @@ public class XrayController
 			WorldRegion region = new WorldRegion( lastPlayerPos, getRadius() ); // the region to scan for ores
 			task = executor.submit( new ClientTick(region) );
 		}
+	}
+
+	/**
+	 * To be called at least when the game shutsdown
+	 */
+	public static void shutdownExecutor()
+	{
+		// Important. If drawOres is true when a player logs out then logs back in, the next requestBlockFinder will crash
+		drawOres = false;
+		try { executor.shutdownNow(); }
+		catch (Throwable ignore) {}
 	}
 }
