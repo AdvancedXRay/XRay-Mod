@@ -43,6 +43,13 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void init(FMLInitializationEvent event) {
 		super.init(event);
+	}
+
+	@Override
+	public void postInit(FMLPostInitializationEvent event) {
+		super.postInit(event);
+
+		ConfigHandler.setup(); // Read the config file and setup environment.
 
 		for ( Block block : ForgeRegistries.BLOCKS ) {
 			NonNullList<ItemStack> subBlocks = NonNullList.create();
@@ -58,13 +65,6 @@ public class ClientProxy extends CommonProxy
 					XRay.blockList.add( new OreInfo( name, meta ) );
 			}
 		}
-	}
-
-	@Override
-	public void postInit(FMLPostInitializationEvent event) {
-		super.postInit(event);
-
-		ConfigHandler.setup(); // Read the config file and setup environment.
 	}
 
 	@Override
