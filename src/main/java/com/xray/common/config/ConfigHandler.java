@@ -100,7 +100,7 @@ public class ConfigHandler
 		if ( version == null || version.isEmpty() || "null".equals( version ) ) // No version number (v1.4.0 and before)
 		{
 
-			ConfigCategory oresCat = XRay.config.getCategory( "ores" );
+			ConfigCategory oresCat = XRay.config.getCategory( CATEGORY_PREFIX_ORES );
 			for ( ConfigCategory cat : oresCat.getChildren() )
 			{
 				try
