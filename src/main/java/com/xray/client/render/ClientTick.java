@@ -10,6 +10,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import com.xray.common.reference.BlockInfo;
 import com.xray.common.utils.WorldRegion;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -46,7 +48,7 @@ public class ClientTick implements Runnable
 		int lowBoundX, highBoundX, lowBoundY, highBoundY, lowBoundZ, highBoundZ;
 
 		// Loop on chunks (x, z)
-		for ( int chunkX = box.minChunkX; chunkX <= box.maxChunkX; chunkX++ ) // Using bitshift because negative numbers divided by 16 will give a wrong chunk
+		for ( int chunkX = box.minChunkX; chunkX <= box.maxChunkX; chunkX++ )
 		{
 			// Pre-compute the extend bounds on X
 			int x = chunkX << 4; // lowest x coord of the chunk in block/world coordinates
@@ -95,7 +97,13 @@ public class ClientTick implements Runnable
 				}
 			}
 		}
-
+		final BlockPos playerPos = mc.player.getPosition();
+		Collections.sort(temp, new Comparator<BlockInfo>() {
+			@Override
+			public int compare( BlockInfo t, BlockInfo t1 ) {
+				return Double.compare( t1.distanceSq( playerPos ), t.distanceSq( playerPos ) );
+			}
+		});
 		XrayRenderer.ores.clear();
 		XrayRenderer.ores.addAll( temp ); // Add all our found blocks to the XrayRenderer.ores list. To be use by XrayRenderer when drawing.
 	}
