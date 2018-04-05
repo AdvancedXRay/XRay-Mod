@@ -1,22 +1,21 @@
 package com.xray.common.utils;
 
+import com.xray.common.reference.BlockInfo;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import org.lwjgl.opengl.GL11;
 
 /**
  * Created by MiKeY on 29/12/17.
  */
 public class Utils {
 
-    public static void renderBlockBounding(BufferBuilder buffer, float x, float y, float z, int red, int green, int blue, int opacity, boolean isLines) {
+    public static void renderBlockBounding(BufferBuilder buffer, BlockInfo b, int opacity) {
         final float size = 1.0f;
-
-        buffer.begin(
-                (isLines ? GL11.GL_LINES : GL11.GL_QUADS),
-                DefaultVertexFormats.POSITION_COLOR
-        );
+        int red = b.color[0];
+        int green = b.color[1];
+        int blue = b.color[2];
+        int x = b.getX();
+        int y = b.getY();
+        int z = b.getZ();
 
         // TOP
         buffer.pos(x, y + size, z).color(red, green, blue, opacity).endVertex();
@@ -53,8 +52,6 @@ public class Utils {
         // Edge 4
         buffer.pos(x, y, z).color(red, green, blue, opacity).endVertex();
         buffer.pos(x, y + size, z).color(red, green, blue, opacity).endVertex();
-
-        Tessellator.getInstance().draw();
     }
 
 }
