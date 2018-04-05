@@ -30,7 +30,7 @@ public class XrayRenderer
         BufferBuilder buffer = tessellator.getBuffer();
         Profile.BLOCKS.apply(); // Sets GL state for block drawing
 
-        BlockInfo[] temp = new BlockInfo[0];
+        BlockInfo[] temp = new BlockInfo[ores.size()];
         ores.toArray(temp);
 
         buffer.setTranslation( -playerX, -playerY, -playerZ );
