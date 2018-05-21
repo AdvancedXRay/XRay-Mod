@@ -3,7 +3,7 @@
 Minecraft Forge based XRay mod designed to aid players who don't like the ore searching process.
 
 ### Message from the Developer
-Hi Everyone, Lives a bit hectic so this mods gunna be put on standbye but it's looking really positive! I can't wait to get the next release out. So many awesome things have been worked on!
+Hi Everyone, Lifes a bit hectic so this mods gunna be put on standbye but it's looking really positive! I can't wait to get the next release out. So many awesome things have been worked on!
 
 ### Feature:
 - Built using Forge!
