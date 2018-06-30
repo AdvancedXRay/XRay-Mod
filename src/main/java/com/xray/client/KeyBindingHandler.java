@@ -1,14 +1,14 @@
 package com.xray.client;
 
+import com.xray.client.gui.GuiList;
 import com.xray.client.xray.XrayController;
 import com.xray.common.XRay;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
-import com.xray.client.gui.GuiList;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 
 public class KeyBindingHandler
 {
