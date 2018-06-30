@@ -5,14 +5,17 @@ import com.xray.client.gui.helper.HelperGuiList;
 import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
 import com.xray.common.reference.OreInfo;
+import com.xray.common.reference.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 
@@ -217,10 +220,16 @@ public class GuiList extends GuiContainer
 		for ( HelperGuiList item : this.renderList ) {
 			try {
 				this.itemRender.renderItemAndEffectIntoGUI( item.getOre().getItemStack(), item.x + 2, item.y + 2 );
+				this.renderColor(item.x, item.y, item.getOre().getColor());
 			} catch ( Exception ignored ) {
 			}
 		}
 		RenderHelper.disableStandardItemLighting();
+	}
+
+	private void renderColor(int x, int y, int[] color) {
+		mc.renderEngine.bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "circle.png"));
+		GuiContainer.drawTexturedQuadFit(x, y, 8, 8, color);
 	}
 
 	@Override

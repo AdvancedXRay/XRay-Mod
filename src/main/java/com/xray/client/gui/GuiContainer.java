@@ -4,6 +4,7 @@ import com.xray.common.reference.Reference;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
@@ -47,11 +48,15 @@ public class GuiContainer extends GuiScreen {
     }
 
     // this should be moved to some sort of utility package but fuck it :).
-    private static void drawTexturedQuadFit(double x, double y, double width, double height)
+    public static void drawTexturedQuadFit(double x, double y, double width, double height, int[] color)
     {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder tessellate = tessellator.getBuffer();
         tessellate.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+
+        if ( color != null )
+            GlStateManager.color((float) color[0] / 255, (float) color[1] / 255, (float) color[2] / 255, 255f);
+
         tessellate.pos(x + 0, y + height, (double) 0).tex( 0,1).endVertex();
         tessellate.pos(x + width, y + height, (double) 0).tex( 1, 1).endVertex();
         tessellate.pos(x + width, y + 0, (double) 0).tex( 1,0).endVertex();
@@ -67,9 +72,9 @@ public class GuiContainer extends GuiScreen {
 
         if( this.hasSide ) {
             mc.renderEngine.bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "bg.png"));
-            drawTexturedQuadFit(width / 2 + 60, height / 2 -(180/2), 150, 180);
+            drawTexturedQuadFit(width / 2 + 60, height / 2 -(180/2), 150, 180, null);
 
-            drawTexturedQuadFit(width / 2 - 150, height / 2 - 118, this.backgroundWidth, this.backgroundHeight);
+            drawTexturedQuadFit(width / 2 - 150, height / 2 - 118, this.backgroundWidth, this.backgroundHeight, null);
 
             if( hasSideTitle() )
                 fr.drawStringWithShadow(this.sideTitle, width / 2 + 80, height / 2 - 77, 0xffff00);
@@ -78,7 +83,7 @@ public class GuiContainer extends GuiScreen {
 
         if( !this.hasSide ) {
             mc.renderEngine.bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "bg.png"));
-            drawTexturedQuadFit(width / 2 - (this.backgroundWidth / 2) + 1, height / 2 - (this.backgroundHeight / 2), this.backgroundWidth, this.backgroundHeight);
+            drawTexturedQuadFit(width / 2 - (this.backgroundWidth / 2) + 1, height / 2 - (this.backgroundHeight / 2), this.backgroundWidth, this.backgroundHeight, null);
         }
 
         if( hasTitle() ) {
