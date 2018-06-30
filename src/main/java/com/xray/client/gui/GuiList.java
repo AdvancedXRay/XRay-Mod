@@ -82,7 +82,7 @@ public class GuiList extends GuiContainer
 		this.buttonList.add( new GuiButton(BUTTON_ADD_BLOCK, (width / 2) + 78, height / 2 - 60, 120, 20, I18n.format("xray.input.add") ) );
 		this.buttonList.add( new GuiButton(BUTTON_ADD_HAND, width / 2 + 78, height / 2 - 38, 120, 20, I18n.format("xray.input.add_hand") ) );
 		this.buttonList.add( new GuiButton(BUTTON_ADD_LOOK, width / 2 + 78, height / 2 - 16, 120, 20, I18n.format("xray.input.add_look") ) );
-		this.buttonList.add( new GuiButton(BUTTON_CAVE_FINDER, width / 2 + 78, height / 2 + 5, 120, 20, "Cave Finder") );
+//		this.buttonList.add( new GuiButton(BUTTON_CAVE_FINDER, width / 2 + 78, height / 2 + 5, 120, 20, "Cave Finder") );
 		this.buttonList.add( new GuiButton(BUTTON_CLOSE, width / 2 + 78, height / 2 + 58, 120, 20, I18n.format("xray.single.close") ) );
 
         if( pageMax < 1 )
