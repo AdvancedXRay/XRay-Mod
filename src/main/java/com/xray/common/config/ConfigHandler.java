@@ -56,6 +56,10 @@ public class ConfigHandler
 	public static void setup()
 	{
 		XrayController.setCurrentDist( XRay.config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0).getInt() );
+
+		// Overlay
+		XRay.showOverlay = XRay.config.get(Configuration.CATEGORY_GENERAL, "show-overlay", true).getBoolean();
+
 		List<OreInfo> oresToAdd = new ArrayList<>();
 
 		String definedVersion = XRay.config.getDefinedConfigVersion();

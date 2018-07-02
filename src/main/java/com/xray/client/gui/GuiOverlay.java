@@ -1,6 +1,7 @@
 package com.xray.client.gui;
 
 import com.xray.client.xray.XrayController;
+import com.xray.common.XRay;
 import com.xray.common.reference.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -21,7 +22,7 @@ public class GuiOverlay extends Gui {
     public void RenderGameOverlayEvent(RenderGameOverlayEvent.Post event) {
 
         // Draw Indicator
-        if(!XrayController.drawOres())
+        if(!XrayController.drawOres() || !XRay.showOverlay)
             return;
 
         GlStateManager.enableAlpha();
