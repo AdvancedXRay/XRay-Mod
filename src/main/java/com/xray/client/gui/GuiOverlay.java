@@ -1,7 +1,6 @@
 package com.xray.client.gui;
 
 import com.xray.client.xray.XrayController;
-import com.xray.common.XRay;
 import com.xray.common.reference.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
