@@ -10,6 +10,8 @@ xray.single.save=Save
 xray.single.tools=Tools
 xray.single.close=Close
 
+xray.overlay=XRay Active
+
 xray.color.red=Red
 xray.color.green=Green
 xray.color.blue=Blue
