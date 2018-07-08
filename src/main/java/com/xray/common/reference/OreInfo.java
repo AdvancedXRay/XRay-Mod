@@ -70,6 +70,7 @@ public class OreInfo implements Comparable<OreInfo>
 		if ( ores.isEmpty() || ores.get(0).isEmpty() )
 			return null;
 		ItemStack stack = ores.get( 0 );
+
 		return new OreInfo( stack, color, draw, true );
 	}
 

@@ -43,7 +43,7 @@ public class BlockId
 
 	public static Set<BlockId> drawablesFromOreInfo( OreInfo ore )
 	{
-		Set<BlockId> res = new HashSet();
+		Set<BlockId> res = new HashSet<>();
 		if ( !ore.isDrawable() )
 			return res;
 		if ( ore.useOredict() )

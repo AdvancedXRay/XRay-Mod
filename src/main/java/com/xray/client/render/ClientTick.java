@@ -10,8 +10,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import com.xray.common.reference.BlockInfo;
 import com.xray.common.utils.WorldRegion;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Map;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -98,12 +96,7 @@ public class ClientTick implements Runnable
 			}
 		}
 		final BlockPos playerPos = mc.player.getPosition();
-		Collections.sort(temp, new Comparator<BlockInfo>() {
-			@Override
-			public int compare( BlockInfo t, BlockInfo t1 ) {
-				return Double.compare( t1.distanceSq( playerPos ), t.distanceSq( playerPos ) );
-			}
-		});
+		temp.sort((t, t1) -> Double.compare(t1.distanceSq(playerPos), t.distanceSq(playerPos)));
 		XrayRenderer.ores.clear();
 		XrayRenderer.ores.addAll( temp ); // Add all our found blocks to the XrayRenderer.ores list. To be use by XrayRenderer when drawing.
 	}
