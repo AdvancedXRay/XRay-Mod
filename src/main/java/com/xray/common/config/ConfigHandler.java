@@ -63,7 +63,7 @@ public class ConfigHandler
 		List<OreInfo> oresToAdd = new ArrayList<>();
 
 		String definedVersion = XRay.config.getDefinedConfigVersion();
-		String version = XRay.config.getLoadedConfigVersion();
+		String version = XRay.config.getLoadedConfigVersion() == null ? "1.4" : XRay.config.getLoadedConfigVersion();
 
 		if ( !XRay.config.getCategoryNames().contains("ores") ) // No config file (not that here, version always equals definedVersion ...
 		{
