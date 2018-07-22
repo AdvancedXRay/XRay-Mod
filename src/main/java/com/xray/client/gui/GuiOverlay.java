@@ -30,21 +30,14 @@ public class GuiOverlay extends Gui {
             return;
 
         GlStateManager.enableAlpha();
-        GlStateManager.enableBlend();
         GlStateManager.color(0, 255, 0, 30);
         mc.renderEngine.bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "circle.png"));
         drawModalRectWithCustomSizedTexture(5, 5, 0f, 0f, 5, 5, 5, 5);
         GlStateManager.disableAlpha();
-        GlStateManager.disableBlend();
 
-        GlStateManager.pushMatrix();
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         FontRenderer fr = this.mc.fontRenderer;
         int color = Color.getHSBColor(0f, 0f, 1f).getRGB();
         fr.drawStringWithShadow(I18n.format("xray.overlay"), 15, 4, color + (30 << 24));
-        GlStateManager.disableBlend();
-        GlStateManager.popMatrix();
 
     }
 
