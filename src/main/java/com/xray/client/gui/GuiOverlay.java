@@ -35,9 +35,7 @@ public class GuiOverlay extends Gui {
         drawModalRectWithCustomSizedTexture(5, 5, 0f, 0f, 5, 5, 5, 5);
         GlStateManager.disableAlpha();
 
-        FontRenderer fr = this.mc.fontRenderer;
-        int color = Color.getHSBColor(0f, 0f, 1f).getRGB();
-        fr.drawStringWithShadow(I18n.format("xray.overlay"), 15, 4, color + (30 << 24));
+        this.mc.fontRenderer.drawStringWithShadow(I18n.format("xray.overlay"), 15, 4, Color.getHSBColor(0f, 0f, 1f).getRGB() + (30 << 24));
 
     }
 
