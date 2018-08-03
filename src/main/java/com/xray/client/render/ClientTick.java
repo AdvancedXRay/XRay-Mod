@@ -11,6 +11,8 @@ import net.minecraft.client.Minecraft;
 import com.xray.common.reference.BlockInfo;
 import com.xray.common.utils.WorldRegion;
 import java.util.Map;
+
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -83,6 +85,9 @@ public class ClientTick implements Runnable
 					for ( int i = lowBoundX; i <= highBoundX; i++ ) {
 						for ( int j = lowBoundY; j <= highBoundY; j++ ) {
 							for ( int k = lowBoundZ; k <= highBoundZ; k++ ) {
+								if( ebs.get(i, j, k).getBlock() == Blocks.AIR || ebs.get(i, j, k).getBlock() == Blocks.STONE)
+									continue;
+
 								key = BlockId.fromBlockState( ebs.get(i, j, k) );
 
 								if (ores.containsKey( key )) // The reason for using Set/Map
