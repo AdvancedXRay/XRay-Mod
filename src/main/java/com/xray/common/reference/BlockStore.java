@@ -12,7 +12,7 @@ public class BlockStore {
     private List<String> defaultStore = new ArrayList<>();
 
     public boolean putBlock(String key, BlockData data) {
-        if( defaultStore.contains(key) )
+        if( this.defaultStore.contains(key) )
             return false;
 
         if( !this.store.containsKey(key) ) {
@@ -27,5 +27,9 @@ public class BlockStore {
             this.defaultStore.add(key);
 
         return true;
+    }
+
+    public boolean defaultContains(String key) {
+        return this.defaultStore.contains(key);
     }
 }
