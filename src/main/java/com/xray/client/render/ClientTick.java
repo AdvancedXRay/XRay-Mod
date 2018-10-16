@@ -94,14 +94,18 @@ public class ClientTick implements Runnable
 
 								IBlockState state = ebs.get(i, j, k);
 
-								if (XrayController.blockStore.store.containsKey(state.getBlock().getRegistryName())) // The reason for using Set/Map
+								if (XrayController.blockStore.store.containsKey(state.getBlock().getLocalizedName())) // The reason for using Set/Map
 								{
-                                    BlockData data = XrayController.blockStore.store.get(state.getBlock().getRegistryName());
-                                    if( data.isDefault() )
-									    temp.add( new BlockInfo(x + i, y + j, z + k, new int[]{0, 0, 0}) ); // Add this block to the temp list using world coordinates
-								    else {
-								        if( Block.getStateId(data.state) == Block.getStateId(state) )
-                                            temp.add( new BlockInfo(x + i, y + j, z + k, new int[]{0, 0, 0}) ); // Add this block to the temp list using world coordinates
+                                    for (BlockData data:
+                                            XrayController.blockStore.store.get(state.getBlock().getLocalizedName())) {
+
+                                        if (data.isDefault())
+                                            temp.add(new BlockInfo(x + i, y + j, z + k, new int[]{0, 0, 0})); // Add this block to the temp list using world coordinates
+                                        else {
+                                            if (Block.getStateId(data.state) == Block.getStateId(state))
+                                                temp.add(new BlockInfo(x + i, y + j, z + k, new int[]{0, 0, 0})); // Add this block to the temp list using world coordinates
+
+                                        }
                                     }
 								}
 							}

@@ -159,17 +159,20 @@ public class GuiList extends GuiContainer
 						IBlockState state = mc.world.getBlockState(ray.getBlockPos());
 						Block lookingAt = mc.world.getBlockState(ray.getBlockPos()).getBlock();
 
-						XrayController.blockStore.store.put(
-							state.getBlock().getRegistryName(),
+						XrayController.blockStore.putBlock(
+							state.getBlock().getLocalizedName(),
 							new BlockData(state.getBlock().getRegistryName(), new OutlineColor(0, 0, 0), state.getBlock().getDefaultState() == state, state)
 						);
 
 						System.out.println(String.format("Block[%s] added", state.getBlock().getLocalizedName()));
 						System.out.println("-> [Printing Block Store]");
-						for (Map.Entry<ResourceLocation, BlockData> data:
+						for (Map.Entry<String, List<BlockData>> data:
 							 XrayController.blockStore.store.entrySet()) {
 
-							System.out.println(String.format("Store Item key[%s] -> value[%s, %s, %s, %b]", data.getKey().toString(), data.getValue().getName().toString(), data.getValue().getColor().toString(), data.getValue().getState().toString(), data.getValue().isDefault()));
+						    System.out.println(String.format("-> [%s]", data.getKey()));
+						    for (BlockData block : data.getValue() ) {
+							    System.out.println(String.format("---> [%b, %s, %s, %s]", block.isDefault(), block.getState().toString(), block.getColor().getBlue(), block.getName()));
+                            }
 						}
 						ItemStack lookingStack = lookingAt.getPickBlock(state, ray, mc.world, ray.getBlockPos(), mc.player);
 //						OreInfo seeBlock = null;
