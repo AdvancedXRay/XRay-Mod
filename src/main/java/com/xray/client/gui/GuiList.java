@@ -4,7 +4,9 @@ import com.xray.client.xray.XrayController;
 import com.xray.client.gui.helper.HelperGuiList;
 import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
+import com.xray.common.reference.BlockData;
 import com.xray.common.reference.OreInfo;
+import com.xray.common.reference.OutlineColor;
 import com.xray.common.reference.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -22,6 +24,7 @@ import net.minecraft.util.text.TextComponentString;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class GuiList extends GuiContainer
 {
@@ -86,6 +89,7 @@ public class GuiList extends GuiContainer
 		this.buttonList.add( new GuiButton(BUTTON_ADD_HAND, width / 2 + 78, height / 2 - 38, 120, 20, I18n.format("xray.input.add_hand") ) );
 		this.buttonList.add( new GuiButton(BUTTON_ADD_LOOK, width / 2 + 78, height / 2 - 16, 120, 20, I18n.format("xray.input.add_look") ) );
 //		this.buttonList.add( new GuiButton(BUTTON_CAVE_FINDER, width / 2 + 78, height / 2 + 5, 120, 20, "Cave Finder") );
+		this.buttonList.add( new GuiButton(BUTTON_CAVE_FINDER, width / 2 + 78, height / 2 + 5, 120, 20, "Clear block List") );
 		this.buttonList.add( new GuiButton(BUTTON_CLOSE, width / 2 + 78, height / 2 + 58, 120, 20, I18n.format("xray.single.close") ) );
 
         if( pageMax < 1 )
@@ -128,9 +132,10 @@ public class GuiList extends GuiContainer
 				break;
 
 			case BUTTON_CAVE_FINDER:
-				mc.player.closeScreen();
-				XrayController.toggleDrawCaves();
-				XRay.logger.debug( "Draw caves: " + XrayController.drawCaves() );
+//				mc.player.closeScreen();
+//				XrayController.toggleDrawCaves();
+//				XRay.logger.debug( "Draw caves: " + XrayController.drawCaves() );
+				XrayController.blockStore.store.clear();
 				break;
 
 			case BUTTON_ADD_HAND:
@@ -154,16 +159,30 @@ public class GuiList extends GuiContainer
 						IBlockState state = mc.world.getBlockState(ray.getBlockPos());
 						Block lookingAt = mc.world.getBlockState(ray.getBlockPos()).getBlock();
 
-						ItemStack lookingStack = lookingAt.getPickBlock(state, ray, mc.world, ray.getBlockPos(), mc.player);
-						OreInfo seeBlock = null;
+						XrayController.blockStore.store.put(
+							state.getBlock().getRegistryName(),
+							new BlockData(state.getBlock().getRegistryName(), new OutlineColor(0, 0, 0), state.getBlock().getDefaultState() == state, state)
+						);
 
-						// Double super check that we've got ourselves a block
-						if(!(lookingStack.getItem() instanceof ItemBlock)) {
-							mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.invalid_hand", lookingStack.getDisplayName()) ));
-							return;
+						System.out.println(String.format("Block[%s] added", state.getBlock().getLocalizedName()));
+						System.out.println("-> [Printing Block Store]");
+						for (Map.Entry<ResourceLocation, BlockData> data:
+							 XrayController.blockStore.store.entrySet()) {
+
+							System.out.println(String.format("Store Item key[%s] -> value[%s, %s, %s, %b]", data.getKey().toString(), data.getValue().getName().toString(), data.getValue().getColor().toString(), data.getValue().getState().toString(), data.getValue().isDefault()));
 						}
-						seeBlock = new OreInfo( lookingStack );
-						mc.displayGuiScreen( new GuiAdd(seeBlock) );
+						ItemStack lookingStack = lookingAt.getPickBlock(state, ray, mc.world, ray.getBlockPos(), mc.player);
+//						OreInfo seeBlock = null;
+
+//						// Double super check that we've got ourselves a block
+//						if(!(lookingStack.getItem() instanceof ItemBlock)) {
+//							mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.invalid_hand", lookingStack.getDisplayName()) ));
+//							return;
+//						}
+//						seeBlock = new OreInfo( lookingStack );
+//						mc.displayGuiScreen( new GuiAdd(seeBlock) );
+
+						mc.player.closeScreen();
 					}
 					else
 						mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.nothing_infront") ));

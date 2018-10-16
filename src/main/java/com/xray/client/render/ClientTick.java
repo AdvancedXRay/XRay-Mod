@@ -1,10 +1,12 @@
 package com.xray.client.render;
 
 import com.xray.client.xray.XrayController;
+import com.xray.common.reference.BlockData;
 import com.xray.common.reference.BlockId;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 
 import net.minecraft.client.Minecraft;
@@ -88,11 +90,19 @@ public class ClientTick implements Runnable
 								if( ebs.get(i, j, k).getBlock() == Blocks.AIR || ebs.get(i, j, k).getBlock() == Blocks.STONE)
 									continue;
 
-								key = BlockId.fromBlockState( ebs.get(i, j, k) );
+//								key = BlockId.fromBlockState( ebs.get(i, j, k) );
 
-								if (ores.containsKey( key )) // The reason for using Set/Map
+								IBlockState state = ebs.get(i, j, k);
+
+								if (XrayController.blockStore.store.containsKey(state.getBlock().getRegistryName())) // The reason for using Set/Map
 								{
-									temp.add( new BlockInfo(x + i, y + j, z + k, ores.get(key)) ); // Add this block to the temp list using world coordinates
+                                    BlockData data = XrayController.blockStore.store.get(state.getBlock().getRegistryName());
+                                    if( data.isDefault() )
+									    temp.add( new BlockInfo(x + i, y + j, z + k, new int[]{0, 0, 0}) ); // Add this block to the temp list using world coordinates
+								    else {
+								        if( Block.getStateId(data.state) == Block.getStateId(state) )
+                                            temp.add( new BlockInfo(x + i, y + j, z + k, new int[]{0, 0, 0}) ); // Add this block to the temp list using world coordinates
+                                    }
 								}
 							}
 						}

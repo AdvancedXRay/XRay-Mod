@@ -4,6 +4,7 @@ import com.xray.client.render.ClientTick;
 import com.xray.client.render.XrayRenderer;
 import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
+import com.xray.common.reference.BlockStore;
 import com.xray.common.reference.SearchList;
 import com.xray.common.utils.WorldRegion;
 import java.util.concurrent.ExecutorService;
@@ -20,6 +21,8 @@ public class XrayController
 	private static int currentDist = 0; // Index for the distNumers array. Default search distance.
 	public static final SearchList searchList = new SearchList();
 	private static Vec3i lastPlayerPos = null;
+
+	public static BlockStore blockStore = new BlockStore();
 
 	// Thread management
 	private static Future task;
