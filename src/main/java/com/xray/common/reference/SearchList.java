@@ -9,6 +9,7 @@ import java.util.Set;
 /**
  * Data structure to hold the monitored objects (blocks, entities)
  */
+@Deprecated
 public class SearchList
 {
 
