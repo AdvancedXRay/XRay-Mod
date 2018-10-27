@@ -4,19 +4,19 @@ import com.xray.client.xray.XrayController;
 import com.xray.client.gui.helper.HelperGuiList;
 import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
-import com.xray.common.reference.BlockData;
-import com.xray.common.reference.OreInfo;
-import com.xray.common.reference.OutlineColor;
-import com.xray.common.reference.Reference;
+import com.xray.common.reference.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 
@@ -140,14 +140,30 @@ public class GuiList extends GuiContainer
 			case BUTTON_ADD_HAND:
 				mc.player.closeScreen();
 				ItemStack handItem = mc.player.getHeldItem(EnumHand.MAIN_HAND);
-				OreInfo handBlock = null;
+
 				// Check if the hand item is a block or not
 				if(!(handItem.getItem() instanceof ItemBlock)) {
 					mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.invalid_hand", handItem.getDisplayName()) ));
 					return;
 				}
-				handBlock = new OreInfo( handItem );
-				mc.displayGuiScreen( new GuiAdd(handBlock) );
+
+				// Fake placement for correct meta
+				// Might not work on things like a chest...
+				IBlockState sblock = Block.getBlockFromItem(handItem.getItem()).getStateForPlacement(
+						this.mc.world,
+						this.mc.player.getPosition(),
+						EnumFacing.NORTH,
+						0.1f,
+						0.1f,
+						0.1f,
+						handItem.getMetadata(),
+						this.mc.player,
+						this.mc.player.getActiveHand()
+				);
+
+				System.out.println(String.format("%s -> %s", sblock.toString(), sblock.getBlock().toString()));
+
+				mc.displayGuiScreen( new GuiAdd( new BlockItem(handItem.getItem().getRegistryName(), Block.getStateId(sblock), sblock.getBlock())) );
 				break;
 
 			case BUTTON_ADD_LOOK:

@@ -2,6 +2,7 @@ package com.xray.common.utils;
 
 import com.xray.common.reference.BlockInfo;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by MiKeY on 29/12/17.
@@ -53,5 +54,4 @@ public class Utils {
         buffer.pos(x, y, z).color(red, green, blue, opacity).endVertex();
         buffer.pos(x, y + size, z).color(red, green, blue, opacity).endVertex();
     }
-
 }

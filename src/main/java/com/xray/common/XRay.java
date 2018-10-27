@@ -2,6 +2,7 @@ package com.xray.common;
 
 import com.xray.common.proxy.CommonProxy;
 import com.xray.common.reference.BlockId;
+import com.xray.common.reference.BlockItem;
 import com.xray.common.reference.OreInfo;
 import com.xray.common.reference.Reference;
 import net.minecraft.client.resources.I18n;
@@ -28,7 +29,7 @@ public class XRay
 {
 	public static Set<BlockId> lst = new HashSet();
 
-	public static ArrayList<OreInfo> blockList = new ArrayList<>();
+	public static ArrayList<BlockItem> blockList = new ArrayList<>();
 	private static Minecraft mc = Minecraft.getMinecraft();
 
 	// Config settings

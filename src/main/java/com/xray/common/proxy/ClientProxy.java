@@ -7,7 +7,7 @@ import com.xray.client.xray.XrayController;
 import com.xray.client.xray.XrayEventHandler;
 import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
-import com.xray.common.reference.OreInfo;
+import com.xray.common.reference.BlockItem;
 import net.minecraft.block.Block;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
@@ -53,19 +53,21 @@ public class ClientProxy extends CommonProxy
 
 		ConfigHandler.setup(); // Read the config file and setup environment.
 
+		Block tmpBlock;
 		for ( Block block : ForgeRegistries.BLOCKS ) {
 			NonNullList<ItemStack> subBlocks = NonNullList.create();
 			block.getSubBlocks( block.getCreativeTabToDisplayOn(), subBlocks );
 			if ( Blocks.AIR.equals( block ) )
 				continue; // avoids troubles
 
-			for( ItemStack subBlock : subBlocks ) {
-				String name = subBlock.isEmpty() ? block.getRegistryName().toString() : subBlock.getItem().getRegistryName().toString();
-				int meta	= subBlock.isEmpty() ? 0 : subBlock.getItemDamage();
+			if( !subBlocks.isEmpty() ) {
+				for( ItemStack subBlock : subBlocks ) {
+					tmpBlock = Block.getBlockFromItem(subBlock.getItem());
 
-				if ( Block.getBlockFromName(name) != null ) // some blocks like minecraft:banner return null and break everything
-					XRay.blockList.add( new OreInfo( name, meta ) );
-			}
+					XRay.blockList.add(new BlockItem(tmpBlock.getRegistryName(), Block.getStateId(tmpBlock.getBlockState().getBaseState()), tmpBlock));
+				}
+			} else
+				XRay.blockList.add( new BlockItem( block.getRegistryName(), Block.getStateId(block.getDefaultState()), block) );
 		}
 	}
 

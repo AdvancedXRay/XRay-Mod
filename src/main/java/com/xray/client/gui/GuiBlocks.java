@@ -1,12 +1,14 @@
 package com.xray.client.gui;
 
 import com.xray.common.XRay;
+import com.xray.common.reference.BlockItem;
 import com.xray.common.reference.OreInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.resources.I18n;
+import sun.jvm.hotspot.opto.Block;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ import java.util.ArrayList;
 public class GuiBlocks extends GuiContainer {
     private RenderItem render;
     private GuiBlocksList blockList;
-    private ArrayList<OreInfo> blocks = new ArrayList<>();
+    private ArrayList<BlockItem> blocks;
     private GuiTextField search;
     private String lastSearched = "";
     private int selected = -1;
@@ -26,7 +28,7 @@ public class GuiBlocks extends GuiContainer {
 
     GuiBlocks() {
         super(false);
-        setBlocks( XRay.blockList );
+        this.blocks = XRay.blockList;
     }
 
     boolean blockSelected(int index) {
@@ -88,10 +90,9 @@ public class GuiBlocks extends GuiContainer {
 
     private void reloadBlocks() {
         blocks = new ArrayList<>();
-        ArrayList<OreInfo> tmpBlocks = new ArrayList<>();
-        for( OreInfo block : XRay.blockList ) {
-            if( block.getName().toLowerCase().contains( search.getText().toLowerCase() )
-		    || block.getDisplayName().toLowerCase().contains( search.getText().toLowerCase() ) )
+        ArrayList<BlockItem> tmpBlocks = new ArrayList<>();
+        for( BlockItem block : XRay.blockList ) {
+            if( block.getName().toString().contains(search.getText().toLowerCase()) )
                 tmpBlocks.add(block);
         }
         blocks = tmpBlocks;
@@ -108,15 +109,10 @@ public class GuiBlocks extends GuiContainer {
     }
 
     @Override
-    public void mouseClicked( int x, int y, int button ) throws IOException
-    {
-        super.mouseClicked( x, y, button );
-        search.mouseClicked(x, y, button );
+    public void mouseClicked( int x, int y, int button ) throws IOException {
+        super.mouseClicked(x, y, button);
+        search.mouseClicked(x, y, button);
         this.blockList.handleMouseInput(x, y);
-    }
-
-    private void setBlocks(ArrayList<OreInfo> blocks) {
-        this.blocks = blocks;
     }
 
     Minecraft getMinecraftInstance() {

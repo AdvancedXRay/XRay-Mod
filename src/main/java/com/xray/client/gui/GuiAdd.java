@@ -1,6 +1,7 @@
 package com.xray.client.gui;
 
 import com.xray.client.xray.XrayController;
+import com.xray.common.reference.BlockItem;
 import com.xray.common.reference.OreInfo;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
@@ -11,6 +12,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentString;
 
 import java.io.IOException;
@@ -24,10 +26,10 @@ public class GuiAdd extends GuiContainer {
 	private GuiSlider redSlider;
 	private GuiSlider greenSlider;
 	private GuiSlider blueSlider;
-	private OreInfo selectBlock;
+	private BlockItem selectBlock;
 	private boolean oreNameCleared  = false;
 
-	GuiAdd(OreInfo selectedBlock) {
+	GuiAdd(BlockItem selectedBlock) {
 		super(false);
 		this.selectBlock = selectedBlock;
 	}
@@ -48,7 +50,7 @@ public class GuiAdd extends GuiContainer {
 		blueSlider.sliderValue  = 1.0F;
 
 		oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 100 ,  height / 2 - 63, 202, 20 );
-		oreName.setText( this.selectBlock.getDisplayName() );
+		oreName.setText( this.selectBlock.getName().toString() );
 	}
 
 	@Override
@@ -59,9 +61,9 @@ public class GuiAdd extends GuiContainer {
 			case BUTTON_ADD:
 				int[] color = new int[] {(int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255)};
 				mc.player.closeScreen();
-				if ( XrayController.searchList.addOre( new OreInfo( selectBlock.getName(), selectBlock.getMeta(), color, true, false ) ) ) {
-					mc.displayGuiScreen( new GuiList() );
-				}
+//				if ( XrayController.searchList.addOre( new OreInfo( selectBlock.getName(), selectBlock.getMeta(), color, true, false ) ) ) {
+//					mc.displayGuiScreen( new GuiList() );
+//				}
 
 				break;
 
@@ -107,14 +109,14 @@ public class GuiAdd extends GuiContainer {
 	public void drawScreen( int x, int y, float f )
 	{
 		super.drawScreen(x, y, f);
-		getFontRender().drawStringWithShadow(selectBlock.getDisplayName(), width / 2 - 100, height / 2 - 90, 0xffffff);
+		getFontRender().drawStringWithShadow(selectBlock.getName().toString(), width / 2 - 100, height / 2 - 90, 0xffffff);
 
 		oreName.drawTextBox();
 
 		renderPreview(width / 2 - 100, height / 2 - 40, 202, 45, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
 
 		RenderHelper.enableGUIStandardItemLighting();
-		this.itemRender.renderItemAndEffectIntoGUI( selectBlock.getItemStack(), width / 2 + 85, height / 2 - 105 );
+		this.itemRender.renderItemAndEffectIntoGUI( new ItemStack(selectBlock.getBlock()), width / 2 + 85, height / 2 - 105 );
 		RenderHelper.disableStandardItemLighting();
 	}
 
