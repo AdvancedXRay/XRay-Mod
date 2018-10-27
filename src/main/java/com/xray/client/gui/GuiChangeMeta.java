@@ -63,8 +63,8 @@ public class GuiChangeMeta extends GuiContainer {
                         //this.info.meta = newMeta; //TODO fix
 
                         // This could likely just be reconstructed but for now lets just edit the original
-                        this.selectedBlock.setBlock( Block.getBlockFromItem( stack.getItem() ) );
-                        this.selectedBlock.setItem( stack.getItem() );
+                        this.selectedBlock.setBlock( Block.getBlockFromItem( stack.getItemStack() ) );
+                        this.selectedBlock.setItem( stack.getItemStack() );
                         this.selectedBlock.setName( stack.getDisplayName() );
                         this.selectedBlock.setItemStack( stack );
                     } catch ( IndexOutOfBoundsException e ) {

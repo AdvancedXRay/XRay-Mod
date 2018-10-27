@@ -50,7 +50,7 @@ public class GuiAdd extends GuiContainer {
 		blueSlider.sliderValue  = 1.0F;
 
 		oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 100 ,  height / 2 - 63, 202, 20 );
-		oreName.setText( this.selectBlock.getName().toString() );
+		oreName.setText( this.selectBlock.getItemStack().getDisplayName() );
 	}
 
 	@Override
@@ -109,14 +109,14 @@ public class GuiAdd extends GuiContainer {
 	public void drawScreen( int x, int y, float f )
 	{
 		super.drawScreen(x, y, f);
-		getFontRender().drawStringWithShadow(selectBlock.getName().toString(), width / 2 - 100, height / 2 - 90, 0xffffff);
+		getFontRender().drawStringWithShadow(selectBlock.getItemStack().getDisplayName(), width / 2 - 100, height / 2 - 90, 0xffffff);
 
 		oreName.drawTextBox();
 
 		renderPreview(width / 2 - 100, height / 2 - 40, 202, 45, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
 
 		RenderHelper.enableGUIStandardItemLighting();
-		this.itemRender.renderItemAndEffectIntoGUI( new ItemStack(selectBlock.getBlock()), width / 2 + 85, height / 2 - 105 );
+		this.itemRender.renderItemAndEffectIntoGUI( selectBlock.getItemStack(), width / 2 + 85, height / 2 - 105 );
 		RenderHelper.disableStandardItemLighting();
 	}
 

@@ -64,10 +64,10 @@ public class ClientProxy extends CommonProxy
 				for( ItemStack subBlock : subBlocks ) {
 					tmpBlock = Block.getBlockFromItem(subBlock.getItem());
 
-					XRay.blockList.add(new BlockItem(tmpBlock.getRegistryName(), Block.getStateId(tmpBlock.getBlockState().getBaseState()), tmpBlock));
+					XRay.blockList.add(new BlockItem(Block.getStateId(tmpBlock.getBlockState().getBaseState()), subBlock));
 				}
 			} else
-				XRay.blockList.add( new BlockItem( block.getRegistryName(), Block.getStateId(block.getDefaultState()), block) );
+				XRay.blockList.add( new BlockItem( Block.getStateId(block.getDefaultState()), new ItemStack(block)) );
 		}
 	}
 

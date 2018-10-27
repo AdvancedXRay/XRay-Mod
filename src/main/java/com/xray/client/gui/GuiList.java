@@ -149,7 +149,7 @@ public class GuiList extends GuiContainer
 
 				// Fake placement for correct meta
 				// Might not work on things like a chest...
-				IBlockState sblock = Block.getBlockFromItem(handItem.getItem()).getStateForPlacement(
+				IBlockState iBlockState = Block.getBlockFromItem(handItem.getItem()).getStateForPlacement(
 						this.mc.world,
 						this.mc.player.getPosition(),
 						EnumFacing.NORTH,
@@ -161,9 +161,7 @@ public class GuiList extends GuiContainer
 						this.mc.player.getActiveHand()
 				);
 
-				System.out.println(String.format("%s -> %s", sblock.toString(), sblock.getBlock().toString()));
-
-				mc.displayGuiScreen( new GuiAdd( new BlockItem(handItem.getItem().getRegistryName(), Block.getStateId(sblock), sblock.getBlock())) );
+				mc.displayGuiScreen( new GuiAdd( new BlockItem(Block.getStateId(iBlockState), handItem)) );
 				break;
 
 			case BUTTON_ADD_LOOK:
@@ -189,18 +187,18 @@ public class GuiList extends GuiContainer
 							    System.out.println(String.format("---> [%b, %s, %s, %s]", block.isDefault(), block.getState().toString(), block.getOutline().getBlue(), block.getName()));
                             }
 						}
+
 						ItemStack lookingStack = lookingAt.getPickBlock(state, ray, mc.world, ray.getBlockPos(), mc.player);
 //						OreInfo seeBlock = null;
 
 //						// Double super check that we've got ourselves a block
-//						if(!(lookingStack.getItem() instanceof ItemBlock)) {
+//						if(!(lookingStack.getItemStack() instanceof ItemBlock)) {
 //							mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.invalid_hand", lookingStack.getDisplayName()) ));
 //							return;
 //						}
 //						seeBlock = new OreInfo( lookingStack );
-//						mc.displayGuiScreen( new GuiAdd(seeBlock) );
-
 						mc.player.closeScreen();
+						mc.displayGuiScreen( new GuiAdd( new BlockItem(Block.getStateId(state), lookingStack) ) );
 					}
 					else
 						mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.nothing_infront") ));

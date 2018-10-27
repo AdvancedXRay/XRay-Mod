@@ -2,13 +2,12 @@ package com.xray.client.gui;
 
 import com.xray.common.XRay;
 import com.xray.common.reference.BlockItem;
-import com.xray.common.reference.OreInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.resources.I18n;
-import sun.jvm.hotspot.opto.Block;
+import net.minecraft.item.ItemStack;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -92,7 +91,7 @@ public class GuiBlocks extends GuiContainer {
         blocks = new ArrayList<>();
         ArrayList<BlockItem> tmpBlocks = new ArrayList<>();
         for( BlockItem block : XRay.blockList ) {
-            if( block.getName().toString().contains(search.getText().toLowerCase()) )
+            if( block.getItemStack().getDisplayName().contains(search.getText().toLowerCase()) )
                 tmpBlocks.add(block);
         }
         blocks = tmpBlocks;

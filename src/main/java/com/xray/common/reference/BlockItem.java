@@ -1,29 +1,22 @@
 package com.xray.common.reference;
 
-import net.minecraft.block.Block;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.item.ItemStack;
 
 public class BlockItem {
 
-    private ResourceLocation name;
     private int stateId;
-    private Block block;
+    private ItemStack item;
 
-    public BlockItem(ResourceLocation name, int stateId, Block block) {
-        this.name = name;
+    public BlockItem(int stateId, ItemStack item) {
         this.stateId = stateId;
-        this.block = block;
-    }
-
-    public Block getBlock() {
-        return block;
-    }
-
-    public ResourceLocation getName() {
-        return name;
+        this.item = item;
     }
 
     public int getStateId() {
         return stateId;
+    }
+
+    public ItemStack getItemStack() {
+        return item;
     }
 }
