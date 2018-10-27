@@ -1,11 +1,9 @@
 package com.xray.client.gui;
 
 import com.xray.common.reference.BlockItem;
-import net.minecraft.block.Block;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.item.Item;
 import net.minecraftforge.fml.client.GuiScrollingList;
 
 import java.util.List;
@@ -57,10 +55,8 @@ public class GuiBlocksList extends GuiScrollingList {
 
         FontRenderer font = this.parent.getFontRender();
 
-        String[] name = Block.getStateById(block.getStateId()).toString().split("/:/");
-
         font.drawString(block.getItemStack().getDisplayName(), this.left + 30 , top +  7, 0xFFFFFF);
-        font.drawString((name.length > 0 ? name[1] : name[0]), this.left + 30 , top + 17, 0xD1CFCF);
+        font.drawString(Objects.requireNonNull(block.getItemStack().getItem().getRegistryName()).getResourceDomain(), this.left + 30 , top + 17, 0xD1CFCF);
 
         RenderHelper.enableGUIStandardItemLighting();
         this.parent.getRender().renderItemAndEffectIntoGUI(block.getItemStack(), this.left + 5, top+7);

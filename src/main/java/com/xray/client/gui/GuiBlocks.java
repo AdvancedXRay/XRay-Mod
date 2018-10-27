@@ -7,7 +7,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -91,7 +90,7 @@ public class GuiBlocks extends GuiContainer {
         blocks = new ArrayList<>();
         ArrayList<BlockItem> tmpBlocks = new ArrayList<>();
         for( BlockItem block : XRay.blockList ) {
-            if( block.getItemStack().getDisplayName().contains(search.getText().toLowerCase()) )
+            if( block.getItemStack().getDisplayName().toLowerCase().contains(search.getText().toLowerCase()) )
                 tmpBlocks.add(block);
         }
         blocks = tmpBlocks;

@@ -11,6 +11,7 @@ import com.xray.common.reference.BlockItem;
 import net.minecraft.block.Block;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.MinecraftForge;
@@ -62,9 +63,10 @@ public class ClientProxy extends CommonProxy
 
 			if( !subBlocks.isEmpty() ) {
 				for( ItemStack subBlock : subBlocks ) {
-					tmpBlock = Block.getBlockFromItem(subBlock.getItem());
+					if( subBlock.equals(ItemStack.EMPTY) || subBlock.getItem() == Items.AIR )
+						continue;
 
-					XRay.blockList.add(new BlockItem(Block.getStateId(tmpBlock.getBlockState().getBaseState()), subBlock));
+					XRay.blockList.add(new BlockItem(Block.getStateId(Block.getBlockFromItem(subBlock.getItem()).getBlockState().getBaseState()), subBlock));
 				}
 			} else
 				XRay.blockList.add( new BlockItem( Block.getStateId(block.getDefaultState()), new ItemStack(block)) );
