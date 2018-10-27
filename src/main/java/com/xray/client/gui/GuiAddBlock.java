@@ -63,8 +63,10 @@ public class GuiAddBlock extends GuiBase {
 			case BUTTON_ADD:
 				mc.player.closeScreen();
 
+				// Fake a placement to get the correct state
+                // @warn: likely will not work correctly for chests
                 IBlockState iBlockState = Utils.getStateFromPlacement(this.mc.world, this.mc.player, selectBlock.getItemStack());
-                
+
 				// Push the block to the render stack
 				XrayController.blockStore.putBlock(
                     iBlockState.getBlock().getLocalizedName(),
