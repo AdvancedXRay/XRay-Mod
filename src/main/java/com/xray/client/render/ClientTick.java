@@ -109,7 +109,7 @@ public class ClientTick implements Runnable
 								    // Looking at default allows us to skip the for loop below
 								    if( XrayController.blockStore.defaultContains(currentName) ) {
                                       
-								        BlockData tmp = XrayController.blockStore.store.get(currentName).get(0);
+								        BlockData tmp = XrayController.blockStore.store.get(currentName).getFirst();
 								        if( tmp == null ) // fail safe
 								            continue;
 
@@ -118,7 +118,7 @@ public class ClientTick implements Runnable
                                     } else {
                                         for (BlockData data : XrayController.blockStore.store.get(currentState.getBlock().getLocalizedName())) {
                                             if (Block.getStateId(data.state) == Block.getStateId(currentState))
-                                                temp.add(new BlockInfo(x + i, y + j, z + k, new int[]{0, 0, 0})); // Add this block to the temp list using world coordinates
+                                                temp.add(new BlockInfo(x + i, y + j, z + k, data.getOutline().getColor())); // Add this block to the temp list using world coordinates
                                         }
                                     }
 								}

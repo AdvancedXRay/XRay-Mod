@@ -5,6 +5,7 @@ import com.xray.client.gui.helper.HelperGuiList;
 import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
 import com.xray.common.reference.*;
+import com.xray.common.utils.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;
@@ -20,6 +21,7 @@ import net.minecraft.util.text.TextComponentString;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 
@@ -133,6 +135,7 @@ public class GuiSelectionScreen extends GuiBase
 //				XrayController.toggleDrawCaves();
 //				XRay.logger.debug( "Draw caves: " + XrayController.drawCaves() );
 				XrayController.blockStore.store.clear();
+				XrayController.blockStore.defaultStore.clear();
 				break;
 
 			case BUTTON_ADD_HAND:
@@ -147,18 +150,7 @@ public class GuiSelectionScreen extends GuiBase
 
 				// Fake placement for correct meta
 				// Might not work on things like a chest...
-				IBlockState iBlockState = Block.getBlockFromItem(handItem.getItem()).getStateForPlacement(
-						this.mc.world,
-						this.mc.player.getPosition(),
-						EnumFacing.NORTH,
-						0.1f,
-						0.1f,
-						0.1f,
-						handItem.getMetadata(),
-						this.mc.player,
-						this.mc.player.getActiveHand()
-				);
-
+				IBlockState iBlockState = Utils.getStateFromPlacement(this.mc.world, this.mc.player, handItem);
 				mc.displayGuiScreen( new GuiAddBlock( new BlockItem(Block.getStateId(iBlockState), handItem)) );
 				break;
 
@@ -170,39 +162,16 @@ public class GuiSelectionScreen extends GuiBase
 						IBlockState state = mc.world.getBlockState(ray.getBlockPos());
 						Block lookingAt = mc.world.getBlockState(ray.getBlockPos()).getBlock();
 
-						XrayController.blockStore.putBlock(
-							state.getBlock().getLocalizedName(),
-							new BlockData(state.getBlock().getRegistryName(), new OutlineColor(0, 0, 0), state.getBlock().getDefaultState() == state, state, true)
-						);
-
-						System.out.println(String.format("Block[%s] added", state.getBlock().getLocalizedName()));
-						System.out.println("-> [Printing Block Store]");
-						for (Map.Entry<String, List<BlockData>> data:
-							 XrayController.blockStore.store.entrySet()) {
-
-						    System.out.println(String.format("-> [%s]", data.getKey()));
-						    for (BlockData block : data.getValue() ) {
-							    System.out.println(String.format("---> [%b, %s, %s, %s]", block.isDefault(), block.getState().toString(), block.getOutline().getBlue(), block.getName()));
-                            }
-						}
-
 						ItemStack lookingStack = lookingAt.getPickBlock(state, ray, mc.world, ray.getBlockPos(), mc.player);
-//						OreInfo seeBlock = null;
 
-//						// Double super check that we've got ourselves a block
-//						if(!(lookingStack.getItemStack() instanceof ItemBlock)) {
-//							mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.invalid_hand", lookingStack.getDisplayName()) ));
-//							return;
-//						}
-//						seeBlock = new OreInfo( lookingStack );
 						mc.player.closeScreen();
 						mc.displayGuiScreen( new GuiAddBlock( new BlockItem(Block.getStateId(state), lookingStack) ) );
 					}
 					else
-						mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.nothing_infront") ));
+                        Utils.sendMessage(mc.player, "[XRay] "+I18n.format("xray.message.nothing_infront") );
 				}
 				catch ( NullPointerException ex ) {
-					mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.thats_odd") ));
+                    Utils.sendMessage(mc.player, "[XRay] "+I18n.format("xray.message.thats_odd") );
 				}
 
 				break;
@@ -252,9 +221,10 @@ public class GuiSelectionScreen extends GuiBase
 		RenderHelper.enableGUIStandardItemLighting();
 		for ( HelperGuiList item : this.renderList ) {
 			try {
-				this.itemRender.renderItemAndEffectIntoGUI( item.getOre().getItemStack(), item.x + 2, item.y + 2 );
 				this.renderColor(item.x, item.y, item.getOre().getColor());
+				this.itemRender.renderItemAndEffectIntoGUI( item.getOre().getItemStack(), item.x + 2, item.y + 2 );
 			} catch ( Exception ignored ) {
+			    // If this fails it's not the end of the world
 			}
 		}
 		RenderHelper.disableStandardItemLighting();
