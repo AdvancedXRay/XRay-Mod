@@ -1,9 +1,9 @@
 package com.xray.common.reference;
 
 public class OutlineColor {
-    private int r = 0;
-    private int g = 0;
-    private int b = 0;
+    private int r;
+    private int g;
+    private int b;
 
     public OutlineColor(int r, int g, int b) {
         this.r = r;
@@ -14,4 +14,8 @@ public class OutlineColor {
     public int getRed() { return this.r; }
     public int getGreen() { return this.g; }
     public int getBlue() { return this.b; }
+
+    public int[] getColor() {
+        return new int[] {this.r, this.g, this.b};
+    }
 }

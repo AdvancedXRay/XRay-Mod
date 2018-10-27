@@ -21,7 +21,7 @@ public class BlockData {
         return name;
     }
 
-    public OutlineColor getColor() {
+    public OutlineColor getOutline() {
         return color;
     }
 

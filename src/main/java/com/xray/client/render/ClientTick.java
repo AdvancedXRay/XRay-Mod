@@ -25,6 +25,14 @@ public class ClientTick implements Runnable
 	private static final Minecraft mc = Minecraft.getMinecraft();
 	private final WorldRegion box;
 
+	private static ArrayList blackList = new ArrayList<Block>() {{
+	    add(Blocks.AIR);
+	    add(Blocks.BEDROCK);
+	    add(Blocks.STONE);
+	    add(Blocks.GRASS);
+	    add(Blocks.DIRT);
+    }};
+
 	public ClientTick( WorldRegion region )
 	{
 		box = region;
@@ -48,6 +56,8 @@ public class ClientTick implements Runnable
 		final List<BlockInfo> temp = new ArrayList<>();
 		BlockId key; // Search key for the map
 		int lowBoundX, highBoundX, lowBoundY, highBoundY, lowBoundZ, highBoundZ;
+		IBlockState currentState;
+        String currentName;
 
 		// Loop on chunks (x, z)
 		for ( int chunkX = box.minChunkX; chunkX <= box.maxChunkX; chunkX++ )
@@ -87,29 +97,27 @@ public class ClientTick implements Runnable
 					for ( int i = lowBoundX; i <= highBoundX; i++ ) {
 						for ( int j = lowBoundY; j <= highBoundY; j++ ) {
 							for ( int k = lowBoundZ; k <= highBoundZ; k++ ) {
-								if( ebs.get(i, j, k).getBlock() == Blocks.AIR || ebs.get(i, j, k).getBlock() == Blocks.STONE)
+								currentState = ebs.get(i, j, k);
+
+								// Reject blacklisted blocks
+								if( blackList.contains(currentState.getBlock()) )
 									continue;
 
-//								key = BlockId.fromBlockState( ebs.get(i, j, k) );
-
-								IBlockState state = ebs.get(i, j, k);
-                                String name = state.getBlock().getLocalizedName();
-								if (XrayController.blockStore.store.containsKey(name)) // The reason for using Set/Map
+                                currentName = currentState.getBlock().getLocalizedName();
+								if (XrayController.blockStore.store.containsKey(currentName)) // The reason for using Set/Map
 								{
 								    // Looking at default allows us to skip the for loop below
-								    if( XrayController.blockStore.defaultContains(name) ) {
+								    if( XrayController.blockStore.defaultContains(currentName) ) {
                                       
-								        BlockData tmp = XrayController.blockStore.store.get(name).get(0);
-								        if( tmp == null )
+								        BlockData tmp = XrayController.blockStore.store.get(currentName).get(0);
+								        if( tmp == null ) // fail safe
 								            continue;
 
-                                        temp.add(new BlockInfo(x + i, y + j, z + k, new int[]{0, 0, 0})); // Add this block to the temp list using world coordinates
+                                        temp.add(new BlockInfo(x + i, y + j, z + k, tmp.getOutline().getColor())); // Add this block to the temp list using world coordinates
 
                                     } else {
-                                        for (BlockData data :
-                                                XrayController.blockStore.store.get(state.getBlock().getLocalizedName())) {
-
-                                            if (Block.getStateId(data.state) == Block.getStateId(state))
+                                        for (BlockData data : XrayController.blockStore.store.get(currentState.getBlock().getLocalizedName())) {
+                                            if (Block.getStateId(data.state) == Block.getStateId(currentState))
                                                 temp.add(new BlockInfo(x + i, y + j, z + k, new int[]{0, 0, 0})); // Add this block to the temp list using world coordinates
                                         }
                                     }

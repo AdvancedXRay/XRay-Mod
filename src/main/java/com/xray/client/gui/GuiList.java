@@ -11,7 +11,6 @@ import com.xray.common.reference.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemBlock;
@@ -171,7 +170,7 @@ public class GuiList extends GuiContainer
 
 						    System.out.println(String.format("-> [%s]", data.getKey()));
 						    for (BlockData block : data.getValue() ) {
-							    System.out.println(String.format("---> [%b, %s, %s, %s]", block.isDefault(), block.getState().toString(), block.getColor().getBlue(), block.getName()));
+							    System.out.println(String.format("---> [%b, %s, %s, %s]", block.isDefault(), block.getState().toString(), block.getOutline().getBlue(), block.getName()));
                             }
 						}
 						ItemStack lookingStack = lookingAt.getPickBlock(state, ray, mc.world, ray.getBlockPos(), mc.player);
