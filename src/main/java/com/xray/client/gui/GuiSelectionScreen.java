@@ -10,13 +10,11 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 
@@ -25,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class GuiList extends GuiContainer
+public class GuiSelectionScreen extends GuiBase
 {
 	private final List<HelperGuiList> listHelper = new ArrayList<>();
 	private final List<HelperGuiList> renderList = new ArrayList<>();
@@ -41,7 +39,7 @@ public class GuiList extends GuiContainer
 	private static final int BUTTON_CAVE_FINDER = 1500;
 	private static final int BUTTON_CLOSE = 6;
 
-	public GuiList() {
+	public GuiSelectionScreen() {
 		super(true);
 		this.setSideTitle( I18n.format("xray.single.tools") );
 	}
@@ -117,7 +115,7 @@ public class GuiList extends GuiContainer
 
 			case BUTTON_ADD_BLOCK:
 				mc.player.closeScreen();
-				mc.displayGuiScreen( new GuiBlocks() );
+				mc.displayGuiScreen( new GuiBlockListScrollable() );
 				break;
 
 			case BUTTON_NEXT:
@@ -161,7 +159,7 @@ public class GuiList extends GuiContainer
 						this.mc.player.getActiveHand()
 				);
 
-				mc.displayGuiScreen( new GuiAdd( new BlockItem(Block.getStateId(iBlockState), handItem)) );
+				mc.displayGuiScreen( new GuiAddBlock( new BlockItem(Block.getStateId(iBlockState), handItem)) );
 				break;
 
 			case BUTTON_ADD_LOOK:
@@ -174,7 +172,7 @@ public class GuiList extends GuiContainer
 
 						XrayController.blockStore.putBlock(
 							state.getBlock().getLocalizedName(),
-							new BlockData(state.getBlock().getRegistryName(), new OutlineColor(0, 0, 0), state.getBlock().getDefaultState() == state, state)
+							new BlockData(state.getBlock().getRegistryName(), new OutlineColor(0, 0, 0), state.getBlock().getDefaultState() == state, state, true)
 						);
 
 						System.out.println(String.format("Block[%s] added", state.getBlock().getLocalizedName()));
@@ -198,7 +196,7 @@ public class GuiList extends GuiContainer
 //						}
 //						seeBlock = new OreInfo( lookingStack );
 						mc.player.closeScreen();
-						mc.displayGuiScreen( new GuiAdd( new BlockItem(Block.getStateId(state), lookingStack) ) );
+						mc.displayGuiScreen( new GuiAddBlock( new BlockItem(Block.getStateId(state), lookingStack) ) );
 					}
 					else
 						mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.nothing_infront") ));
@@ -234,7 +232,7 @@ public class GuiList extends GuiContainer
 			for (HelperGuiList list : this.renderList) {
 				if (list.getButton().mousePressed(this.mc, x, y)) {
 					mc.player.closeScreen();
-					mc.displayGuiScreen(new GuiEditOre(list.getOre()));
+					mc.displayGuiScreen(new GuiEdit(list.getOre()));
 				}
 			}
 
@@ -264,7 +262,7 @@ public class GuiList extends GuiContainer
 
 	private void renderColor(int x, int y, int[] color) {
 		mc.renderEngine.bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "circle.png"));
-		GuiContainer.drawTexturedQuadFit(x, y, 8, 8, color);
+		GuiBase.drawTexturedQuadFit(x, y, 8, 8, color);
 	}
 
 	@Override

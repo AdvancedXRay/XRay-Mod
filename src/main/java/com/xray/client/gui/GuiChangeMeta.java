@@ -8,7 +8,7 @@ import net.minecraft.client.resources.I18n;
 
 import java.io.IOException;
 
-public class GuiChangeMeta extends GuiContainer {
+public class GuiChangeMeta extends GuiBase {
 
     private OreInfo info;
     private GuiTextField oreMeta;
@@ -40,7 +40,7 @@ public class GuiChangeMeta extends GuiContainer {
         {
             case BUTTON_CANCEL:
                 mc.player.closeScreen();
-                mc.displayGuiScreen( new GuiEditOre( this.info ) );
+                mc.displayGuiScreen( new GuiEdit( this.info ) );
                 break;
 
             case BUTTON_SAVE: // edit meta
@@ -75,7 +75,7 @@ public class GuiChangeMeta extends GuiContainer {
 
                 // No matter what close the UI and start again. Otherwise people can't see that an error may have happened
                 mc.player.closeScreen();
-                mc.displayGuiScreen( new GuiEditOre( this.info, this.selectedBlock ) );
+                mc.displayGuiScreen( new GuiEdit( this.info, this.selectedBlock ) );
 */
                 break;
 

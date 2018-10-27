@@ -14,7 +14,7 @@ import java.util.ArrayList;
 /**
  * Created by MiKeY on 07/07/17.
  */
-public class GuiBlocks extends GuiContainer {
+public class GuiBlockListScrollable extends GuiBase {
     private RenderItem render;
     private GuiBlocksList blockList;
     private ArrayList<BlockItem> blocks;
@@ -24,7 +24,7 @@ public class GuiBlocks extends GuiContainer {
 
     private static final int BUTTON_CANCEL = 0;
 
-    GuiBlocks() {
+    GuiBlockListScrollable() {
         super(false);
         this.blocks = XRay.blockList;
     }
@@ -40,7 +40,7 @@ public class GuiBlocks extends GuiContainer {
 
         this.selected = index;
         mc.player.closeScreen();
-        mc.displayGuiScreen( new GuiAdd( blocks.get( this.selected ) ) );
+        mc.displayGuiScreen( new GuiAddBlock( blocks.get( this.selected ) ) );
     }
 
     @Override
@@ -62,7 +62,7 @@ public class GuiBlocks extends GuiContainer {
         {
             case BUTTON_CANCEL:
                 mc.player.closeScreen();
-                mc.displayGuiScreen( new GuiList() );
+                mc.displayGuiScreen( new GuiSelectionScreen() );
                 break;
 
             default:

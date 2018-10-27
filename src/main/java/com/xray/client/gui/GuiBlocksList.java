@@ -15,10 +15,10 @@ import java.util.Objects;
 public class GuiBlocksList extends GuiScrollingList {
 
     private static final int HEIGHT = 35;
-    private final GuiBlocks parent;
+    private final GuiBlockListScrollable parent;
     private List<BlockItem> blockList;
 
-    GuiBlocksList(GuiBlocks parent, List<BlockItem> blockList) {
+    GuiBlocksList(GuiBlockListScrollable parent, List<BlockItem> blockList) {
         super( parent.getMinecraftInstance(), 202, 210, parent.height / 2 - 105, parent.height / 2 + 80, parent.width / 2 - 100, HEIGHT, parent.width, parent.height);
 
         this.parent = parent;

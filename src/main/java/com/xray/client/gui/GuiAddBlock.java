@@ -1,9 +1,6 @@
 package com.xray.client.gui;
 
-import com.xray.client.xray.XrayController;
 import com.xray.common.reference.BlockItem;
-import com.xray.common.reference.OreInfo;
-import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -12,13 +9,11 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextComponentString;
 
 import java.io.IOException;
 import java.util.Objects;
 
-public class GuiAdd extends GuiContainer {
+public class GuiAddBlock extends GuiBase {
 	private static final int BUTTON_ADD = 98;
 	private static final int BUTTON_CANCEL = 99;
 
@@ -29,7 +24,7 @@ public class GuiAdd extends GuiContainer {
 	private BlockItem selectBlock;
 	private boolean oreNameCleared  = false;
 
-	GuiAdd(BlockItem selectedBlock) {
+	GuiAddBlock(BlockItem selectedBlock) {
 		super(false);
 		this.selectBlock = selectedBlock;
 	}
@@ -62,14 +57,14 @@ public class GuiAdd extends GuiContainer {
 				int[] color = new int[] {(int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255)};
 				mc.player.closeScreen();
 //				if ( XrayController.searchList.addOre( new OreInfo( selectBlock.getName(), selectBlock.getMeta(), color, true, false ) ) ) {
-//					mc.displayGuiScreen( new GuiList() );
+//					mc.displayGuiScreen( new GuiSelectionScreen() );
 //				}
 
 				break;
 
 			case BUTTON_CANCEL:
 				mc.player.closeScreen();
-				mc.displayGuiScreen( new GuiList() );
+				mc.displayGuiScreen( new GuiSelectionScreen() );
 				break;
 
 			default:

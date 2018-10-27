@@ -9,7 +9,7 @@ import net.minecraft.client.resources.I18n;
 
 import java.io.IOException;
 
-public class GuiEditOre extends GuiContainer
+public class GuiEdit extends GuiBase
 {
     private GuiTextField oreName;
     private GuiSlider redSlider;
@@ -22,7 +22,7 @@ public class GuiEditOre extends GuiContainer
     private static final int BUTTON_SAVE = 98;
     private static final int BUTTON_CANCEL = 99;
 
-    GuiEditOre(OreInfo oreInfo) {
+    GuiEdit(OreInfo oreInfo) {
         super(true); // Has a sidebar
         this.setSideTitle( I18n.format("xray.single.tools") );
 
@@ -66,19 +66,19 @@ public class GuiEditOre extends GuiContainer
                 XrayController.searchList.updateOre( oreInfo );
 
                 mc.player.closeScreen();
-                mc.displayGuiScreen( new GuiList() );
+                mc.displayGuiScreen( new GuiSelectionScreen() );
                 break;
 
             case BUTTON_DELETE:
                 XrayController.searchList.removeOre( oreInfo );
 
                 mc.player.closeScreen();
-                mc.displayGuiScreen( new GuiList() );
+                mc.displayGuiScreen( new GuiSelectionScreen() );
                 break;
 
             case BUTTON_CANCEL:
                 mc.player.closeScreen();
-                mc.displayGuiScreen( new GuiList() );
+                mc.displayGuiScreen( new GuiSelectionScreen() );
                 break;
 
             case BUTTON_OREDICT:
@@ -115,7 +115,7 @@ public class GuiEditOre extends GuiContainer
 
         oreName.drawTextBox();
 
-        GuiAdd.renderPreview(width / 2 - 138, height / 2 - 40, 202, 45, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
+        GuiAddBlock.renderPreview(width / 2 - 138, height / 2 - 40, 202, 45, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
 
         RenderHelper.enableGUIStandardItemLighting();
         this.itemRender.renderItemAndEffectIntoGUI( oreInfo.getItemStack(), width / 2 + 50, height / 2 - 105 ); // Blocks with no stack will display an empty image. TODO GLDraw image?

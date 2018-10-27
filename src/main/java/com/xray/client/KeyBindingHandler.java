@@ -1,6 +1,6 @@
 package com.xray.client;
 
-import com.xray.client.gui.GuiList;
+import com.xray.client.gui.GuiSelectionScreen;
 import com.xray.client.xray.XrayController;
 import com.xray.common.XRay;
 
@@ -25,7 +25,7 @@ public class KeyBindingHandler
 			}
 			else if( XRay.keyBind_keys[ XRay.keyIndex_showXrayMenu ].isPressed() )
 			{
-				mc.displayGuiScreen( new GuiList() );
+				mc.displayGuiScreen( new GuiSelectionScreen() );
 			}
 		}
 	}

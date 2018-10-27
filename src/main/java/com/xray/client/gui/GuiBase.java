@@ -15,14 +15,14 @@ import java.io.IOException;
 /**
  * Created by MiKeY on 08/07/17.
  */
-public class GuiContainer extends GuiScreen {
+public class GuiBase extends GuiScreen {
 
     private boolean hasSide = false;
     private String sideTitle = "";
     private int backgroundWidth = 229;
     private int backgroundHeight = 235;
 
-    GuiContainer( boolean hasSide ) {
+    GuiBase(boolean hasSide ) {
         this.hasSide = hasSide;
     }
 
