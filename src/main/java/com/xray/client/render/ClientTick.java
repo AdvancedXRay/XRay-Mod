@@ -18,6 +18,7 @@ import java.util.*;
 public class ClientTick implements Runnable
 {
 	private final WorldRegion box;
+    private static HashMap<String, Deque<BlockData>> blocks;
 
 	public ClientTick( WorldRegion region )
 	{
@@ -34,8 +35,8 @@ public class ClientTick implements Runnable
 	 * Use XRayController.requestBlockFinder() to trigger a scan.
 	 */
 	private void blockFinder() {
-		HashMap<String, Deque<BlockData>> blocks = XRayController.getBlockStore().getStore();
-		if ( blocks.isEmpty() || XRayController.getBlockStore().hasDrawables() )
+        blocks = XRayController.getBlockStore().getStore();
+		if ( blocks.isEmpty() || !XRayController.getBlockStore().hasDrawables() )
 			return; // no need to scan the region if there's nothing to find
 
 		final World world = XRay.mc.world;
@@ -101,7 +102,6 @@ public class ClientTick implements Runnable
 								        BlockData tmp = blocks.get(currentName).getFirst();
 								        if( tmp == null ) // fail safe
 								            continue;
-
 								        // Push the block to the render queue
                                         renderQueue.add(new BlockInfo(x + i, y + j, z + k, tmp.getOutline().getColor()));
 

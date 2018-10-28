@@ -114,7 +114,6 @@ public class GuiSelectionScreen extends GuiBase
 	@Override
 	public void actionPerformed( GuiButton button )
 	{
-
 		// Called on left click of GuiButton
 		switch(button.id)
 		{
@@ -151,7 +150,7 @@ public class GuiSelectionScreen extends GuiBase
 
 				// Check if the hand item is a block or not
 				if(!(handItem.getItem() instanceof ItemBlock)) {
-					mc.player.sendMessage( new TextComponentString( "[XRay] "+I18n.format("xray.message.invalid_hand", handItem.getDisplayName()) ));
+					Utils.sendMessage(mc.player,"[XRay] "+I18n.format("xray.message.invalid_hand", handItem.getDisplayName()));
 					return;
 				}
 

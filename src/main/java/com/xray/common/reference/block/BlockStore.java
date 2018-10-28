@@ -54,12 +54,14 @@ public class BlockStore {
         Deque<BlockData> data = this.store.get(key);
         if( block.isDefault() ) {
             data.getFirst().drawing = !data.getFirst().drawing;
+            this.updateDrawables();
             return;
         }
 
         for ( BlockData d : data ) {
             if (d.getState() == block.getState()) {
                 d.drawing = !d.drawing;
+                this.updateDrawables();
                 break; // We're done. Lets not waste time
             }
         }
