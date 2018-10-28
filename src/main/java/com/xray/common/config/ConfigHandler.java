@@ -19,6 +19,10 @@ import net.minecraftforge.common.config.Property;
 
 public class ConfigHandler
 {
+	public static float outlineThickness = 1f;
+	public static float outlineOpacity = 1f;
+	public static boolean showOverlay = true;
+
 	public static final String CATEGORY_PREFIX_ORES = "ores";
 	public static final List<String> ORDER = new ArrayList<String>() {{ // Sort properties in config file
 		add("name");
@@ -58,7 +62,7 @@ public class ConfigHandler
 		XrayController.setCurrentDist( XRay.config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0).getInt() );
 
 		// Overlay
-		XRay.showOverlay = XRay.config.get(Configuration.CATEGORY_GENERAL, "show-overlay", true).getBoolean();
+		showOverlay = XRay.config.get(Configuration.CATEGORY_GENERAL, "show-overlay", true).getBoolean();
 
 		List<OreInfo> oresToAdd = new ArrayList<>();
 

@@ -1,6 +1,7 @@
 package com.xray.client.render;
 
 import com.xray.common.XRay;
+import com.xray.common.config.ConfigHandler;
 import com.xray.common.reference.BlockInfo;
 import com.xray.common.utils.Utils;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -15,8 +16,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 public class XrayRenderer
 {
     public static List<BlockInfo> ores = Collections.synchronizedList( new ArrayList<>() ); // this is accessed by threads
-    // Opacity is weird as all hell. We save it as 0 - 1 / off -> full so we need to convert that value
-    private final static int opacity = XRay.outlineOpacity >= 1 ? 255 : XRay.outlineOpacity <= 0 ? 0 : (int) (XRay.outlineOpacity * 255); // Pretty simple :D
+
+    private final static int opacity = ConfigHandler.outlineOpacity >= 1 ? 255 : ConfigHandler.outlineOpacity <= 0 ? 0 : (int) (ConfigHandler.outlineOpacity * 255); // Pretty simple :D
 
     private static final int GL_FRONT_AND_BACK = 1032;
     private static final int GL_LINE = 6913;
@@ -61,7 +62,7 @@ public class XrayRenderer
                 GlStateManager.glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
                 GlStateManager.blendFunc( GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA );
                 GlStateManager.enableBlend();
-                GlStateManager.glLineWidth( XRay.outlineThickness );
+                GlStateManager.glLineWidth( ConfigHandler.outlineThickness );
             }
 
             @Override
