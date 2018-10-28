@@ -2,13 +2,12 @@ package com.xray.client.gui;
 
 import com.xray.client.gui.manage.GuiAddBlock;
 import com.xray.client.gui.manage.GuiBlockListScrollable;
-import com.xray.client.gui.manage.GuiEdit;
 import com.xray.client.gui.utils.GuiBase;
-import com.xray.client.xray.XRayController;
 import com.xray.client.gui.utils.GuiPaged;
+import com.xray.client.xray.XRayController;
 import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
-import com.xray.common.reference.*;
+import com.xray.common.reference.Reference;
 import com.xray.common.reference.block.BlockData;
 import com.xray.common.reference.block.BlockItem;
 import com.xray.common.utils.Utils;
@@ -22,7 +21,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.TextComponentString;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -170,8 +168,6 @@ public class GuiSelectionScreen extends GuiBase
 						Block lookingAt = mc.world.getBlockState(ray.getBlockPos()).getBlock();
 
 						ItemStack lookingStack = lookingAt.getPickBlock(state, ray, mc.world, ray.getBlockPos(), mc.player);
-
-						System.out.printf("%s\n", state.toString());
 
 						mc.player.closeScreen();
 						mc.displayGuiScreen( new GuiAddBlock( new BlockItem(Block.getStateId(state), lookingStack), state ) );
