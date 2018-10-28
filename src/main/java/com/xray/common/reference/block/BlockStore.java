@@ -1,4 +1,4 @@
-package com.xray.common.reference;
+package com.xray.common.reference.block;
 
 import java.util.*;
 

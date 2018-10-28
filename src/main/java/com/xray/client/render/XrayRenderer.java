@@ -1,8 +1,7 @@
 package com.xray.client.render;
 
-import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
-import com.xray.common.reference.BlockInfo;
+import com.xray.common.reference.block.BlockInfo;
 import com.xray.common.utils.Utils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;

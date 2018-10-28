@@ -1,4 +1,4 @@
-package com.xray.common.reference;
+package com.xray.common.utils;
 
 public class OutlineColor {
     private int r;

@@ -23,13 +23,14 @@ public class XRay
 {
 	public static ArrayList<BlockItem> blockList = new ArrayList<>();
 
+	// Used throughout our codebase as a single point of reference
 	public static Minecraft mc = Minecraft.getMinecraft();
 
 	// Config settings
 	public static Configuration config;
 
     // Radius +/- around the player to search. So 8 is 8 on left and right of player plus under the player. So 17x17 area.
-    public static final int[] distNumbers = new int[] {8, 16, 32, 48, 64, 80, 128, 256};
+    public static final int[] distanceList = new int[] {8, 16, 32, 48, 64, 80, 128, 256};
 
 	public static Logger logger;
 

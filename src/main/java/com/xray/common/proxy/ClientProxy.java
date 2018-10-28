@@ -1,11 +1,10 @@
-// Forge proxy for the client side.
 package com.xray.common.proxy;
 
 import com.xray.client.keybinding.InputEvent;
 import com.xray.client.gui.GuiOverlay;
 import com.xray.client.keybinding.KeyBindings;
-import com.xray.client.xray.XrayController;
-import com.xray.client.xray.XrayEventHandler;
+import com.xray.client.xray.XRayController;
+import com.xray.client.xray.XRayEventHandler;
 import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
 import com.xray.common.reference.BlockItem;
@@ -30,7 +29,7 @@ public class ClientProxy
 		KeyBindings.setup();
 
 		MinecraftForge.EVENT_BUS.register( new InputEvent() );
-		MinecraftForge.EVENT_BUS.register( new XrayEventHandler() );
+		MinecraftForge.EVENT_BUS.register( new XRayEventHandler() );
 		MinecraftForge.EVENT_BUS.register( new GuiOverlay() );
 	}
 
@@ -62,6 +61,6 @@ public class ClientProxy
 
 	public void onExit(FMLServerStoppingEvent event)
 	{
-		XrayController.shutdownExecutor(); // Make sure threads don't lock the JVM
+		XRayController.shutdownExecutor(); // Make sure threads don't lock the JVM
 	}
 }

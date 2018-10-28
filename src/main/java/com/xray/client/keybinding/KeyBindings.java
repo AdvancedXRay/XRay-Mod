@@ -6,7 +6,8 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import org.lwjgl.input.Keyboard;
 
 public class KeyBindings {
-    // Keybindings
+    // Key bindings
+    // TODO: Refactor
     static final int keyIndex_toggleXray = 0;
     static final int keyIndex_showXrayMenu = 1;
     private static final int[] keyBind_keyValues = { Keyboard.KEY_BACKSLASH, Keyboard.KEY_Z };
@@ -14,7 +15,7 @@ public class KeyBindings {
     static KeyBinding[] keyBind_keys = null;
 
     public static void setup() {
-        // Setup Keybindings
+        // Setup Key bindings
         keyBind_keys = new KeyBinding[ keyBind_descriptions.length ];
         for(int i = 0; i < keyBind_descriptions.length; ++i )
         {

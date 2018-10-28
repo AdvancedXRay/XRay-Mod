@@ -1,6 +1,6 @@
 package com.xray.common.config;
 
-import com.xray.client.xray.XrayController;
+import com.xray.client.xray.XRayController;
 import com.xray.common.XRay;
 import com.xray.common.reference.OreInfo;
 import com.xray.common.reference.Reference;
@@ -42,7 +42,7 @@ public class ConfigHandler
 
 	public static void storeCurrentDist()
 	{
-		XRay.config.getCategory( Configuration.CATEGORY_GENERAL ).put("searchdist", new Property("searchdist", "" + XrayController.getCurrentDist(), Property.Type.INTEGER) );
+		XRay.config.getCategory( Configuration.CATEGORY_GENERAL ).put("searchdist", new Property("searchdist", "" + XRayController.getCurrentDist(), Property.Type.INTEGER) );
 	}
 
 	public static void syncConfig()
@@ -51,7 +51,7 @@ public class ConfigHandler
 		XRay.config.removeCategory(oresCat); // Cannot rely on ConfigCategory.clear()
 		oresCat = XRay.config.getCategory( CATEGORY_PREFIX_ORES );
 
-		for ( OreInfo ore : XrayController.searchList.getOres() )
+		for ( OreInfo ore : XRayController.searchList.getOres() )
 		{
 			ore.addToConfig(oresCat);
 		}
@@ -59,7 +59,7 @@ public class ConfigHandler
 
 	public static void setup()
 	{
-		XrayController.setCurrentDist( XRay.config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0).getInt() );
+		XRayController.setCurrentDist( XRay.config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0).getInt() );
 
 		// Overlay
 		showOverlay = XRay.config.get(Configuration.CATEGORY_GENERAL, "show-overlay", true).getBoolean();
@@ -94,7 +94,7 @@ public class ConfigHandler
 			}
 		}
 
-		XrayController.searchList.addOres( oresToAdd );
+		XRayController.searchList.addOres( oresToAdd );
 		syncConfig();
 		XRay.config.save();
 	}

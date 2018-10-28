@@ -3,7 +3,7 @@ package com.xray.client.gui.manage;
 import com.xray.client.gui.utils.GuiBase;
 import com.xray.client.gui.GuiSelectionScreen;
 import com.xray.client.gui.utils.GuiSlider;
-import com.xray.client.xray.XrayController;
+import com.xray.client.xray.XRayController;
 import com.xray.common.reference.OreInfo;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -66,14 +66,14 @@ public class GuiEdit extends GuiBase
             case BUTTON_SAVE:
                 int[] rgb = {(int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255)};
 		oreInfo.setColor( rgb );
-                XrayController.searchList.updateOre( oreInfo );
+                XRayController.searchList.updateOre( oreInfo );
 
                 mc.player.closeScreen();
                 mc.displayGuiScreen( new GuiSelectionScreen() );
                 break;
 
             case BUTTON_DELETE:
-                XrayController.searchList.removeOre( oreInfo );
+                XRayController.searchList.removeOre( oreInfo );
 
                 mc.player.closeScreen();
                 mc.displayGuiScreen( new GuiSelectionScreen() );

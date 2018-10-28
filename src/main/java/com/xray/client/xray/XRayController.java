@@ -4,19 +4,17 @@ import com.xray.client.render.ClientTick;
 import com.xray.client.render.XrayRenderer;
 import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
-import com.xray.common.reference.BlockStore;
+import com.xray.common.reference.block.BlockStore;
 import com.xray.common.reference.SearchList;
 import com.xray.common.utils.WorldRegion;
+import net.minecraft.util.math.Vec3i;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.math.Vec3i;
 
-public class XrayController
+public class XRayController
 {
-	private static Minecraft mc = Minecraft.getMinecraft();
-
 	// Data
 	private static int currentDist = 0; // Index for the distNumers array. Default search distance.
 	public static final SearchList searchList = new SearchList();
@@ -33,7 +31,7 @@ public class XrayController
 	private static boolean drawCaves = false;
 
 	// Public accesors
-	public static boolean drawOres() { return drawOres && mc.world != null && mc.player != null; }
+	public static boolean drawOres() { return drawOres && XRay.mc.world != null && XRay.mc.player != null; }
 	public static boolean drawCaves() { return drawCaves; }
 	public static void toggleDrawCaves() { drawCaves = !drawCaves; }
 	public static void toggleDrawOres()
@@ -51,7 +49,7 @@ public class XrayController
 		}
 	}
 	public static int getCurrentDist() { return currentDist; }
-	public static int getRadius() { return XRay.distNumbers[currentDist]; }
+	public static int getRadius() { return XRay.distanceList[currentDist]; }
 	public static void setCurrentDist( int dist )
 	{
 		currentDist = dist;
@@ -59,7 +57,7 @@ public class XrayController
 	}
 	public static void incrementCurrentDist()
 	{
-		if ( currentDist < XRay.distNumbers.length - 1 )
+		if ( currentDist < XRay.distanceList.length - 1 )
 			currentDist++;
 		else
 			currentDist = 0;
@@ -70,7 +68,7 @@ public class XrayController
 		if ( currentDist > 0 )
 			currentDist--;
 		else
-			currentDist = XRay.distNumbers.length - 1;
+			currentDist = XRay.distanceList.length - 1;
 		ConfigHandler.storeCurrentDist();
 	}
 
@@ -84,13 +82,13 @@ public class XrayController
 	private static boolean playerHasMoved()
 	{
 		return lastPlayerPos == null
-			|| lastPlayerPos.getX() != mc.player.getPosition().getX()
-			|| lastPlayerPos.getZ() != mc.player.getPosition().getZ();
+			|| lastPlayerPos.getX() != XRay.mc.player.getPosition().getX()
+			|| lastPlayerPos.getZ() != XRay.mc.player.getPosition().getZ();
 	}
 
 	private static void updatePlayerPosition()
 	{
-		lastPlayerPos = mc.player.getPosition();
+		lastPlayerPos = XRay.mc.player.getPosition();
 	}
 
 	/**

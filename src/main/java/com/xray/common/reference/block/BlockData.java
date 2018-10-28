@@ -1,5 +1,6 @@
-package com.xray.common.reference;
+package com.xray.common.reference.block;
 
+import com.xray.common.utils.OutlineColor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
 

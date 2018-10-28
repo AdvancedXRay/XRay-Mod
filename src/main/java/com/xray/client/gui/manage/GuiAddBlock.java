@@ -3,10 +3,10 @@ package com.xray.client.gui.manage;
 import com.xray.client.gui.utils.GuiBase;
 import com.xray.client.gui.GuiSelectionScreen;
 import com.xray.client.gui.utils.GuiSlider;
-import com.xray.client.xray.XrayController;
-import com.xray.common.reference.BlockData;
+import com.xray.client.xray.XRayController;
+import com.xray.common.reference.block.BlockData;
 import com.xray.common.reference.BlockItem;
-import com.xray.common.reference.OutlineColor;
+import com.xray.common.utils.OutlineColor;
 import com.xray.common.utils.Utils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;
@@ -69,7 +69,7 @@ public class GuiAddBlock extends GuiBase {
                 IBlockState iBlockState = Utils.getStateFromPlacement(this.mc.world, this.mc.player, selectBlock.getItemStack());
 
 				// Push the block to the render stack
-				XrayController.blockStore.putBlock(
+				XRayController.blockStore.putBlock(
                     iBlockState.getBlock().getLocalizedName(),
 					new BlockData(
                         iBlockState.getBlock().getRegistryName(),
@@ -80,7 +80,7 @@ public class GuiAddBlock extends GuiBase {
 					)
 				);
 
-				XrayController.blockStore.printStore();
+				XRayController.blockStore.printStore();
 
 				mc.displayGuiScreen( new GuiSelectionScreen() );
 
