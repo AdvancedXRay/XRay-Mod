@@ -1,7 +1,11 @@
 package com.xray.client.gui;
 
+import com.xray.client.gui.manage.GuiAddBlock;
+import com.xray.client.gui.manage.GuiBlockListScrollable;
+import com.xray.client.gui.manage.GuiEdit;
+import com.xray.client.gui.utils.GuiBase;
 import com.xray.client.xray.XrayController;
-import com.xray.client.gui.helper.HelperGuiList;
+import com.xray.client.gui.utils.GuiPaged;
 import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
 import com.xray.common.reference.*;
@@ -13,7 +17,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
@@ -21,14 +24,12 @@ import net.minecraft.util.text.TextComponentString;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
-import java.util.Map;
 
 public class GuiSelectionScreen extends GuiBase
 {
-	private final List<HelperGuiList> listHelper = new ArrayList<>();
-	private final List<HelperGuiList> renderList = new ArrayList<>();
+	private final List<GuiPaged> listHelper = new ArrayList<>();
+	private final List<GuiPaged> renderList = new ArrayList<>();
 	private int pageCurrent, pageMax = 0;
 
 	private GuiButton distButtons;
@@ -64,13 +65,13 @@ public class GuiSelectionScreen extends GuiBase
 				x = width / 2 - 140;
 				y = height / 2 - 106;
 			}
-			listHelper.add( new HelperGuiList( 10+count, page, x, y, ore) );
+			listHelper.add( new GuiPaged( 10+count, page, x, y, ore) );
 			y += 21.8;
 			count ++;
 		}
 
         // only draws the current page
-		for (HelperGuiList item : listHelper ) {
+		for (GuiPaged item : listHelper ) {
 			if (item.getPageId() != pageCurrent)
 				continue; // skip the ones that are not on this page.
 
@@ -181,7 +182,7 @@ public class GuiSelectionScreen extends GuiBase
 				break;
 
 			default:
-				for ( HelperGuiList list : this.renderList ) {
+				for ( GuiPaged list : this.renderList ) {
 					if( list.getButton().id == button.id ) {
 						XrayController.searchList.toggleOreDrawable(list.getOre()); // no need to update list.getOre() as it is referenced in searchList
 					}
@@ -198,7 +199,7 @@ public class GuiSelectionScreen extends GuiBase
 		super.mouseClicked( x, y, mouse );
 
 		if( mouse == 1 ) {
-			for (HelperGuiList list : this.renderList) {
+			for (GuiPaged list : this.renderList) {
 				if (list.getButton().mousePressed(this.mc, x, y)) {
 					mc.player.closeScreen();
 					mc.displayGuiScreen(new GuiEdit(list.getOre()));
@@ -219,7 +220,7 @@ public class GuiSelectionScreen extends GuiBase
 		super.drawScreen(x, y, f);
 
 		RenderHelper.enableGUIStandardItemLighting();
-		for ( HelperGuiList item : this.renderList ) {
+		for ( GuiPaged item : this.renderList ) {
 			try {
 				this.renderColor(item.x, item.y, item.getOre().getColor());
 				this.itemRender.renderItemAndEffectIntoGUI( item.getOre().getItemStack(), item.x + 2, item.y + 2 );
