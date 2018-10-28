@@ -4,7 +4,6 @@ import com.xray.client.render.ClientTick;
 import com.xray.client.render.XrayRenderer;
 import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
-import com.xray.common.reference.SearchList;
 import com.xray.common.reference.block.BlockStore;
 import com.xray.common.utils.WorldRegion;
 
@@ -33,12 +32,6 @@ public class XRayController
      */
 	private static int currentDist = 0;
 	private static Vec3i lastPlayerPos = null;
-
-    /**
-     * @deprecated use {@link XRayController#blockStore} instead
-     */
-	@Deprecated
-	public static final SearchList searchList = new SearchList();
 
 	/**
      * Global blockStore used for:

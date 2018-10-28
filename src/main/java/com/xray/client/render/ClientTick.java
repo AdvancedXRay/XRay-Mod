@@ -154,7 +154,7 @@ public class ClientTick implements Runnable
                 return;
             }
 
-		    BlockData data;
+		    BlockData data = null;
             if( XRayController.getBlockStore().defaultContains(currentName) ) {
                 data = XRayController.getBlockStore().getStore().get(currentName).getFirst();
                 if( data == null ) return;
@@ -165,6 +165,7 @@ public class ClientTick implements Runnable
                 }
             }
 
+            if( data == null ) return;
             // the block was added to the world, let's add it to the drawing buffer
             XrayRenderer.ores.add( new BlockInfo(pos, data.getOutline().getColor()) );
 		}
