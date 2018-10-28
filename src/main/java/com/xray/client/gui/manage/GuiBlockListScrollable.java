@@ -1,7 +1,9 @@
-package com.xray.client.gui;
+package com.xray.client.gui.manage;
 
+import com.xray.client.gui.utils.GuiBase;
+import com.xray.client.gui.GuiSelectionScreen;
 import com.xray.common.XRay;
-import com.xray.common.reference.OreInfo;
+import com.xray.common.reference.block.BlockItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -14,19 +16,19 @@ import java.util.ArrayList;
 /**
  * Created by MiKeY on 07/07/17.
  */
-public class GuiBlocks extends GuiContainer {
+public class GuiBlockListScrollable extends GuiBase {
     private RenderItem render;
     private GuiBlocksList blockList;
-    private ArrayList<OreInfo> blocks = new ArrayList<>();
+    private ArrayList<BlockItem> blocks;
     private GuiTextField search;
     private String lastSearched = "";
     private int selected = -1;
 
     private static final int BUTTON_CANCEL = 0;
 
-    GuiBlocks() {
+    public GuiBlockListScrollable() {
         super(false);
-        setBlocks( XRay.blockList );
+        this.blocks = XRay.blockList;
     }
 
     boolean blockSelected(int index) {
@@ -40,7 +42,7 @@ public class GuiBlocks extends GuiContainer {
 
         this.selected = index;
         mc.player.closeScreen();
-        mc.displayGuiScreen( new GuiAdd( blocks.get( this.selected ) ) );
+        mc.displayGuiScreen( new GuiAddBlock( blocks.get( this.selected ) ) );
     }
 
     @Override
@@ -62,7 +64,7 @@ public class GuiBlocks extends GuiContainer {
         {
             case BUTTON_CANCEL:
                 mc.player.closeScreen();
-                mc.displayGuiScreen( new GuiList() );
+                mc.displayGuiScreen( new GuiSelectionScreen() );
                 break;
 
             default:
@@ -88,10 +90,9 @@ public class GuiBlocks extends GuiContainer {
 
     private void reloadBlocks() {
         blocks = new ArrayList<>();
-        ArrayList<OreInfo> tmpBlocks = new ArrayList<>();
-        for( OreInfo block : XRay.blockList ) {
-            if( block.getName().toLowerCase().contains( search.getText().toLowerCase() )
-		    || block.getDisplayName().toLowerCase().contains( search.getText().toLowerCase() ) )
+        ArrayList<BlockItem> tmpBlocks = new ArrayList<>();
+        for( BlockItem block : XRay.blockList ) {
+            if( block.getItemStack().getDisplayName().toLowerCase().contains(search.getText().toLowerCase()) )
                 tmpBlocks.add(block);
         }
         blocks = tmpBlocks;
@@ -108,15 +109,10 @@ public class GuiBlocks extends GuiContainer {
     }
 
     @Override
-    public void mouseClicked( int x, int y, int button ) throws IOException
-    {
-        super.mouseClicked( x, y, button );
-        search.mouseClicked(x, y, button );
+    public void mouseClicked( int x, int y, int button ) throws IOException {
+        super.mouseClicked(x, y, button);
+        search.mouseClicked(x, y, button);
         this.blockList.handleMouseInput(x, y);
-    }
-
-    private void setBlocks(ArrayList<OreInfo> blocks) {
-        this.blocks = blocks;
     }
 
     Minecraft getMinecraftInstance() {

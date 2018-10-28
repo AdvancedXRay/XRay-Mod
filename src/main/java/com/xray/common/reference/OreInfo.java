@@ -16,6 +16,7 @@ import net.minecraftforge.oredict.OreDictionary;
  * - a color
  * - 2 options (drawable and oredict)
  */
+@Deprecated
 public class OreInfo implements Comparable<OreInfo>
 {
 	public static final int[] DEFAULT_COLOR = new int[] { 128, 128, 128 };

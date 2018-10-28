@@ -1,26 +1,21 @@
 package com.xray.client.render;
 
-import com.xray.client.xray.XrayController;
-import com.xray.common.reference.BlockId;
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.block.state.IBlockState;
-
-import net.minecraft.client.Minecraft;
-import com.xray.common.reference.BlockInfo;
+import com.xray.client.xray.XRayController;
+import com.xray.common.XRay;
+import com.xray.common.reference.block.BlockData;
+import com.xray.common.reference.block.BlockInfo;
 import com.xray.common.utils.WorldRegion;
-import java.util.Map;
-
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
+import java.util.*;
+
 public class ClientTick implements Runnable
 {
-	private static final Minecraft mc = Minecraft.getMinecraft();
 	private final WorldRegion box;
 
 	public ClientTick( WorldRegion region )
@@ -35,17 +30,24 @@ public class ClientTick implements Runnable
 	}
 
 	/**
-	 * Use XrayController.requestBlockFinder() to trigger a scan.
+	 * Use XRayController.requestBlockFinder() to trigger a scan.
 	 */
 	private void blockFinder() {
-		Map<BlockId, int[]> ores = XrayController.searchList.getDrawableBlocks();
-		if ( ores.isEmpty() )
-			return; // no need to scan the region if there's nothing to find
+        HashMap<String, Deque<BlockData>> blocks = XRayController.getBlockStore().getStore();
+		if ( blocks.isEmpty() || XRayController.getBlockStore().getDrawStore().isEmpty() ) {
+		    if( !XrayRenderer.ores.isEmpty() )
+		        XrayRenderer.ores.clear();
+            return; // no need to scan the region if there's nothing to find
+        }
 
-		final World world = mc.world;
-		final List<BlockInfo> temp = new ArrayList<>();
-		BlockId key; // Search key for the map
+		final World world = XRay.mc.world;
+		final List<BlockInfo> renderQueue = new ArrayList<>();
+
 		int lowBoundX, highBoundX, lowBoundY, highBoundY, lowBoundZ, highBoundZ;
+
+		// Used for cleaning up the searching process
+		IBlockState currentState;
+        String currentName;
 
 		// Loop on chunks (x, z)
 		for ( int chunkX = box.minChunkX; chunkX <= box.maxChunkX; chunkX++ )
@@ -85,14 +87,35 @@ public class ClientTick implements Runnable
 					for ( int i = lowBoundX; i <= highBoundX; i++ ) {
 						for ( int j = lowBoundY; j <= highBoundY; j++ ) {
 							for ( int k = lowBoundZ; k <= highBoundZ; k++ ) {
-								if( ebs.get(i, j, k).getBlock() == Blocks.AIR || ebs.get(i, j, k).getBlock() == Blocks.STONE)
+								currentState = ebs.get(i, j, k);
+
+								// Reject blacklisted blocks
+								if( XRayController.blackList.contains(currentState.getBlock()) )
 									continue;
 
-								key = BlockId.fromBlockState( ebs.get(i, j, k) );
-
-								if (ores.containsKey( key )) // The reason for using Set/Map
+								// Find our blocks from the list
+                                currentName = currentState.getBlock().getLocalizedName();
+								if (blocks.containsKey(currentName)) // The reason for using Set/Map
 								{
-									temp.add( new BlockInfo(x + i, y + j, z + k, ores.get(key)) ); // Add this block to the temp list using world coordinates
+                                    // Looking at default allows us to skip the for loop below
+								    if( XRayController.getBlockStore().defaultContains(currentName) ) {
+                                      
+								        BlockData tmp = blocks.get(currentName).getFirst();
+								        if( tmp == null || !tmp.isDrawing() ) // fail safe
+								            continue;
+								        // Push the block to the render queue
+                                        renderQueue.add(new BlockInfo(x + i, y + j, z + k, tmp.getOutline().getColor()));
+
+                                    } else {
+								        if( !XRayController.getBlockStore().getDrawStore().contains(Block.getStateId(currentState)) )
+								            continue;
+
+								        // Find from our list and push to the queue
+                                        for (BlockData data : blocks.get(currentName)) {
+                                            if (Block.getStateId(data.state) == Block.getStateId(currentState))
+                                                renderQueue.add(new BlockInfo(x + i, y + j, z + k, data.getOutline().getColor()));
+                                        }
+                                    }
 								}
 							}
 						}
@@ -100,10 +123,10 @@ public class ClientTick implements Runnable
 				}
 			}
 		}
-		final BlockPos playerPos = mc.player.getPosition();
-		temp.sort((t, t1) -> Double.compare(t1.distanceSq(playerPos), t.distanceSq(playerPos)));
+		final BlockPos playerPos = XRay.mc.player.getPosition();
+		renderQueue.sort((t, t1) -> Double.compare(t1.distanceSq(playerPos), t.distanceSq(playerPos)));
 		XrayRenderer.ores.clear();
-		XrayRenderer.ores.addAll( temp ); // Add all our found blocks to the XrayRenderer.ores list. To be use by XrayRenderer when drawing.
+		XrayRenderer.ores.addAll( renderQueue ); // Add all our found blocks to the XrayRenderer.ores list. To be use by XrayRenderer when drawing.
 	}
 
 	/**
@@ -115,16 +138,35 @@ public class ClientTick implements Runnable
 	 */
 	public static void checkBlock( BlockPos pos, IBlockState state, boolean add )
 	{
-		if ( !XrayController.drawOres() ) return; // just pass
+		if ( !XRayController.drawOres() || XRayController.getBlockStore().getStore().isEmpty() )
+		    return; // just pass
+
+        String currentName = state.getBlock().getLocalizedName();
+        if (XRayController.getBlockStore().getStore().containsKey(currentName))
+            return;
 
 		// Let's see if the block to check is an ore we monitor
-		int[] color = XrayController.searchList.getDrawableBlocks().get( BlockId.fromBlockState(state) );
-		if ( color != null ) // it's a block we are monitoring
+		if ( XRayController.getBlockStore().getDrawStore().indexOf(Block.getStateId(state)) != -1) // it's a block we are monitoring
 		{
-			if ( add )	// the block was added to the world, let's add it to the drawing buffer
-				XrayRenderer.ores.add( new BlockInfo(pos, color) );
-			else		// it was removed from the world, let's remove it from the buffer as well
-				XrayRenderer.ores.remove( new BlockInfo(pos, null) );
+		    if( !add ) {
+                XrayRenderer.ores.remove( new BlockInfo(pos, null) );
+                return;
+            }
+
+		    BlockData data = null;
+            if( XRayController.getBlockStore().defaultContains(currentName) ) {
+                data = XRayController.getBlockStore().getStore().get(currentName).getFirst();
+                if( data == null ) return;
+            } else {
+                // Find from our list and push to the queue
+                for (BlockData d : XRayController.getBlockStore().getStore().get(currentName)) {
+                    if (Block.getStateId(d.state) == Block.getStateId(state)) data = d;
+                }
+            }
+
+            if( data == null ) return;
+            // the block was added to the world, let's add it to the drawing buffer
+            XrayRenderer.ores.add( new BlockInfo(pos, data.getOutline().getColor()) );
 		}
 	}
 }

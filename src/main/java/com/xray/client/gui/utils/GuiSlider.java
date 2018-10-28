@@ -1,4 +1,4 @@
-package com.xray.client.gui;
+package com.xray.client.gui.utils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -7,12 +7,12 @@ import org.lwjgl.opengl.GL11;
 public class GuiSlider extends GuiButton
 {
 
-    float sliderValue = 1.0F;
+    public float sliderValue = 1.0F;
     private float sliderMaxValue = 1.0F;
     private boolean dragging = false;
     private String label;
 
-    GuiSlider(int id, int x, int y, String label, float startingValue, float maxValue)
+    public GuiSlider(int id, int x, int y, String label, float startingValue, float maxValue)
     {
         super(id, x, y, 202, 20, label);
         this.label = label;

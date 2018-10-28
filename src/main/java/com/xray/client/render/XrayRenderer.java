@@ -1,7 +1,7 @@
 package com.xray.client.render;
 
-import com.xray.common.XRay;
-import com.xray.common.reference.BlockInfo;
+import com.xray.common.config.ConfigHandler;
+import com.xray.common.reference.block.BlockInfo;
 import com.xray.common.utils.Utils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -12,17 +12,16 @@ import java.util.List;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
-// TODO: Please refactor of all this file :heart:
 public class XrayRenderer
 {
     public static List<BlockInfo> ores = Collections.synchronizedList( new ArrayList<>() ); // this is accessed by threads
-    // Opacity is weird as all hell. We save it as 0 - 1 / off -> full so we need to convert that value
-    private final static int opacity = XRay.outlineOpacity >= 1 ? 255 : XRay.outlineOpacity <= 0 ? 0 : (int) (XRay.outlineOpacity * 255); // Pretty simple :D
 
-    public static final int GL_FRONT_AND_BACK = 1032;
-    public static final int GL_LINE = 6913;
-    public static final int GL_FILL = 6914;
-    public static final int GL_LINES = 1;
+    private final static int opacity = ConfigHandler.outlineOpacity >= 1 ? 255 : ConfigHandler.outlineOpacity <= 0 ? 0 : (int) (ConfigHandler.outlineOpacity * 255); // Pretty simple :D
+
+    private static final int GL_FRONT_AND_BACK = 1032;
+    private static final int GL_LINE = 6913;
+    private static final int GL_FILL = 6914;
+    private static final int GL_LINES = 1;
 
 	public static void drawOres( float playerX, float playerY, float playerZ )
 	{
@@ -62,7 +61,7 @@ public class XrayRenderer
                 GlStateManager.glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
                 GlStateManager.blendFunc( GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA );
                 GlStateManager.enableBlend();
-                GlStateManager.glLineWidth( XRay.outlineThickness );
+                GlStateManager.glLineWidth( ConfigHandler.outlineThickness );
             }
 
             @Override
@@ -75,6 +74,7 @@ public class XrayRenderer
                 GlStateManager.enableTexture2D();
             }
         },
+        // TODO:
         ENTITIES {
             @Override
             public void apply()

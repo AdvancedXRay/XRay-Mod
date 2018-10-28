@@ -1,4 +1,4 @@
-package com.xray.client.gui;
+package com.xray.client.gui.utils;
 
 import com.xray.common.reference.Reference;
 import net.minecraft.client.gui.FontRenderer;
@@ -15,14 +15,14 @@ import java.io.IOException;
 /**
  * Created by MiKeY on 08/07/17.
  */
-public class GuiContainer extends GuiScreen {
+public class GuiBase extends GuiScreen {
 
     private boolean hasSide = false;
     private String sideTitle = "";
     private int backgroundWidth = 229;
     private int backgroundHeight = 235;
 
-    GuiContainer( boolean hasSide ) {
+    public GuiBase(boolean hasSide ) {
         this.hasSide = hasSide;
     }
 
@@ -120,7 +120,7 @@ public class GuiContainer extends GuiScreen {
         this.backgroundHeight = height;
     }
 
-    FontRenderer getFontRender() {
+    public FontRenderer getFontRender() {
         return this.mc.fontRenderer;
     }
 }
