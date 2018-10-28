@@ -36,7 +36,7 @@ public class ClientTick implements Runnable
 	 */
 	private void blockFinder() {
         blocks = XRayController.getBlockStore().getStore();
-		if ( blocks.isEmpty() || !XRayController.getBlockStore().hasDrawables() )
+		if ( blocks.isEmpty() || XRayController.getBlockStore().getDrawStore().isEmpty() )
 			return; // no need to scan the region if there's nothing to find
 
 		final World world = XRay.mc.world;
@@ -100,12 +100,15 @@ public class ClientTick implements Runnable
 								    if( XRayController.getBlockStore().defaultContains(currentName) ) {
                                       
 								        BlockData tmp = blocks.get(currentName).getFirst();
-								        if( tmp == null ) // fail safe
+								        if( tmp == null || !tmp.isDrawing() ) // fail safe
 								            continue;
 								        // Push the block to the render queue
                                         renderQueue.add(new BlockInfo(x + i, y + j, z + k, tmp.getOutline().getColor()));
 
                                     } else {
+                                        if( !XRayController.getBlockStore().getDrawStore().contains(Block.getStateId(currentState)) )
+                                            continue;
+
 								        // Find from our list and push to the queue
                                         for (BlockData data : blocks.get(currentState.getBlock().getLocalizedName())) {
                                             if (Block.getStateId(data.state) == Block.getStateId(currentState))

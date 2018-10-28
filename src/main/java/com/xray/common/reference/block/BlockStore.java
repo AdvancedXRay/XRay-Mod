@@ -1,10 +1,13 @@
 package com.xray.common.reference.block;
 
+import net.minecraft.block.Block;
+
 import java.util.*;
 
 public class BlockStore {
 
     private HashMap<String, Deque<BlockData>> store = new HashMap<>();
+    private List<Integer> drawStore = new ArrayList<>();
     private boolean hasDrawables = false;
 
     // This is used to avoid having to scan the BlockData used in this.store.list<BlockData>
@@ -36,11 +39,18 @@ public class BlockStore {
         if( !this.hasDrawables && data.isDrawing() )
             this.hasDrawables = true;
 
+        if( data.isDrawing() )
+            this.drawStore.add(Block.getStateId(data.getState()));
+
         return true;
     }
 
     public HashMap<String, Deque<BlockData>> getStore() {
         return store;
+    }
+
+    public List<Integer> getDrawStore() {
+        return drawStore;
     }
 
     public boolean hasDrawables() {
@@ -54,17 +64,24 @@ public class BlockStore {
         Deque<BlockData> data = this.store.get(key);
         if( block.isDefault() ) {
             data.getFirst().drawing = !data.getFirst().drawing;
-            this.updateDrawables();
+            this.updateDrawStore(data.getFirst().drawing, Block.getStateId(block.getState()));
             return;
         }
 
         for ( BlockData d : data ) {
             if (d.getState() == block.getState()) {
                 d.drawing = !d.drawing;
-                this.updateDrawables();
+                this.updateDrawStore(d.drawing, Block.getStateId(block.getState()));
                 break; // We're done. Lets not waste time
             }
         }
+    }
+
+    private void updateDrawStore(boolean addRemove, int stateId) {
+        if( addRemove )
+            this.drawStore.add(stateId);
+        else
+            this.drawStore.remove(this.drawStore.indexOf(stateId));
     }
 
     /**
@@ -74,6 +91,7 @@ public class BlockStore {
      * Pos solution to this would be to add a UUID to the blockData and store
      * a list of those UUID in our store. Then we can simplify this loop dramatically.
      */
+    @Deprecated
     private void updateDrawables() {
         boolean hasAtLeastOne = false;
         for(Map.Entry<String, Deque<BlockData>> store : this.store.entrySet()) {
@@ -110,7 +128,7 @@ public class BlockStore {
      */
     public void printStore() {
         System.out.println("----==============================================----");
-        System.out.println("-> [Printing Block Store]");
+        System.out.println("-> Block Store");
         for (Map.Entry<String, Deque<BlockData>> data:
                 this.store.entrySet()) {
 
@@ -118,6 +136,10 @@ public class BlockStore {
             for (BlockData block : data.getValue() ) {
                 System.out.println(String.format("---> [%b, %s, %s, %s]", block.isDefault(), block.getState().toString(), block.getOutline().getBlue(), block.getName()));
             }
+        }
+        System.out.println("-> Draw Store");
+        for (int id : this.drawStore) {
+            System.out.println(String.format("---> [%s]", String.valueOf(id)));
         }
         System.out.println("----==============================================----");
     }
