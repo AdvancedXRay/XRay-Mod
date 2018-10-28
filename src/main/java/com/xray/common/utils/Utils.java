@@ -42,6 +42,11 @@ public class Utils {
         );
     }
 
+    public static int clampColor(int c)
+    {
+        return c < 0 ? 0 : c > 255 ? 255 : c;
+    }
+
     /**
      * Renders a bounding box around a specific block.
      * Could be done better and should use {@link net.minecraft.util.math.AxisAlignedBB#AxisAlignedBB(BlockPos)}
