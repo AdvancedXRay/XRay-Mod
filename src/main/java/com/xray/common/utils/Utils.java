@@ -52,6 +52,9 @@ public class Utils {
      * @param opacity Opacity of the outlines
      */
     public static void renderBlockBounding(BufferBuilder buffer, BlockInfo b, int opacity) {
+        if( b == null )
+            return;
+
         final float size = 1.0f;
         int red = b.color[0];
         int green = b.color[1];
