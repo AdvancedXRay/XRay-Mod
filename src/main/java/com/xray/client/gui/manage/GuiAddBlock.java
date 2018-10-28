@@ -77,6 +77,7 @@ public class GuiAddBlock extends GuiBase {
 						new OutlineColor((int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255)),
                         iBlockState.getBlock().getDefaultState() == iBlockState,
                         iBlockState,
+						selectBlock.getItemStack(),
 						true
 					)
 				);

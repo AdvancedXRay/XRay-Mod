@@ -229,7 +229,7 @@ public class GuiSelectionScreen extends GuiBase
 		for ( GuiPaged item : this.renderList ) {
 			try {
 				this.renderColor(item.x, item.y, item.getBlock().getOutline().getColor());
-				this.itemRender.renderItemAndEffectIntoGUI( new ItemStack(item.getBlock().getState().getBlock()), item.x + 2, item.y + 2 );
+				this.itemRender.renderItemAndEffectIntoGUI( item.getBlock().getItemStack(), item.x + 2, item.y + 2 );
 			} catch ( Exception ignored ) {
 			    // If this fails it's not the end of the world
 			}
