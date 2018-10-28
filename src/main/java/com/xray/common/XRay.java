@@ -23,8 +23,7 @@ public class XRay
 {
 	public static ArrayList<BlockItem> blockList = new ArrayList<>();
 
-	// TODO: Use this more...
-	private static Minecraft mc = Minecraft.getMinecraft();
+	public static Minecraft mc = Minecraft.getMinecraft();
 
 	// Config settings
 	public static Configuration config;
