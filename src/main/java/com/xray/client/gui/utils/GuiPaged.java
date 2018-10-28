@@ -1,14 +1,9 @@
-package com.xray.client.gui.helper;
+package com.xray.client.gui.utils;
 
 import com.xray.common.reference.OreInfo;
 import net.minecraft.client.gui.GuiButton;
 
-/**
- * Created by MiKeY on 08/07/17.
- */
-
-// TODO: refactor / remove this and merge it into page handler
-public class HelperGuiList {
+public class GuiPaged {
 
     public int id;
     public int x;
@@ -17,7 +12,7 @@ public class HelperGuiList {
     private OreInfo ore;
     private GuiButton button;
 
-    public HelperGuiList(int id, int pageId, int x, int y, OreInfo ore ) {
+    public GuiPaged(int id, int pageId, int x, int y, OreInfo ore ) {
 
         this.id = id;
         this.pageId = pageId;

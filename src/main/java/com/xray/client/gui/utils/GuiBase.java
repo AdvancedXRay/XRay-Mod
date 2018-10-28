@@ -1,4 +1,4 @@
-package com.xray.client.gui;
+package com.xray.client.gui.utils;
 
 import com.xray.common.reference.Reference;
 import net.minecraft.client.gui.FontRenderer;

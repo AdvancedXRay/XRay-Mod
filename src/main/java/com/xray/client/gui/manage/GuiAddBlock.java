@@ -1,11 +1,13 @@
-package com.xray.client.gui;
+package com.xray.client.gui.manage;
 
+import com.xray.client.gui.utils.GuiBase;
+import com.xray.client.gui.GuiSelectionScreen;
+import com.xray.client.gui.utils.GuiSlider;
 import com.xray.client.xray.XrayController;
 import com.xray.common.reference.BlockData;
 import com.xray.common.reference.BlockItem;
 import com.xray.common.reference.OutlineColor;
 import com.xray.common.utils.Utils;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -15,7 +17,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.EnumFacing;
 
 import java.io.IOException;
 import java.util.Objects;

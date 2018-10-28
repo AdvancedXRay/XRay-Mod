@@ -1,4 +1,4 @@
-package com.xray.client.gui;
+package com.xray.client.gui.utils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;

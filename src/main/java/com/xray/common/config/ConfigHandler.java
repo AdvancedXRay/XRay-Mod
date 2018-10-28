@@ -23,7 +23,7 @@ public class ConfigHandler
 	public static float outlineOpacity = 1f;
 	public static boolean showOverlay = true;
 
-	public static final String CATEGORY_PREFIX_ORES = "ores";
+	private static final String CATEGORY_PREFIX_ORES = "ores";
 	public static final List<String> ORDER = new ArrayList<String>() {{ // Sort properties in config file
 		add("name");
 		add("meta");
