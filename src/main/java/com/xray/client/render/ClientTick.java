@@ -18,7 +18,6 @@ import java.util.*;
 public class ClientTick implements Runnable
 {
 	private final WorldRegion box;
-    private static HashMap<String, Deque<BlockData>> blocks;
 
 	public ClientTick( WorldRegion region )
 	{
@@ -113,7 +112,7 @@ public class ClientTick implements Runnable
 								            continue;
 
 								        // Find from our list and push to the queue
-                                        for (BlockData data : blocks.get(currentState.getBlock().getLocalizedName())) {
+                                        for (BlockData data : blocks.get(currentName)) {
                                             if (Block.getStateId(data.state) == Block.getStateId(currentState))
                                                 renderQueue.add(new BlockInfo(x + i, y + j, z + k, data.getOutline().getColor()));
                                         }
@@ -140,16 +139,34 @@ public class ClientTick implements Runnable
 	 */
 	public static void checkBlock( BlockPos pos, IBlockState state, boolean add )
 	{
-		if ( !XRayController.drawOres() ) return; // just pass
+		if ( !XRayController.drawOres() || XRayController.getBlockStore().getStore().isEmpty() )
+		    return; // just pass
+
+        String currentName = state.getBlock().getLocalizedName();
+        if (XRayController.getBlockStore().getStore().containsKey(currentName))
+            return;
 
 		// Let's see if the block to check is an ore we monitor
-		int[] color = XRayController.searchList.getDrawableBlocks().get( BlockId.fromBlockState(state) );
-		if ( color != null ) // it's a block we are monitoring
+		if ( XRayController.getBlockStore().getDrawStore().indexOf(Block.getStateId(state)) != -1) // it's a block we are monitoring
 		{
-			if ( add )	// the block was added to the world, let's add it to the drawing buffer
-				XrayRenderer.ores.add( new BlockInfo(pos, color) );
-			else		// it was removed from the world, let's remove it from the buffer as well
-				XrayRenderer.ores.remove( new BlockInfo(pos, null) );
+		    if( !add ) {
+                XrayRenderer.ores.remove( new BlockInfo(pos, null) );
+                return;
+            }
+
+		    BlockData data;
+            if( XRayController.getBlockStore().defaultContains(currentName) ) {
+                data = XRayController.getBlockStore().getStore().get(currentName).getFirst();
+                if( data == null ) return;
+            } else {
+                // Find from our list and push to the queue
+                for (BlockData d : XRayController.getBlockStore().getStore().get(currentName)) {
+                    if (Block.getStateId(d.state) == Block.getStateId(state)) data = d;
+                }
+            }
+
+            // the block was added to the world, let's add it to the drawing buffer
+            XrayRenderer.ores.add( new BlockInfo(pos, data.getOutline().getColor()) );
 		}
 	}
 }

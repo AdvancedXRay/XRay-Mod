@@ -77,8 +77,6 @@ public class BlockStore {
             this.drawStore.add(stateId);
         else
             this.drawStore.remove(this.drawStore.indexOf(stateId));
-
-        this.printStore();
     }
 
     public boolean defaultContains(String key) {
