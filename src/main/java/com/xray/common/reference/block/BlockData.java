@@ -10,14 +10,18 @@ public class BlockData {
     public OutlineColor color;
     public boolean isDefault;
     public IBlockState state;
-    public boolean draw;
+    public boolean drawing;
 
     public BlockData(ResourceLocation name, OutlineColor color, boolean isDefault, IBlockState state, boolean draw) {
         this.name = name;
         this.color = color;
         this.isDefault = isDefault;
         this.state = state;
-        this.draw = draw;
+        this.drawing = draw;
+    }
+
+    public boolean isDrawing() {
+        return drawing;
     }
 
     public ResourceLocation getName() {

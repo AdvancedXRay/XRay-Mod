@@ -20,6 +20,9 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ClientProxy
 {
 	public void preInit(FMLPreInitializationEvent event) {
@@ -35,6 +38,16 @@ public class ClientProxy
 
 	public void init(FMLInitializationEvent event) {
 
+	    // Create a tmp way of adding blocks
+        ArrayList<Block> blocks = new ArrayList<Block>() {{
+           add(Blocks.CONCRETE);
+           add(Blocks.COBBLESTONE);
+        }};
+
+        for( Block b : blocks ) {
+
+        }
+//        XRayController.getBlockStore().putBlock();
 	}
 
 	public void postInit(FMLPostInitializationEvent event) {

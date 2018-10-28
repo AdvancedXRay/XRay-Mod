@@ -4,9 +4,10 @@ import com.xray.client.render.ClientTick;
 import com.xray.client.render.XrayRenderer;
 import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
-import com.xray.common.reference.block.BlockStore;
 import com.xray.common.reference.SearchList;
+import com.xray.common.reference.block.BlockStore;
 import com.xray.common.utils.WorldRegion;
+
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.Vec3i;
@@ -43,7 +44,7 @@ public class XRayController
      * Global blockStore used for:
      * [Rendering, GUI, Config Handling]
      */
-	public static BlockStore blockStore = new BlockStore();
+	private static BlockStore blockStore = new BlockStore();
 
 	// Thread management
 	private static Future task;
@@ -53,7 +54,11 @@ public class XRayController
 	private static boolean drawOres = false; // Off by default
 	private static boolean drawCaves = false;
 
-	// Public accessors
+    public static BlockStore getBlockStore() {
+        return blockStore;
+    }
+
+    // Public accessors
 	public static boolean drawOres() { return drawOres && XRay.mc.world != null && XRay.mc.player != null; }
 	public static void toggleDrawOres()
 	{
