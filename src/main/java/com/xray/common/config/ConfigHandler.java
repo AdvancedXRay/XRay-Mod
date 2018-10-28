@@ -56,15 +56,17 @@ public class ConfigHandler
         for (Map.Entry<String, Deque<BlockData>> store : XRayController.getBlockStore().getStore().entrySet()) {
             for (BlockData data: store.getValue()) {
 
-                cat.put("entry-name",   new Property("entry-name", data.getEntryName(), Property.Type.STRING));
-                cat.put("state-id",     new Property("state-id", "" + Block.getStateId(data.getState()), Property.Type.INTEGER));
-                cat.put("default",      new Property("default", "" + data.isDefault(), Property.Type.BOOLEAN));
-                cat.put("red",          new Property("red", "" + data.getOutline().getRed(), Property.Type.INTEGER));
-                cat.put("green",        new Property("green", "" + data.getOutline().getGreen(), Property.Type.INTEGER));
-                cat.put("blue",         new Property("blue", "" + data.getOutline().getBlue(), Property.Type.INTEGER));
-                cat.put("enabled",      new Property("enabled", "" + data.isDrawing(), Property.Type.BOOLEAN));
+                ConfigCategory newCat = new ConfigCategory( data.getState().toString(), cat);
 
-                cat.setPropertyOrder( ConfigHandler.ORDER );
+                newCat.put("entry-name",   new Property("entry-name", data.getEntryName(), Property.Type.STRING));
+                newCat.put("state-id",     new Property("state-id", "" + Block.getStateId(data.getState()), Property.Type.INTEGER));
+                newCat.put("default",      new Property("default", "" + data.isDefault(), Property.Type.BOOLEAN));
+                newCat.put("red",          new Property("red", "" + data.getOutline().getRed(), Property.Type.INTEGER));
+                newCat.put("green",        new Property("green", "" + data.getOutline().getGreen(), Property.Type.INTEGER));
+                newCat.put("blue",         new Property("blue", "" + data.getOutline().getBlue(), Property.Type.INTEGER));
+                newCat.put("enabled",      new Property("enabled", "" + data.isDrawing(), Property.Type.BOOLEAN));
+
+                newCat.setPropertyOrder( ConfigHandler.ORDER );
             }
         }
 	}
@@ -109,7 +111,7 @@ public class ConfigHandler
                             ),
                             cat.get("default").getBoolean(),
                             block,
-                            new ItemStack(block.getBlock()),
+                            new ItemStack(block.getBlock(), 1, block.getBlock().getMetaFromState(block)),
                             cat.get("enabled").getBoolean()
                     ));
                 }
@@ -120,8 +122,14 @@ public class ConfigHandler
 			}
 		}
 
-        for (BlockData data: blockQueue)
-            XRayController.getBlockStore().putBlock(data.getState().getBlock().getLocalizedName(), data);
+        for (BlockData data: blockQueue) {
+            if( data == null )
+                continue;
+
+            XRayController.getBlockStore().putBlock(
+                    data.getState().getBlock().getLocalizedName(),
+                    data);
+        }
 
 		syncConfig();
 		XRay.config.save();

@@ -42,7 +42,7 @@ public class GuiBlockListScrollable extends GuiBase {
 
         this.selected = index;
         mc.player.closeScreen();
-        mc.displayGuiScreen( new GuiAddBlock( blocks.get( this.selected ) ) );
+        mc.displayGuiScreen( new GuiAddBlock( blocks.get( this.selected ), null ) );
     }
 
     @Override

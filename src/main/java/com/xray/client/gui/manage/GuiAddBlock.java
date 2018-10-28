@@ -8,6 +8,7 @@ import com.xray.common.reference.block.BlockData;
 import com.xray.common.reference.block.BlockItem;
 import com.xray.common.utils.OutlineColor;
 import com.xray.common.utils.Utils;
+import jline.internal.Nullable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -31,10 +32,12 @@ public class GuiAddBlock extends GuiBase {
 	private GuiSlider blueSlider;
 	private BlockItem selectBlock;
 	private boolean oreNameCleared  = false;
+	private IBlockState state;
 
-	public GuiAddBlock(BlockItem selectedBlock) {
+	public GuiAddBlock(BlockItem selectedBlock, @Nullable IBlockState state) {
 		super(false);
 		this.selectBlock = selectedBlock;
+		this.state = state;
 	}
 
 	@Override
@@ -66,17 +69,18 @@ public class GuiAddBlock extends GuiBase {
 
 				// Fake a placement to get the correct state
                 // @warn: likely will not work correctly for chests
-                IBlockState iBlockState = Utils.getStateFromPlacement(this.mc.world, this.mc.player, selectBlock.getItemStack());
+				if( this.state == null )
+                	this.state = Utils.getStateFromPlacement(this.mc.world, this.mc.player, selectBlock.getItemStack());
 
 				// Push the block to the render stack
 				XRayController.getBlockStore().putBlock(
-                    iBlockState.getBlock().getLocalizedName(),
+					this.state.getBlock().getLocalizedName(),
 					new BlockData(
-                        iBlockState.getBlock().getRegistryName(),
-						iBlockState.getBlock().getLocalizedName(),
+						this.state.getBlock().getRegistryName(),
+						oreName.getText(),
 						new OutlineColor((int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255)),
-                        iBlockState.getBlock().getDefaultState() == iBlockState,
-                        iBlockState,
+						this.state.getBlock().getDefaultState() == this.state,
+						this.state,
 						selectBlock.getItemStack(),
 						true
 					)

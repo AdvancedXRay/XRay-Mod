@@ -158,7 +158,7 @@ public class GuiSelectionScreen extends GuiBase
 				// Fake placement for correct meta
 				// Might not work on things like a chest...
 				IBlockState iBlockState = Utils.getStateFromPlacement(this.mc.world, this.mc.player, handItem);
-				mc.displayGuiScreen( new GuiAddBlock( new BlockItem(Block.getStateId(iBlockState), handItem)) );
+				mc.displayGuiScreen( new GuiAddBlock( new BlockItem(Block.getStateId(iBlockState), handItem), null) );
 				break;
 
 			case BUTTON_ADD_LOOK:
@@ -171,8 +171,10 @@ public class GuiSelectionScreen extends GuiBase
 
 						ItemStack lookingStack = lookingAt.getPickBlock(state, ray, mc.world, ray.getBlockPos(), mc.player);
 
+						System.out.printf("%s\n", state.toString());
+
 						mc.player.closeScreen();
-						mc.displayGuiScreen( new GuiAddBlock( new BlockItem(Block.getStateId(state), lookingStack) ) );
+						mc.displayGuiScreen( new GuiAddBlock( new BlockItem(Block.getStateId(state), lookingStack), state ) );
 					}
 					else
                         Utils.sendMessage(mc.player, "[XRay] "+I18n.format("xray.message.nothing_infront") );
