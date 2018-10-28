@@ -142,6 +142,7 @@ public class GuiSelectionScreen extends GuiBase
 //				XRay.logger.debug( "Draw caves: " + XRayController.drawCaves() );
 				XRayController.getBlockStore().getStore().clear();
 				XRayController.getBlockStore().defaultStore.clear();
+				XRayController.getBlockStore().getDrawStore().clear();
 				break;
 
 			case BUTTON_ADD_HAND:
@@ -184,6 +185,7 @@ public class GuiSelectionScreen extends GuiBase
 
 			case BUTTON_CLOSE:
 				mc.player.closeScreen();
+				XRayController.getBlockStore().printStore();
 				break;
 
 			default:

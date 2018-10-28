@@ -8,7 +8,6 @@ public class BlockStore {
 
     private HashMap<String, Deque<BlockData>> store = new HashMap<>();
     private List<Integer> drawStore = new ArrayList<>();
-    private boolean hasDrawables = false;
 
     // This is used to avoid having to scan the BlockData used in this.store.list<BlockData>
     public List<String> defaultStore = new ArrayList<>();
@@ -29,15 +28,15 @@ public class BlockStore {
             // start of the list :D
             if (data.isDefault())
                 this.store.get(key).addFirst(data);
-            else
-                this.store.get(key).add(data);
+            else {
+                if( !this.store.get(key).contains(data) )
+                    this.store.get(key).add(data);
+                else
+                    return false;
+            }
         }
         if (data.isDefault())
             this.defaultStore.add(key);
-
-        // Must be updated upon removal or draw toggle
-        if( !this.hasDrawables && data.isDrawing() )
-            this.hasDrawables = true;
 
         if( data.isDrawing() )
             this.drawStore.add(Block.getStateId(data.getState()));
@@ -51,10 +50,6 @@ public class BlockStore {
 
     public List<Integer> getDrawStore() {
         return drawStore;
-    }
-
-    public boolean hasDrawables() {
-        return this.hasDrawables;
     }
 
     public void toggleDrawing( String key, BlockData block ) {
@@ -82,45 +77,13 @@ public class BlockStore {
             this.drawStore.add(stateId);
         else
             this.drawStore.remove(this.drawStore.indexOf(stateId));
-    }
 
-    /**
-     * Not sure if this is the best way to do this but we need to make
-     * sure that our list does actually contain some kind drawable block.
-     *
-     * Pos solution to this would be to add a UUID to the blockData and store
-     * a list of those UUID in our store. Then we can simplify this loop dramatically.
-     */
-    @Deprecated
-    private void updateDrawables() {
-        boolean hasAtLeastOne = false;
-        for(Map.Entry<String, Deque<BlockData>> store : this.store.entrySet()) {
-            if( hasAtLeastOne )
-                break;
-
-            // Skip loop if there is only a single entry we care about
-            if( this.defaultStore.contains(store.getKey()) ) {
-                if( store.getValue().getFirst().isDrawing() )
-                    hasAtLeastOne = true;
-                continue;
-            }
-
-            for (BlockData data : store.getValue()) {
-                if( hasAtLeastOne )
-                    break;
-
-                if( data.isDrawing() )
-                    hasAtLeastOne = true;
-            }
-        }
-
-        this.hasDrawables = hasAtLeastOne;
+        this.printStore();
     }
 
     public boolean defaultContains(String key) {
         return this.defaultStore.contains(key);
     }
-
 
     /**
      * Used for debugging. Shouldn't be used in released version

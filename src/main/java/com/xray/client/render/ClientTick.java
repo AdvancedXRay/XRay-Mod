@@ -35,9 +35,12 @@ public class ClientTick implements Runnable
 	 * Use XRayController.requestBlockFinder() to trigger a scan.
 	 */
 	private void blockFinder() {
-        blocks = XRayController.getBlockStore().getStore();
-		if ( blocks.isEmpty() || XRayController.getBlockStore().getDrawStore().isEmpty() )
-			return; // no need to scan the region if there's nothing to find
+        HashMap<String, Deque<BlockData>> blocks = XRayController.getBlockStore().getStore();
+		if ( blocks.isEmpty() || XRayController.getBlockStore().getDrawStore().isEmpty() ) {
+		    if( !XrayRenderer.ores.isEmpty() )
+		        XrayRenderer.ores.clear();
+            return; // no need to scan the region if there's nothing to find
+        }
 
 		final World world = XRay.mc.world;
 		final List<BlockInfo> renderQueue = new ArrayList<>();
@@ -96,7 +99,7 @@ public class ClientTick implements Runnable
                                 currentName = currentState.getBlock().getLocalizedName();
 								if (blocks.containsKey(currentName)) // The reason for using Set/Map
 								{
-								    // Looking at default allows us to skip the for loop below
+                                    // Looking at default allows us to skip the for loop below
 								    if( XRayController.getBlockStore().defaultContains(currentName) ) {
                                       
 								        BlockData tmp = blocks.get(currentName).getFirst();
@@ -106,8 +109,8 @@ public class ClientTick implements Runnable
                                         renderQueue.add(new BlockInfo(x + i, y + j, z + k, tmp.getOutline().getColor()));
 
                                     } else {
-                                        if( !XRayController.getBlockStore().getDrawStore().contains(Block.getStateId(currentState)) )
-                                            continue;
+								        if( !XRayController.getBlockStore().getDrawStore().contains(Block.getStateId(currentState)) )
+								            continue;
 
 								        // Find from our list and push to the queue
                                         for (BlockData data : blocks.get(currentState.getBlock().getLocalizedName())) {
