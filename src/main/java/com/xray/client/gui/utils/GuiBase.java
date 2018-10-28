@@ -22,7 +22,7 @@ public class GuiBase extends GuiScreen {
     private int backgroundWidth = 229;
     private int backgroundHeight = 235;
 
-    GuiBase(boolean hasSide ) {
+    public GuiBase(boolean hasSide ) {
         this.hasSide = hasSide;
     }
 
@@ -120,7 +120,7 @@ public class GuiBase extends GuiScreen {
         this.backgroundHeight = height;
     }
 
-    FontRenderer getFontRender() {
+    public FontRenderer getFontRender() {
         return this.mc.fontRenderer;
     }
 }

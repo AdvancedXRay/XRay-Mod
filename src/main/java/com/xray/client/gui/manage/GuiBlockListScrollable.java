@@ -26,7 +26,7 @@ public class GuiBlockListScrollable extends GuiBase {
 
     private static final int BUTTON_CANCEL = 0;
 
-    GuiBlockListScrollable() {
+    public GuiBlockListScrollable() {
         super(false);
         this.blocks = XRay.blockList;
     }

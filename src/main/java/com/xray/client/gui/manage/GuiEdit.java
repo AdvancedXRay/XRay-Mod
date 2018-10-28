@@ -25,7 +25,7 @@ public class GuiEdit extends GuiBase
     private static final int BUTTON_SAVE = 98;
     private static final int BUTTON_CANCEL = 99;
 
-    GuiEdit(OreInfo oreInfo) {
+    public GuiEdit(OreInfo oreInfo) {
         super(true); // Has a sidebar
         this.setSideTitle( I18n.format("xray.single.tools") );
 
@@ -65,7 +65,7 @@ public class GuiEdit extends GuiBase
         {
             case BUTTON_SAVE:
                 int[] rgb = {(int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255)};
-		oreInfo.setColor( rgb );
+		        oreInfo.setColor( rgb );
                 XRayController.searchList.updateOre( oreInfo );
 
                 mc.player.closeScreen();

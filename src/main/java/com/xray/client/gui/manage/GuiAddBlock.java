@@ -32,7 +32,7 @@ public class GuiAddBlock extends GuiBase {
 	private BlockItem selectBlock;
 	private boolean oreNameCleared  = false;
 
-	GuiAddBlock(BlockItem selectedBlock) {
+	public GuiAddBlock(BlockItem selectedBlock) {
 		super(false);
 		this.selectBlock = selectedBlock;
 	}
