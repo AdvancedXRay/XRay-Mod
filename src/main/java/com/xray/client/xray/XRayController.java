@@ -7,33 +7,54 @@ import com.xray.common.config.ConfigHandler;
 import com.xray.common.reference.block.BlockStore;
 import com.xray.common.reference.SearchList;
 import com.xray.common.utils.WorldRegion;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.Vec3i;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class XRayController
 {
-	// Data
-	private static int currentDist = 0; // Index for the distNumers array. Default search distance.
-	public static final SearchList searchList = new SearchList();
+	// Block blackList
+	public static ArrayList blackList = new ArrayList<Block>() {{
+		add(Blocks.AIR);
+		add(Blocks.BEDROCK);
+		add(Blocks.STONE);
+		add(Blocks.GRASS);
+		add(Blocks.DIRT);
+	}};
+
+    /**
+     * Index for {@link XRay#distanceList}
+     */
+	private static int currentDist = 0;
 	private static Vec3i lastPlayerPos = null;
 
+    /**
+     * @deprecated use {@link XRayController#blockStore} instead
+     */
+	@Deprecated
+	public static final SearchList searchList = new SearchList();
+
+	/**
+     * Global blockStore used for:
+     * [Rendering, GUI, Config Handling]
+     */
 	public static BlockStore blockStore = new BlockStore();
 
 	// Thread management
 	private static Future task;
     private static ExecutorService executor;
 
-	// Mod state, cannot be made public because we need to know when the values change
+	// Draw states
 	private static boolean drawOres = false; // Off by default
 	private static boolean drawCaves = false;
 
-	// Public accesors
+	// Public accessors
 	public static boolean drawOres() { return drawOres && XRay.mc.world != null && XRay.mc.player != null; }
-	public static boolean drawCaves() { return drawCaves; }
-	public static void toggleDrawCaves() { drawCaves = !drawCaves; }
 	public static void toggleDrawOres()
 	{
 		if ( !drawOres ) // enable drawing
@@ -48,6 +69,10 @@ public class XRayController
 			shutdownExecutor();
 		}
 	}
+
+    public static boolean drawCaves() { return drawCaves; }
+    public static void toggleDrawCaves() { drawCaves = !drawCaves; }
+
 	public static int getCurrentDist() { return currentDist; }
 	public static int getRadius() { return XRay.distanceList[currentDist]; }
 	public static void setCurrentDist( int dist )

@@ -2,14 +2,12 @@ package com.xray.client.render;
 
 import com.xray.client.xray.XRayController;
 import com.xray.common.XRay;
-import com.xray.common.reference.block.BlockData;
 import com.xray.common.reference.BlockId;
+import com.xray.common.reference.block.BlockData;
 import com.xray.common.reference.block.BlockInfo;
 import com.xray.common.utils.WorldRegion;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -22,14 +20,6 @@ import java.util.Map;
 public class ClientTick implements Runnable
 {
 	private final WorldRegion box;
-
-	private static ArrayList blackList = new ArrayList<Block>() {{
-	    add(Blocks.AIR);
-	    add(Blocks.BEDROCK);
-	    add(Blocks.STONE);
-	    add(Blocks.GRASS);
-	    add(Blocks.DIRT);
-    }};
 
 	public ClientTick( WorldRegion region )
 	{
@@ -98,7 +88,7 @@ public class ClientTick implements Runnable
 								currentState = ebs.get(i, j, k);
 
 								// Reject blacklisted blocks
-								if( blackList.contains(currentState.getBlock()) )
+								if( XRayController.blackList.contains(currentState.getBlock()) )
 									continue;
 
                                 currentName = currentState.getBlock().getLocalizedName();

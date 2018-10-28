@@ -9,6 +9,7 @@ import com.xray.client.gui.utils.GuiPaged;
 import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
 import com.xray.common.reference.*;
+import com.xray.common.reference.block.BlockItem;
 import com.xray.common.utils.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;

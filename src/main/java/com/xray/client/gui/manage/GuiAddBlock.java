@@ -5,7 +5,7 @@ import com.xray.client.gui.GuiSelectionScreen;
 import com.xray.client.gui.utils.GuiSlider;
 import com.xray.client.xray.XRayController;
 import com.xray.common.reference.block.BlockData;
-import com.xray.common.reference.BlockItem;
+import com.xray.common.reference.block.BlockItem;
 import com.xray.common.utils.OutlineColor;
 import com.xray.common.utils.Utils;
 import net.minecraft.block.state.IBlockState;
@@ -132,14 +132,14 @@ public class GuiAddBlock extends GuiBase {
 
 		oreName.drawTextBox();
 
-		renderPreview(width / 2 - 100, height / 2 - 40, 202, 45, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
+		renderPreview(width / 2 - 100, height / 2 - 40, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
 
 		RenderHelper.enableGUIStandardItemLighting();
 		this.itemRender.renderItemAndEffectIntoGUI( selectBlock.getItemStack(), width / 2 + 85, height / 2 - 105 );
 		RenderHelper.disableStandardItemLighting();
 	}
 
-	static void renderPreview(int x, int y, int width, int height, float r, float g, float b) {
+	static void renderPreview(int x, int y, float r, float g, float b) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder tessellate = tessellator.getBuffer();
 		GlStateManager.enableBlend();
@@ -148,9 +148,9 @@ public class GuiAddBlock extends GuiBase {
 		GlStateManager.color(r, g, b, 1);
 		tessellate.begin(7, DefaultVertexFormats.POSITION);
 		tessellate.pos(x, y, 0.0D).endVertex();
-		tessellate.pos(x, y + height, 0.0D).endVertex();
-		tessellate.pos(x + width, y + height, 0.0D).endVertex();
-		tessellate.pos(x+ width, y, 0.0D).endVertex();
+		tessellate.pos(x, y + 45, 0.0D).endVertex();
+		tessellate.pos(x + 202, y + 45, 0.0D).endVertex();
+		tessellate.pos(x+ 202, y, 0.0D).endVertex();
 		tessellator.draw();
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();

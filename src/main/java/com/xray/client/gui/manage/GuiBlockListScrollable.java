@@ -3,7 +3,7 @@ package com.xray.client.gui.manage;
 import com.xray.client.gui.utils.GuiBase;
 import com.xray.client.gui.GuiSelectionScreen;
 import com.xray.common.XRay;
-import com.xray.common.reference.BlockItem;
+import com.xray.common.reference.block.BlockItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;

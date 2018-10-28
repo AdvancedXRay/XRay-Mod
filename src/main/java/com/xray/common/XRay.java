@@ -1,7 +1,7 @@
 package com.xray.common;
 
 import com.xray.common.proxy.ClientProxy;
-import com.xray.common.reference.BlockItem;
+import com.xray.common.reference.block.BlockItem;
 import com.xray.common.reference.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;

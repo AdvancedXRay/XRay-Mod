@@ -118,7 +118,7 @@ public class GuiEdit extends GuiBase
 
         oreName.drawTextBox();
 
-        GuiAddBlock.renderPreview(width / 2 - 138, height / 2 - 40, 202, 45, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
+        GuiAddBlock.renderPreview(width / 2 - 138, height / 2 - 40, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
 
         RenderHelper.enableGUIStandardItemLighting();
         this.itemRender.renderItemAndEffectIntoGUI( oreInfo.getItemStack(), width / 2 + 50, height / 2 - 105 ); // Blocks with no stack will display an empty image. TODO GLDraw image?

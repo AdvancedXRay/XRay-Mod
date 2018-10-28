@@ -7,7 +7,7 @@ import com.xray.client.xray.XRayController;
 import com.xray.client.xray.XRayEventHandler;
 import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
-import com.xray.common.reference.BlockItem;
+import com.xray.common.reference.block.BlockItem;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
