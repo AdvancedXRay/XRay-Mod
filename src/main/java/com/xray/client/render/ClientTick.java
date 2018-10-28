@@ -2,7 +2,6 @@ package com.xray.client.render;
 
 import com.xray.client.xray.XRayController;
 import com.xray.common.XRay;
-import com.xray.common.reference.BlockId;
 import com.xray.common.reference.block.BlockData;
 import com.xray.common.reference.block.BlockInfo;
 import com.xray.common.utils.WorldRegion;
