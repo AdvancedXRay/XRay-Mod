@@ -69,10 +69,11 @@ public class GuiAddBlock extends GuiBase {
                 IBlockState iBlockState = Utils.getStateFromPlacement(this.mc.world, this.mc.player, selectBlock.getItemStack());
 
 				// Push the block to the render stack
-				XRayController.blockStore.putBlock(
+				XRayController.getBlockStore().putBlock(
                     iBlockState.getBlock().getLocalizedName(),
 					new BlockData(
                         iBlockState.getBlock().getRegistryName(),
+						iBlockState.getBlock().getLocalizedName(),
 						new OutlineColor((int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255)),
                         iBlockState.getBlock().getDefaultState() == iBlockState,
                         iBlockState,
@@ -80,7 +81,7 @@ public class GuiAddBlock extends GuiBase {
 					)
 				);
 
-				XRayController.blockStore.printStore();
+				XRayController.getBlockStore().printStore();
 
 				mc.displayGuiScreen( new GuiSelectionScreen() );
 

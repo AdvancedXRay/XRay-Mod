@@ -21,7 +21,7 @@ public class BlockStore {
             this.store.put(key, list);
         } else {
             // If we're adding a default it's possible that the list already contains alternative
-            // Versions of the same block. if this happens the render will pick the 0'th index
+            // versions of the same block. if this happens the render will pick the first index
             // and use that version of the block to render. To solve this we simply insert to the
             // start of the list :D
             if (data.isDefault())
@@ -45,6 +45,24 @@ public class BlockStore {
 
     public boolean hasDrawables() {
         return this.hasDrawables;
+    }
+
+    public void toggleDrawing( String key, BlockData block ) {
+        if( !this.store.containsKey(key) )
+            return;
+
+        Deque<BlockData> data = this.store.get(key);
+        if( block.isDefault() ) {
+            data.getFirst().drawing = !data.getFirst().drawing;
+            return;
+        }
+
+        for ( BlockData d : data ) {
+            if (d.getState() == block.getState()) {
+                d.drawing = !d.drawing;
+                break; // We're done. Lets not waste time
+            }
+        }
     }
 
     /**
@@ -83,6 +101,11 @@ public class BlockStore {
         return this.defaultStore.contains(key);
     }
 
+
+    /**
+     * Used for debugging. Shouldn't be used in released version
+     * TODO: add support for automatically disabling
+     */
     public void printStore() {
         System.out.println("----==============================================----");
         System.out.println("-> [Printing Block Store]");

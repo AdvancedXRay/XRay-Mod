@@ -1,6 +1,6 @@
 package com.xray.client.gui.utils;
 
-import com.xray.common.reference.OreInfo;
+import com.xray.common.reference.block.BlockData;
 import net.minecraft.client.gui.GuiButton;
 
 public class GuiPaged {
@@ -9,18 +9,24 @@ public class GuiPaged {
     public int x;
     public int y;
     private int pageId;
-    private OreInfo ore;
+    private BlockData block;
+    private String storeKey;
     private GuiButton button;
 
-    public GuiPaged(int id, int pageId, int x, int y, OreInfo ore ) {
+    public GuiPaged(int id, int pageId, int x, int y, String storeKey, BlockData block ) {
 
         this.id = id;
         this.pageId = pageId;
         this.x = x;
         this.y = y;
-        this.ore = ore;
-        this.button = new GuiButton(id, x+25, y, 181, 20, ore.getDisplayName() + ": " + (ore.isDrawable() ? "On" : "Off"));
+        this.block = block;
+        this.storeKey = storeKey;
+        this.button = new GuiButton(id, x+25, y, 181, 20, block.getEntryName() + ": " + (block.isDrawing() ? "On" : "Off"));
 
+    }
+
+    public String getStoreKey() {
+        return storeKey;
     }
 
     public int getId() {
@@ -39,8 +45,8 @@ public class GuiPaged {
         return pageId;
     }
 
-    public OreInfo getOre() {
-        return ore;
+    public BlockData getBlock() {
+        return block;
     }
 
     public GuiButton getButton() {

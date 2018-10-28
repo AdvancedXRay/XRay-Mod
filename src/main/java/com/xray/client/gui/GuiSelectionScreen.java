@@ -9,6 +9,7 @@ import com.xray.client.gui.utils.GuiPaged;
 import com.xray.common.XRay;
 import com.xray.common.config.ConfigHandler;
 import com.xray.common.reference.*;
+import com.xray.common.reference.block.BlockData;
 import com.xray.common.reference.block.BlockItem;
 import com.xray.common.utils.Utils;
 import net.minecraft.block.Block;
@@ -25,7 +26,9 @@ import net.minecraft.util.text.TextComponentString;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
+import java.util.Map;
 
 public class GuiSelectionScreen extends GuiBase
 {
@@ -56,19 +59,21 @@ public class GuiSelectionScreen extends GuiBase
 		this.renderList.clear();
 		int x = width / 2 - 140, y = height / 2 - 106, count = 0, page = 0;
 
-		for( OreInfo ore : XRayController.searchList.getOres() ) {
-			if( count % 9 == 0 && count != 0 )
-			{
-				page++;
-				if( page > pageMax )
-					pageMax++;
+		for(Map.Entry<String, Deque<BlockData>> store: XRayController.getBlockStore().getStore().entrySet() ) {
+		    for( BlockData d : store.getValue() ) {
+                if (count % 9 == 0 && count != 0) {
+                    page++;
+                    if (page > pageMax)
+                        pageMax++;
 
-				x = width / 2 - 140;
-				y = height / 2 - 106;
-			}
-			listHelper.add( new GuiPaged( 10+count, page, x, y, ore) );
-			y += 21.8;
-			count ++;
+                    x = width / 2 - 140;
+                    y = height / 2 - 106;
+                }
+
+                listHelper.add( new GuiPaged( 10+count, page, x, y, store.getKey(), d) );
+                y += 21.8;
+                count++;
+            }
 		}
 
         // only draws the current page
@@ -136,8 +141,8 @@ public class GuiSelectionScreen extends GuiBase
 //				mc.player.closeScreen();
 //				XRayController.toggleDrawCaves();
 //				XRay.logger.debug( "Draw caves: " + XRayController.drawCaves() );
-				XRayController.blockStore.store.clear();
-				XRayController.blockStore.defaultStore.clear();
+				XRayController.getBlockStore().getStore().clear();
+				XRayController.getBlockStore().defaultStore.clear();
 				break;
 
 			case BUTTON_ADD_HAND:
@@ -185,7 +190,7 @@ public class GuiSelectionScreen extends GuiBase
 			default:
 				for ( GuiPaged list : this.renderList ) {
 					if( list.getButton().id == button.id ) {
-						XRayController.searchList.toggleOreDrawable(list.getOre()); // no need to update list.getOre() as it is referenced in searchList
+						XRayController.getBlockStore().toggleDrawing(list.getStoreKey(), list.getBlock()); // no need to update list.getOre() as it is referenced in searchList
 					}
 				}
 		}
@@ -203,7 +208,7 @@ public class GuiSelectionScreen extends GuiBase
 			for (GuiPaged list : this.renderList) {
 				if (list.getButton().mousePressed(this.mc, x, y)) {
 					mc.player.closeScreen();
-					mc.displayGuiScreen(new GuiEdit(list.getOre()));
+//					mc.displayGuiScreen(new GuiEdit(list.getOre()));
 				}
 			}
 
@@ -223,8 +228,8 @@ public class GuiSelectionScreen extends GuiBase
 		RenderHelper.enableGUIStandardItemLighting();
 		for ( GuiPaged item : this.renderList ) {
 			try {
-				this.renderColor(item.x, item.y, item.getOre().getColor());
-				this.itemRender.renderItemAndEffectIntoGUI( item.getOre().getItemStack(), item.x + 2, item.y + 2 );
+				this.renderColor(item.x, item.y, item.getBlock().getOutline().getColor());
+				this.itemRender.renderItemAndEffectIntoGUI( new ItemStack(item.getBlock().getState().getBlock()), item.x + 2, item.y + 2 );
 			} catch ( Exception ignored ) {
 			    // If this fails it's not the end of the world
 			}
