@@ -23,10 +23,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GuiSelectionScreen extends GuiBase
 {
@@ -207,6 +204,7 @@ public class GuiSelectionScreen extends GuiBase
 			for (GuiPaged list : this.renderList) {
 				if (list.getButton().mousePressed(this.mc, x, y)) {
 					mc.player.closeScreen();
+
 //					mc.displayGuiScreen(new GuiEdit(list.getOre()));
 				}
 			}
