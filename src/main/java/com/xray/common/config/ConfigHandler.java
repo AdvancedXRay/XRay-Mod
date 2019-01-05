@@ -25,6 +25,8 @@ public class ConfigHandler
 	public static float outlineOpacity = 1f;
 	public static boolean showOverlay = true;
 
+	private static final boolean isDisabled = true;
+
 	private static final String CATEGORY_PREFIX_BLOCKS = "blocks";
 	public static final List<String> ORDER = new ArrayList<String>() {{ // Sort properties in config file
 		add("entry-name");
@@ -77,6 +79,9 @@ public class ConfigHandler
 
 		// Overlay
 		showOverlay = XRay.config.get(Configuration.CATEGORY_GENERAL, "show-overlay", true).getBoolean();
+
+		if( isDisabled )
+			return;
 
 		List<BlockData> blockQueue = new ArrayList<>();
 

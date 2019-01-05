@@ -49,7 +49,7 @@ public class XrayRenderer
     /**
      * OpenGL Profiles used for rendering blocks and entities
      */
-    private static enum Profile
+    private enum Profile
     {
         BLOCKS {
             @Override

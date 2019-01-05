@@ -57,7 +57,7 @@ public class ClientProxy
 		for ( Block block : ForgeRegistries.BLOCKS ) {
 			NonNullList<ItemStack> subBlocks = NonNullList.create();
 			block.getSubBlocks( block.getCreativeTabToDisplayOn(), subBlocks );
-			if ( Blocks.AIR.equals( block ) )
+			if ( Blocks.AIR.equals( block ) ||  XRayController.blackList.contains(block) )
 				continue; // avoids troubles
 
 			if( !subBlocks.isEmpty() ) {
