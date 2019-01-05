@@ -1,8 +1,6 @@
 ---
 name: Bug report
-about: If you've found a bug that you think needs to be fixed then use this template. Be sure to fill out the form as
-shown and don't leave any sections off.
-
+about: If you've found a bug that you think needs to be fixed then use this template. Be sure to fill out the form as shown and don't leave any sections off.
 ---
 
 **Describe the bug**
