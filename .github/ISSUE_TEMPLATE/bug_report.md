@@ -1,6 +1,7 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: If you've found a bug that you think needs to be fixed then use this template. Be sure to fill out the form as
+shown and don't leave any sections off.
 
 ---
 
@@ -17,11 +18,11 @@ Steps to reproduce the behavior:
 A clear and concise description of what you expected to happen.
 
 **Screenshots**
-If applicable, add screenshots to help explain your problem.
+If applicable (delete if not), add screenshots to help explain your problem.
 
 **Minecraft Enviorment**
  - Minecraft Version: [eg: 1.12.2]
- - XRay Mod Version: [eg: 1.12.2-1.5.0]
+ - XRay Mod Version: [eg: 1.5.0]
  - Mod Pack & Version if applicable
  - Forge Version if applicable
 
