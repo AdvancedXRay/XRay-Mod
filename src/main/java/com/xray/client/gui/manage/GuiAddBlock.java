@@ -11,7 +11,6 @@ import com.xray.common.reference.block.BlockItem;
 import com.xray.common.utils.OutlineColor;
 import com.xray.common.utils.PredefinedColors;
 import com.xray.common.utils.Utils;
-import jline.internal.Nullable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -22,6 +21,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
