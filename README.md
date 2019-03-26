@@ -2,6 +2,9 @@
 # XRay Mod - [![Forge Downloads](http://cf.way2muchnoise.eu/advanced-xray.svg)](https://mods.curse.com/mc-mods/minecraft/256256-advanced-xray) [![Forge Available For](http://cf.way2muchnoise.eu/versions/advanced-xray.svg)](https://mods.curse.com/mc-mods/minecraft/256256-advanced-xray)
 Minecraft Forge based XRay mod designed to aid players who don't like the ore searching process.
 
+### Help wanted
+I'm extreamly busy as of late, because of this I'd like to attempt to find someone willing to help maintain this project as it's a passions project for me and would hate to see it go downhill. Please contact me at hello.michaelhillcox@gmail.com, on Discord: MiKeY#3704 or anything from https://mikey.pro if you're intrested in helping out :D
+
 ### Feature:
 - Built using Forge!
 - Simple and Clean UI For Adding, Deleting and Editing the blocks you want to see
