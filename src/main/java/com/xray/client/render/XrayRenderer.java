@@ -1,6 +1,6 @@
 package com.xray.client.render;
 
-import com.xray.common.config.ConfigHandler;
+import com.xray.common.Configuration;
 import com.xray.common.reference.block.BlockInfo;
 import com.xray.common.utils.Utils;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -15,8 +15,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 public class XrayRenderer
 {
     public static List<BlockInfo> ores = Collections.synchronizedList( new ArrayList<>() ); // this is accessed by threads
-
-    private final static int opacity = ConfigHandler.outlineOpacity >= 1 ? 255 : ConfigHandler.outlineOpacity <= 0 ? 0 : (int) (ConfigHandler.outlineOpacity * 255); // Pretty simple :D
 
     private static final int GL_FRONT_AND_BACK = 1032;
     private static final int GL_LINE = 6913;
@@ -37,7 +35,7 @@ public class XrayRenderer
         {
             buffer.begin( GL_LINES, DefaultVertexFormats.POSITION_COLOR );
             {
-                Utils.renderBlockBounding( buffer, b, opacity );
+                Utils.renderBlockBounding( buffer, b, (int) b.alpha );
             }
             tessellator.draw();
         }
@@ -61,7 +59,7 @@ public class XrayRenderer
                 GlStateManager.glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
                 GlStateManager.blendFunc( GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA );
                 GlStateManager.enableBlend();
-                GlStateManager.glLineWidth( ConfigHandler.outlineThickness );
+                GlStateManager.glLineWidth( (float) Configuration.outlineThickness );
             }
 
             @Override

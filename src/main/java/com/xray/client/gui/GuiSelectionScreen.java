@@ -6,7 +6,7 @@ import com.xray.client.gui.utils.GuiBase;
 import com.xray.client.gui.utils.GuiPaged;
 import com.xray.client.xray.XRayController;
 import com.xray.common.XRay;
-import com.xray.common.config.ConfigHandler;
+import com.xray.common.Configuration;
 import com.xray.common.reference.Reference;
 import com.xray.common.reference.block.BlockData;
 import com.xray.common.reference.block.BlockItem;
@@ -21,6 +21,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
 
 import java.io.IOException;
 import java.util.*;
@@ -54,21 +56,19 @@ public class GuiSelectionScreen extends GuiBase
 		this.renderList.clear();
 		int x = width / 2 - 140, y = height / 2 - 106, count = 0, page = 0;
 
-		for(Map.Entry<String, Deque<BlockData>> store: XRayController.getBlockStore().getStore().entrySet() ) {
-		    for( BlockData d : store.getValue() ) {
-                if (count % 9 == 0 && count != 0) {
-                    page++;
-                    if (page > pageMax)
-                        pageMax++;
+		for(Map.Entry<String, BlockData> store: XRayController.getBlockStore().getStore().entrySet() ) {
+			if (count % 9 == 0 && count != 0) {
+				page++;
+				if (page > pageMax)
+					pageMax++;
 
-                    x = width / 2 - 140;
-                    y = height / 2 - 106;
-                }
+				x = width / 2 - 140;
+				y = height / 2 - 106;
+			}
 
-                listHelper.add( new GuiPaged( 10+count, page, x, y, store.getKey(), d) );
-                y += 21.8;
-                count++;
-            }
+			listHelper.add( new GuiPaged( 10+count, page, x, y, store.getKey(), store.getValue()) );
+			y += 21.8;
+			count++;
 		}
 
         // only draws the current page
@@ -136,8 +136,6 @@ public class GuiSelectionScreen extends GuiBase
 //				XRayController.toggleDrawCaves();
 //				XRay.logger.debug( "Draw caves: " + XRayController.drawCaves() );
 				XRayController.getBlockStore().getStore().clear();
-				XRayController.getBlockStore().defaultStore.clear();
-				XRayController.getBlockStore().getDrawStore().clear();
 				break;
 
 			case BUTTON_ADD_HAND:
@@ -180,13 +178,12 @@ public class GuiSelectionScreen extends GuiBase
 
 			case BUTTON_CLOSE:
 				mc.player.closeScreen();
-				XRayController.getBlockStore().printStore();
 				break;
 
 			default:
 				for ( GuiPaged list : this.renderList ) {
 					if( list.getButton().id == button.id ) {
-						XRayController.getBlockStore().toggleDrawing(list.getStoreKey(), list.getBlock()); // no need to update list.getOre() as it is referenced in searchList
+						XRayController.getBlockStore().toggleDrawing(list.getStoreKey()); // no need to update list.getOre() as it is referenced in searchList
 					}
 				}
 		}
@@ -243,8 +240,9 @@ public class GuiSelectionScreen extends GuiBase
 	public void onGuiClosed()
 	{
 		// First, save all changes made to the config
-		ConfigHandler.syncConfig();
-		XRay.config.save();
+//		Configuration.syncConfig();
+//		XRay.config.save();
+		ConfigManager.sync(Reference.MOD_ID, Config.Type.INSTANCE);
 
 		// And force a scan
 		XRayController.requestBlockFinder( true );

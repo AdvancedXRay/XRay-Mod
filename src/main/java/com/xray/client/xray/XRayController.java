@@ -2,8 +2,8 @@ package com.xray.client.xray;
 
 import com.xray.client.render.ClientTick;
 import com.xray.client.render.XrayRenderer;
+import com.xray.common.Configuration;
 import com.xray.common.XRay;
-import com.xray.common.config.ConfigHandler;
 import com.xray.common.reference.block.BlockStore;
 import com.xray.common.utils.WorldRegion;
 
@@ -35,7 +35,7 @@ public class XRayController
 
 	/**
      * Global blockStore used for:
-     * [Rendering, GUI, Config Handling]
+     * [Rendering, GUI, Configuration Handling]
      */
 	private static BlockStore blockStore = new BlockStore();
 
@@ -76,23 +76,27 @@ public class XRayController
 	public static void setCurrentDist( int dist )
 	{
 		currentDist = dist;
-		ConfigHandler.storeCurrentDist();
+		Configuration.radius = currentDist;
 	}
+
 	public static void incrementCurrentDist()
 	{
 		if ( currentDist < XRay.distanceList.length - 1 )
 			currentDist++;
 		else
 			currentDist = 0;
-		ConfigHandler.storeCurrentDist();
+
+		Configuration.radius = currentDist;
 	}
+
 	public static void decrementCurrentDist()
 	{
 		if ( currentDist > 0 )
 			currentDist--;
 		else
 			currentDist = XRay.distanceList.length - 1;
-		ConfigHandler.storeCurrentDist();
+
+		Configuration.radius = currentDist;
 	}
 
 	/**

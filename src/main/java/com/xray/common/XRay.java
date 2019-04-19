@@ -26,7 +26,7 @@ public class XRay
 	// Used throughout our codebase as a single point of reference
 	public static Minecraft mc = Minecraft.getMinecraft();
 
-	// Config settings
+	// Configuration settings
 	public static Configuration config;
 
     // Radius +/- around the player to search. So 8 is 8 on left and right of player plus under the player. So 17x17 area.

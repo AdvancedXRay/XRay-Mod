@@ -10,7 +10,7 @@ import com.xray.common.reference.block.BlockData;
 import com.xray.common.reference.block.BlockItem;
 import com.xray.common.utils.OutlineColor;
 import com.xray.common.utils.PredefinedColors;
-import com.xray.common.utils.Utils;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -56,15 +56,15 @@ public class GuiAddBlock extends GuiBase {
 		this.buttonList.add( new GuiButton( BUTTON_ADD, width / 2 - 100, height / 2 + 85, 128, 20, I18n.format("xray.single.add") ));
 		this.buttonList.add( new GuiButton( BUTTON_CANCEL, width / 2 + 30, height / 2 + 85, 72, 20, I18n.format("xray.single.cancel") ) );
 
-//		this.buttonList.add(
-				redSlider = new GuiSlider( 3, width / 2 - 100, height / 2 + 7, I18n.format("xray.color.red"), 0, 255 );
-	//);
-//		this.buttonList.add(
-				greenSlider = new GuiSlider( 2, width / 2 - 100, height / 2 + 30, I18n.format("xray.color.green"), 0, 255 );
-	//);
-//		this.buttonList.add(
-				blueSlider = new GuiSlider( 1, width / 2 - 100, height / 2 + 53, I18n.format("xray.color.blue"), 0, 255 ) ;
-//	);
+		this.buttonList.add(
+				redSlider = new GuiSlider( 3, width / 2 - 100, height / 2 + 7, I18n.format("xray.color.red"), 0, 255 )
+		);
+		this.buttonList.add(
+				greenSlider = new GuiSlider( 2, width / 2 - 100, height / 2 + 30, I18n.format("xray.color.green"), 0, 255 )
+		);
+		this.buttonList.add(
+				blueSlider = new GuiSlider( 1, width / 2 - 100, height / 2 + 53, I18n.format("xray.color.blue"), 0, 255 )
+		);
 
 		redSlider.sliderValue   = 0.0F;
 		greenSlider.sliderValue = 0.654F;
@@ -93,14 +93,13 @@ public class GuiAddBlock extends GuiBase {
 			case BUTTON_ADD:
 				mc.player.closeScreen();
 
-				// Fake a placement to get the correct state
-                // @warn: likely will not work correctly for chests
 				if( this.state == null )
-                	this.state = Utils.getStateFromPlacement(this.mc.world, this.mc.player, selectBlock.getItemStack());
+                	this.state = Block.getBlockFromItem(this.selectBlock.getItemStack().getItem()).getDefaultState();
 
 				// Push the block to the render stack
-				XRayController.getBlockStore().putBlock(
-					this.state.getBlock().getLocalizedName(),
+				XRayController.getBlockStore().put(
+					this.state.toString(),
+
 					new BlockData(
 						this.state.getBlock().getRegistryName(),
 						oreName.getText(),
@@ -111,8 +110,6 @@ public class GuiAddBlock extends GuiBase {
 						true
 					)
 				);
-
-				XRayController.getBlockStore().printStore();
 
 				mc.displayGuiScreen( new GuiSelectionScreen() );
 
@@ -137,15 +134,11 @@ public class GuiAddBlock extends GuiBase {
 			oreName.textboxKeyTyped( par1, par2 );
 		else
 		{
-			switch( par2 )
-			{
-				case 15: // Change focus to oreName on focus-less tab
-					if( !oreNameCleared )
-						oreName.setText("");
-					oreName.setFocused( true );
-					break;
-				default:
-					break;
+			// Change focus to oreName on focus-less tab
+			if (par2 == 15) {
+				if (!oreNameCleared)
+					oreName.setText("");
+				oreName.setFocused(true);
 			}
 		}
 	}
@@ -164,7 +157,7 @@ public class GuiAddBlock extends GuiBase {
 
 		oreName.drawTextBox();
 
-//		renderPreview(width / 2 - 100, height / 2 - 40, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
+		renderPreview(width / 2 - 100, height / 2 - 40, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
 
 		RenderHelper.enableGUIStandardItemLighting();
 		this.itemRender.renderItemAndEffectIntoGUI( selectBlock.getItemStack(), width / 2 + 85, height / 2 - 105 );
@@ -182,9 +175,7 @@ public class GuiAddBlock extends GuiBase {
 		}
 	}
 
-
-
-	static void renderPreview(int x, int y, int width, int height, float r, float g, float b) {
+	static void renderPreview(int x, int y, float r, float g, float b) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder tessellate = tessellator.getBuffer();
 		GlStateManager.enableBlend();

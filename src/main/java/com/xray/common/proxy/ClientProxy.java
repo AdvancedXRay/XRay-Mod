@@ -6,7 +6,7 @@ import com.xray.client.keybinding.KeyBindings;
 import com.xray.client.xray.XRayController;
 import com.xray.client.xray.XRayEventHandler;
 import com.xray.common.XRay;
-import com.xray.common.config.ConfigHandler;
+import com.xray.common.Configuration;
 import com.xray.common.reference.block.BlockItem;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -21,12 +21,11 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ClientProxy
 {
 	public void preInit(FMLPreInitializationEvent event) {
-		ConfigHandler.init( event.getSuggestedConfigurationFile() );
+//		Configuration.init( event.getSuggestedConfigurationFile() );
 
 		// Setup the keyBindings
 		KeyBindings.setup();
@@ -44,14 +43,10 @@ public class ClientProxy
            add(Blocks.COBBLESTONE);
         }};
 
-        for( Block b : blocks ) {
-
-        }
-//        XRayController.getBlockStore().putBlock();
 	}
 
 	public void postInit(FMLPostInitializationEvent event) {
-		ConfigHandler.setup(); // Read the config file and setup environment.
+//		Configuration.setup(); // Read the config file and setup environment.
 
 		Block tmpBlock;
 		for ( Block block : ForgeRegistries.BLOCKS ) {
