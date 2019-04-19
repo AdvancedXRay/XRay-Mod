@@ -5,7 +5,10 @@ import com.xray.common.reference.block.BlockItem;
 import com.xray.common.reference.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -14,20 +17,18 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 
-@Mod(modid= Reference.MOD_ID, name= Reference.MOD_NAME, version=Reference.MOD_VERSION /*guiFactory = Reference.GUI_FACTORY*/)
+@Mod(modid= Reference.MOD_ID, name= Reference.MOD_NAME, version=Reference.MOD_VERSION, updateJSON= Reference.UPDATE_JSON)
+@Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class XRay
 {
 	public static ArrayList<BlockItem> blockList = new ArrayList<>();
 
-	// Used throughout our codebase as a single point of reference
 	public static Minecraft mc = Minecraft.getMinecraft();
-
-	// Configuration settings
-	public static Configuration config;
 
     // Radius +/- around the player to search. So 8 is 8 on left and right of player plus under the player. So 17x17 area.
     public static final int[] distanceList = new int[] {8, 16, 32, 48, 64, 80, 128, 256};
@@ -67,5 +68,14 @@ public class XRay
 	public void onExit(FMLServerStoppingEvent event)
 	{
 		proxy.onExit(event);
+	}
+
+	@SubscribeEvent
+	public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
+	{
+		if (event.getModID().equals(Reference.MOD_ID))
+		{
+			ConfigManager.sync(Reference.MOD_ID, Config.Type.INSTANCE);
+		}
 	}
 }

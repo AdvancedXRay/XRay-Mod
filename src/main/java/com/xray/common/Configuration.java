@@ -14,11 +14,11 @@ public class Configuration
             "DO NOT TOUCH!",
             "This setting is for memory only and if changed to a value not supported",
             "the game will crash on start up. This value can be changed in game very simply.",
-            "If you must change it then these are the valid values {8, 16, 32, 48, 64, 80, 128, 256}",
+            "If you must change it then these are the valid values 0 -> 7",
             "but please leave it alone :P"
     })
-    @Config.RangeInt(min = 16, max = 256)
-    public static int radius = 32;
+    @Config.RangeInt(min = 0, max = 7)
+    public static int radius = 3;
 
     @Config.Name("Show XRay overlay")
     @Config.Comment("This allows you hide or show the overlay in the top right of the screen when XRay is enabled")

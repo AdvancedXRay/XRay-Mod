@@ -8,8 +8,10 @@ import com.xray.common.reference.block.BlockStore;
 import com.xray.common.utils.WorldRegion;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.text.TextComponentString;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -45,7 +47,6 @@ public class XRayController
 
 	// Draw states
 	private static boolean drawOres = false; // Off by default
-	private static boolean drawCaves = false;
 
     public static BlockStore getBlockStore() {
         return blockStore;
@@ -61,23 +62,20 @@ public class XRayController
 			executor = Executors.newSingleThreadExecutor();
 			drawOres = true; // then, enable drawing
 			requestBlockFinder( true ); // finally, force a refresh
+
+			if( !Configuration.showOverlay )
+				XRay.mc.player.sendMessage( new TextComponentString(I18n.format("xray.toggle.activated")) );
 		}
 		else // disable drawing
 		{
+			if( !Configuration.showOverlay )
+				XRay.mc.player.sendMessage( new TextComponentString(I18n.format("xray.toggle.deactivated")) );
+
 			shutdownExecutor();
 		}
 	}
 
-    public static boolean drawCaves() { return drawCaves; }
-    public static void toggleDrawCaves() { drawCaves = !drawCaves; }
-
-	public static int getCurrentDist() { return currentDist; }
-	public static int getRadius() { return XRay.distanceList[currentDist]; }
-	public static void setCurrentDist( int dist )
-	{
-		currentDist = dist;
-		Configuration.radius = currentDist;
-	}
+	public static int getRadius() { return XRay.distanceList[Configuration.radius]; }
 
 	public static void incrementCurrentDist()
 	{

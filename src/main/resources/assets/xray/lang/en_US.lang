@@ -46,3 +46,6 @@ xray.message.meta_not_supported={%s} isn't a valid meta data for {%s}
 
 xray.config.toggle=Toggle XRay
 xray.config.open=Open XRay Menu
+
+xray.toggle.activated=XRay activated
+xray.toggle.deactivated=XRay deactivated
