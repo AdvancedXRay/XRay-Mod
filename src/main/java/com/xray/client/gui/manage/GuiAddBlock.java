@@ -4,7 +4,7 @@ import com.xray.client.gui.GuiSelectionScreen;
 import com.xray.client.gui.utils.GuiBase;
 import com.xray.client.gui.utils.GuiColorSelect;
 import com.xray.client.gui.utils.GuiSlider;
-import com.xray.client.xray.XRayController;
+import com.xray.client.xray.Controller;
 import com.xray.common.reference.ColorName;
 import com.xray.common.reference.block.BlockData;
 import com.xray.common.reference.block.BlockItem;
@@ -97,7 +97,7 @@ public class GuiAddBlock extends GuiBase {
                 	this.state = Block.getBlockFromItem(this.selectBlock.getItemStack().getItem()).getDefaultState();
 
 				// Push the block to the render stack
-				XRayController.getBlockStore().put(
+				Controller.getBlockStore().put(
 					this.state.toString(),
 
 					new BlockData(

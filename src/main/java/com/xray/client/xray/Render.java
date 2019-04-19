@@ -1,4 +1,4 @@
-package com.xray.client.render;
+package com.xray.client.xray;
 
 import com.xray.common.Configuration;
 import com.xray.common.reference.block.BlockInfo;
@@ -12,7 +12,7 @@ import java.util.List;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
-public class XrayRenderer
+public class Render
 {
     public static List<BlockInfo> ores = Collections.synchronizedList( new ArrayList<>() ); // this is accessed by threads
 

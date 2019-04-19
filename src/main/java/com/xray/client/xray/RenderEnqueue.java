@@ -1,6 +1,5 @@
-package com.xray.client.render;
+package com.xray.client.xray;
 
-import com.xray.client.xray.XRayController;
 import com.xray.common.Configuration;
 import com.xray.common.XRay;
 import com.xray.common.reference.block.BlockData;
@@ -14,11 +13,11 @@ import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
 import java.util.*;
 
-public class ClientTick implements Runnable
+public class RenderEnqueue implements Runnable
 {
 	private final WorldRegion box;
 
-	public ClientTick( WorldRegion region )
+	public RenderEnqueue(WorldRegion region )
 	{
 		box = region;
 	}
@@ -30,14 +29,14 @@ public class ClientTick implements Runnable
 	}
 
 	/**
-	 * Use XRayController.requestBlockFinder() to trigger a scan.
+	 * Use Controller.requestBlockFinder() to trigger a scan.
 	 */
 	private void blockFinder() {
-        HashMap<String, BlockData> blocks = XRayController.getBlockStore().getStore();
+        HashMap<String, BlockData> blocks = Controller.getBlockStore().getStore();
 
 		if ( blocks.isEmpty() ) {
-		    if( !XrayRenderer.ores.isEmpty() )
-		        XrayRenderer.ores.clear();
+		    if( !Render.ores.isEmpty() )
+		        Render.ores.clear();
             return; // no need to scan the region if there's nothing to find
         }
 
@@ -92,7 +91,7 @@ public class ClientTick implements Runnable
 								currentState = ebs.get(i, j, k);
 
 								// Reject blacklisted blocks
-								if( XRayController.blackList.contains(currentState.getBlock()) )
+								if( Controller.blackList.contains(currentState.getBlock()) )
 									continue;
 
 								defaultState = currentState.getBlock().getDefaultState();
@@ -107,7 +106,7 @@ public class ClientTick implements Runnable
 									continue;
 
 								// Calculate distance from player to block. Fade out futher away blocks
-								double alpha = !Configuration.shouldFade ? 255 : Math.max(0, ((XRayController.getRadius() - XRay.mc.player.getDistance(x + i, y + j, z + k)) / XRayController.getRadius() ) * 255);
+								double alpha = !Configuration.shouldFade ? 255 : Math.max(0, ((Controller.getRadius() - XRay.mc.player.getDistance(x + i, y + j, z + k)) / Controller.getRadius() ) * 255);
 
 								// Push the block to the render queue
 								renderQueue.add(new BlockInfo(x + i, y + j, z + k, blockData.getOutline().getColor(), alpha));
@@ -119,8 +118,8 @@ public class ClientTick implements Runnable
 		}
 		final BlockPos playerPos = XRay.mc.player.getPosition();
 		renderQueue.sort((t, t1) -> Double.compare(t1.distanceSq(playerPos), t.distanceSq(playerPos)));
-		XrayRenderer.ores.clear();
-		XrayRenderer.ores.addAll( renderQueue ); // Add all our found blocks to the XrayRenderer.ores list. To be use by XrayRenderer when drawing.
+		Render.ores.clear();
+		Render.ores.addAll( renderQueue ); // Add all our found blocks to the Render.ores list. To be use by Render when drawing.
 	}
 
 	/**
@@ -132,31 +131,31 @@ public class ClientTick implements Runnable
 	 */
 	public static void checkBlock( BlockPos pos, IBlockState state, boolean add )
 	{
-		if ( !XRayController.drawOres() || XRayController.getBlockStore().getStore().isEmpty() )
+		if ( !Controller.drawOres() || Controller.getBlockStore().getStore().isEmpty() )
 		    return; // just pass
 
 		String defaultState = state.getBlock().getDefaultState().toString();
 
 		// Let's see if the block to check is an ore we monitor
-		if ( XRayController.getBlockStore().getStore().containsKey(defaultState) ) // it's a block we are monitoring
+		if ( Controller.getBlockStore().getStore().containsKey(defaultState) ) // it's a block we are monitoring
 		{
 		    if( !add )
 		    {
-                XrayRenderer.ores.remove( new BlockInfo(pos, null, 0.0) );
+                Render.ores.remove( new BlockInfo(pos, null, 0.0) );
                 return;
             }
 
 		    BlockData data = null;
-            if( XRayController.getBlockStore().getStore().containsKey(defaultState) )
-                data = XRayController.getBlockStore().getStore().get(defaultState);
+            if( Controller.getBlockStore().getStore().containsKey(defaultState) )
+                data = Controller.getBlockStore().getStore().get(defaultState);
 
             if( data == null )
             	return;
 
-			double alpha = !Configuration.shouldFade ? 255 : Math.max(0, ((XRayController.getRadius() - XRay.mc.player.getDistance(pos.getX(), pos.getY(), pos.getZ())) / XRayController.getRadius() ) * 255);
+			double alpha = !Configuration.shouldFade ? 255 : Math.max(0, ((Controller.getRadius() - XRay.mc.player.getDistance(pos.getX(), pos.getY(), pos.getZ())) / Controller.getRadius() ) * 255);
 
             // the block was added to the world, let's add it to the drawing buffer
-            XrayRenderer.ores.add( new BlockInfo(pos, data.getOutline().getColor(), alpha) );
+            Render.ores.add( new BlockInfo(pos, data.getOutline().getColor(), alpha) );
 		}
 	}
 }

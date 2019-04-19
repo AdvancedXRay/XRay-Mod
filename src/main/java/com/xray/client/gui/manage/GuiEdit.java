@@ -3,7 +3,6 @@ package com.xray.client.gui.manage;
 import com.xray.client.gui.GuiSelectionScreen;
 import com.xray.client.gui.utils.GuiBase;
 import com.xray.client.gui.utils.GuiSlider;
-import com.xray.client.xray.XRayController;
 import com.xray.common.reference.block.BlockData;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -67,14 +66,14 @@ public class GuiEdit extends GuiBase
             case BUTTON_SAVE:
                 int[] rgb = {(int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255)};
 //		        oreInfo.setColor( rgb );
-//                XRayController.searchList.updateOre( oreInfo );
+//                Controller.searchList.updateOre( oreInfo );
 
                 mc.player.closeScreen();
                 mc.displayGuiScreen( new GuiSelectionScreen() );
                 break;
 
             case BUTTON_DELETE:
-//                XRayController.searchList.removeOre( oreInfo );
+//                Controller.searchList.removeOre( oreInfo );
 
                 mc.player.closeScreen();
                 mc.displayGuiScreen( new GuiSelectionScreen() );
@@ -86,7 +85,7 @@ public class GuiEdit extends GuiBase
                 break;
 
             case BUTTON_OREDICT:
-		//XRayController.searchList.toggleOreDictionary( oreInfo );
+		//Controller.searchList.toggleOreDictionary( oreInfo );
 //		oreInfo.toggleOredict();
 //                button.displayString = I18n.format("xray.input.toggle_oredict") + ": " + (oreInfo.useOredict() ? "On" : "Off");
                 break;

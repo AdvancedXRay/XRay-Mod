@@ -1,7 +1,7 @@
 package com.xray.client.keybinding;
 
 import com.xray.client.gui.GuiSelectionScreen;
-import com.xray.client.xray.XRayController;
+import com.xray.client.xray.Controller;
 import com.xray.common.XRay;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -17,7 +17,7 @@ public class InputEvent
         {
 			if( KeyBindings.keyBind_keys[ KeyBindings.keyIndex_toggleXray ].isPressed() )
 			{
-				XRayController.toggleDrawOres();
+				Controller.toggleDrawOres();
 			}
 			else if( KeyBindings.keyBind_keys[ KeyBindings.keyIndex_showXrayMenu ].isPressed() )
 			{

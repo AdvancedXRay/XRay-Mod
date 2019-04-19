@@ -1,6 +1,6 @@
 package com.xray.client.gui;
 
-import com.xray.client.xray.XRayController;
+import com.xray.client.xray.Controller;
 import com.xray.common.Configuration;
 import com.xray.common.XRay;
 import com.xray.common.reference.Reference;
@@ -23,7 +23,7 @@ public class GuiOverlay extends Gui {
     public void RenderGameOverlayEvent(RenderGameOverlayEvent.Post event) {
 
         // Draw Indicator
-        if(!XRayController.drawOres() || !Configuration.showOverlay)
+        if(!Controller.drawOres() || !Configuration.showOverlay)
             return;
 
         GlStateManager.enableAlpha();

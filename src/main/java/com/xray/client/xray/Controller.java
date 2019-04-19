@@ -1,7 +1,5 @@
 package com.xray.client.xray;
 
-import com.xray.client.render.ClientTick;
-import com.xray.client.render.XrayRenderer;
 import com.xray.common.Configuration;
 import com.xray.common.XRay;
 import com.xray.common.reference.block.BlockStore;
@@ -18,7 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class XRayController
+public class Controller
 {
 	// Block blackList
 	public static ArrayList blackList = new ArrayList<Block>() {{
@@ -29,10 +27,6 @@ public class XRayController
 		add(Blocks.DIRT);
 	}};
 
-    /**
-     * Index for {@link XRay#distanceList}
-     */
-	private static int currentDist = 0;
 	private static Vec3i lastPlayerPos = null;
 
 	/**
@@ -58,7 +52,7 @@ public class XRayController
 	{
 		if ( !drawOres ) // enable drawing
 		{
-			XrayRenderer.ores.clear(); // first, clear the buffer
+			Render.ores.clear(); // first, clear the buffer
 			executor = Executors.newSingleThreadExecutor();
 			drawOres = true; // then, enable drawing
 			requestBlockFinder( true ); // finally, force a refresh
@@ -79,22 +73,18 @@ public class XRayController
 
 	public static void incrementCurrentDist()
 	{
-		if ( currentDist < XRay.distanceList.length - 1 )
-			currentDist++;
+		if ( Configuration.radius < XRay.distanceList.length - 1 )
+			Configuration.radius++;
 		else
-			currentDist = 0;
-
-		Configuration.radius = currentDist;
+			Configuration.radius = 0;
 	}
 
 	public static void decrementCurrentDist()
 	{
-		if ( currentDist > 0 )
-			currentDist--;
+		if ( Configuration.radius > 0 )
+			Configuration.radius--;
 		else
-			currentDist = XRay.distanceList.length - 1;
-
-		Configuration.radius = currentDist;
+			Configuration.radius = XRay.distanceList.length - 1;
 	}
 
 	/**
@@ -131,7 +121,7 @@ public class XRayController
 		{
 			updatePlayerPosition(); // since we're about to run, update the last known position
 			WorldRegion region = new WorldRegion( lastPlayerPos, getRadius() ); // the region to scan for ores
-			task = executor.submit( new ClientTick(region) );
+			task = executor.submit( new RenderEnqueue(region) );
 		}
 	}
 

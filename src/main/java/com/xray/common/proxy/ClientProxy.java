@@ -3,10 +3,9 @@ package com.xray.common.proxy;
 import com.xray.client.keybinding.InputEvent;
 import com.xray.client.gui.GuiOverlay;
 import com.xray.client.keybinding.KeyBindings;
-import com.xray.client.xray.XRayController;
-import com.xray.client.xray.XRayEventHandler;
+import com.xray.client.xray.Controller;
+import com.xray.client.xray.Events;
 import com.xray.common.XRay;
-import com.xray.common.Configuration;
 import com.xray.common.reference.block.BlockItem;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -31,7 +30,7 @@ public class ClientProxy
 		KeyBindings.setup();
 
 		MinecraftForge.EVENT_BUS.register( new InputEvent() );
-		MinecraftForge.EVENT_BUS.register( new XRayEventHandler() );
+		MinecraftForge.EVENT_BUS.register( new Events() );
 		MinecraftForge.EVENT_BUS.register( new GuiOverlay() );
 	}
 
@@ -52,7 +51,7 @@ public class ClientProxy
 		for ( Block block : ForgeRegistries.BLOCKS ) {
 			NonNullList<ItemStack> subBlocks = NonNullList.create();
 			block.getSubBlocks( block.getCreativeTabToDisplayOn(), subBlocks );
-			if ( Blocks.AIR.equals( block ) ||  XRayController.blackList.contains(block) )
+			if ( Blocks.AIR.equals( block ) ||  Controller.blackList.contains(block) )
 				continue; // avoids troubles
 
 			if( !subBlocks.isEmpty() ) {
@@ -69,6 +68,6 @@ public class ClientProxy
 
 	public void onExit(FMLServerStoppingEvent event)
 	{
-		XRayController.shutdownExecutor(); // Make sure threads don't lock the JVM
+		Controller.shutdownExecutor(); // Make sure threads don't lock the JVM
 	}
 }

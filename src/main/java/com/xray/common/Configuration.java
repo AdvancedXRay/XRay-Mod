@@ -71,7 +71,7 @@ public class Configuration
 //		XRay.config.removeCategory(cat);
 //        cat = XRay.config.getCategory( CATEGORY_PREFIX_BLOCKS );
 //
-//        for (Map.Entry<String, BlockData> store : XRayController.getBlockStore().getStore().entrySet()) {
+//        for (Map.Entry<String, BlockData> store : Controller.getBlockStore().getStore().entrySet()) {
 //			ConfigCategory newCat = new ConfigCategory( store.getValue().getState().toString(), cat);
 //
 //			newCat.put("entry-name",   new Property("entry-name", store.getValue().getEntryName(), Property.Type.STRING));
@@ -88,7 +88,7 @@ public class Configuration
 //
 //	public static void setup()
 //	{
-//		XRayController.setCurrentDist( XRay.config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0).getInt() );
+//		Controller.setCurrentDist( XRay.config.get(Configuration.CATEGORY_GENERAL, "searchdist", 0).getInt() );
 //
 //		// Overlay
 //		showOverlay = XRay.config.get(Configuration.CATEGORY_GENERAL, "show-overlay", true).getBoolean();
@@ -144,7 +144,7 @@ public class Configuration
 //            if( data == null )
 //                continue;
 //
-//            XRayController.getBlockStore().put(
+//            Controller.getBlockStore().put(
 //					data.getState().toString(),
 //                    data
 //			);

@@ -4,9 +4,7 @@ import com.xray.client.gui.manage.GuiAddBlock;
 import com.xray.client.gui.manage.GuiBlockListScrollable;
 import com.xray.client.gui.utils.GuiBase;
 import com.xray.client.gui.utils.GuiPaged;
-import com.xray.client.xray.XRayController;
-import com.xray.common.XRay;
-import com.xray.common.Configuration;
+import com.xray.client.xray.Controller;
 import com.xray.common.reference.Reference;
 import com.xray.common.reference.block.BlockData;
 import com.xray.common.reference.block.BlockItem;
@@ -56,7 +54,7 @@ public class GuiSelectionScreen extends GuiBase
 		this.renderList.clear();
 		int x = width / 2 - 140, y = height / 2 - 106, count = 0, page = 0;
 
-		for(Map.Entry<String, BlockData> store: XRayController.getBlockStore().getStore().entrySet() ) {
+		for(Map.Entry<String, BlockData> store: Controller.getBlockStore().getStore().entrySet() ) {
 			if (count % 9 == 0 && count != 0) {
 				page++;
 				if (page > pageMax)
@@ -81,7 +79,7 @@ public class GuiSelectionScreen extends GuiBase
 		}
 
 		GuiButton aNextButton, aPrevButton;
-		this.buttonList.add( distButtons = new GuiButton(BUTTON_RADIUS, (width / 2) - 108, height / 2 + 86, 140, 20, I18n.format("xray.input.distance")+": "+ XRayController.getRadius()) );
+		this.buttonList.add( distButtons = new GuiButton(BUTTON_RADIUS, (width / 2) - 108, height / 2 + 86, 140, 20, I18n.format("xray.input.distance")+": "+ Controller.getRadius()) );
 		this.buttonList.add( aNextButton = new GuiButton(BUTTON_NEXT, width / 2 + 35, height / 2 + 86, 30, 20, ">") );
 		this.buttonList.add( aPrevButton = new GuiButton(BUTTON_PREVIOUS, width / 2 - 140, height / 2 + 86, 30, 20, "<") );
 
@@ -112,7 +110,7 @@ public class GuiSelectionScreen extends GuiBase
 		switch(button.id)
 		{
 			case BUTTON_RADIUS:
-				XRayController.incrementCurrentDist();
+				Controller.incrementCurrentDist();
 				break;
 
 			case BUTTON_ADD_BLOCK:
@@ -132,9 +130,9 @@ public class GuiSelectionScreen extends GuiBase
 
 			case BUTTON_CAVE_FINDER:
 //				mc.player.closeScreen();
-//				XRayController.toggleDrawCaves();
-//				XRay.logger.debug( "Draw caves: " + XRayController.drawCaves() );
-				XRayController.getBlockStore().getStore().clear();
+//				Controller.toggleDrawCaves();
+//				XRay.logger.debug( "Draw caves: " + Controller.drawCaves() );
+				Controller.getBlockStore().getStore().clear();
 				break;
 
 			case BUTTON_ADD_HAND:
@@ -182,7 +180,7 @@ public class GuiSelectionScreen extends GuiBase
 			default:
 				for ( GuiPaged list : this.renderList ) {
 					if( list.getButton().id == button.id ) {
-						XRayController.getBlockStore().toggleDrawing(list.getStoreKey()); // no need to update list.getOre() as it is referenced in searchList
+						Controller.getBlockStore().toggleDrawing(list.getStoreKey()); // no need to update list.getOre() as it is referenced in searchList
 					}
 				}
 		}
@@ -207,8 +205,8 @@ public class GuiSelectionScreen extends GuiBase
 
 			if( distButtons.mousePressed(this.mc, x, y) )
 			{
-				XRayController.decrementCurrentDist();
-				distButtons.displayString = I18n.format("xray.input.distance")+": "+ XRayController.getRadius();
+				Controller.decrementCurrentDist();
+				distButtons.displayString = I18n.format("xray.input.distance")+": "+ Controller.getRadius();
 			}
 		}
 	}
@@ -244,6 +242,6 @@ public class GuiSelectionScreen extends GuiBase
 		ConfigManager.sync(Reference.MOD_ID, Config.Type.INSTANCE);
 
 		// And force a scan
-		XRayController.requestBlockFinder( true );
+		Controller.requestBlockFinder( true );
 	}
 }
