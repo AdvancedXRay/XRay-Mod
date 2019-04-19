@@ -2,14 +2,11 @@ package com.xray.client.gui.manage;
 
 import com.xray.client.gui.GuiSelectionScreen;
 import com.xray.client.gui.utils.GuiBase;
-import com.xray.client.gui.utils.GuiColorSelect;
 import com.xray.client.gui.utils.GuiSlider;
 import com.xray.client.xray.Controller;
-import com.xray.common.reference.ColorName;
 import com.xray.common.reference.block.BlockData;
 import com.xray.common.reference.block.BlockItem;
 import com.xray.common.utils.OutlineColor;
-import com.xray.common.utils.PredefinedColors;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;
@@ -23,8 +20,6 @@ import net.minecraft.client.resources.I18n;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class GuiAddBlock extends GuiBase {
@@ -40,8 +35,6 @@ public class GuiAddBlock extends GuiBase {
 	private IBlockState state;
 
 	private OutlineColor selectedColor = new OutlineColor(0, 0, 0);
-
-	private List<GuiColorSelect> colorSelects = new ArrayList<>();
 
 	public GuiAddBlock(BlockItem selectedBlock, @Nullable IBlockState state) {
 		super(false);
@@ -72,17 +65,6 @@ public class GuiAddBlock extends GuiBase {
 
 		oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 100 ,  height / 2 - 70, 202, 20 );
 		oreName.setText( this.selectBlock.getItemStack().getDisplayName() );
-
-		int col = 0, row = 0;
-
-		for (ColorName colors: PredefinedColors.getColors()) {
-			colorSelects.add(new GuiColorSelect(colors.getName(), colors.getColor(), (width / 2 - 100) + (20 * col), (height / 2 - 15) + (15 * row)));
-			col ++;
-			if( col > 9 ) {
-				col = 0;
-				row ++;
-			}
-		}
 	}
 
 	@Override
@@ -165,14 +147,6 @@ public class GuiAddBlock extends GuiBase {
 
 		// Color select
 		getFontRender().drawStringWithShadow(I18n.format("xray.gui.select_color"), width / 2f - 100, height / 2f - 35, 0xffffff);
-
-		for (GuiColorSelect select: this.colorSelects)
-			select.drawSelect();
-
-		for (GuiColorSelect select: this.colorSelects) {
-			if( select.isMouseOver(x, y) )
-				this.drawHoveringText( select.getName(), x, y );
-		}
 	}
 
 	static void renderPreview(int x, int y, float r, float g, float b) {
@@ -208,15 +182,6 @@ public class GuiAddBlock extends GuiBase {
 		{
 			oreNameCleared = false;
 			oreName.setText( I18n.format("xray.input.gui") );
-		}
-
-		if( mouse == 0 ) {
-			for (GuiColorSelect select : this.colorSelects) {
-				if (select.isMouseOver(x, y)) {
-					this.selectedColor = select.getColor();
-					break;
-				}
-			}
 		}
 	}
 

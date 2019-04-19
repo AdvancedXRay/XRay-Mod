@@ -62,7 +62,7 @@ public class RenderEnqueue implements Runnable
 			{
 				// Time to getStore the chunk (16x256x16) and split it into 16 vertical extends (16x16x16)
 				Chunk chunk = world.getChunkFromChunkCoords( chunkX, chunkZ );
-				if ( chunk == null || !chunk.isLoaded() ) {
+				if (!chunk.isLoaded()) {
 					continue; // We won't find anything interesting in unloaded chunks
 				}
 				ExtendedBlockStorage[] extendsList = chunk.getBlockStorageArray();

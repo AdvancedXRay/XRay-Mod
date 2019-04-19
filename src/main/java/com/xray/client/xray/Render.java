@@ -4,13 +4,13 @@ import com.xray.common.Configuration;
 import com.xray.common.reference.block.BlockInfo;
 import com.xray.common.utils.Utils;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 public class Render
 {
@@ -27,18 +27,14 @@ public class Render
         BufferBuilder buffer = tessellator.getBuffer();
         Profile.BLOCKS.apply(); // Sets GL state for block drawing
 
-        BlockInfo[] temp = new BlockInfo[ores.size()];
-        ores.toArray(temp);
-
         buffer.setTranslation( -playerX, -playerY, -playerZ );
-        for ( BlockInfo b : temp )
-        {
+
+        ores.forEach( b -> {
             buffer.begin( GL_LINES, DefaultVertexFormats.POSITION_COLOR );
-            {
-                Utils.renderBlockBounding( buffer, b, (int) b.alpha );
-            }
+            Utils.renderBlockBounding( buffer, b, (int) b.alpha );
             tessellator.draw();
-        }
+        } );
+
         buffer.setTranslation( 0, 0, 0 );
 
         Profile.BLOCKS.clean();
