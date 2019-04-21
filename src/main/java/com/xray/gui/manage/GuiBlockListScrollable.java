@@ -1,7 +1,7 @@
-package com.xray.client.gui.manage;
+package com.xray.common.gui.manage;
 
-import com.xray.client.gui.utils.GuiBase;
-import com.xray.client.gui.GuiSelectionScreen;
+import com.xray.common.gui.utils.GuiBase;
+import com.xray.common.gui.GuiSelectionScreen;
 import com.xray.common.XRay;
 import com.xray.common.reference.block.BlockItem;
 import net.minecraft.client.Minecraft;

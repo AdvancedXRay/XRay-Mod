@@ -1,6 +1,6 @@
-package com.xray.client.gui;
+package com.xray.common.gui;
 
-import com.xray.client.xray.Controller;
+import com.xray.common.xray.Controller;
 import com.xray.common.Configuration;
 import com.xray.common.XRay;
 import com.xray.common.reference.Reference;

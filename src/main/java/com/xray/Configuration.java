@@ -1,9 +1,7 @@
-package com.xray.common;
+package com.xray;
 
-import com.xray.common.reference.Reference;
-import jdk.nashorn.internal.ir.annotations.Ignore;
+import com.xray.reference.Reference;
 import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.Property;
 
 @Config(modid = Reference.MOD_ID, name = "advanced_xray", type = Config.Type.INSTANCE)
 public class Configuration

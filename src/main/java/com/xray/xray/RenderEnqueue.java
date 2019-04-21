@@ -1,10 +1,10 @@
-package com.xray.client.xray;
+package com.xray.xray;
 
-import com.xray.common.Configuration;
-import com.xray.common.XRay;
-import com.xray.common.reference.block.BlockData;
-import com.xray.common.reference.block.BlockInfo;
-import com.xray.common.utils.WorldRegion;
+import com.xray.Configuration;
+import com.xray.XRay;
+import com.xray.reference.block.BlockData;
+import com.xray.reference.block.BlockInfo;
+import com.xray.utils.WorldRegion;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

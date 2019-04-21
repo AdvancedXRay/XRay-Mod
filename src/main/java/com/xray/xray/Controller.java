@@ -1,9 +1,9 @@
-package com.xray.client.xray;
+package com.xray.xray;
 
-import com.xray.common.Configuration;
-import com.xray.common.XRay;
-import com.xray.common.reference.block.BlockStore;
-import com.xray.common.utils.WorldRegion;
+import com.xray.Configuration;
+import com.xray.XRay;
+import com.xray.reference.block.BlockStore;
+import com.xray.utils.WorldRegion;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
@@ -18,7 +18,10 @@ import java.util.concurrent.Future;
 
 public class Controller
 {
-	// Block blackList
+    // Radius +/- around the player to search. So 8 is 8 on left and right of player plus under the player. So 17x17 area.
+    private static final int[] distanceList = new int[] {8, 16, 32, 48, 64, 80, 128, 256};
+
+    // Block blackList
 	public static ArrayList blackList = new ArrayList<Block>() {{
 		add(Blocks.AIR);
 		add(Blocks.BEDROCK);
@@ -69,11 +72,11 @@ public class Controller
 		}
 	}
 
-	public static int getRadius() { return XRay.distanceList[Configuration.radius]; }
+	public static int getRadius() { return distanceList[Configuration.radius]; }
 
 	public static void incrementCurrentDist()
 	{
-		if ( Configuration.radius < XRay.distanceList.length - 1 )
+		if ( Configuration.radius < distanceList.length - 1 )
 			Configuration.radius++;
 		else
 			Configuration.radius = 0;
@@ -84,7 +87,7 @@ public class Controller
 		if ( Configuration.radius > 0 )
 			Configuration.radius--;
 		else
-			Configuration.radius = XRay.distanceList.length - 1;
+			Configuration.radius = distanceList.length - 1;
 	}
 
 	/**

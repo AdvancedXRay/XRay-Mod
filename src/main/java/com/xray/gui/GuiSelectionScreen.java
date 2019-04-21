@@ -1,10 +1,10 @@
-package com.xray.client.gui;
+package com.xray.common.gui;
 
-import com.xray.client.gui.manage.GuiAddBlock;
-import com.xray.client.gui.manage.GuiBlockListScrollable;
-import com.xray.client.gui.utils.GuiBase;
-import com.xray.client.gui.utils.GuiPaged;
-import com.xray.client.xray.Controller;
+import com.xray.common.gui.manage.GuiAddBlock;
+import com.xray.common.gui.manage.GuiBlockListScrollable;
+import com.xray.common.gui.utils.GuiBase;
+import com.xray.common.gui.utils.GuiPaged;
+import com.xray.common.xray.Controller;
 import com.xray.common.reference.Reference;
 import com.xray.common.reference.block.BlockData;
 import com.xray.common.reference.block.BlockItem;

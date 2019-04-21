@@ -1,6 +1,6 @@
-package com.xray.client.xray;
+package com.xray.xray;
 
-import com.xray.common.XRay;
+import com.xray.XRay;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.ChunkEvent;
