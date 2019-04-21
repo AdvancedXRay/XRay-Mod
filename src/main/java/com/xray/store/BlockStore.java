@@ -1,5 +1,6 @@
-package com.xray.reference.block;
+package com.xray.store;
 
+import com.xray.reference.block.BlockData;
 import com.xray.utils.OutlineColor;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;

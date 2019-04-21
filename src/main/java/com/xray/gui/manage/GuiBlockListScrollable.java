@@ -13,9 +13,6 @@ import net.minecraft.client.resources.I18n;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * Created by MiKeY on 07/07/17.
- */
 public class GuiBlockListScrollable extends GuiBase {
     private RenderItem render;
     private GuiBlocksList blockList;

@@ -2,7 +2,7 @@ package com.xray.xray;
 
 import com.xray.Configuration;
 import com.xray.XRay;
-import com.xray.reference.block.BlockStore;
+import com.xray.store.BlockStore;
 import com.xray.utils.WorldRegion;
 
 import net.minecraft.block.Block;

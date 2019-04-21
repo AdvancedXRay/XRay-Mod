@@ -1,14 +1,12 @@
 package com.xray.gui.manage;
 
-import com.xray.XRay;
 import com.xray.gui.GuiSelectionScreen;
 import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.GuiSlider;
-import com.xray.world.BlockStorage;
-import com.xray.xray.Controller;
 import com.xray.reference.block.BlockData;
 import com.xray.reference.block.BlockItem;
 import com.xray.utils.OutlineColor;
+import com.xray.xray.Controller;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;
@@ -19,7 +17,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
-import org.lwjgl.Sys;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -92,16 +89,6 @@ public class GuiAddBlock extends GuiBase {
 						true
 					)
 				);
-
-				BlockStorage storage = BlockStorage.get(XRay.mc.world);
-				if (storage != null) {
-					storage.setBlockStorage( Controller.getBlockStore().getStore() );
-					storage.markDirty();
-					System.out.println(BlockStorage.get(XRay.mc.world).getBlockStorage().size());
-
-				} else {
-					System.out.println("NULLSLSALPSAJPOIHDIO");
-				}
 
 				mc.displayGuiScreen( new GuiSelectionScreen() );
 

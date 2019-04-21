@@ -4,11 +4,12 @@ import com.xray.gui.manage.GuiAddBlock;
 import com.xray.gui.manage.GuiBlockListScrollable;
 import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.GuiPaged;
-import com.xray.xray.Controller;
 import com.xray.reference.Reference;
 import com.xray.reference.block.BlockData;
 import com.xray.reference.block.BlockItem;
 import com.xray.utils.Utils;
+import com.xray.xray.Controller;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;
@@ -23,7 +24,9 @@ import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class GuiSelectionScreen extends GuiBase
 {
