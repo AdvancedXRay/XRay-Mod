@@ -1,26 +1,21 @@
-package com.xray.common.reference.block;
+package com.xray.reference.block;
 
-import com.xray.common.utils.OutlineColor;
+import com.xray.utils.OutlineColor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 public class BlockData {
 
-    public ResourceLocation name;
     private String entryName;
     public OutlineColor color;
-    public boolean isDefault;
-    public IBlockState state;
-    public ItemStack itemStack;
-    public boolean drawing;
+    private IBlockState state;
+    private ItemStack itemStack;
+    private boolean drawing;
 
-    public BlockData(ResourceLocation name, String entryName, OutlineColor color, boolean isDefault, IBlockState state, ItemStack itemStack, boolean drawing) {
-        this.name = name;
+    public BlockData(String entryName, OutlineColor color, ItemStack itemStack, boolean drawing) {
         this.entryName = entryName;
         this.color = color;
-        this.isDefault = isDefault;
-        this.state = state;
         this.itemStack = itemStack;
         this.drawing = drawing;
     }
@@ -37,24 +32,12 @@ public class BlockData {
         return entryName;
     }
 
-    public void setEntryName(String entryName) {
-        this.entryName = entryName;
-    }
-
-    public ResourceLocation getName() {
-        return name;
-    }
-
     public OutlineColor getOutline() {
         return color;
     }
 
-    public boolean isDefault() {
-        return isDefault;
-    }
-
-    public IBlockState getState() {
-        return state;
+    public void setDrawing(boolean drawing) {
+        this.drawing = drawing;
     }
 }
 

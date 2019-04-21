@@ -1,6 +1,6 @@
-package com.xray.common.gui.utils;
+package com.xray.gui.utils;
 
-import com.xray.common.reference.Reference;
+import com.xray.reference.Reference;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;

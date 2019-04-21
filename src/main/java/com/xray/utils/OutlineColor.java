@@ -1,9 +1,14 @@
-package com.xray.common.utils;
+package com.xray.utils;
 
 public class OutlineColor {
     private int r;
     private int g;
     private int b;
+
+    public OutlineColor(int[] color)
+    {
+        this( color[0], color[1], color[2] );
+    }
 
     public OutlineColor(int r, int g, int b) {
         this.r = r;

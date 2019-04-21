@@ -1,14 +1,14 @@
-package com.xray.common.gui;
+package com.xray.gui;
 
-import com.xray.common.gui.manage.GuiAddBlock;
-import com.xray.common.gui.manage.GuiBlockListScrollable;
-import com.xray.common.gui.utils.GuiBase;
-import com.xray.common.gui.utils.GuiPaged;
-import com.xray.common.xray.Controller;
-import com.xray.common.reference.Reference;
-import com.xray.common.reference.block.BlockData;
-import com.xray.common.reference.block.BlockItem;
-import com.xray.common.utils.Utils;
+import com.xray.gui.manage.GuiAddBlock;
+import com.xray.gui.manage.GuiBlockListScrollable;
+import com.xray.gui.utils.GuiBase;
+import com.xray.gui.utils.GuiPaged;
+import com.xray.xray.Controller;
+import com.xray.reference.Reference;
+import com.xray.reference.block.BlockData;
+import com.xray.reference.block.BlockItem;
+import com.xray.utils.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;

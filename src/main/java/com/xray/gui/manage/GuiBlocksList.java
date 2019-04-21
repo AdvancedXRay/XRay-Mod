@@ -1,6 +1,6 @@
-package com.xray.common.gui.manage;
+package com.xray.gui.manage;
 
-import com.xray.common.reference.block.BlockItem;
+import com.xray.reference.block.BlockItem;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;

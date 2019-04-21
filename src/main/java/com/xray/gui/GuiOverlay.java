@@ -1,9 +1,9 @@
-package com.xray.common.gui;
+package com.xray.gui;
 
-import com.xray.common.xray.Controller;
-import com.xray.common.Configuration;
-import com.xray.common.XRay;
-import com.xray.common.reference.Reference;
+import com.xray.xray.Controller;
+import com.xray.Configuration;
+import com.xray.XRay;
+import com.xray.reference.Reference;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;

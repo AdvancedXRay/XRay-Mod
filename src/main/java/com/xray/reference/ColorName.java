@@ -1,6 +1,6 @@
-package com.xray.common.reference;
+package com.xray.reference;
 
-import com.xray.common.utils.OutlineColor;
+import com.xray.utils.OutlineColor;
 
 public class ColorName {
 

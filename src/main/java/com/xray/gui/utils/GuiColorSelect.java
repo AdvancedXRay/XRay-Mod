@@ -1,7 +1,7 @@
-package com.xray.common.gui.utils;
+package com.xray.gui.utils;
 
-import com.xray.common.reference.Reference;
-import com.xray.common.utils.OutlineColor;
+import com.xray.reference.Reference;
+import com.xray.utils.OutlineColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;

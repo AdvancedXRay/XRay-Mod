@@ -1,4 +1,4 @@
-package com.xray.common.utils;
+package com.xray.utils;
 
 import net.minecraft.util.math.Vec3i;
 

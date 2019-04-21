@@ -1,8 +1,8 @@
-package com.xray.common.keybinding;
+package com.xray.keybinding;
 
-import com.xray.common.gui.GuiSelectionScreen;
-import com.xray.common.xray.Controller;
-import com.xray.common.XRay;
+import com.xray.gui.GuiSelectionScreen;
+import com.xray.xray.Controller;
+import com.xray.XRay;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

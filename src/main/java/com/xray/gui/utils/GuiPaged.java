@@ -1,6 +1,6 @@
-package com.xray.common.gui.utils;
+package com.xray.gui.utils;
 
-import com.xray.common.reference.block.BlockData;
+import com.xray.reference.block.BlockData;
 import net.minecraft.client.gui.GuiButton;
 
 public class GuiPaged {

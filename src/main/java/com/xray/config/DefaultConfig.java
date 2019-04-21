@@ -1,7 +1,7 @@
-package com.xray.common.config;
+package com.xray.config;
 
-import com.xray.common.reference.block.BlockData;
-import com.xray.common.reference.block.BlockStore;
+import com.xray.reference.block.BlockData;
+import com.xray.reference.block.BlockStore;
 
 import java.util.ArrayList;
 import java.util.List;

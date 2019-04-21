@@ -1,6 +1,6 @@
-package com.xray.common.reference.block;
+package com.xray.reference.block;
 
-import com.xray.common.utils.OutlineColor;
+import com.xray.utils.OutlineColor;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -28,7 +28,7 @@ public class BlockStore {
             return;
 
         BlockData data = this.store.get(key);
-        data.drawing = !data.drawing;
+        data.setDrawing(!data.isDrawing());
     }
 
     /**
@@ -48,11 +48,8 @@ public class BlockStore {
         ItemStack stack = ores.get( 0 );
 
         return new BlockData(
-                stack.getItem().getRegistryName(),
                 stack.getDisplayName(),
                 new OutlineColor(color[0], color[1], color[2]),
-                true,
-                Block.getBlockFromItem(stack.getItem()).getDefaultState(),
                 stack,
                 draw
         );

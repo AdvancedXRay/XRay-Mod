@@ -1,6 +1,6 @@
-package com.xray.common.utils;
+package com.xray.utils;
 
-import com.xray.common.reference.block.BlockInfo;
+import com.xray.reference.block.BlockInfo;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;

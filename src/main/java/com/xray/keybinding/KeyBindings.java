@@ -1,4 +1,4 @@
-package com.xray.common.keybinding;
+package com.xray.keybinding;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;

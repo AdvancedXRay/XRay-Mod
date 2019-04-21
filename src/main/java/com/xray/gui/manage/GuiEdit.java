@@ -1,9 +1,9 @@
-package com.xray.common.gui.manage;
+package com.xray.gui.manage;
 
-import com.xray.common.gui.GuiSelectionScreen;
-import com.xray.common.gui.utils.GuiBase;
-import com.xray.common.gui.utils.GuiSlider;
-import com.xray.common.reference.block.BlockData;
+import com.xray.gui.GuiSelectionScreen;
+import com.xray.gui.utils.GuiBase;
+import com.xray.gui.utils.GuiSlider;
+import com.xray.reference.block.BlockData;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.RenderHelper;
