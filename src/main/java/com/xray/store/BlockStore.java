@@ -55,12 +55,11 @@ public class BlockStore {
                             e.getName(),
                             e.getStateId(),
                             e.getColor(),
-                            new ItemStack(ItemBlock.getItemFromBlock(state.getBlock())),
+                            new ItemStack( state.getBlock(), 1, state.getBlock().getMetaFromState(state)),
                             e.isDrawing()
                     )
             );
 
-            Block.getStateById(e.getStateId()).withProperty(Property)
             System.out.println( "Found: " + state.toString());
         }
 
