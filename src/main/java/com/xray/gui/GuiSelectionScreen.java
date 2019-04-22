@@ -1,5 +1,6 @@
 package com.xray.gui;
 
+import com.xray.XRay;
 import com.xray.gui.manage.GuiAddBlock;
 import com.xray.gui.manage.GuiBlockListScrollable;
 import com.xray.gui.utils.GuiBase;
@@ -7,6 +8,7 @@ import com.xray.gui.utils.GuiPaged;
 import com.xray.reference.Reference;
 import com.xray.reference.block.BlockData;
 import com.xray.reference.block.BlockItem;
+import com.xray.store.JsonStore;
 import com.xray.utils.Utils;
 import com.xray.xray.Controller;
 
@@ -222,7 +224,7 @@ public class GuiSelectionScreen extends GuiBase
 		RenderHelper.enableGUIStandardItemLighting();
 		for ( GuiPaged item : this.renderList ) {
 			try {
-				this.renderColor(item.x, item.y, item.getBlock().getOutline().getColor());
+				this.renderColor(item.x, item.y, item.getBlock().getColor().getColor());
 				this.itemRender.renderItemAndEffectIntoGUI( item.getBlock().getItemStack(), item.x + 2, item.y + 2 );
 			} catch ( Exception ignored ) {
 			    // If this fails it's not the end of the world

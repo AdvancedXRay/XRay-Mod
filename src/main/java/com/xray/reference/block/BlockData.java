@@ -8,16 +8,29 @@ import net.minecraft.util.ResourceLocation;
 public class BlockData {
 
     private String entryName;
-    public OutlineColor color;
-    private IBlockState state;
+    private int stateId;
+    private OutlineColor color;
     private ItemStack itemStack;
     private boolean drawing;
 
-    public BlockData(String entryName, OutlineColor color, ItemStack itemStack, boolean drawing) {
+    public BlockData(String entryName, int stateId, OutlineColor color, ItemStack itemStack, boolean drawing) {
         this.entryName = entryName;
+        this.stateId = stateId;
         this.color = color;
         this.itemStack = itemStack;
         this.drawing = drawing;
+    }
+
+    public String getEntryName() {
+        return entryName;
+    }
+
+    public int getStateId() {
+        return stateId;
+    }
+
+    public OutlineColor getColor() {
+        return color;
     }
 
     public ItemStack getItemStack() {
@@ -26,14 +39,6 @@ public class BlockData {
 
     public boolean isDrawing() {
         return drawing;
-    }
-
-    public String getEntryName() {
-        return entryName;
-    }
-
-    public OutlineColor getOutline() {
-        return color;
     }
 
     public void setDrawing(boolean drawing) {

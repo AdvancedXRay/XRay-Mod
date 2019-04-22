@@ -4,8 +4,12 @@ import com.xray.gui.GuiOverlay;
 import com.xray.keybinding.InputEvent;
 import com.xray.keybinding.KeyBindings;
 import com.xray.reference.Reference;
+import com.xray.reference.block.BlockData;
 import com.xray.reference.block.BlockItem;
+import com.xray.reference.block.SimpleBlockData;
+import com.xray.store.BlockStore;
 import com.xray.store.JsonStore;
+import com.xray.utils.OutlineColor;
 import com.xray.xray.Controller;
 import com.xray.xray.Events;
 
@@ -35,7 +39,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @Mod(
 		modid= Reference.MOD_ID,
@@ -75,6 +82,13 @@ public class XRay
 		MinecraftForge.EVENT_BUS.register( new GuiOverlay() );
 
 		MinecraftForge.EVENT_BUS.register( this );
+
+		List<SimpleBlockData> data = blockStore.read();
+		if( data.isEmpty() )
+			return;
+
+		HashMap<String, BlockData> map = BlockStore.getFromSimpleBlockList(data);
+		Controller.getBlockStore().setStore(map);
 	}
 
 	@EventHandler

@@ -49,9 +49,9 @@ public class GuiEdit extends GuiBase
         this.buttonList.add( greenSlider = new GuiSlider( 2, width / 2 - 138, height / 2 + 30, I18n.format("xray.color.green"), 0, 255 ));
         this.buttonList.add( blueSlider = new GuiSlider( 1, width / 2 - 138, height / 2 + 53, I18n.format("xray.color.blue"), 0, 255 ) );
 
-        redSlider.sliderValue   = (float)block.getOutline().getRed()/255;
-        greenSlider.sliderValue = (float)block.getOutline().getGreen()/255;
-        blueSlider.sliderValue  = (float)block.getOutline().getBlue()/255;
+        redSlider.sliderValue   = (float)block.getColor().getRed()/255;
+        greenSlider.sliderValue = (float)block.getColor().getGreen()/255;
+        blueSlider.sliderValue  = (float)block.getColor().getBlue()/255;
 
         oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 138 ,  height / 2 - 63, 202, 20 );
         oreName.setText(this.block.getEntryName());

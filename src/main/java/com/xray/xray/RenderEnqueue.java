@@ -101,7 +101,7 @@ public class RenderEnqueue implements Runnable
 								if( !defaultExists && !currentExists )
 									continue;
 
-								blockData = blocks.get(defaultExists ? defaultState.toString() : currentState.toString());
+								blockData = blocks.get(currentExists ? currentState.toString() : defaultState.toString());
 								if( blockData == null || !blockData.isDrawing() ) // fail safe
 									continue;
 
@@ -109,7 +109,7 @@ public class RenderEnqueue implements Runnable
 								double alpha = !Configuration.shouldFade ? 255 : Math.max(0, ((Controller.getRadius() - XRay.mc.player.getDistance(x + i, y + j, z + k)) / Controller.getRadius() ) * 255);
 
 								// Push the block to the render queue
-								renderQueue.add(new BlockInfo(x + i, y + j, z + k, blockData.getOutline().getColor(), alpha));
+								renderQueue.add(new BlockInfo(x + i, y + j, z + k, blockData.getColor().getColor(), alpha));
 							}
 						}
 					}
@@ -155,7 +155,7 @@ public class RenderEnqueue implements Runnable
 			double alpha = !Configuration.shouldFade ? 255 : Math.max(0, ((Controller.getRadius() - XRay.mc.player.getDistance(pos.getX(), pos.getY(), pos.getZ())) / Controller.getRadius() ) * 255);
 
             // the block was added to the world, let's add it to the drawing buffer
-            Render.ores.add( new BlockInfo(pos, data.getOutline().getColor(), alpha) );
+            Render.ores.add( new BlockInfo(pos, data.getColor().getColor(), alpha) );
 		}
 	}
 }

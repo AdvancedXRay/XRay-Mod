@@ -65,6 +65,7 @@ public class Configuration
 //
 //	public static void syncConfig()
 //	{
+//        XRay.config = new Configuration( suggestedConfig, Reference.CONFIG_VERSION );
 //		ConfigCategory cat = XRay.config.getCategory( CATEGORY_PREFIX_BLOCKS );
 //		XRay.config.removeCategory(cat);
 //        cat = XRay.config.getCategory( CATEGORY_PREFIX_BLOCKS );
