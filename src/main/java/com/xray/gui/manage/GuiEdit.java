@@ -4,12 +4,14 @@ import com.xray.gui.GuiSelectionScreen;
 import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.GuiSlider;
 import com.xray.reference.block.BlockData;
+import com.xray.xray.Controller;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class GuiEdit extends GuiBase
 {
@@ -42,6 +44,7 @@ public class GuiEdit extends GuiBase
 
         this.buttonList.add( new GuiButton( BUTTON_SAVE, (width / 2) + 78, height / 2 + 58, 120, 20, I18n.format("xray.single.save") ));
 
+
         // Bottom buttons
         this.buttonList.add( new GuiButton( BUTTON_CANCEL, width / 2 - 138, height / 2 + 83, 202, 20, I18n.format("xray.single.cancel") ) ); // Cancel button
 
@@ -73,7 +76,7 @@ public class GuiEdit extends GuiBase
                 break;
 
             case BUTTON_DELETE:
-//                Controller.searchList.removeOre( oreInfo );
+                Controller.getBlockStore().getStore().values().removeIf( e -> e == this.block);
 
                 mc.player.closeScreen();
                 mc.displayGuiScreen( new GuiSelectionScreen() );
@@ -82,12 +85,6 @@ public class GuiEdit extends GuiBase
             case BUTTON_CANCEL:
                 mc.player.closeScreen();
                 mc.displayGuiScreen( new GuiSelectionScreen() );
-                break;
-
-            case BUTTON_OREDICT:
-		//Controller.searchList.toggleOreDictionary( oreInfo );
-//		oreInfo.toggleOredict();
-//                button.displayString = I18n.format("xray.input.toggle_oredict") + ": " + (oreInfo.useOredict() ? "On" : "Off");
                 break;
 
             default:

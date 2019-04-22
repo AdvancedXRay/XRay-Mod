@@ -5,6 +5,7 @@ import com.xray.keybinding.InputEvent;
 import com.xray.keybinding.KeyBindings;
 import com.xray.reference.Reference;
 import com.xray.reference.block.BlockData;
+import com.xray.reference.block.BlockItem;
 import com.xray.reference.block.SimpleBlockData;
 import com.xray.store.BlockStore;
 import com.xray.store.JsonStore;
@@ -121,11 +122,6 @@ public class XRay
 				XRay.blockList.add(new BlockItem(Block.getStateId(Block.getBlockFromItem(subItem.getItem()).getBlockState().getBaseState()), subItem));
 			}
 		}
-
-		XRay.blockList.add(new BlockItem(Block.getStateId(Blocks.WATER.getDefaultState()), new ItemStack(Blocks.WATER)));
-		XRay.blockList.add(new BlockItem(Block.getStateId(Blocks.FLOWING_WATER.getDefaultState()), new ItemStack(Blocks.FLOWING_WATER)));
-		XRay.blockList.add(new BlockItem(Block.getStateId(Blocks.LAVA.getDefaultState()), new ItemStack(Blocks.LAVA)));
-		XRay.blockList.add(new BlockItem(Block.getStateId(Blocks.FLOWING_LAVA.getDefaultState()), new ItemStack(Blocks.FLOWING_LAVA)));
 	}
 
 
