@@ -5,11 +5,9 @@ import com.xray.keybinding.InputEvent;
 import com.xray.keybinding.KeyBindings;
 import com.xray.reference.Reference;
 import com.xray.reference.block.BlockData;
-import com.xray.reference.block.BlockItem;
 import com.xray.reference.block.SimpleBlockData;
 import com.xray.store.BlockStore;
 import com.xray.store.JsonStore;
-import com.xray.utils.OutlineColor;
 import com.xray.xray.Controller;
 import com.xray.xray.Events;
 
@@ -18,6 +16,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
@@ -39,7 +39,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -99,23 +98,34 @@ public class XRay
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		Block tmpBlock;
-		for ( Block block : ForgeRegistries.BLOCKS ) {
-			NonNullList<ItemStack> subBlocks = NonNullList.create();
-			block.getSubBlocks( block.getCreativeTabToDisplayOn(), subBlocks );
-			if ( Blocks.AIR.equals( block ) ||  Controller.blackList.contains(block) )
+		for ( Item item : ForgeRegistries.ITEMS ) {
+
+			if( !(item instanceof ItemBlock) )
+				continue;
+
+			Block block = Block.getBlockFromItem(item);
+			if ( item == Items.AIR || block == Blocks.AIR || Controller.blackList.contains(block) )
 				continue; // avoids troubles
 
-			if( !subBlocks.isEmpty() ) {
-				for( ItemStack subBlock : subBlocks ) {
-					if( subBlock.equals(ItemStack.EMPTY) || subBlock.getItem() == Items.AIR )
-						continue;
+			XRay.blockList.add( new BlockItem( Block.getStateId(block.getBlockState().getBaseState()), new ItemStack(item) ) );
 
-					XRay.blockList.add(new BlockItem(Block.getStateId(Block.getBlockFromItem(subBlock.getItem()).getBlockState().getBaseState()), subBlock));
-				}
-			} else
-				XRay.blockList.add( new BlockItem( Block.getStateId(block.getDefaultState()), new ItemStack(block)) );
+			if( !item.getHasSubtypes() || item.getCreativeTab() == null )
+				continue;
+
+			NonNullList<ItemStack> subItems = NonNullList.create();
+			item.getSubItems( item.getCreativeTab(), subItems );
+			for( ItemStack subItem : subItems ) {
+				if( subItem.equals(ItemStack.EMPTY) || subItem.getItem() == Items.AIR )
+					continue;
+
+				XRay.blockList.add(new BlockItem(Block.getStateId(Block.getBlockFromItem(subItem.getItem()).getBlockState().getBaseState()), subItem));
+			}
 		}
+
+		XRay.blockList.add(new BlockItem(Block.getStateId(Blocks.WATER.getDefaultState()), new ItemStack(Blocks.WATER)));
+		XRay.blockList.add(new BlockItem(Block.getStateId(Blocks.FLOWING_WATER.getDefaultState()), new ItemStack(Blocks.FLOWING_WATER)));
+		XRay.blockList.add(new BlockItem(Block.getStateId(Blocks.LAVA.getDefaultState()), new ItemStack(Blocks.LAVA)));
+		XRay.blockList.add(new BlockItem(Block.getStateId(Blocks.FLOWING_LAVA.getDefaultState()), new ItemStack(Blocks.FLOWING_LAVA)));
 	}
 
 
