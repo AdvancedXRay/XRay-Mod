@@ -18,6 +18,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -41,6 +42,7 @@ public class GuiSelectionScreen extends GuiBase
 
 	private GuiButton distButtons;
 	private GuiTextField search;
+	public RenderItem render;
 
 	private static final int BUTTON_RADIUS = 0;
 	private static final int BUTTON_NEXT = 2;
@@ -50,6 +52,8 @@ public class GuiSelectionScreen extends GuiBase
 	private static final int BUTTON_ADD_LOOK = 5;
 	private static final int BUTTON_CLOSE = 6;
 
+	private GuiActiveBlockList scrollList;
+
 	public GuiSelectionScreen() {
 		super(true);
 		this.setSideTitle( I18n.format("xray.single.tools") );
@@ -58,41 +62,46 @@ public class GuiSelectionScreen extends GuiBase
 	@Override
 	public void initGui()
     {
+    	this.render = this.itemRender;
 		this.buttonList.clear();
 		this.listHelper.clear();
 		this.renderList.clear();
-		int x = width / 2 - 140, y = height / 2 - 80, count = 0, page = 0;
+
+		this.scrollList = new GuiActiveBlockList(this, width / 2 - 140, height / 2 - 80);
+
+		this.search = new GuiTextField(7, getFontRender(), width / 2 - 135,  height / 2 - 106, 200, 18);
+		this.search.setCanLoseFocus(true);
+
+//		int x = width / 2 - 140, y = height / 2 - 80, count = 0, page = 0;
 
 		// Our search area
-		search = new GuiTextField(7, getFontRender(), width / 2 - 135,  height / 2 - 106, 200, 18);
-		search.setCanLoseFocus(true);
 
-		for(Map.Entry<String, BlockData> store: Controller.getBlockStore().getStore().entrySet() ) {
-			if (count % 8 == 0 && count != 0) {
-				page++;
-				if (page > pageMax)
-					pageMax++;
-
-				x = width / 2 - 140;
-				y = height / 2 - 106;
-			}
-
-			listHelper.add( new GuiPage( 10+count, page, x, y, store.getKey(), store.getValue()) );
-			y += 21.8;
-			count++;
-		}
+//		for(Map.Entry<String, BlockData> store: Controller.getBlockStore().getStore().entrySet() ) {
+//			if (count % 8 == 0 && count != 0) {
+//				page++;
+//				if (page > pageMax)
+//					pageMax++;
+//
+//				x = width / 2 - 140;
+//				y = height / 2 - 106;
+//			}
+//
+//			listHelper.add( new GuiPage( 10+count, page, x, y, store.getKey(), store.getValue()) );
+//			y += 21.8;
+//			count++;
+//		}
 
 		if( listHelper.size() == 0 )
 			search.setEnabled(false);
 
         // only draws the current page
-		for (GuiPage item : listHelper ) {
-			if (item.getPageId() != pageCurrent)
-				continue; // skip the ones that are not on this page.
-
-			this.renderList.add( item );
-			this.buttonList.add( item.getButton() );
-		}
+//		for (GuiPage item : listHelper ) {
+//			if (item.getPageId() != pageCurrent)
+//				continue; // skip the ones that are not on this page.
+//
+//			this.renderList.add( item );
+//			this.buttonList.add( item.getButton() );
+//		}
 
 		GuiButton aNextButton, aPrevButton;
 		this.buttonList.add( distButtons = new GuiButton(BUTTON_RADIUS, (width / 2) - 108, height / 2 + 86, 140, 20, I18n.format("xray.input.distance")+": "+ Controller.getRadius()) );
@@ -230,7 +239,9 @@ public class GuiSelectionScreen extends GuiBase
 	public void drawScreen( int x, int y, float f ) {
 
 		super.drawScreen(x, y, f);
-		search.drawTextBox();
+
+		this.search.drawTextBox();
+		this.scrollList.drawScreen( x, y, f );
 
 		if( !search.isFocused() )
 			XRay.mc.fontRenderer.drawStringWithShadow(I18n.format("xray.single.search"), (float) width / 2 - 130, (float) height / 2 - 101, Color.GRAY.getRGB());
