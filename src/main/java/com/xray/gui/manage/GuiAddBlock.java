@@ -8,7 +8,6 @@ import com.xray.reference.block.BlockData;
 import com.xray.reference.block.BlockItem;
 import com.xray.utils.OutlineColor;
 import com.xray.xray.Controller;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;
@@ -22,6 +21,7 @@ import net.minecraft.client.resources.I18n;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class GuiAddBlock extends GuiBase {
@@ -29,14 +29,13 @@ public class GuiAddBlock extends GuiBase {
 	private static final int BUTTON_CANCEL = 99;
 
 	private GuiTextField oreName;
+	private GuiButton addBtn;
 	private GuiSlider redSlider;
 	private GuiSlider greenSlider;
 	private GuiSlider blueSlider;
 	private BlockItem selectBlock;
 	private boolean oreNameCleared  = false;
 	private IBlockState state;
-
-	private OutlineColor selectedColor = new OutlineColor(0, 0, 0);
 
 	public GuiAddBlock(BlockItem selectedBlock, @Nullable IBlockState state) {
 		super(false);
@@ -48,7 +47,7 @@ public class GuiAddBlock extends GuiBase {
 	public void initGui()
 	{
 		// Called when the gui should be (re)created
-		this.buttonList.add( new GuiButton( BUTTON_ADD, width / 2 - 100, height / 2 + 85, 128, 20, I18n.format("xray.single.add") ));
+		this.buttonList.add( addBtn = new GuiButton( BUTTON_ADD, width / 2 - 100, height / 2 + 85, 128, 20, I18n.format("xray.single.add") ));
 		this.buttonList.add( new GuiButton( BUTTON_CANCEL, width / 2 + 30, height / 2 + 85, 72, 20, I18n.format("xray.single.cancel") ) );
 
 		this.buttonList.add(
@@ -140,8 +139,10 @@ public class GuiAddBlock extends GuiBase {
 		getFontRender().drawStringWithShadow(selectBlock.getItemStack().getDisplayName(), width / 2f - 100, height / 2f - 90, 0xffffff);
 
 		oreName.drawTextBox();
-
 		renderPreview(width / 2 - 100, height / 2 - 40, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
+
+		if( this.state == null && this.addBtn.isMouseOver() )
+			this.drawHoveringText(Arrays.asList(I18n.format("xray.message.state_warning").split("\n")), this.addBtn.x, this.addBtn.y - 20);
 
 		RenderHelper.enableGUIStandardItemLighting();
 		this.itemRender.renderItemAndEffectIntoGUI( selectBlock.getItemStack(), width / 2 + 85, height / 2 - 105 );

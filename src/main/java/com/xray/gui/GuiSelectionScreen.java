@@ -82,6 +82,9 @@ public class GuiSelectionScreen extends GuiBase
 			count++;
 		}
 
+		if( listHelper.size() == 0 )
+			search.setEnabled(false);
+
         // only draws the current page
 		for (GuiPage item : listHelper ) {
 			if (item.getPageId() != pageCurrent)
@@ -211,7 +214,7 @@ public class GuiSelectionScreen extends GuiBase
 				if (list.getButton().mousePressed(this.mc, x, y)) {
 					mc.player.closeScreen();
 
-					mc.displayGuiScreen(new GuiEdit(list.getBlock()));
+					mc.displayGuiScreen(new GuiEdit(list.getStoreKey(), list.getBlock()));
 				}
 			}
 

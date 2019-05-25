@@ -44,5 +44,9 @@ public class BlockData {
     public void setDrawing(boolean drawing) {
         this.drawing = drawing;
     }
+
+    public void setColor(OutlineColor color) {
+        this.color = color;
+    }
 }
 

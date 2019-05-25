@@ -1,3 +1,4 @@
+#PARSE_ESCAPES
 // Debug stuff. Much less important than the normal stuff
 xray.debug.init=XRay Initialised
 
@@ -42,6 +43,7 @@ xray.message.thats_odd=Something went wrong? Sorry about that. Make an issue if 
 xray.message.nothing_infront=You're not looking at anything are you?
 xray.message.not_a_number={%s} is not a number. Please use a number for your meta
 xray.message.meta_not_supported={%s} isn't a valid meta data for {%s}
+xray.message.state_warning=Warning, this will limit you to default\nblocks. Use looking at or in hand to get\nthe absolute block you require.
 
 xray.config.toggle=Toggle XRay
 xray.config.open=Open XRay Menu
