@@ -3,6 +3,7 @@ package com.xray.gui;
 import com.xray.XRay;
 import com.xray.gui.manage.GuiAddBlock;
 import com.xray.gui.manage.GuiBlockListScrollable;
+import com.xray.gui.manage.GuiEdit;
 import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.GuiPage;
 import com.xray.reference.Reference;
@@ -13,7 +14,9 @@ import com.xray.xray.Controller;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemBlock;
@@ -24,6 +27,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,13 +40,14 @@ public class GuiSelectionScreen extends GuiBase
 	private int pageCurrent, pageMax = 0;
 
 	private GuiButton distButtons;
+	private GuiTextField search;
+
 	private static final int BUTTON_RADIUS = 0;
 	private static final int BUTTON_NEXT = 2;
 	private static final int BUTTON_PREVIOUS = 3;
 	private static final int BUTTON_ADD_BLOCK = 1;
 	private static final int BUTTON_ADD_HAND = 4;
 	private static final int BUTTON_ADD_LOOK = 5;
-	private static final int BUTTON_CAVE_FINDER = 1500;
 	private static final int BUTTON_CLOSE = 6;
 
 	public GuiSelectionScreen() {
@@ -56,10 +61,14 @@ public class GuiSelectionScreen extends GuiBase
 		this.buttonList.clear();
 		this.listHelper.clear();
 		this.renderList.clear();
-		int x = width / 2 - 140, y = height / 2 - 106, count = 0, page = 0;
+		int x = width / 2 - 140, y = height / 2 - 80, count = 0, page = 0;
+
+		// Our search area
+		search = new GuiTextField(7, getFontRender(), width / 2 - 135,  height / 2 - 106, 200, 18);
+		search.setCanLoseFocus(true);
 
 		for(Map.Entry<String, BlockData> store: Controller.getBlockStore().getStore().entrySet() ) {
-			if (count % 9 == 0 && count != 0) {
+			if (count % 8 == 0 && count != 0) {
 				page++;
 				if (page > pageMax)
 					pageMax++;
@@ -132,13 +141,6 @@ public class GuiSelectionScreen extends GuiBase
 			  		pageCurrent --;
 				break;
 
-			case BUTTON_CAVE_FINDER:
-//				mc.player.closeScreen();
-//				Controller.toggleDrawCaves();
-//				XRay.logger.debug( "Draw caves: " + Controller.drawCaves() );
-				Controller.getBlockStore().getStore().clear();
-				break;
-
 			case BUTTON_ADD_HAND:
 				mc.player.closeScreen();
 				ItemStack handItem = mc.player.getHeldItem(EnumHand.MAIN_HAND);
@@ -192,18 +194,24 @@ public class GuiSelectionScreen extends GuiBase
 		this.initGui();
 	}
 
+	@Override
+	protected void keyTyped(char charTyped, int hex) throws IOException {
+		super.keyTyped(charTyped, hex);
+		search.textboxKeyTyped(charTyped, hex);
+	}
 
 	@Override
 	public void mouseClicked( int x, int y, int mouse ) throws IOException
 	{
 		super.mouseClicked( x, y, mouse );
+		search.mouseClicked(x, y, mouse );
 
 		if( mouse == 1 ) {
 			for (GuiPage list : this.renderList) {
 				if (list.getButton().mousePressed(this.mc, x, y)) {
 					mc.player.closeScreen();
 
-//					mc.displayGuiScreen(new GuiEdit(list.getOre()));
+					mc.displayGuiScreen(new GuiEdit(list.getBlock()));
 				}
 			}
 
@@ -219,6 +227,10 @@ public class GuiSelectionScreen extends GuiBase
 	public void drawScreen( int x, int y, float f ) {
 
 		super.drawScreen(x, y, f);
+		search.drawTextBox();
+
+		if( !search.isFocused() )
+			XRay.mc.fontRenderer.drawStringWithShadow(I18n.format("xray.single.search"), (float) width / 2 - 130, (float) height / 2 - 101, Color.GRAY.getRGB());
 
 		RenderHelper.enableGUIStandardItemLighting();
 		for ( GuiPage item : this.renderList ) {
