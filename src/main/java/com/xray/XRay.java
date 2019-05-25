@@ -57,6 +57,7 @@ public class XRay
 	public static JsonStore blockStore = new JsonStore();
 
 	public static Logger logger;
+
 	@Instance(Reference.MOD_ID)
 	public static XRay instance;
 
