@@ -9,9 +9,6 @@ import net.minecraftforge.fml.client.GuiScrollingList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Created by MiKeY on 07/07/17.
- */
 public class GuiBlocksList extends GuiScrollingList {
 
     private static final int HEIGHT = 35;

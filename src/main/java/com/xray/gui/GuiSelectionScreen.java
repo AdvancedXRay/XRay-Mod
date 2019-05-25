@@ -4,11 +4,10 @@ import com.xray.XRay;
 import com.xray.gui.manage.GuiAddBlock;
 import com.xray.gui.manage.GuiBlockListScrollable;
 import com.xray.gui.utils.GuiBase;
-import com.xray.gui.utils.GuiPaged;
+import com.xray.gui.utils.GuiPage;
 import com.xray.reference.Reference;
 import com.xray.reference.block.BlockData;
 import com.xray.reference.block.BlockItem;
-import com.xray.store.JsonStore;
 import com.xray.utils.Utils;
 import com.xray.xray.Controller;
 
@@ -32,8 +31,8 @@ import java.util.Map;
 
 public class GuiSelectionScreen extends GuiBase
 {
-	private final List<GuiPaged> listHelper = new ArrayList<>();
-	private final List<GuiPaged> renderList = new ArrayList<>();
+	private final List<GuiPage> listHelper = new ArrayList<>();
+	private final List<GuiPage> renderList = new ArrayList<>();
 	private int pageCurrent, pageMax = 0;
 
 	private GuiButton distButtons;
@@ -69,13 +68,13 @@ public class GuiSelectionScreen extends GuiBase
 				y = height / 2 - 106;
 			}
 
-			listHelper.add( new GuiPaged( 10+count, page, x, y, store.getKey(), store.getValue()) );
+			listHelper.add( new GuiPage( 10+count, page, x, y, store.getKey(), store.getValue()) );
 			y += 21.8;
 			count++;
 		}
 
         // only draws the current page
-		for (GuiPaged item : listHelper ) {
+		for (GuiPage item : listHelper ) {
 			if (item.getPageId() != pageCurrent)
 				continue; // skip the ones that are not on this page.
 
@@ -183,7 +182,7 @@ public class GuiSelectionScreen extends GuiBase
 				break;
 
 			default:
-				for ( GuiPaged list : this.renderList ) {
+				for ( GuiPage list : this.renderList ) {
 					if( list.getButton().id == button.id ) {
 						Controller.getBlockStore().toggleDrawing(list.getStoreKey()); // no need to update list.getOre() as it is referenced in searchList
 					}
@@ -200,7 +199,7 @@ public class GuiSelectionScreen extends GuiBase
 		super.mouseClicked( x, y, mouse );
 
 		if( mouse == 1 ) {
-			for (GuiPaged list : this.renderList) {
+			for (GuiPage list : this.renderList) {
 				if (list.getButton().mousePressed(this.mc, x, y)) {
 					mc.player.closeScreen();
 
@@ -222,10 +221,10 @@ public class GuiSelectionScreen extends GuiBase
 		super.drawScreen(x, y, f);
 
 		RenderHelper.enableGUIStandardItemLighting();
-		for ( GuiPaged item : this.renderList ) {
+		for ( GuiPage item : this.renderList ) {
 			try {
-				this.renderColor(item.x, item.y, item.getBlock().getColor().getColor());
-				this.itemRender.renderItemAndEffectIntoGUI( item.getBlock().getItemStack(), item.x + 2, item.y + 2 );
+				this.renderColor(item.getX(), item.getY(), item.getBlock().getColor().getColor());
+				this.itemRender.renderItemAndEffectIntoGUI( item.getBlock().getItemStack(), item.getX() + 2, item.getY() + 2 );
 			} catch ( Exception ignored ) {
 			    // If this fails it's not the end of the world
 			}

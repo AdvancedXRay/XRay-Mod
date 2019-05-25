@@ -12,12 +12,9 @@ import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 
-/**
- * Created by MiKeY on 08/07/17.
- */
 public class GuiBase extends GuiScreen {
 
-    private boolean hasSide = false;
+    private boolean hasSide;
     private String sideTitle = "";
     private int backgroundWidth = 229;
     private int backgroundHeight = 235;
@@ -27,16 +24,10 @@ public class GuiBase extends GuiScreen {
     }
 
     @Override
-    public void initGui() {
-
-    }
-
-    @Override
     protected void keyTyped( char par1, int par2 ) throws IOException
     {
         super.keyTyped( par1, par2 );
 
-        // Close on esc, inventory key or keybind
         if( par2 == 1 )
             mc.player.closeScreen();
     }
@@ -72,27 +63,26 @@ public class GuiBase extends GuiScreen {
 
         if( this.hasSide ) {
             mc.renderEngine.bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "bg.png"));
-            drawTexturedQuadFit(width / 2 + 60, height / 2 -(180/2), 150, 180, null);
+            drawTexturedQuadFit((double) width / 2 + 60, (float) height / 2 -((float) 180/2), 150, 180, null);
 
-            drawTexturedQuadFit(width / 2 - 150, height / 2 - 118, this.backgroundWidth, this.backgroundHeight, null);
+            drawTexturedQuadFit((float) width / 2 - 150, (float) height / 2 - 118, this.backgroundWidth, this.backgroundHeight, null);
 
             if( hasSideTitle() )
-                fr.drawStringWithShadow(this.sideTitle, width / 2 + 80, height / 2 - 77, 0xffff00);
+                fr.drawStringWithShadow(this.sideTitle, (float) width / 2 + 80, (float) height / 2 - 77, 0xffff00);
 
         }
 
         if( !this.hasSide ) {
             mc.renderEngine.bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "bg.png"));
-            drawTexturedQuadFit(width / 2 - (this.backgroundWidth / 2) + 1, height / 2 - (this.backgroundHeight / 2), this.backgroundWidth, this.backgroundHeight, null);
+            drawTexturedQuadFit((float) width / 2 - ((float) this.backgroundWidth / 2) + 1, (float) height / 2 - ((float) this.backgroundHeight / 2), this.backgroundWidth, this.backgroundHeight, null);
         }
 
         if( hasTitle() ) {
             if( this.hasSide )
-                fr.drawStringWithShadow(title(), width / 2 - 138, height / 2 - 105, 0xffff00);
+                fr.drawStringWithShadow(title(), (float) width / 2 - 138, (float) height / 2 - 105, 0xffff00);
             else
-                fr.drawStringWithShadow(title(), width / 2 - (this.backgroundWidth / 2 ) + 14, height / 2 - (this.backgroundHeight / 2) + 13, 0xffff00);
+                fr.drawStringWithShadow(title(), (float) width / 2 - ((float) this.backgroundWidth / 2 ) + 14, (float) height / 2 - ((float) this.backgroundHeight / 2) + 13, 0xffff00);
         }
-
 
         super.drawScreen(x, y, f);
     }
@@ -111,8 +101,9 @@ public class GuiBase extends GuiScreen {
         return "";
     }
 
-    public boolean hasSideTitle() { return !this.sideTitle.isEmpty(); }
-    public void setSideTitle( String title ) { this.sideTitle = title; }
+    private boolean hasSideTitle() { return !this.sideTitle.isEmpty(); }
+    protected void setSideTitle(String title) { this.sideTitle = title; }
+
     public boolean hasSide() { return this.hasSide; }
 
     public void setSize( int width, int height ) {
