@@ -22,7 +22,6 @@ public class GuiEdit extends GuiBase
     private BlockData block;
 
     private static final int BUTTON_DELETE = 100;
-    private static final int BUTTON_OREDICT = 101;
     private static final int BUTTON_SAVE = 98;
     private static final int BUTTON_CANCEL = 99;
 
@@ -40,10 +39,7 @@ public class GuiEdit extends GuiBase
         // Called when the gui should be (re)created
         // Sidebar buttons for now
         this.buttonList.add( new GuiButton( BUTTON_DELETE, (width / 2) + 78, height / 2 - 60, 120, 20, I18n.format("xray.single.delete") ));
-//        this.buttonList.add( new GuiButton( BUTTON_OREDICT, (width / 2) + 78, height / 2 - 38, 120, 20, I18n.format("xray.input.toggle_oredict") + ": " + (oreInfo.useOredict() ? "On" : "Off") ));
-
         this.buttonList.add( new GuiButton( BUTTON_SAVE, (width / 2) + 78, height / 2 + 58, 120, 20, I18n.format("xray.single.save") ));
-
 
         // Bottom buttons
         this.buttonList.add( new GuiButton( BUTTON_CANCEL, width / 2 - 138, height / 2 + 83, 202, 20, I18n.format("xray.single.cancel") ) ); // Cancel button

@@ -25,7 +25,7 @@ public class GuiBlockListScrollable extends GuiBase {
 
     public GuiBlockListScrollable() {
         super(false);
-        this.blocks = XRay.blockList;
+        this.blocks = XRay.gameBlockStore.getStore();
     }
 
     boolean blockSelected(int index) {
@@ -88,7 +88,7 @@ public class GuiBlockListScrollable extends GuiBase {
     private void reloadBlocks() {
         blocks = new ArrayList<>();
         ArrayList<BlockItem> tmpBlocks = new ArrayList<>();
-        for( BlockItem block : XRay.blockList ) {
+        for( BlockItem block : XRay.gameBlockStore.getStore() ) {
             if( block.getItemStack().getDisplayName().toLowerCase().contains(search.getText().toLowerCase()) )
                 tmpBlocks.add(block);
         }

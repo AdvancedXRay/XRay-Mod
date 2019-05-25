@@ -146,9 +146,6 @@ public class GuiAddBlock extends GuiBase {
 		RenderHelper.enableGUIStandardItemLighting();
 		this.itemRender.renderItemAndEffectIntoGUI( selectBlock.getItemStack(), width / 2 + 85, height / 2 - 105 );
 		RenderHelper.disableStandardItemLighting();
-
-		// Color select
-		getFontRender().drawStringWithShadow(I18n.format("xray.gui.select_color"), width / 2f - 100, height / 2f - 35, 0xffffff);
 	}
 
 	static void renderPreview(int x, int y, float r, float g, float b) {
