@@ -7,6 +7,7 @@ import com.xray.XRay;
 import com.xray.reference.Reference;
 import com.xray.reference.block.BlockData;
 import com.xray.reference.block.SimpleBlockData;
+import org.apache.logging.log4j.Level;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -31,10 +32,10 @@ public class JsonStore
         if( !configDir.exists() )
             configDir.mkdirs();
 
-        jsonFile = new File(CONFIG_DIR, FILE);
+        jsonFile = new File(CONFIG_DIR + Reference.MOD_ID, FILE);
     }
 
-    public void write(HashMap<String, BlockData> blockData) throws IOException {
+    public void write(HashMap<String, BlockData> blockData) {
         List<SimpleBlockData> simpleBlockData = new ArrayList<>();
         blockData.forEach( (k, v) -> simpleBlockData.add(new SimpleBlockData(v.getEntryName(), k, v.getStateId(), v.getColor(), v.isDrawing())) );
 
@@ -42,21 +43,26 @@ public class JsonStore
         {
             gson.toJson(simpleBlockData, writer);
         }
+        catch (IOException e) {
+            XRay.logger.log(Level.ERROR, "Failed to write json data to " + FILE);
+        }
     }
 
     public List<SimpleBlockData> read() {
-        // No file, no data
         if( !jsonFile.exists() )
             return new ArrayList<>();
 
-        try {
+        try
+        {
             Type type = new TypeToken<List<SimpleBlockData>>() {}.getType();
             try (BufferedReader reader = new BufferedReader(new FileReader(jsonFile)))
             {
                 return gson.fromJson(reader, type);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            XRay.logger.log(Level.ERROR, "Failed to read json data from " + FILE);
         }
 
         return new ArrayList<>();

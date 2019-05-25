@@ -92,9 +92,7 @@ public class XRay
 	}
 
 	@EventHandler
-	public void init(FMLInitializationEvent event)
-	{
-	}
+	public void init(FMLInitializationEvent event) {}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
@@ -108,19 +106,18 @@ public class XRay
 			if ( item == Items.AIR || block == Blocks.AIR || Controller.blackList.contains(block) )
 				continue; // avoids troubles
 
-			XRay.blockList.add( new BlockItem( Block.getStateId(block.getBlockState().getBaseState()), new ItemStack(item) ) );
+			if( item.getHasSubtypes() && item.getCreativeTab() != null ) {
+				NonNullList<ItemStack> subItems = NonNullList.create();
+				item.getSubItems(item.getCreativeTab(), subItems);
+				for (ItemStack subItem : subItems) {
+					if (subItem.equals(ItemStack.EMPTY) || subItem.getItem() == Items.AIR)
+						continue;
 
-			if( !item.getHasSubtypes() || item.getCreativeTab() == null )
-				continue;
-
-			NonNullList<ItemStack> subItems = NonNullList.create();
-			item.getSubItems( item.getCreativeTab(), subItems );
-			for( ItemStack subItem : subItems ) {
-				if( subItem.equals(ItemStack.EMPTY) || subItem.getItem() == Items.AIR )
-					continue;
-
-				XRay.blockList.add(new BlockItem(Block.getStateId(Block.getBlockFromItem(subItem.getItem()).getBlockState().getBaseState()), subItem));
+					XRay.blockList.add(new BlockItem(Block.getStateId(Block.getBlockFromItem(subItem.getItem()).getBlockState().getBaseState()), subItem));
+				}
 			}
+			else
+				XRay.blockList.add( new BlockItem( Block.getStateId(block.getBlockState().getBaseState()), new ItemStack(item) ) );
 		}
 	}
 

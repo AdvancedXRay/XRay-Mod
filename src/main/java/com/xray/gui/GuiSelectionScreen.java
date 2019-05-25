@@ -241,12 +241,9 @@ public class GuiSelectionScreen extends GuiBase
 	@Override
 	public void onGuiClosed()
 	{
-		// First, save all changes made to the config
-//		Configuration.syncConfig();
-//		XRay.config.save();
 		ConfigManager.sync(Reference.MOD_ID, Config.Type.INSTANCE);
+		XRay.blockStore.write( Controller.getBlockStore().getStore() );
 
-		// And force a scan
 		Controller.requestBlockFinder( true );
 	}
 }

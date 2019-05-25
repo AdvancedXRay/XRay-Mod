@@ -1,19 +1,16 @@
 package com.xray.store;
 
-import com.xray.XRay;
 import com.xray.reference.block.BlockData;
-import com.xray.reference.block.BlockItem;
 import com.xray.reference.block.SimpleBlockData;
 import com.xray.utils.OutlineColor;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
-import org.apache.logging.log4j.Level;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 
 public class BlockStore {
 
@@ -59,8 +56,6 @@ public class BlockStore {
                             e.isDrawing()
                     )
             );
-
-            System.out.println( "Found: " + state.toString());
         }
 
         return blockData;

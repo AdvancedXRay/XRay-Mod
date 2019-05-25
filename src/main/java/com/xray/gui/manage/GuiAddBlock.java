@@ -93,12 +93,7 @@ public class GuiAddBlock extends GuiBase {
 					)
 				);
 
-				try {
-					XRay.blockStore.write( Controller.getBlockStore().getStore() );
-				} catch (IOException e) {
-					e.printStackTrace();
-					XRay.logger.error(e);
-				}
+				XRay.blockStore.write( Controller.getBlockStore().getStore() );
 
 				mc.displayGuiScreen( new GuiSelectionScreen() );
 
