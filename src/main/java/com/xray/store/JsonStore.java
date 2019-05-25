@@ -35,11 +35,7 @@ public class JsonStore
 
         jsonFile = new File(CONFIG_DIR + Reference.MOD_ID, FILE);
         if( !jsonFile.exists() ) {
-            List<SimpleBlockData> simpleBlockData = new ArrayList<>();
-            BlockStore.DEFAULT_BLOCKS.forEach(
-                    e -> simpleBlockData.add(new SimpleBlockData(e.getEntryName(), Block.getStateById(e.getStateId()).toString(), e.getStateId(), e.getColor(), e.isDrawing()))
-            );
-
+            List<SimpleBlockData> simpleBlockData = new ArrayList<>(BlockStore.DEFAULT_BLOCKS);
             this.write(simpleBlockData);
         }
     }

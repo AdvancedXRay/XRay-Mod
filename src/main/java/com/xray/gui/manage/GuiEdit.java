@@ -65,6 +65,7 @@ public class GuiEdit extends GuiBase
         {
             case BUTTON_SAVE:
                 BlockData block = new BlockData(
+                        this.storeKey,
                         this.oreName.getText(),
                         this.block.getStateId(),
                         new OutlineColor((int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255) ),

@@ -2,12 +2,9 @@ package com.xray.store;
 
 import com.xray.reference.block.BlockData;
 import com.xray.reference.block.SimpleBlockData;
-import com.xray.utils.OutlineColor;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,16 +13,16 @@ import java.util.List;
 public class BlockStore {
 
     // Default blocks
-    static final List<BlockData> DEFAULT_BLOCKS = new ArrayList<BlockData>() {
+    static final List<SimpleBlockData> DEFAULT_BLOCKS = new ArrayList<SimpleBlockData>() {
         {
-            add( BlockStore.firstOreInDictionary( "oreIron", "Iron Ore",             new int[]{170,117, 37}, false ));
-            add( BlockStore.firstOreInDictionary( "oreCoal", "Coal Ore",             new int[]{  0,  0,  0}, false ));
-            add( BlockStore.firstOreInDictionary( "oreGold", "Gold Ore",             new int[]{255,255,  0}, false ));
-            add( BlockStore.firstOreInDictionary( "oreRedstone", "Redstone Ore",     new int[]{255,  0,  0}, false ));
-            add( BlockStore.firstOreInDictionary( "oreDiamond", "Diamond Ore",       new int[]{136,136,255}, true  ));
-            add( BlockStore.firstOreInDictionary( "oreEmerald", "Emerald Ore",       new int[]{  0,136, 10}, true  ));
-            add( BlockStore.firstOreInDictionary( "oreQuartz","Nether Quart",        new int[]{ 30, 74,  0}, false ));
-            add( BlockStore.firstOreInDictionary( "oreLapis", "Lapis",               new int[]{  0,  0,255}, false ));
+            add( SimpleBlockData.firstOreInDictionary( "oreIron", "Iron Ore",             new int[]{170,117, 37}, false ));
+            add( SimpleBlockData.firstOreInDictionary( "oreCoal", "Coal Ore",             new int[]{  0,  0,  0}, false ));
+            add( SimpleBlockData.firstOreInDictionary( "oreGold", "Gold Ore",             new int[]{255,255,  0}, false ));
+            add( SimpleBlockData.firstOreInDictionary( "oreRedstone", "Redstone Ore",     new int[]{255,  0,  0}, false ));
+            add( SimpleBlockData.firstOreInDictionary( "oreDiamond", "Diamond Ore",       new int[]{136,136,255}, true  ));
+            add( SimpleBlockData.firstOreInDictionary( "oreEmerald", "Emerald Ore",       new int[]{  0,136, 10}, true  ));
+            add( SimpleBlockData.firstOreInDictionary( "oreQuartz","Nether Quart",        new int[]{ 30, 74,  0}, false ));
+            add( SimpleBlockData.firstOreInDictionary( "oreLapis", "Lapis",               new int[]{  0,  0,255}, false ));
         }
     };
 
@@ -64,6 +61,7 @@ public class BlockStore {
             blockData.put(
                     e.getStateString(),
                     new BlockData(
+                            e.getStateString(),
                             e.getName(),
                             e.getStateId(),
                             e.getColor(),
@@ -76,28 +74,4 @@ public class BlockStore {
         return blockData;
     }
 
-    /**
-     * Helper for creating default config from ore dictionary names.
-     * Given an ore name, tries to find an actual instance of such ore.
-     * @param name OreDictionary name (eg. oreIron)
-     * @param color a color for this ore
-     * @param draw shall we draw it by default?
-     * @return An ore registered with this dictionary name, null if none found
-     */
-    public static BlockData firstOreInDictionary( String name, String entryName, int[] color, boolean draw )
-    {
-        NonNullList<ItemStack> ores = OreDictionary.getOres( name );
-        if ( ores.isEmpty() || ores.get(0).isEmpty() )
-            return null;
-
-        ItemStack stack = ores.get( 0 );
-
-        return new BlockData(
-                entryName,
-                Block.getStateId(Block.getBlockFromItem(stack.getItem()).getDefaultState()),
-                new OutlineColor(color[0], color[1], color[2]),
-                stack,
-                draw
-        );
-    }
 }

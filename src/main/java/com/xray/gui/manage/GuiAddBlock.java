@@ -84,6 +84,7 @@ public class GuiAddBlock extends GuiBase {
 					this.state.toString(),
 
 					new BlockData(
+						this.state.toString(),
 						oreName.getText(),
 						Block.getStateId(this.state),
 						new OutlineColor((int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255)),
