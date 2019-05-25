@@ -9,10 +9,25 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class BlockStore {
+
+    // Default blocks
+    static final List<BlockData> DEFAULT_BLOCKS = new ArrayList<BlockData>() {
+        {
+            add( BlockStore.firstOreInDictionary( "oreIron", "Iron Ore",             new int[]{170,117, 37}, false ));
+            add( BlockStore.firstOreInDictionary( "oreCoal", "Coal Ore",             new int[]{  0,  0,  0}, false ));
+            add( BlockStore.firstOreInDictionary( "oreGold", "Gold Ore",             new int[]{255,255,  0}, false ));
+            add( BlockStore.firstOreInDictionary( "oreRedstone", "Redstone Ore",     new int[]{255,  0,  0}, false ));
+            add( BlockStore.firstOreInDictionary( "oreDiamond", "Diamond Ore",       new int[]{136,136,255}, true  ));
+            add( BlockStore.firstOreInDictionary( "oreEmerald", "Emerald Ore",       new int[]{  0,136, 10}, true  ));
+            add( BlockStore.firstOreInDictionary( "oreQuartz","Nether Quart",        new int[]{ 30, 74,  0}, false ));
+            add( BlockStore.firstOreInDictionary( "oreLapis", "Lapis",               new int[]{  0,  0,255}, false ));
+        }
+    };
 
     private HashMap<String, BlockData> store = new HashMap<>();
 
@@ -69,7 +84,7 @@ public class BlockStore {
      * @param draw shall we draw it by default?
      * @return An ore registered with this dictionary name, null if none found
      */
-    public static BlockData firstOreInDictionary( String name, int[] color, boolean draw )
+    public static BlockData firstOreInDictionary( String name, String entryName, int[] color, boolean draw )
     {
         NonNullList<ItemStack> ores = OreDictionary.getOres( name );
         if ( ores.isEmpty() || ores.get(0).isEmpty() )
@@ -78,7 +93,7 @@ public class BlockStore {
         ItemStack stack = ores.get( 0 );
 
         return new BlockData(
-                stack.getDisplayName(),
+                entryName,
                 Block.getStateId(Block.getBlockFromItem(stack.getItem()).getDefaultState()),
                 new OutlineColor(color[0], color[1], color[2]),
                 stack,

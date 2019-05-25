@@ -7,6 +7,7 @@ import com.xray.XRay;
 import com.xray.reference.Reference;
 import com.xray.reference.block.BlockData;
 import com.xray.reference.block.SimpleBlockData;
+import net.minecraft.block.Block;
 import org.apache.logging.log4j.Level;
 
 import java.io.*;
@@ -33,12 +34,24 @@ public class JsonStore
             configDir.mkdirs();
 
         jsonFile = new File(CONFIG_DIR + Reference.MOD_ID, FILE);
+        if( !jsonFile.exists() ) {
+            List<SimpleBlockData> simpleBlockData = new ArrayList<>();
+            BlockStore.DEFAULT_BLOCKS.forEach(
+                    e -> simpleBlockData.add(new SimpleBlockData(e.getEntryName(), Block.getStateById(e.getStateId()).toString(), e.getStateId(), e.getColor(), e.isDrawing()))
+            );
+
+            this.write(simpleBlockData);
+        }
     }
 
     public void write(HashMap<String, BlockData> blockData) {
         List<SimpleBlockData> simpleBlockData = new ArrayList<>();
         blockData.forEach( (k, v) -> simpleBlockData.add(new SimpleBlockData(v.getEntryName(), k, v.getStateId(), v.getColor(), v.isDrawing())) );
 
+        this.write(simpleBlockData);
+    }
+
+    private void write(List<SimpleBlockData> simpleBlockData) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(jsonFile)))
         {
             gson.toJson(simpleBlockData, writer);
