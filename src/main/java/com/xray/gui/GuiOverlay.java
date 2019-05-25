@@ -19,21 +19,17 @@ import java.awt.*;
 public class GuiOverlay extends Gui {
 
     @SideOnly(Side.CLIENT)
-    @SubscribeEvent(priority = EventPriority.NORMAL)
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void RenderGameOverlayEvent(RenderGameOverlayEvent.Post event) {
-
         // Draw Indicator
         if(!Controller.drawOres() || !Configuration.showOverlay)
             return;
 
-        GlStateManager.enableAlpha();
         GlStateManager.color(0, 255, 0, 30);
         XRay.mc.renderEngine.bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "circle.png"));
         drawModalRectWithCustomSizedTexture(5, 5, 0f, 0f, 5, 5, 5, 5);
-        GlStateManager.disableAlpha();
 
         XRay.mc.fontRenderer.drawStringWithShadow(I18n.format("xray.overlay"), 15, 4, Color.getHSBColor(0f, 0f, 1f).getRGB() + (30 << 24));
-
     }
 
 }
