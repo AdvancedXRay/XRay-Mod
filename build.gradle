@@ -9,7 +9,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.5.0"
+version = "1.6.0"
 group= "com.xray.xray"
 archivesBaseName = "xray-1.12.2"
 
@@ -19,10 +19,10 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.0.2491"
+    version = "1.12.2-14.23.5.2768"
     runDir = "run"
 
-    mappings = "snapshot_20170624"
+    mappings = "snapshot_20171003"
 }
 
 
