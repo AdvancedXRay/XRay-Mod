@@ -2,7 +2,6 @@ package com.xray.gui;
 
 import com.xray.XRay;
 import com.xray.gui.manage.GuiAddBlock;
-import com.xray.gui.manage.GuiBlockListScrollable;
 import com.xray.gui.utils.GuiBase;
 import com.xray.reference.block.BlockData;
 import com.xray.reference.block.BlockItem;
@@ -10,6 +9,7 @@ import com.xray.utils.Utils;
 import com.xray.xray.Controller;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -59,7 +59,7 @@ public class GuiSelectionScreen extends GuiBase
 		// side bar buttons
 		addButton( new Button((width / 2) + 79, height / 2 - 60, 120, 20, I18n.format("xray.input.add"), button -> {
 			getMinecraft().player.closeScreen();
-			getMinecraft().displayGuiScreen( new GuiBlockListScrollable() );
+			getMinecraft().displayGuiScreen( new GuiAddBlock(new BlockItem(Block.getStateId(Blocks.GRASS.getDefaultState()), new ItemStack(Blocks.GRASS)), Blocks.GRASS.getDefaultState()) );
 		}));
 		addButton( new Button(width / 2 + 79, height / 2 - 38, 120, 20, I18n.format("xray.input.add_hand"), button -> {
 			getMinecraft().player.closeScreen();
@@ -67,7 +67,7 @@ public class GuiSelectionScreen extends GuiBase
 
 			// Check if the hand item is a block or not
 			if(!(handItem.getItem() instanceof net.minecraft.item.BlockItem)) {
-				Utils.sendMessage(getMinecraft().player,"[XRay] "+I18n.format("xray.message.invalid_hand", handItem.getDisplayName()));
+				Utils.sendMessage(getMinecraft().player,"[XRay] "+I18n.format("xray.message.invalid_hand", handItem.getDisplayName().getFormattedText()));
 				return;
 			}
 
@@ -85,7 +85,7 @@ public class GuiSelectionScreen extends GuiBase
 				RayTraceContext context = new RayTraceContext(start, end, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, player);
 				BlockRayTraceResult result = getMinecraft().world.rayTraceBlocks(context);
 
-				if(result.hitInfo == RayTraceResult.Type.BLOCK) {
+				if(result.getType() == RayTraceResult.Type.BLOCK) {
 					BlockState state = getMinecraft().world.getBlockState(result.getPos());
 					Block lookingAt = getMinecraft().world.getBlockState(result.getPos()).getBlock();
 

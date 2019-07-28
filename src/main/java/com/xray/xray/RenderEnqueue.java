@@ -36,7 +36,7 @@ public class RenderEnqueue implements Runnable
 	private void blockFinder() {
         HashMap<String, BlockData> blocks = Controller.getBlockStore().getStore();
 
-		if ( blocks.isEmpty() ) {
+        if ( blocks.isEmpty() ) {
 		    if( !Render.ores.isEmpty() )
 		        Render.ores.clear();
             return; // no need to scan the region if there's nothing to find
