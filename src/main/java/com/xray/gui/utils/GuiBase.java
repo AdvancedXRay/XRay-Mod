@@ -39,20 +39,24 @@ public class GuiBase extends GuiScreen {
     }
 
     // this should be moved to some sort of utility package but fuck it :).
-    public static void drawTexturedQuadFit(double x, double y, double width, double height, int[] color)
+    public static void drawTexturedQuadFit(double x, double y, double width, double height, int[] color, float alpha)
     {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder tessellate = tessellator.getBuffer();
         tessellate.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
         if ( color != null )
-            GlStateManager.color((float) color[0] / 255, (float) color[1] / 255, (float) color[2] / 255, 255f);
+            GlStateManager.color((float) color[0] / 255, (float) color[1] / 255, (float) color[2] / 255, alpha / 255);
 
         tessellate.pos(x + 0, y + height, (double) 0).tex( 0,1).endVertex();
         tessellate.pos(x + width, y + height, (double) 0).tex( 1, 1).endVertex();
         tessellate.pos(x + width, y + 0, (double) 0).tex( 1,0).endVertex();
         tessellate.pos(x + 0, y + 0, (double) 0).tex( 0, 0).endVertex();
-        Tessellator.getInstance().draw();
+        tessellator.draw();
+    }
+
+    public static void drawTexturedQuadFit(double x, double y, double width, double height, int[] color) {
+        drawTexturedQuadFit(x, y, width, height, color, 255f);
     }
 
     @Override
