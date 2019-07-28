@@ -10,6 +10,7 @@ import com.xray.xray.Controller;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -102,7 +103,10 @@ public class GuiSelectionScreen extends GuiBase
 			}
 		}));
 
-		addButton( distButtons = new Button((width / 2) + 79, height / 2 + 36, 120, 20, I18n.format("xray.input.distance")+": "+ Controller.getRadius(), button -> Controller.incrementCurrentDist()));
+		addButton( distButtons = new Button((width / 2) + 79, height / 2 + 36, 120, 20, I18n.format("xray.input.distance")+": "+ Controller.getRadius(), button -> {
+			Controller.incrementCurrentDist();
+			button.setMessage(I18n.format("xray.input.distance")+": "+ Controller.getRadius());
+		}));
 		addButton( new Button(width / 2 + 79, height / 2 + 58, 60, 20, I18n.format("xray.single.help"), button -> {
 			getMinecraft().player.closeScreen();
 			getMinecraft().displayGuiScreen( new GuiHelp() );
@@ -148,13 +152,10 @@ public class GuiSelectionScreen extends GuiBase
 	public boolean mouseClicked( double x, double y, int mouse )
 	{
 		search.mouseClicked(x, y, mouse );
-
-		if( mouse == 1 ) {
-			if( distButtons.mouseClicked(x, y, mouse) )
-			{
-				Controller.decrementCurrentDist();
-				distButtons.setMessage(I18n.format("xray.input.distance")+": "+ Controller.getRadius());
-			}
+		if( mouse == 1 && distButtons.isMouseOver(x, y) ) {
+			Controller.decrementCurrentDist();
+			distButtons.setMessage(I18n.format("xray.input.distance")+": "+ Controller.getRadius());
+			distButtons.playDownSound(Minecraft.getInstance().getSoundHandler());
 		}
 
 		return super.mouseClicked( x, y, mouse );
