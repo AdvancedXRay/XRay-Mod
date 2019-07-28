@@ -90,6 +90,11 @@ public class GuiSelectionScreen extends GuiBase
 				mc.displayGuiScreen( new GuiBlockListScrollable() );
 				break;
 
+			case BUTTON_HELP:
+				mc.player.closeScreen();
+				mc.displayGuiScreen( new GuiHelp() );
+				break;
+
 			case BUTTON_ADD_HAND:
 				mc.player.closeScreen();
 				ItemStack handItem = mc.player.getHeldItem(EnumHand.MAIN_HAND);

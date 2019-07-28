@@ -10,6 +10,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
+import java.awt.*;
 import java.io.IOException;
 
 public class GuiBase extends GuiScreen {
@@ -59,27 +61,36 @@ public class GuiBase extends GuiScreen {
         drawTexturedQuadFit(x, y, width, height, color, 255f);
     }
 
+    public static void drawTexturedQuadFit(double x, double y, double width, double height, @Nullable Color color) {
+        drawTexturedQuadFit(x, y, width, height, color == null ? null : new int[]{color.getRed(), color.getGreen(), color.getBlue()}, 255f);
+    }
+
+
     @Override
     public void drawScreen( int x, int y, float f ) {
         drawDefaultBackground();
 
         FontRenderer fr = this.mc.fontRenderer;
 
-        if( this.hasSide ) {
+        if( colorBackground() == null )
             mc.renderEngine.bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "bg.png"));
-            drawTexturedQuadFit((double) width / 2 + 60, (float) height / 2 -((float) 180/2), 150, 180, null);
+        else
+            GlStateManager.disableTexture2D();
 
-            drawTexturedQuadFit((float) width / 2 - 150, (float) height / 2 - 118, this.backgroundWidth, this.backgroundHeight, null);
+        if( this.hasSide ) {
+            drawTexturedQuadFit((double) width / 2 + 60, (float) height / 2 -((float) 180/2), 150, 180, colorBackground());
+            drawTexturedQuadFit((float) width / 2 - 150, (float) height / 2 - 118, this.backgroundWidth, this.backgroundHeight, colorBackground());
 
             if( hasSideTitle() )
                 fr.drawStringWithShadow(this.sideTitle, (float) width / 2 + 80, (float) height / 2 - 77, 0xffff00);
 
         }
 
-        if( !this.hasSide ) {
-            mc.renderEngine.bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "bg.png"));
-            drawTexturedQuadFit((float) width / 2 - ((float) this.backgroundWidth / 2) + 1, (float) height / 2 - ((float) this.backgroundHeight / 2), this.backgroundWidth, this.backgroundHeight, null);
-        }
+        if( !this.hasSide )
+            drawTexturedQuadFit((float) width / 2 - ((float) this.backgroundWidth / 2) + 1, (float) height / 2 - ((float) this.backgroundHeight / 2), this.backgroundWidth, this.backgroundHeight, colorBackground());
+
+        if( colorBackground() != null )
+            GlStateManager.enableTexture2D();
 
         if( hasTitle() ) {
             if( this.hasSide )
@@ -89,6 +100,10 @@ public class GuiBase extends GuiScreen {
         }
 
         super.drawScreen(x, y, f);
+    }
+
+    public Color colorBackground() {
+        return null;
     }
 
     @Override
@@ -107,8 +122,6 @@ public class GuiBase extends GuiScreen {
 
     private boolean hasSideTitle() { return !this.sideTitle.isEmpty(); }
     protected void setSideTitle(String title) { this.sideTitle = title; }
-
-    public boolean hasSide() { return this.hasSide; }
 
     public void setSize( int width, int height ) {
         this.backgroundWidth = width;
