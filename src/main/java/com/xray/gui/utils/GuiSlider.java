@@ -1,72 +1,35 @@
 package com.xray.gui.utils;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.button.Button;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.client.gui.widget.AbstractSlider;
 
-public class GuiSlider extends Button
+public class GuiSlider extends AbstractSlider
 {
-    public float sliderValue;
-    private float sliderMaxValue;
-    private boolean dragging = false;
+    private float maxValue;
     private String label;
 
-    public GuiSlider(int id, int x, int y, String label, float startingValue, float maxValue)
+    public GuiSlider(int x, int y, String label, float startingValue, float maxValue)
     {
-        super(x, y, 202, 20, label, b -> {});
+        super(Minecraft.getInstance().gameSettings, x, y, 202, 20, startingValue);
         this.label = label;
-        this.sliderValue = startingValue;
-        this.sliderMaxValue = maxValue;
+        this.maxValue = maxValue;
+
+        updateMessage();
     }
 
-    public int getHoverState(boolean par1)
-    {
-        return 0;
+    @Override
+    protected void updateMessage() {
+        this.setMessage(this.label + ": " + (int) (this.value * this.maxValue));
     }
 
-    protected void mouseDragged(Minecraft par1Minecraft, int par2, int par3)
-    {
-        if (this.dragging)
-            updateValue(par2);
+    @Override
+    protected void applyValue() {}
 
-        this.setMessage(label + ": " + (int) (sliderValue * sliderMaxValue));
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-//        this.drawTexturedModalRect(this.x + (int) (this.sliderValue * (float) (this.width - 8)), this.y, 0, 66, 4, 20);
-//        this.drawTexturedModalRect(this.x + (int) (this.sliderValue * (float) (this.width - 8)) + 4, this.y, 196, 66, 4, 20);
+    public double getValue() {
+        return value;
     }
 
-    private void updateValue(int value) {
-        this.sliderValue = (float) (value - (this.x + 4)) / (float) (this.width - 8);
-        if (this.sliderValue < 0.0F)
-            this.sliderValue = 0.0F;
-
-        if (this.sliderValue > 1.0F)
-            this.sliderValue = 1.0F;
+    public void setValue(double value) {
+        this.value = value;
     }
-
-//    @Override
-//    public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
-//
-//        return super.mouseClicked(p_mouseClicked_1_, p_mouseClicked_3_, p_mouseClicked_5_);
-//    }
-//
-//
-//
-//    public boolean mousePressed(Minecraft par1Minecraft, int par2, int par3)
-//    {
-//        if (super.mousePressed(par1Minecraft, par2, par3))
-//        {
-//            updateValue(par2);
-//
-//            this.dragging = true;
-//            return true;
-//        }
-//        else
-//            return false;
-//    }
-//
-//    public void mouseReleased(int par1, int par2)
-//    {
-//        this.dragging = false;
-//    }
 }

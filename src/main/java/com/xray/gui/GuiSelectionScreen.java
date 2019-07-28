@@ -60,7 +60,7 @@ public class GuiSelectionScreen extends GuiBase
 		// side bar buttons
 		addButton( new Button((width / 2) + 79, height / 2 - 60, 120, 20, I18n.format("xray.input.add"), button -> {
 			getMinecraft().player.closeScreen();
-			getMinecraft().displayGuiScreen( new GuiAddBlock(new BlockItem(Block.getStateId(Blocks.GRASS.getDefaultState()), new ItemStack(Blocks.GRASS)), Blocks.GRASS.getDefaultState()) );
+			getMinecraft().displayGuiScreen( new GuiAddBlock(new BlockItem(Block.getStateId(Blocks.GRASS.getDefaultState()), new ItemStack(Blocks.GRASS)), null) );
 		}));
 		addButton( new Button(width / 2 + 79, height / 2 - 38, 120, 20, I18n.format("xray.input.add_hand"), button -> {
 			getMinecraft().player.closeScreen();
@@ -145,7 +145,7 @@ public class GuiSelectionScreen extends GuiBase
 	@Override
 	public void tick() {
 		super.tick();
-//		search.updateCursorCounter();
+		search.tick();
 	}
 
 	@Override

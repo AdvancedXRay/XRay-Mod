@@ -40,7 +40,7 @@ public class GuiEdit extends GuiBase {
                     this.storeKey,
                     this.oreName.getText(),
                     this.block.getStateId(),
-                    new OutlineColor((int) (redSlider.sliderValue * 255), (int) (greenSlider.sliderValue * 255), (int) (blueSlider.sliderValue * 255)),
+                    new OutlineColor((int) (redSlider.getValue() * 255), (int) (greenSlider.getValue() * 255), (int) (blueSlider.getValue() * 255)),
                     this.block.getItemStack(),
                     this.block.isDrawing(),
                     this.block.getOrder()
@@ -53,13 +53,13 @@ public class GuiEdit extends GuiBase {
             this.onClose();
         }));
 
-        addButton(redSlider = new GuiSlider(3, width / 2 - 138, height / 2 + 7, I18n.format("xray.color.red"), 0, 255));
-        addButton(greenSlider = new GuiSlider(2, width / 2 - 138, height / 2 + 30, I18n.format("xray.color.green"), 0, 255));
-        addButton(blueSlider = new GuiSlider(1, width / 2 - 138, height / 2 + 53, I18n.format("xray.color.blue"), 0, 255));
+        addButton(redSlider = new GuiSlider(width / 2 - 138, height / 2 + 7, I18n.format("xray.color.red"), 0, 255));
+        addButton(greenSlider = new GuiSlider(width / 2 - 138, height / 2 + 30, I18n.format("xray.color.green"), 0, 255));
+        addButton(blueSlider = new GuiSlider(width / 2 - 138, height / 2 + 53, I18n.format("xray.color.blue"), 0, 255));
 
-        redSlider.sliderValue = (float) block.getColor().getRed() / 255;
-        greenSlider.sliderValue = (float) block.getColor().getGreen() / 255;
-        blueSlider.sliderValue = (float) block.getColor().getBlue() / 255;
+        redSlider.setValue((float) block.getColor().getRed() / 255);
+        greenSlider.setValue((float) block.getColor().getGreen() / 255);
+        blueSlider.setValue((float) block.getColor().getBlue() / 255);
 
         oreName = new TextFieldWidget(getMinecraft().fontRenderer, width / 2 - 138, height / 2 - 63, 202, 20, "");
         oreName.setText(this.block.getEntryName());
@@ -73,11 +73,11 @@ public class GuiEdit extends GuiBase {
         return super.charTyped(keyTyped, __unknown);
     }
 
-
-//    @Override
-//    public void updateScreen() {
-//        oreName.updateCursorCounter();
-//    }
+    @Override
+    public void tick() {
+        super.tick();
+        oreName.tick();
+    }
 
     @Override
     public void render(int x, int y, float f) {
@@ -86,7 +86,7 @@ public class GuiEdit extends GuiBase {
 
         oreName.render(x, y, f);
 
-        GuiAddBlock.renderPreview(width / 2 - 138, height / 2 - 40, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
+        GuiAddBlock.renderPreview(width / 2 - 138, height / 2 - 40, (float) redSlider.getValue(), (float) greenSlider.getValue(), (float) blueSlider.getValue());
 
         RenderHelper.enableGUIStandardItemLighting();
         this.itemRenderer.renderItemAndEffectIntoGUI(this.block.getItemStack(), width / 2 + 50, height / 2 - 105);
