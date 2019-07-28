@@ -2,8 +2,8 @@ package com.xray.store;
 
 import com.xray.reference.block.BlockData;
 import com.xray.reference.block.SimpleBlockData;
+import com.xray.xray.Controller;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.BlockWorldState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 
@@ -67,7 +67,8 @@ public class BlockStore {
                             e.getStateId(),
                             e.getColor(),
                             new ItemStack( state.getBlock(), 1, state.getBlock().getMetaFromState(state)),
-                            e.isDrawing()
+                            e.isDrawing(),
+                            e.getOrder()
                     )
             );
         }

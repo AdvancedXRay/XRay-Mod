@@ -36,13 +36,16 @@ public class JsonStore
         jsonFile = new File(CONFIG_DIR + Reference.MOD_ID, FILE);
         if( !jsonFile.exists() ) {
             List<SimpleBlockData> simpleBlockData = new ArrayList<>(BlockStore.DEFAULT_BLOCKS);
+            for (int i = 0; i < simpleBlockData.size(); i++)
+                simpleBlockData.get(i).setOrder(i);
+
             this.write(simpleBlockData);
         }
     }
 
     public void write(HashMap<String, BlockData> blockData) {
         List<SimpleBlockData> simpleBlockData = new ArrayList<>();
-        blockData.forEach( (k, v) -> simpleBlockData.add(new SimpleBlockData(v.getEntryName(), k, v.getStateId(), v.getColor(), v.isDrawing())) );
+        blockData.forEach( (k, v) -> simpleBlockData.add(new SimpleBlockData(v.getEntryName(), k, v.getStateId(), v.getColor(), v.isDrawing(), v.getOrder())) );
 
         this.write(simpleBlockData);
     }

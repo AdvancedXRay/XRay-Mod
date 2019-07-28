@@ -70,7 +70,8 @@ public class GuiEdit extends GuiBase
                         this.block.getStateId(),
                         new OutlineColor((int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255) ),
                         this.block.getItemStack(),
-                        this.block.isDrawing()
+                        this.block.isDrawing(),
+                        this.block.getOrder()
                 );
 
                 Controller.getBlockStore().getStore().remove(this.storeKey);

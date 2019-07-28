@@ -11,16 +11,18 @@ public class SimpleBlockData {
     private String name;
     private String stateString;
     private int stateId;
+    private int order;
 
     private OutlineColor color;
     private boolean drawing;
 
-    public SimpleBlockData(String name, String stateString, int stateId, OutlineColor color, boolean drawing) {
+    public SimpleBlockData(String name, String stateString, int stateId, OutlineColor color, boolean drawing, int order) {
         this.name = name;
         this.stateString = stateString;
         this.stateId = stateId;
         this.color = color;
         this.drawing = drawing;
+        this.order = order;
     }
 
     /**
@@ -44,7 +46,8 @@ public class SimpleBlockData {
                 Block.getBlockFromItem(stack.getItem()).getDefaultState().toString(),
                 Block.getStateId(Block.getBlockFromItem(stack.getItem()).getDefaultState()),
                 new OutlineColor(color[0], color[1], color[2]),
-                draw
+                draw,
+                0
         );
     }
 
@@ -66,5 +69,13 @@ public class SimpleBlockData {
 
     public int getStateId() {
         return stateId;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 }

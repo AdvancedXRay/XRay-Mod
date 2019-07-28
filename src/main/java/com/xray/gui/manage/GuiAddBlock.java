@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
+import org.lwjgl.input.Mouse;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -89,7 +90,8 @@ public class GuiAddBlock extends GuiBase {
 						Block.getStateId(this.state),
 						new OutlineColor((int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255)),
 						selectBlock.getItemStack(),
-						true
+						true,
+						Controller.getBlockStore().getStore().size() + 1
 					)
 				);
 

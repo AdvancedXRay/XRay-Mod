@@ -11,14 +11,16 @@ public class BlockData {
     private OutlineColor color;
     private ItemStack itemStack;
     private boolean drawing;
+    private int order;
 
-    public BlockData(String entryKey, String entryName, int stateId, OutlineColor color, ItemStack itemStack, boolean drawing) {
+    public BlockData(String entryKey, String entryName, int stateId, OutlineColor color, ItemStack itemStack, boolean drawing, int order) {
         this.entryKey = entryKey;
         this.entryName = entryName;
         this.stateId = stateId;
         this.color = color;
         this.itemStack = itemStack;
         this.drawing = drawing;
+        this.order = order;
     }
 
     public String getEntryKey() {
@@ -51,6 +53,10 @@ public class BlockData {
 
     public void setColor(OutlineColor color) {
         this.color = color;
+    }
+
+    public int getOrder() {
+        return order;
     }
 }
 
