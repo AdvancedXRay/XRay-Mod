@@ -29,8 +29,6 @@ import java.util.stream.Collectors;
 
 public class GuiSelectionScreen extends GuiBase
 {
-	private int pageCurrent, pageMax = 0;
-
 	private GuiButton distButtons;
 	private GuiTextField search;
 	public RenderItem render;
@@ -38,8 +36,6 @@ public class GuiSelectionScreen extends GuiBase
 	private String lastSearch = "";
 
 	private static final int BUTTON_RADIUS = 0;
-	private static final int BUTTON_NEXT = 2;
-	private static final int BUTTON_PREVIOUS = 3;
 	private static final int BUTTON_ADD_BLOCK = 1;
 	private static final int BUTTON_ADD_HAND = 4;
 	private static final int BUTTON_ADD_LOOK = 5;
@@ -63,35 +59,19 @@ public class GuiSelectionScreen extends GuiBase
     	this.render = this.itemRender;
 		this.buttonList.clear();
 
-		this.scrollList = new GuiActiveBlockList(this, width / 2 - 140, height / 2 - 80, this.itemList);
+		this.scrollList = new GuiActiveBlockList(this, width / 2 - 138, height / 2 - 80, this.itemList);
 
-		this.search = new GuiTextField(150, getFontRender(), width / 2 - 140,  height / 2 - 106, 200, 18);
+		this.search = new GuiTextField(150, getFontRender(), width / 2 - 137,  height / 2 - 105, 202, 18);
 		this.search.setCanLoseFocus(true);
 
-		GuiButton aNextButton, aPrevButton;
-		this.buttonList.add( distButtons = new GuiButton(BUTTON_RADIUS, (width / 2) - 108, height / 2 + 86, 140, 20, I18n.format("xray.input.distance")+": "+ Controller.getRadius()) );
-		this.buttonList.add( aNextButton = new GuiButton(BUTTON_NEXT, width / 2 + 35, height / 2 + 86, 30, 20, ">") );
-		this.buttonList.add( aPrevButton = new GuiButton(BUTTON_PREVIOUS, width / 2 - 140, height / 2 + 86, 30, 20, "<") );
-
 		// side bar buttons
-		this.buttonList.add( new GuiButton(BUTTON_ADD_BLOCK, (width / 2) + 78, height / 2 - 60, 120, 20, I18n.format("xray.input.add") ) );
-		this.buttonList.add( new GuiButton(BUTTON_ADD_HAND, width / 2 + 78, height / 2 - 38, 120, 20, I18n.format("xray.input.add_hand") ) );
-		this.buttonList.add( new GuiButton(BUTTON_ADD_LOOK, width / 2 + 78, height / 2 - 16, 120, 20, I18n.format("xray.input.add_look") ) );
+		this.buttonList.add( new GuiButton(BUTTON_ADD_BLOCK, (width / 2) + 79, height / 2 - 60, 120, 20, I18n.format("xray.input.add") ) );
+		this.buttonList.add( new GuiButton(BUTTON_ADD_HAND, width / 2 + 79, height / 2 - 38, 120, 20, I18n.format("xray.input.add_hand") ) );
+		this.buttonList.add( new GuiButton(BUTTON_ADD_LOOK, width / 2 + 79, height / 2 - 16, 120, 20, I18n.format("xray.input.add_look") ) );
 
-		this.buttonList.add( new GuiButton(BUTTON_HELP, width / 2 + 78, height / 2 + 38, 120, 20, I18n.format("xray.single.help") ) );
-		this.buttonList.add( new GuiButton(BUTTON_CLOSE, width / 2 + 78, height / 2 + 58, 120, 20, I18n.format("xray.single.close") ) );
-
-        if( pageMax < 1 )
-        {
-            aNextButton.enabled = false;
-            aPrevButton.enabled = false;
-        }
-
-        if( pageCurrent == 0 )
-        	aPrevButton.enabled = false;
-
-        if( pageCurrent == pageMax )
-            aNextButton.enabled = false;
+		this.buttonList.add( distButtons = new GuiButton(BUTTON_RADIUS, (width / 2) + 79, height / 2 + 36, 120, 20, I18n.format("xray.input.distance")+": "+ Controller.getRadius()) );
+		this.buttonList.add( new GuiButton(BUTTON_HELP, width / 2 + 79, height / 2 + 58, 60, 20, I18n.format("xray.single.help") ) );
+		this.buttonList.add( new GuiButton(BUTTON_CLOSE, (width / 2 + 79) + 62, height / 2 + 58, 59, 20, I18n.format("xray.single.close") ) );
     }
 
 	@Override
@@ -107,16 +87,6 @@ public class GuiSelectionScreen extends GuiBase
 			case BUTTON_ADD_BLOCK:
 				mc.player.closeScreen();
 				mc.displayGuiScreen( new GuiBlockListScrollable() );
-				break;
-
-			case BUTTON_NEXT:
-				if( pageCurrent < pageMax )
-					pageCurrent ++;
-				break;
-
-			case BUTTON_PREVIOUS:
-				if( pageCurrent > 0 )
-			  		pageCurrent --;
 				break;
 
 			case BUTTON_ADD_HAND:
@@ -178,6 +148,7 @@ public class GuiSelectionScreen extends GuiBase
 		if( search.getText().equals("") ) {
 			this.itemList = this.originalList;
 			this.scrollList.setItemList(this.itemList);
+			lastSearch = "";
 			return;
 		}
 
@@ -189,6 +160,7 @@ public class GuiSelectionScreen extends GuiBase
 				.collect(Collectors.toCollection(ArrayList::new));
 
 		this.scrollList.setItemList(this.itemList);
+		lastSearch = search.getText();
 	}
 
 	@Override

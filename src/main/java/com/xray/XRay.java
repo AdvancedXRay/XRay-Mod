@@ -11,7 +11,6 @@ import com.xray.store.GameBlockStore;
 import com.xray.store.JsonStore;
 import com.xray.xray.Controller;
 import com.xray.xray.Events;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.MinecraftForge;
@@ -31,7 +30,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 @Mod(

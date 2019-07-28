@@ -3,6 +3,7 @@ package com.xray.store;
 import com.xray.reference.block.BlockData;
 import com.xray.reference.block.SimpleBlockData;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.BlockWorldState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 

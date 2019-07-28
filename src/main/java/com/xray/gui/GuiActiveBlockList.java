@@ -25,7 +25,7 @@ public class GuiActiveBlockList extends GuiScrollingList {
 
 
     GuiActiveBlockList(GuiSelectionScreen parent, int x, int y, ArrayList<BlockData> itemList) {
-        super(XRay.mc, 204, 210, y, parent.height / 2 + 80, x, HEIGHT, parent.width, parent.height);
+        super(XRay.mc, 204, 250, y, parent.height / 2 + 100, x, HEIGHT, parent.width, parent.height);
 
         this.parent = parent;
         this.itemList = itemList;
