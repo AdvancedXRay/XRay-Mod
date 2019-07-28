@@ -1,21 +1,20 @@
 package com.xray.store;
 
-import com.xray.reference.block.BlockItem;
 import com.xray.xray.Controller;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.block.Blocks;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 
 public class GameBlockStore {
 
-    private ArrayList<BlockItem> store = new ArrayList<>();
+    private ArrayList<com.xray.reference.block.BlockItem> store = new ArrayList<>();
 
     /**
      * This method is used to fill the store as we do not intend to update this after
@@ -28,32 +27,32 @@ public class GameBlockStore {
         if( this.store.size() != 0 )
             return;
 
-        for ( Item item : ForgeRegistries.ITEMS ) {
-
-            if( !(item instanceof ItemBlock) )
-                continue;
-
-            Block block = Block.getBlockFromItem(item);
-            if ( item == Items.AIR || block == Blocks.AIR )
-                continue; // avoids troubles
-
-            if( item.getHasSubtypes() && item.getCreativeTab() != null ) {
-                NonNullList<ItemStack> subItems = NonNullList.create();
-                item.getSubItems(item.getCreativeTab(), subItems);
-                for (ItemStack subItem : subItems) {
-                    if (subItem.equals(ItemStack.EMPTY) || subItem.getItem() == Items.AIR || Controller.blackList.contains(block))
-                        continue;
-
-                    store.add(new BlockItem(Block.getStateId(Block.getBlockFromItem(subItem.getItem()).getBlockState().getBaseState()), subItem));
-                }
-            }
-            else {
-                if( Controller.blackList.contains(block) )
-                    continue;
-
-                store.add(new BlockItem(Block.getStateId(block.getBlockState().getBaseState()), new ItemStack(item)));
-            }
-        }
+//        for ( Item item : ForgeRegistries.ITEMS ) {
+//
+//            if( !(item instanceof net.minecraft.item.BlockItem) )
+//                continue;
+//
+//            Block block = Block.getBlockFromItem(item);
+//            if ( item == Items.AIR || block == Blocks.AIR )
+//                continue; // avoids troubles
+//
+//            if( item.getHasSubtypes() && item.getCreativeTabs() != null ) {
+//                NonNullList<ItemStack> subItems = NonNullList.create();
+//                item.getSubItems(item.getCreativeTabs(), subItems);
+//                for (ItemStack subItem : subItems) {
+//                    if (subItem.equals(ItemStack.EMPTY) || subItem.getItem() == Items.AIR || Controller.blackList.contains(block))
+//                        continue;
+//
+//                    store.add(new BlockItem(Block.getStateId(Block.getBlockFromItem(subItem.getItem()).getBlockState().getBaseState()), subItem));
+//                }
+//            }
+//            else {
+//                if( Controller.blackList.contains(block) )
+//                    continue;
+//
+//                store.add(new BlockItem(Block.getStateId(block.getBlockState().getBaseState()), new ItemStack(item)));
+//            }
+//        }
     }
 
     public void repopulate()
@@ -62,7 +61,7 @@ public class GameBlockStore {
         this.populate();
     }
 
-    public ArrayList<BlockItem> getStore() {
+    public ArrayList<com.xray.reference.block.BlockItem> getStore() {
         return this.store;
     }
 }

@@ -7,7 +7,6 @@ import com.xray.XRay;
 import com.xray.reference.Reference;
 import com.xray.reference.block.BlockData;
 import com.xray.reference.block.SimpleBlockData;
-import net.minecraft.block.Block;
 import org.apache.logging.log4j.Level;
 
 import java.io.*;
@@ -19,7 +18,7 @@ import java.util.List;
 public class JsonStore
 {
     private static final String FILE = "block_store.json";
-    private static final String CONFIG_DIR = XRay.mc.mcDataDir + "/config/";
+    private static final String CONFIG_DIR = XRay.mc.gameDir + "/config/";
 
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 

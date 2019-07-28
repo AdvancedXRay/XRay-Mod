@@ -1,5 +1,6 @@
 package com.xray.gui.manage;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.xray.XRay;
 import com.xray.gui.GuiSelectionScreen;
 import com.xray.gui.utils.GuiBase;
@@ -9,16 +10,14 @@ import com.xray.reference.block.BlockItem;
 import com.xray.utils.OutlineColor;
 import com.xray.xray.Controller;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
-import org.lwjgl.input.Mouse;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -29,126 +28,102 @@ public class GuiAddBlock extends GuiBase {
 	private static final int BUTTON_ADD = 98;
 	private static final int BUTTON_CANCEL = 99;
 
-	private GuiTextField oreName;
-	private GuiButton addBtn;
+	private TextFieldWidget oreName;
+	private Button addBtn;
 	private GuiSlider redSlider;
 	private GuiSlider greenSlider;
 	private GuiSlider blueSlider;
 	private BlockItem selectBlock;
 	private boolean oreNameCleared  = false;
-	private IBlockState state;
+	private BlockState state;
 
-	public GuiAddBlock(BlockItem selectedBlock, @Nullable IBlockState state) {
+	public GuiAddBlock(BlockItem selectedBlock, @Nullable BlockState state) {
 		super(false);
 		this.selectBlock = selectedBlock;
 		this.state = state;
 	}
 
 	@Override
-	public void initGui()
+	public void init()
 	{
 		// Called when the gui should be (re)created
-		this.buttonList.add( addBtn = new GuiButton( BUTTON_ADD, width / 2 - 100, height / 2 + 85, 128, 20, I18n.format("xray.single.add") ));
-		this.buttonList.add( new GuiButton( BUTTON_CANCEL, width / 2 + 30, height / 2 + 85, 72, 20, I18n.format("xray.single.cancel") ) );
+		addButton( addBtn = new Button( width / 2 - 100, height / 2 + 85, 128, 20, I18n.format("xray.single.add"), b -> {
+            this.onClose();
 
-		this.buttonList.add(
-				redSlider = new GuiSlider( 3, width / 2 - 100, height / 2 + 7, I18n.format("xray.color.red"), 0, 255 )
-		);
-		this.buttonList.add(
-				greenSlider = new GuiSlider( 2, width / 2 - 100, height / 2 + 30, I18n.format("xray.color.green"), 0, 255 )
-		);
-		this.buttonList.add(
-				blueSlider = new GuiSlider( 1, width / 2 - 100, height / 2 + 53, I18n.format("xray.color.blue"), 0, 255 )
-		);
+            if( this.state == null )
+                this.state = Block.getBlockFromItem(this.selectBlock.getItemStack().getItem()).getDefaultState();
+
+            // Push the block to the render stack
+            Controller.getBlockStore().put(
+                    this.state.toString(),
+
+                    new BlockData(
+                            this.state.toString(),
+                            oreName.getText(),
+                            Block.getStateId(this.state),
+                            new OutlineColor((int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255)),
+                            selectBlock.getItemStack(),
+                            true,
+                            Controller.getBlockStore().getStore().size() + 1
+                    )
+            );
+
+            XRay.blockStore.write( Controller.getBlockStore().getStore() );
+
+            getMinecraft().displayGuiScreen( new GuiSelectionScreen() );
+        } ));
+		addButton( new Button( width / 2 + 30, height / 2 + 85, 72, 20, I18n.format("xray.single.cancel"), b -> this.onClose() ) );
+
+		addButton(redSlider = new GuiSlider( 3, width / 2 - 100, height / 2 + 7, I18n.format("xray.color.red"), 0, 255 ));
+		addButton(greenSlider = new GuiSlider( 2, width / 2 - 100, height / 2 + 30, I18n.format("xray.color.green"), 0, 255 ));
+		addButton(blueSlider = new GuiSlider( 1, width / 2 - 100, height / 2 + 53, I18n.format("xray.color.blue"), 0, 255 ));
 
 		redSlider.sliderValue   = 0.0F;
 		greenSlider.sliderValue = 0.654F;
 		blueSlider.sliderValue  = 1.0F;
 
-		oreName = new GuiTextField( 1, this.fontRenderer, width / 2 - 100 ,  height / 2 - 70, 202, 20 );
-		oreName.setText( this.selectBlock.getItemStack().getDisplayName() );
+		oreName = new TextFieldWidget( getMinecraft().fontRenderer, width / 2 - 100 ,  height / 2 - 70, 202, 20, "" );
+		oreName.setText( this.selectBlock.getItemStack().getDisplayName().getFormattedText() );
 	}
 
-	@Override
-	public void actionPerformed( GuiButton button )
-	{
-		switch(button.id)
-		{
-			case BUTTON_ADD:
-				mc.player.closeScreen();
+    @Override
+    public boolean charTyped(char keyTyped, int __unknown) {
+        if( oreName.isFocused() )
+            oreName.charTyped( keyTyped, __unknown );
+        else
+        {
+            // Change focus to oreName on focus-less tab
+            if (__unknown == 15) {
+                if (!oreNameCleared)
+                    oreName.setText("");
 
-				if( this.state == null )
-                	this.state = Block.getBlockFromItem(this.selectBlock.getItemStack().getItem()).getDefaultState();
+                oreName.changeFocus(true);
+            }
+        }
 
-				// Push the block to the render stack
-				Controller.getBlockStore().put(
-					this.state.toString(),
+        return super.charTyped(keyTyped, __unknown);
+    }
 
-					new BlockData(
-						this.state.toString(),
-						oreName.getText(),
-						Block.getStateId(this.state),
-						new OutlineColor((int)(redSlider.sliderValue * 255), (int)(greenSlider.sliderValue * 255), (int)(blueSlider.sliderValue * 255)),
-						selectBlock.getItemStack(),
-						true,
-						Controller.getBlockStore().getStore().size() + 1
-					)
-				);
-
-				XRay.blockStore.write( Controller.getBlockStore().getStore() );
-
-				mc.displayGuiScreen( new GuiSelectionScreen() );
-
-				break;
-
-			case BUTTON_CANCEL:
-				mc.player.closeScreen();
-				mc.displayGuiScreen( new GuiSelectionScreen() );
-				break;
-
-			default:
-				break;
-		}
-	}
+//	@Override
+//	public void updateScreen()
+//	{
+//		oreName.updateCursorCounter();
+//	}
 
 	@Override
-	protected void keyTyped( char par1, int par2 ) throws IOException // par1 is char typed, par2 is ascii hex (tab=15 return=28)
+	public void render( int x, int y, float f )
 	{
-		super.keyTyped( par1, par2 );
+		super.render(x, y, f);
+		getFontRender().drawStringWithShadow(selectBlock.getItemStack().getDisplayName().getFormattedText(), width / 2f - 100, height / 2f - 90, 0xffffff);
 
-		if( oreName.isFocused() )
-			oreName.textboxKeyTyped( par1, par2 );
-		else
-		{
-			// Change focus to oreName on focus-less tab
-			if (par2 == 15) {
-				if (!oreNameCleared)
-					oreName.setText("");
-				oreName.setFocused(true);
-			}
-		}
-	}
-
-	@Override
-	public void updateScreen()
-	{
-		oreName.updateCursorCounter();
-	}
-
-	@Override
-	public void drawScreen( int x, int y, float f )
-	{
-		super.drawScreen(x, y, f);
-		getFontRender().drawStringWithShadow(selectBlock.getItemStack().getDisplayName(), width / 2f - 100, height / 2f - 90, 0xffffff);
-
-		oreName.drawTextBox();
+		oreName.render(x, y, f);
 		renderPreview(width / 2 - 100, height / 2 - 40, redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
 
-		if( this.state == null && this.addBtn.isMouseOver() )
-			this.drawHoveringText(Arrays.asList(I18n.format("xray.message.state_warning").split("\n")), this.addBtn.x -30, this.addBtn.y - 45);
+//		if( this.state == null && this.addBtn.isMouseOver() )
+//			this.drawHoveringText(Arrays.asList(I18n.format("xray.message.state_warning").split("\n")), this.addBtn.x -30, this.addBtn.y - 45);
 
 		RenderHelper.enableGUIStandardItemLighting();
-		this.itemRender.renderItemAndEffectIntoGUI( selectBlock.getItemStack(), width / 2 + 85, height / 2 - 105 );
+		this.itemRenderer.renderItemAndEffectIntoGUI( selectBlock.getItemStack(), width / 2 + 85, height / 2 - 105 );
 		RenderHelper.disableStandardItemLighting();
 	}
 
@@ -156,23 +131,22 @@ public class GuiAddBlock extends GuiBase {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder tessellate = tessellator.getBuffer();
 		GlStateManager.enableBlend();
-		GlStateManager.disableTexture2D();
-		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-		GlStateManager.color(r, g, b, 1);
+		GlStateManager.disableTexture();
+		GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		GlStateManager.color4f(r, g, b, 1);
 		tessellate.begin(7, DefaultVertexFormats.POSITION);
 		tessellate.pos(x, y, 0.0D).endVertex();
 		tessellate.pos(x, y + 45, 0.0D).endVertex();
 		tessellate.pos(x + 202, y + 45, 0.0D).endVertex();
 		tessellate.pos(x+ 202, y, 0.0D).endVertex();
 		tessellator.draw();
-		GlStateManager.enableTexture2D();
+		GlStateManager.enableTexture();
 		GlStateManager.disableBlend();
 	}
 
 	@Override
-	public void mouseClicked( int x, int y, int mouse ) throws IOException
+	public boolean mouseClicked( double x, double y, int mouse )
 	{
-		super.mouseClicked( x, y, mouse );
 		oreName.mouseClicked( x, y, mouse );
 
 		if( oreName.isFocused() && !oreNameCleared )
@@ -186,6 +160,8 @@ public class GuiAddBlock extends GuiBase {
 			oreNameCleared = false;
 			oreName.setText( I18n.format("xray.input.gui") );
 		}
+
+		return super.mouseClicked( x, y, mouse );
 	}
 
 	@Override

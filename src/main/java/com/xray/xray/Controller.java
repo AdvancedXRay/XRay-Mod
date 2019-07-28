@@ -4,12 +4,11 @@ import com.xray.Configuration;
 import com.xray.XRay;
 import com.xray.store.BlockStore;
 import com.xray.utils.WorldRegion;
-
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -61,12 +60,12 @@ public class Controller
 			requestBlockFinder( true ); // finally, force a refresh
 
 			if( !Configuration.showOverlay )
-				XRay.mc.player.sendMessage( new TextComponentString(I18n.format("xray.toggle.activated")) );
+				XRay.mc.player.sendMessage( new StringTextComponent(I18n.format("xray.toggle.activated")) );
 		}
 		else // disable drawing
 		{
 			if( !Configuration.showOverlay )
-				XRay.mc.player.sendMessage( new TextComponentString(I18n.format("xray.toggle.deactivated")) );
+				XRay.mc.player.sendMessage( new StringTextComponent(I18n.format("xray.toggle.deactivated")) );
 
 			shutdownExecutor();
 		}

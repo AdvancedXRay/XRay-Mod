@@ -1,10 +1,10 @@
 package com.xray.xray;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.xray.Configuration;
 import com.xray.reference.block.BlockInfo;
 import com.xray.utils.Utils;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
@@ -49,23 +49,23 @@ public class Render
             @Override
             public void apply()
             {
-                GlStateManager.disableTexture2D();
-                GlStateManager.disableDepth();
+                GlStateManager.disableTexture();
+                GlStateManager.disableDepthTest();
                 GlStateManager.depthMask( false );
-                GlStateManager.glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+                GlStateManager.polygonMode( GL_FRONT_AND_BACK, GL_LINE );
                 GlStateManager.blendFunc( GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA );
                 GlStateManager.enableBlend();
-                GlStateManager.glLineWidth( (float) Configuration.outlineThickness );
+                GlStateManager.lineWidth( (float) Configuration.outlineThickness );
             }
 
             @Override
             public void clean()
             {
-                GlStateManager.glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+                GlStateManager.polygonMode( GL_FRONT_AND_BACK, GL_FILL );
                 GlStateManager.disableBlend();
-                GlStateManager.enableDepth();
+                GlStateManager.enableDepthTest();
                 GlStateManager.depthMask( true );
-                GlStateManager.enableTexture2D();
+                GlStateManager.enableTexture();
             }
         },
         // TODO:

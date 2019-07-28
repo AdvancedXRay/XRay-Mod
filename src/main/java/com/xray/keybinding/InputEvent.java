@@ -1,19 +1,26 @@
 package com.xray.keybinding;
 
-import com.xray.gui.GuiSelectionScreen;
-import com.xray.xray.Controller;
 import com.xray.XRay;
-import net.minecraft.client.gui.GuiChat;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
+import com.xray.gui.GuiSelectionScreen;
+import com.xray.reference.Reference;
+import com.xray.xray.Controller;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+@Mod.EventBusSubscriber(modid = Reference.MOD_ID, value = Dist.CLIENT)
 public class InputEvent
 {
 	@SubscribeEvent
-	public void onKeyInput( KeyInputEvent event )
+	public static void eventInput(TickEvent.ClientTickEvent event)
     {
-		if( (!FMLClientHandler.instance().isGUIOpen( GuiChat.class )) && (XRay.mc.currentScreen == null) && (XRay.mc.world != null) )
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.player == null || event.phase == TickEvent.Phase.START)
+			return;
+
+		if( XRay.mc.currentScreen == null && XRay.mc.world != null )
         {
 			if( KeyBindings.keyBind_keys[ KeyBindings.keyIndex_toggleXray ].isPressed() )
 			{

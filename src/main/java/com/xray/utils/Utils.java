@@ -2,15 +2,15 @@ package com.xray.utils;
 
 import com.xray.reference.block.BlockInfo;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 /**
@@ -24,8 +24,8 @@ public class Utils {
      * @param player Minecraft Player
      * @param message String Message
      */
-    public static void sendMessage(EntityPlayerSP player, String message) {
-        player.sendMessage( new TextComponentString(message) );
+    public static void sendMessage(PlayerEntity player, String message) {
+        player.sendMessage( new StringTextComponent(message) );
     }
 
     /**
@@ -34,12 +34,13 @@ public class Utils {
      * @param world - mc world
      * @param player - mc player
      * @param stack - ItemStack
-     * @return IBlockState from {@link Block#getStateForPlacement(World, BlockPos, EnumFacing, float, float, float, int, EntityLivingBase, EnumHand)}
+     * @return IBlockState from {@link Block#getStateForPlacement(BlockState, Direction, BlockState, IWorld, BlockPos, BlockPos, Hand)} (World, BlockPos, EnumFacing, float, float, float, int, EntityLivingBase, EnumHand)}
      */
-    public static IBlockState getStateFromPlacement(World world, EntityLivingBase player, ItemStack stack) {
-        return Block.getBlockFromItem(stack.getItem()).getStateForPlacement(
-            world, player.getPosition(), EnumFacing.NORTH, 0.1f, 0.1f, 0.1f, stack.getMetadata(), player, player.getActiveHand()
-        );
+    public static BlockState getStateFromPlacement(World world, PlayerEntity player, ItemStack stack) {
+        return null;
+//        return Block.getBlockFromItem(stack.getItem()).getStateForPlacement(
+////            world, player.getPosition(), EnumFacing.NORTH, 0.1f, 0.1f, 0.1f, stack.getMetadata(), player, player.getActiveHand()
+//        );
     }
 
     public static int clampColor(int c)

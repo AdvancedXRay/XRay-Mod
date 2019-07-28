@@ -1,12 +1,16 @@
 package com.xray.xray;
 
 import com.xray.XRay;
+import com.xray.reference.Reference;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.ChunkEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+@Mod.EventBusSubscriber(modid = Reference.MOD_ID, value = Dist.CLIENT)
 public class Events
 {
 	@SubscribeEvent
@@ -16,7 +20,7 @@ public class Events
 	}
 
 	@SubscribeEvent
-	public void placeItem( BlockEvent.PlaceEvent event )
+	public void placeItem( BlockEvent.EntityPlaceEvent event )
 	{
 		RenderEnqueue.checkBlock( event.getPos(), event.getState(), true);
 	}
