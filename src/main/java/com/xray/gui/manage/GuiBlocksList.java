@@ -2,23 +2,26 @@ package com.xray.gui.manage;
 
 import com.xray.reference.block.BlockItem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.LanguageScreen;
+import net.minecraft.client.gui.widget.list.AbstractList;
+import net.minecraft.client.gui.widget.list.ExtendedList;
 
 import java.util.List;
 
-public class GuiBlocksList {
+public class GuiBlocksList  {
     private static final int HEIGHT = 1;
 
     //
 //    private static final int HEIGHT = 35;
 //    private final GuiBlockListScrollable parent;
 //    private List<BlockItem> blockList;
+////
+//    GuiBlocksList(GuiBlockListScrollable parent, List<BlockItem> blockList) {
+////        super(Minecraft.getInstance(), 202, 210, parent.height / 2 - 105, parent.height / 2 + 80, HEIGHT);
 //
-    GuiBlocksList(GuiBlockListScrollable parent, List<BlockItem> blockList) {
-//        super(Minecraft.getInstance(), 202, 210, parent.height / 2 - 105, parent.height / 2 + 80, HEIGHT);
-
-//        this.parent = parent;
-//        this.blockList = blockList;
-    }
+////        this.parent = parent;
+////        this.blockList = blockList;
+//    }
 
 //    @Override
 //    protected int getSize() {
