@@ -1,13 +1,13 @@
 package com.xray.gui;
 
 import com.xray.XRay;
+import com.xray.gui.manage.GuiEdit;
 import com.xray.reference.block.BlockData;
 import com.xray.xray.Controller;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraftforge.fml.client.GuiScrollingList;
-import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 
@@ -17,14 +17,11 @@ public class GuiActiveBlockList extends GuiScrollingList {
     private final GuiSelectionScreen parent;
     private ArrayList<BlockData> itemList;
 
-    private int selectedIndex = -1;
-    private long lastClick = 0L;
-
-    GuiActiveBlockList(GuiSelectionScreen parent, int x, int y) {
+    GuiActiveBlockList(GuiSelectionScreen parent, int x, int y, ArrayList<BlockData> itemList) {
         super(XRay.mc, 204, 210, y, parent.height / 2 + 80, x, HEIGHT, parent.width, parent.height);
 
         this.parent = parent;
-        this.itemList = new ArrayList<>(Controller.getBlockStore().getStore().values());
+        this.itemList = itemList;
     }
 
     @Override
@@ -34,19 +31,23 @@ public class GuiActiveBlockList extends GuiScrollingList {
 
     @Override
     protected void elementClicked(int index, boolean doubleClick) {
-        if( this.selectedIndex == index )
-            this.selectedIndex = -1;
-        else
-            this.selectedIndex = index;
-    }
+        BlockData data = this.itemList.get(index);
+        if( GuiEdit.isShiftKeyDown() ) {
+            Controller.getBlockStore().toggleDrawing(data.getEntryKey());
+            XRay.blockStore.write(Controller.getBlockStore().getStore());
 
-    private void eventRightClick(int mouseX, int mouseY, float partialTicks) {
-        System.out.println("hi");
+            return;
+        }
+
+        if( doubleClick ) {
+            XRay.mc.player.closeScreen();
+            XRay.mc.displayGuiScreen( new GuiEdit(data.getEntryKey(), data) );
+        }
     }
 
     @Override
     protected boolean isSelected(int index) {
-        return index == this.selectedIndex;
+        return false;
     }
 
     @Override
@@ -55,6 +56,10 @@ public class GuiActiveBlockList extends GuiScrollingList {
     @Override
     protected int getContentHeight() {
         return (this.getSize() * HEIGHT);
+    }
+
+    public void setItemList(ArrayList<BlockData> itemList) {
+        this.itemList = itemList;
     }
 
     @Override
@@ -74,10 +79,5 @@ public class GuiActiveBlockList extends GuiScrollingList {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-
-        if( Mouse.isButtonDown(1) && System.currentTimeMillis() - this.lastClick > 500L ) {
-            this.eventRightClick(mouseX, mouseY, partialTicks);
-            this.lastClick = System.currentTimeMillis();
-        }
     }
 }
