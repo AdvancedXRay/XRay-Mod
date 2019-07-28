@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.resources.I18n;
+import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -109,8 +110,17 @@ public class GuiBlockListScrollable extends GuiBase {
     public void mouseClicked( int x, int y, int button ) throws IOException {
         super.mouseClicked(x, y, button);
         search.mouseClicked(x, y, button);
-        this.blockList.handleMouseInput(x, y);
     }
+
+    @Override
+    public void handleMouseInput() throws IOException {
+        super.handleMouseInput();
+
+        int mouseX = Mouse.getEventX() * this.width / this.mc.displayWidth;
+        int mouseY = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
+        this.blockList.handleMouseInput(mouseX, mouseY);
+    }
+
 
     Minecraft getMinecraftInstance() {
         return this.mc;

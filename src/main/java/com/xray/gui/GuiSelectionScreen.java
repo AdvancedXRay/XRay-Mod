@@ -21,6 +21,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
+import org.lwjgl.input.Mouse;
 
 import java.awt.*;
 import java.io.IOException;
@@ -203,5 +204,14 @@ public class GuiSelectionScreen extends GuiBase
 		XRay.blockStore.write( Controller.getBlockStore().getStore() );
 
 		Controller.requestBlockFinder( true );
+	}
+
+	@Override
+	public void handleMouseInput() throws IOException {
+		super.handleMouseInput();
+
+		int mouseX = Mouse.getEventX() * this.width / this.mc.displayWidth;
+		int mouseY = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
+		this.scrollList.handleMouseInput(mouseX, mouseY);
 	}
 }
