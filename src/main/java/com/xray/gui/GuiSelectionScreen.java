@@ -2,7 +2,7 @@ package com.xray.gui;
 
 import com.xray.XRay;
 import com.xray.gui.manage.GuiAddBlock;
-import com.xray.gui.manage.GuiBlockListScrollable;
+import com.xray.gui.manage.GuiBlockList;
 import com.xray.gui.utils.GuiBase;
 import com.xray.reference.block.BlockData;
 import com.xray.reference.block.BlockItem;
@@ -10,7 +10,6 @@ import com.xray.utils.Utils;
 import com.xray.xray.Controller;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -60,7 +59,7 @@ public class GuiSelectionScreen extends GuiBase {
         addButton(new Button((width / 2) + 79, height / 2 - 60, 120, 20, I18n.format("xray.input.add"), button -> {
             getMinecraft().player.closeScreen();
 //			getMinecraft().displayGuiScreen( new GuiAddBlock(new BlockItem(Block.getStateId(Blocks.GRASS.getDefaultState()), new ItemStack(Blocks.GRASS)), null) );
-            getMinecraft().displayGuiScreen(new GuiBlockListScrollable());
+            getMinecraft().displayGuiScreen(new GuiBlockList());
         }));
         addButton(new Button(width / 2 + 79, height / 2 - 38, 120, 20, I18n.format("xray.input.add_hand"), button -> {
             getMinecraft().player.closeScreen();
