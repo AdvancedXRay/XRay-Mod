@@ -12,14 +12,14 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = "1.7.0"
+version = mod_version
 group= "com.xray.xray"
-archivesBaseName = "xray-1.14.2"
+archivesBaseName = "xray-${game_version}-${mod_version}"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    mappings channel: 'snapshot', version: '20190719-1.14.3'
+    mappings channel: 'snapshot', version: forge_mappings
 
     runs {
         client {
@@ -57,7 +57,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.0.21'
+    minecraft "net.minecraftforge:forge:${game_version}-${forge_version}"
 }
 
 processResources { 
@@ -75,7 +75,7 @@ jar {
         attributes([
                 "Specification-Title": "Advanced XRay",
                 "Specification-Vendor": "",
-                "Specification-Version": "1.7.0",
+                "Specification-Version": "${version}",
                 "Implementation-Title": project.name,
                 "Implementation-Version": "${version}",
                 "Implementation-Vendor" :"advanced-xray",
