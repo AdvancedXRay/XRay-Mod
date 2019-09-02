@@ -33,7 +33,7 @@ public class GuiBase extends Screen {
         if( keyTyped == 1 )
             getMinecraft().player.closeScreen();
 
-        return true;
+        return false;
     }
 
     @Override

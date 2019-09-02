@@ -24,7 +24,6 @@ public class GuiBlockList extends GuiBase {
     private ArrayList<BlockItem> blocks;
     private TextFieldWidget search;
     private String lastSearched = "";
-    private int selected = -1;
 
     public GuiBlockList() {
         super(false);
@@ -38,33 +37,30 @@ public class GuiBlockList extends GuiBase {
 
         search = new TextFieldWidget(getFontRender(), width / 2 - 100, height / 2 + 85, 140, 18, "");
         search.changeFocus(true);
-        search.setCanLoseFocus(true);
+        this.setFocused(search);
 
         addButton(new Button(width / 2 + 43, height / 2 + 84, 60, 20, I18n.format("xray.single.cancel"), b -> this.onClose()));
     }
 
     @Override
-    public boolean charTyped(char keyTyped, int __unknown) {
-        search.charTyped(keyTyped, __unknown);
-        reloadBlocks();
-
-        return super.charTyped(keyTyped, __unknown);
-    }
-
-    @Override
     public void tick() {
         search.tick();
+        if (!search.getText().equals(this.lastSearched))
+            reloadBlocks();
+
         super.tick();
     }
 
     private void reloadBlocks() {
-        if (this.lastSearched.equals(search.getText()) || search.getText().length() < 2)
+        if (this.lastSearched.equals(search.getText()))
             return;
 
         this.blockList.updateEntries(
-                this.blocks.stream().filter(e ->
-                        e.getItemStack().getDisplayName().getFormattedText().toLowerCase().contains(search.getText().toLowerCase())
-                ).collect(Collectors.toList())
+                search.getText().length() == 0
+                        ? this.blocks
+                        : this.blocks.stream()
+                            .filter(e -> e.getItemStack().getDisplayName().getFormattedText().toLowerCase().contains(search.getText().toLowerCase()))
+                            .collect(Collectors.toList())
         );
 
         lastSearched = search.getText();
@@ -80,7 +76,6 @@ public class GuiBlockList extends GuiBase {
 
     @Override
     public boolean mouseClicked(double x, double y, int button) {
-        search.mouseClicked(x, y, button);
         return super.mouseClicked(x, y, button);
     }
 
