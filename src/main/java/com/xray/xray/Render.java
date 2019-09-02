@@ -2,6 +2,7 @@ package com.xray.xray;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.xray.Configuration;
+import com.xray.XRay;
 import com.xray.reference.block.BlockInfo;
 import com.xray.utils.Utils;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -27,7 +28,7 @@ public class Render
         BufferBuilder buffer = tessellator.getBuffer();
         Profile.BLOCKS.apply(); // Sets GL state for block drawing
 
-        buffer.setTranslation( -playerX, -playerY, -playerZ );
+        buffer.setTranslation( -playerX, -playerY - (XRay.mc.player.getEyeHeight()), -playerZ );
 
         ores.forEach( b -> {
             buffer.begin( GL_LINES, DefaultVertexFormats.POSITION_COLOR );

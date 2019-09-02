@@ -35,7 +35,6 @@ public class RenderEnqueue implements Runnable
 	 */
 	private void blockFinder() {
         HashMap<String, BlockData> blocks = Controller.getBlockStore().getStore();
-
         if ( blocks.isEmpty() ) {
 		    if( !Render.ores.isEmpty() )
 		        Render.ores.clear();
@@ -112,7 +111,7 @@ public class RenderEnqueue implements Runnable
 								double alpha = !Configuration.shouldFade ? 255 : Math.max(0, ((Controller.getRadius() - XRay.mc.player.getDistanceSq(x + i, y + j, z + k)) / Controller.getRadius() ) * 255);
 
 								// Push the block to the render queue
-								renderQueue.add(new BlockInfo(x + i, y + j, z + k, blockData.getColor().getColor(), alpha));
+								renderQueue.add(new BlockInfo(x + i, y + j, z + k, blockData.getColor().getColor(), 255));
 							}
 						}
 					}

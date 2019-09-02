@@ -14,25 +14,25 @@ import net.minecraftforge.fml.common.Mod;
 public class Events
 {
 	@SubscribeEvent
-	public void pickupItem( BlockEvent.BreakEvent event )
+	public static void pickupItem( BlockEvent.BreakEvent event )
 	{
 		RenderEnqueue.checkBlock( event.getPos(), event.getState(), false);
 	}
 
 	@SubscribeEvent
-	public void placeItem( BlockEvent.EntityPlaceEvent event )
+	public static void placeItem( BlockEvent.EntityPlaceEvent event )
 	{
 		RenderEnqueue.checkBlock( event.getPos(), event.getState(), true);
 	}
 
 	@SubscribeEvent
-	public void chunkLoad( ChunkEvent.Load event )
+	public static void chunkLoad( ChunkEvent.Load event )
 	{
 		Controller.requestBlockFinder( true );
 	}
 
 	@SubscribeEvent
-	public void tickEnd( TickEvent.ClientTickEvent event )
+	public static void tickEnd( TickEvent.ClientTickEvent event )
 	{
 		if ( event.phase == TickEvent.Phase.END )
 		{
@@ -41,7 +41,7 @@ public class Events
 	}
 
 	@SubscribeEvent
-	public void onWorldRenderLast( RenderWorldLastEvent event ) // Called when drawing the world.
+	public static void onWorldRenderLast( RenderWorldLastEvent event ) // Called when drawing the world.
 	{
 		if ( Controller.drawOres() )
 		{
