@@ -56,7 +56,7 @@ public class Render
                 GlStateManager.polygonMode( GL_FRONT_AND_BACK, GL_LINE );
                 GlStateManager.blendFunc( GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA );
                 GlStateManager.enableBlend();
-                GlStateManager.lineWidth( (float) Configuration.outlineThickness );
+                GlStateManager.lineWidth( (float) Configuration.general.outlineThickness.get().doubleValue() );
             }
 
             @Override

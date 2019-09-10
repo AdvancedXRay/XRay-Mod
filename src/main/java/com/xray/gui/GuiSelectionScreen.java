@@ -1,5 +1,6 @@
 package com.xray.gui;
 
+import com.xray.Configuration;
 import com.xray.XRay;
 import com.xray.gui.manage.GuiAddBlock;
 import com.xray.gui.manage.GuiBlockList;
@@ -170,7 +171,7 @@ public class GuiSelectionScreen extends GuiBase {
 
     @Override
     public void onClose() {
-//		ConfigManager.sync(Reference.MOD_ID, Config.Type.INSTANCE);
+        Configuration.general.radius.save();
         XRay.blockStore.write(Controller.getBlockStore().getStore());
 
         Controller.requestBlockFinder(true);
@@ -181,14 +182,4 @@ public class GuiSelectionScreen extends GuiBase {
     public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
         return false;
     }
-
-    // todo: reimplement if required
-//	@Override
-//	public void handleMouseInput() throws IOException {
-//		super.handleMouseInput();
-//
-//		int mouseX = Mouse.getEventX() * this.width / this.mc.displayWidth;
-//		int mouseY = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
-//		this.scrollList.handleMouseInput(mouseX, mouseY);
-//	}
 }

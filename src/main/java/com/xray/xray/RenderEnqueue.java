@@ -108,7 +108,7 @@ public class RenderEnqueue implements Runnable
 									continue;
 
 								// Calculate distance from player to block. Fade out futher away blocks
-								double alpha = !Configuration.shouldFade ? 255 : Math.max(0, ((Controller.getRadius() - XRay.mc.player.getDistanceSq(x + i, y + j, z + k)) / Controller.getRadius() ) * 255);
+								double alpha = !Configuration.general.shouldFade.get() ? 255 : Math.max(0, ((Controller.getRadius() - XRay.mc.player.getDistanceSq(x + i, y + j, z + k)) / Controller.getRadius() ) * 255);
 
 								// Push the block to the render queue
 								renderQueue.add(new BlockInfo(x + i, y + j, z + k, blockData.getColor().getColor(), 255));
@@ -154,7 +154,7 @@ public class RenderEnqueue implements Runnable
             if( data == null )
             	return;
 
-			double alpha = !Configuration.shouldFade ? 255 : Math.max(0, ((Controller.getRadius() - XRay.mc.player.getDistanceSq(pos.getX(), pos.getY(), pos.getZ())) / Controller.getRadius() ) * 255);
+			double alpha = !Configuration.general.shouldFade.get() ? 255 : Math.max(0, ((Controller.getRadius() - XRay.mc.player.getDistanceSq(pos.getX(), pos.getY(), pos.getZ())) / Controller.getRadius() ) * 255);
 
             // the block was added to the world, let's add it to the drawing buffer
             Render.ores.add( new BlockInfo(pos, data.getColor().getColor(), alpha) );

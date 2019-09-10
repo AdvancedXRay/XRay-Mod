@@ -46,7 +46,7 @@ public class XRay
 
 		eventBus.addListener(this::onSetup);
 		eventBus.addListener(this::onLoadComplete);
-		eventBus.addListener(this::onConfigChanged);
+//		eventBus.addListener(this::onConfigChanged);
 		eventBus.addListener(this::onExit);
 	}
 
@@ -54,6 +54,9 @@ public class XRay
 		logger.debug(I18n.format("xray.debug.init"));
 
 		KeyBindings.setup();
+
+		// Load the config
+		Configuration.load();
 
 		List<SimpleBlockData> data = blockStore.read();
 		if( data.isEmpty() )
@@ -73,11 +76,11 @@ public class XRay
 		Controller.shutdownExecutor();
 	}
 
-	private void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
-	{
-		if (event.getModID().equals(Reference.MOD_ID))
-		{
-//			Config.sync(Reference.MOD_ID, Config.Type.INSTANCE);
-		}
-	}
+//	private void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
+//	{
+//		if (event.getModID().equals(Reference.MOD_ID))
+//		{
+////			Config.sync(Reference.MOD_ID, Config.Type.INSTANCE);
+//		}
+//	}
 }

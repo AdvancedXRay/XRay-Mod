@@ -59,34 +59,34 @@ public class Controller
 			drawOres = true; // then, enable drawing
 			requestBlockFinder( true ); // finally, force a refresh
 
-			if( !Configuration.showOverlay )
+			if( !Configuration.general.showOverlay.get() )
 				XRay.mc.player.sendMessage( new StringTextComponent(I18n.format("xray.toggle.activated")) );
 		}
 		else // disable drawing
 		{
-			if( !Configuration.showOverlay )
+			if( !Configuration.general.showOverlay.get() )
 				XRay.mc.player.sendMessage( new StringTextComponent(I18n.format("xray.toggle.deactivated")) );
 
 			shutdownExecutor();
 		}
 	}
 
-	public static int getRadius() { return distanceList[Configuration.radius]; }
+	public static int getRadius() { return distanceList[Configuration.general.radius.get()]; }
 
 	public static void incrementCurrentDist()
 	{
-		if ( Configuration.radius < distanceList.length - 1 )
-			Configuration.radius++;
+		if ( Configuration.general.radius.get() < distanceList.length - 1 )
+			Configuration.general.radius.set(Configuration.general.radius.get() + 1);
 		else
-			Configuration.radius = 0;
+			Configuration.general.radius.set(0);
 	}
 
 	public static void decrementCurrentDist()
 	{
-		if ( Configuration.radius > 0 )
-			Configuration.radius--;
+		if ( Configuration.general.radius.get() > 0 )
+			Configuration.general.radius.set(Configuration.general.radius.get() - 1);
 		else
-			Configuration.radius = distanceList.length - 1;
+			Configuration.general.radius.set( distanceList.length - 1 );
 	}
 
 	/**
