@@ -76,6 +76,9 @@ public class GuiBlockList extends GuiBase {
 
     @Override
     public boolean mouseClicked(double x, double y, int button) {
+        if( this.search.mouseClicked(x, y, button) )
+            this.setFocused(this.search);
+
         return super.mouseClicked(x, y, button);
     }
 
