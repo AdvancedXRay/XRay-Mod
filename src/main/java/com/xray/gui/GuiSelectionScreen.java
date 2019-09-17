@@ -4,6 +4,7 @@ import com.xray.Configuration;
 import com.xray.XRay;
 import com.xray.gui.manage.GuiAddBlock;
 import com.xray.gui.manage.GuiBlockList;
+import com.xray.gui.manage.GuiEdit;
 import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.ScrollingList;
 import com.xray.reference.Reference;
@@ -73,7 +74,6 @@ public class GuiSelectionScreen extends GuiBase {
         // side bar buttons
         addButton(new Button((width / 2) + 79, height / 2 - 60, 120, 20, I18n.format("xray.input.add"), button -> {
             getMinecraft().player.closeScreen();
-//			getMinecraft().displayGuiScreen( new GuiAddBlock(new BlockItem(Block.getStateId(Blocks.GRASS.getDefaultState()), new ItemStack(Blocks.GRASS)), null) );
             getMinecraft().displayGuiScreen(new GuiBlockList());
         }));
         addButton(new Button(width / 2 + 79, height / 2 - 38, 120, 20, I18n.format("xray.input.add_hand"), button -> {
@@ -128,23 +128,16 @@ public class GuiSelectionScreen extends GuiBase {
         }));
     }
 
-    @Override
-    public boolean charTyped(char keyTyped, int __unknown) {
-        search.charTyped(keyTyped, __unknown);
-        updateSearch();
-        return super.charTyped(keyTyped, __unknown);
-    }
-
     private void updateSearch() {
+        if (lastSearch.equals(search.getText()))
+            return;
+
         if (search.getText().equals("")) {
             this.itemList = this.originalList;
-//			this.scrollList.setItemList(this.itemList);
+			this.scrollList.updateEntries(this.itemList);
             lastSearch = "";
             return;
         }
-
-        if (lastSearch.equals(search.getText()))
-            return;
 
         this.itemList = this.originalList.stream()
                 .filter(b -> b.getEntryName().toLowerCase().contains(search.getText().toLowerCase()))
@@ -152,7 +145,7 @@ public class GuiSelectionScreen extends GuiBase {
 
         this.itemList.sort(Comparator.comparingInt(BlockData::getOrder));
 
-//		this.scrollList.setItemList(this.itemList);
+		this.scrollList.updateEntries(this.itemList);
         lastSearch = search.getText();
     }
 
@@ -160,11 +153,15 @@ public class GuiSelectionScreen extends GuiBase {
     public void tick() {
         super.tick();
         search.tick();
+
+        updateSearch();
     }
 
     @Override
     public boolean mouseClicked(double x, double y, int mouse) {
-        search.mouseClicked(x, y, mouse);
+        if( search.mouseClicked(x, y, mouse) )
+            this.setFocused(search);
+
         if (mouse == 1 && distButtons.isMouseOver(x, y)) {
             Controller.decrementCurrentDist();
             distButtons.setMessage(I18n.format("xray.input.distance") + ": " + Controller.getRadius());
@@ -202,13 +199,18 @@ public class GuiSelectionScreen extends GuiBase {
             this.updateEntries(blocks);
         }
 
-        @Override
-        public void setSelected(@Nullable BlockSlot entry) {
+        public void setSelected(@Nullable BlockSlot entry, int mouse) {
             if (entry == null)
                 return;
 
-//            Minecraft.getInstance().player.closeScreen();
-//            Minecraft.getInstance().displayGuiScreen(new GuiAddBlock(entry.getBlock(), null));
+            if( GuiSelectionScreen.hasShiftDown() ) {
+                XRay.mc.player.closeScreen();
+                XRay.mc.displayGuiScreen( new GuiEdit(entry.block.getEntryKey(), entry.block) );
+                return;
+            }
+
+            Controller.getBlockStore().toggleDrawing(entry.block.getEntryKey());
+            XRay.blockStore.write(Controller.getBlockStore().getStore());
         }
 
         void updateEntries(List<BlockData> blocks) {
@@ -248,76 +250,10 @@ public class GuiSelectionScreen extends GuiBase {
             }
 
             @Override
-            public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
-                this.parent.setSelected(this);
+            public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int mouse) {
+                this.parent.setSelected(this, mouse);
                 return false;
             }
         }
     }
-
-//    @Override
-//    protected int getSize() {
-//        return this.itemList.size();
-//    }
-//
-//    @Override
-//    protected void elementClicked(int index, boolean doubleClick) {
-//        BlockData data = this.itemList.get(index);
-//        if( GuiEdit.isShiftKeyDown() ) {
-//            Controller.getBlockStore().toggleDrawing(data.getEntryKey());
-//            XRay.blockStore.write(Controller.getBlockStore().getStore());
-//
-//            return;
-//        }
-//
-//        if( doubleClick ) {
-//            XRay.mc.player.closeScreen();
-//            XRay.mc.displayGuiScreen( new GuiEdit(data.getEntryKey(), data) );
-//        }
-//    }
-//
-//    @Override
-//    protected boolean isSelected(int index) {
-//        return false;
-//    }
-//
-//    @Override
-//    protected void drawBackground() {}
-//
-//    @Override
-//    protected int getContentHeight() {
-//        return (this.getSize() * HEIGHT);
-//    }
-//
-//    public void setItemList(ArrayList<BlockData> itemList) {
-//        this.itemList = itemList;
-//    }
-//
-//    @Override
-//    protected void drawSlot(int idx, int right, int top, int height, Tessellator tess) {
-//        BlockData blockData = this.itemList.get(idx);
-//
-//        FontRenderer font = this.parent.getFontRender();
-//
-//        font.drawString(blockData.getEntryName(), this.left + 30, top + 7, 0xFFFFFF);
-//        font.drawString(blockData.isDrawing() ? "Enabled" : "Disabled", this.left + 30, top + 17, blockData.isDrawing() ? Color.GREEN.getRGB() : Color.RED.getRGB());
-//
-//        RenderHelper.enableGUIStandardItemLighting();
-//        this.parent.render.renderItemAndEffectIntoGUI(blockData.getItemStack(), this.left + 5, top + 7);
-//        RenderHelper.disableStandardItemLighting();
-//
-//        Minecraft.getMinecraft().renderEngine.bindTexture(circle);
-//        GuiBase.drawTexturedQuadFit(right - 22, top + (HEIGHT / 2f) - 9, 14, 14, new int[]{255, 255, 255}, 20f);
-//        GuiBase.drawTexturedQuadFit(right - 20, top + (HEIGHT / 2f) - 7, 10, 10, blockData.getColor().getColor());
-//    }
-//
-//    @Override
-//    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-//        super.drawScreen(mouseX, mouseY, partialTicks);
-//    }
-//
-//    @Override
-//    public void handleMouseInput(int mouseX, int mouseY) throws IOException {
-//        super.handleMouseInput(mouseX, mouseY);
-//    }
 }
