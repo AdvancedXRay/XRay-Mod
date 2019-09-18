@@ -44,7 +44,7 @@ public class JsonStore
 
     public void write(HashMap<String, BlockData> blockData) {
         List<SimpleBlockData> simpleBlockData = new ArrayList<>();
-        blockData.forEach( (k, v) -> simpleBlockData.add(new SimpleBlockData(v.getEntryName(), k, v.getStateId(), v.getColor(), v.isDrawing(), v.getOrder())) );
+        blockData.forEach( (k, v) -> simpleBlockData.add(new SimpleBlockData(v.getEntryName(), v.getState(), v.getColor(), v.isDrawing(), v.getOrder())) );
 
         this.write(simpleBlockData);
     }

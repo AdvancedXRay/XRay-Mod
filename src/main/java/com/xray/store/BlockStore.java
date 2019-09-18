@@ -1,10 +1,13 @@
 package com.xray.store;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.xray.reference.block.BlockData;
 import com.xray.reference.block.SimpleBlockData;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,16 +59,26 @@ public class BlockStore {
         HashMap<String, BlockData> blockData = new HashMap<>();
 
         for (SimpleBlockData e : simpleList) {
-            BlockState state = Block.getStateById(e.getStateId());
+            CompoundNBT compound = null;
 
+            try {
+                compound = JsonToNBT.getTagFromJson(e.getStateString());
+            } catch (CommandSyntaxException ex) {
+                ex.printStackTrace();
+            }
+
+            if(compound == null)
+                continue;
+
+            BlockState state = NBTUtil.readBlockState(compound);
             blockData.put(
                     e.getStateString(),
                     new BlockData(
                             e.getStateString(),
                             e.getName(),
-                            e.getStateId(),
+                            state,
                             e.getColor(),
-                            new ItemStack( state.getBlock(), 1/*, state.getBlock().getMetaFromState(state)*/),
+                            new ItemStack( state.getBlock(), 1),
                             e.isDrawing(),
                             e.getOrder()
                     )

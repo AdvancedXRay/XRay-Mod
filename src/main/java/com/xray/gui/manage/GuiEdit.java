@@ -39,7 +39,7 @@ public class GuiEdit extends GuiBase {
             BlockData block = new BlockData(
                     this.storeKey,
                     this.oreName.getText(),
-                    this.block.getStateId(),
+                    this.block.getState(),
                     new OutlineColor((int) (redSlider.getValue() * 255), (int) (greenSlider.getValue() * 255), (int) (blueSlider.getValue() * 255)),
                     this.block.getItemStack(),
                     this.block.isDrawing(),

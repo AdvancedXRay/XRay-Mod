@@ -1,22 +1,23 @@
 package com.xray.reference.block;
 
 import com.xray.utils.OutlineColor;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 
 public class BlockData {
 
     private String entryKey;
     private String entryName;
-    private int stateId;
+    private BlockState state;
     private OutlineColor color;
     private ItemStack itemStack;
     private boolean drawing;
     private int order;
 
-    public BlockData(String entryKey, String entryName, int stateId, OutlineColor color, ItemStack itemStack, boolean drawing, int order) {
+    public BlockData(String entryKey, String entryName, BlockState state, OutlineColor color, ItemStack itemStack, boolean drawing, int order) {
         this.entryKey = entryKey;
         this.entryName = entryName;
-        this.stateId = stateId;
+        this.state = state;
         this.color = color;
         this.itemStack = itemStack;
         this.drawing = drawing;
@@ -31,8 +32,8 @@ public class BlockData {
         return entryName;
     }
 
-    public int getStateId() {
-        return stateId;
+    public BlockState getState() {
+        return state;
     }
 
     public OutlineColor getColor() {
