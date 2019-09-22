@@ -29,6 +29,9 @@ public class BlockStore {
     private HashMap<String, UUID>    storeReference = new HashMap<>();
 
     public void put(BlockData data) {
+        if( this.storeReference.containsKey(data.getBlockName()) )
+            return;
+
         UUID uniqueId = UUID.randomUUID();
         this.store.put(uniqueId, data);
         this.storeReference.put(data.getBlockName(), uniqueId);

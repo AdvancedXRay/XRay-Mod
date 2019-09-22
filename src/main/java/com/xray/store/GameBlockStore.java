@@ -35,8 +35,6 @@ public class GameBlockStore {
 
             store.add(new BlockWithItemStack(block, new ItemStack(item)));
         }
-
-        System.out.println(store.size());
     }
 
     public void repopulate()

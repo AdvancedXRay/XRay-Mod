@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -44,6 +45,9 @@ public class XRay
 		eventBus.addListener(this::onSetup);
 		eventBus.addListener(this::onLoadComplete);
 		eventBus.addListener(this::onExit);
+
+		// Keybindings
+		MinecraftForge.EVENT_BUS.register(KeyBindings.class);
 	}
 
 	private void onSetup(final FMLCommonSetupEvent event) {
