@@ -67,14 +67,7 @@ public class GuiEdit extends GuiBase {
 
         oreName = new TextFieldWidget(getMinecraft().fontRenderer, width / 2 - 138, height / 2 - 63, 202, 20, "");
         oreName.setText(this.block.getEntryName());
-    }
-
-    @Override
-    public boolean charTyped(char keyTyped, int __unknown) {
-        if (oreName.isFocused())
-            oreName.charTyped(keyTyped, __unknown);
-
-        return super.charTyped(keyTyped, __unknown);
+        this.children.add(oreName);
     }
 
     @Override
@@ -86,7 +79,7 @@ public class GuiEdit extends GuiBase {
     @Override
     public void render(int x, int y, float f) {
         super.render(x, y, f);
-        getFontRender().drawStringWithShadow(this.block.getItemStack().getDisplayName().getFormattedText(), width / 2 - 138, height / 2 - 90, 0xffffff);
+        getFontRender().drawStringWithShadow(this.block.getItemStack().getDisplayName().getFormattedText(), width / 2f - 138, height / 2f - 90, 0xffffff);
 
         oreName.render(x, y, f);
 
@@ -99,7 +92,9 @@ public class GuiEdit extends GuiBase {
 
     @Override
     public boolean mouseClicked(double x, double y, int mouse) {
-        oreName.mouseClicked(x, y, mouse);
+        if( oreName.mouseClicked(x, y, mouse) )
+            this.setFocused(oreName);
+
         return super.mouseClicked(x, y, mouse);
     }
 

@@ -45,7 +45,7 @@ public class GuiAddBlock extends GuiBase {
         addButton(addBtn = new Button(width / 2 - 100, height / 2 + 85, 128, 20, I18n.format("xray.single.add"), b -> {
             this.onClose();
 
-            if( selectBlock.getRegistryName() == null )
+            if (selectBlock.getRegistryName() == null)
                 return;
 
             // Push the block to the render stack
@@ -75,35 +75,19 @@ public class GuiAddBlock extends GuiBase {
 
         oreName = new TextFieldWidget(getMinecraft().fontRenderer, width / 2 - 100, height / 2 - 70, 202, 20, "");
         oreName.setText(this.selectBlock.getNameTextComponent().getFormattedText());
+        this.children.add(oreName);
     }
 
     @Override
-    public boolean charTyped(char keyTyped, int __unknown) {
-        if (oreName.isFocused())
-            oreName.charTyped(keyTyped, __unknown);
-        else {
-            // Change focus to oreName on focus-less tab
-            if (__unknown == 15) {
-                if (!oreNameCleared)
-                    oreName.setText("");
-
-                oreName.changeFocus(true);
-            }
-        }
-
-        return super.charTyped(keyTyped, __unknown);
+    public void tick() {
+        super.tick();
+        oreName.tick();
     }
-
-//	@Override
-//	public void updateScreen()
-//	{
-//		oreName.updateCursorCounter();
-//	}
 
     @Override
     public void render(int x, int y, float f) {
         super.render(x, y, f);
-        getFontRender().drawStringWithShadow(selectBlock.getNameTextComponent().toString(), width / 2f - 100, height / 2f - 90, 0xffffff);
+        getFontRender().drawStringWithShadow(selectBlock.getNameTextComponent().getFormattedText(), width / 2f - 100, height / 2f - 90, 0xffffff);
 
         oreName.render(x, y, f);
         renderPreview(width / 2 - 100, height / 2 - 40, (float) redSlider.getValue(), (float) greenSlider.getValue(), (float) blueSlider.getValue());
@@ -132,7 +116,8 @@ public class GuiAddBlock extends GuiBase {
 
     @Override
     public boolean mouseClicked(double x, double y, int mouse) {
-        oreName.mouseClicked(x, y, mouse);
+        if (oreName.mouseClicked(x, y, mouse))
+            this.setFocused(oreName);
 
         if (oreName.isFocused() && !oreNameCleared) {
             oreName.setText("");
