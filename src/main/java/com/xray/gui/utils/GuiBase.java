@@ -46,6 +46,8 @@ public class GuiBase extends Screen {
     {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder tessellate = tessellator.getBuffer();
+
+        GlStateManager.pushMatrix();
         tessellate.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
         if ( color != null )
@@ -56,6 +58,8 @@ public class GuiBase extends Screen {
         tessellate.pos(x + width, y + 0, (double) 0).tex( 1,0).endVertex();
         tessellate.pos(x + 0, y + 0, (double) 0).tex( 0, 0).endVertex();
         tessellator.draw();
+
+        GlStateManager.popMatrix();
     }
 
     public static void drawTexturedQuadFit(double x, double y, double width, double height, int[] color) {
@@ -68,6 +72,8 @@ public class GuiBase extends Screen {
 
     @Override
     public void render(int x, int y, float partialTicks) {
+        GlStateManager.pushMatrix();
+
         if( colorBackground() == null )
             getMinecraft().getTextureManager().bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "bg.png"));
         else
@@ -94,6 +100,7 @@ public class GuiBase extends Screen {
                 getFontRender().drawStringWithShadow(title(), (float) width / 2 - ((float) this.backgroundWidth / 2 ) + 14, (float) height / 2 - ((float) this.backgroundHeight / 2) + 13, 0xffff00);
         }
 
+        GlStateManager.popMatrix();
         super.render(x, y, partialTicks);
     }
 

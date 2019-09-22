@@ -5,6 +5,7 @@ import com.xray.Configuration;
 import com.xray.XRay;
 import com.xray.reference.Reference;
 import com.xray.xray.Controller;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -22,16 +23,16 @@ public class GuiOverlay {
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void RenderGameOverlayEvent(RenderGameOverlayEvent.Post event) {
+    public static void RenderGameOverlayEvent(RenderGameOverlayEvent event) {
         // Draw Indicator
-        if(!Controller.drawOres() || !Configuration.general.showOverlay.get())
+        if(!Controller.drawOres() || !Configuration.general.showOverlay.get() || event.isCanceled() || event.getType() != RenderGameOverlayEvent.ElementType.HOTBAR )
             return;
 
-        GlStateManager.enableBlend();
-        GlStateManager.color4f(0, 255, 0, 30);
+        GlStateManager.pushMatrix();
+        GlStateManager.color3f(0, 255, 0);
         XRay.mc.getTextureManager().bindTexture(circle);
-//        Screen.drawModalRectWithCustomSizedTexture(5, 5, 0f, 0f, 5, 5, 5, 5);
-        GlStateManager.disableBlend();
+        Screen.blit(5, 5, 0f, 0f, 5, 5, 5, 5);
+        GlStateManager.popMatrix();
 
         XRay.mc.fontRenderer.drawStringWithShadow(I18n.format("xray.overlay"), 15, 4, Color.getHSBColor(0f, 0f, 1f).getRGB() + (30 << 24));
     }
