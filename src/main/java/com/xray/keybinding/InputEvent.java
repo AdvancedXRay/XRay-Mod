@@ -25,6 +25,7 @@ public class InputEvent
 			if( KeyBindings.keyBind_keys[ KeyBindings.keyIndex_toggleXray ].isPressed() )
 			{
 				Controller.toggleDrawOres();
+//				Controller.getBlockStore().getStore().entrySet().forEach(e -> System.out.printf("%s %s %s\n\n", e.getValue().getBlockName(), e.getValue().getItemStack(), e.getValue().getOrder()));
 			}
 			else if( KeyBindings.keyBind_keys[ KeyBindings.keyIndex_showXrayMenu ].isPressed() )
 			{

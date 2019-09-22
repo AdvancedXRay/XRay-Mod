@@ -12,7 +12,6 @@ import org.apache.logging.log4j.Level;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class JsonStore
@@ -41,10 +40,10 @@ public class JsonStore
             this.write(simpleBlockData);
         }
     }
-
-    public void write(HashMap<String, BlockData> blockData) {
+    
+    public void write(ArrayList<BlockData> blockData) {
         List<SimpleBlockData> simpleBlockData = new ArrayList<>();
-        blockData.forEach( (k, v) -> simpleBlockData.add(new SimpleBlockData(v.getEntryName(), v.getState(), v.getColor(), v.isDrawing(), v.getOrder())) );
+        blockData.forEach( e -> simpleBlockData.add(new SimpleBlockData(e.getEntryName(), e.getBlockName(), e.getColor(), e.isDrawing(), e.getOrder())) );
 
         this.write(simpleBlockData);
     }

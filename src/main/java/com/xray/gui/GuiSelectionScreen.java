@@ -9,7 +9,6 @@ import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.ScrollingList;
 import com.xray.reference.Reference;
 import com.xray.reference.block.BlockData;
-import com.xray.reference.block.BlockItem;
 import com.xray.utils.Utils;
 import com.xray.xray.Controller;
 import net.minecraft.block.Block;
@@ -23,6 +22,7 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
@@ -86,8 +86,7 @@ public class GuiSelectionScreen extends GuiBase {
                 return;
             }
 
-            BlockState state = Utils.getStateFromPlacement(getMinecraft().world, getMinecraft().player, handItem);
-            getMinecraft().displayGuiScreen(new GuiAddBlock(new BlockItem(Block.getStateId(state), handItem), null));
+            getMinecraft().displayGuiScreen(new GuiAddBlock(((BlockItem) handItem.getItem()).getBlock()));
         }));
         addButton(new Button(width / 2 + 79, height / 2 - 16, 120, 20, I18n.format("xray.input.add_look"), button -> {
             this.onClose();
@@ -107,7 +106,7 @@ public class GuiSelectionScreen extends GuiBase {
                     ItemStack lookingStack = lookingAt.getPickBlock(state, result, getMinecraft().world, result.getPos(), getMinecraft().player);
 
                     getMinecraft().player.closeScreen();
-                    getMinecraft().displayGuiScreen(new GuiAddBlock(new BlockItem(Block.getStateId(state), lookingStack), state));
+                    getMinecraft().displayGuiScreen(new GuiAddBlock(Block.getBlockFromItem(lookingStack.getItem())));
                 } else
                     Utils.sendMessage(getMinecraft().player, "[XRay] " + I18n.format("xray.message.nothing_infront"));
             } catch (NullPointerException ex) {
@@ -185,7 +184,7 @@ public class GuiSelectionScreen extends GuiBase {
     @Override
     public void onClose() {
         Configuration.general.radius.save();
-        XRay.blockStore.write(Controller.getBlockStore().getStore());
+        XRay.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
 
         Controller.requestBlockFinder(true);
         super.onClose();
@@ -205,12 +204,12 @@ public class GuiSelectionScreen extends GuiBase {
 
             if( GuiSelectionScreen.hasShiftDown() ) {
                 XRay.mc.player.closeScreen();
-                XRay.mc.displayGuiScreen( new GuiEdit(entry.block.getEntryKey(), entry.block) );
+                XRay.mc.displayGuiScreen( new GuiEdit(entry.block) );
                 return;
             }
 
-            Controller.getBlockStore().toggleDrawing(entry.block.getEntryKey());
-            XRay.blockStore.write(Controller.getBlockStore().getStore());
+            Controller.getBlockStore().toggleDrawing(entry.block);
+            XRay.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
         }
 
         void updateEntries(List<BlockData> blocks) {

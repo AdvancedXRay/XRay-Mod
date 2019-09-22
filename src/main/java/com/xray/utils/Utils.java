@@ -1,17 +1,10 @@
 package com.xray.utils;
 
 import com.xray.reference.block.BlockInfo;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
 
 /**
  * Created by MiKeY on 29/12/17.
@@ -28,24 +21,9 @@ public class Utils {
         player.sendMessage( new StringTextComponent(message) );
     }
 
-    /**
-     * Lazy function to auto fill some pars for getStateForPlacement
-     *
-     * @param world - mc world
-     * @param player - mc player
-     * @param stack - ItemStack
-     * @return IBlockState from {@link Block#getStateForPlacement(BlockState, Direction, BlockState, IWorld, BlockPos, BlockPos, Hand)} (World, BlockPos, EnumFacing, float, float, float, int, EntityLivingBase, EnumHand)}
-     */
-    public static BlockState getStateFromPlacement(World world, PlayerEntity player, ItemStack stack) {
-        return null;
-//        return Block.getBlockFromItem(stack.getItem()).getStateForPlacement(
-////            world, player.getPosition(), EnumFacing.NORTH, 0.1f, 0.1f, 0.1f, stack.getMetadata(), player, player.getActiveHand()
-//        );
-    }
-
     public static int clampColor(int c)
     {
-        return c < 0 ? 0 : c > 255 ? 255 : c;
+        return c < 0 ? 0 : Math.min(c, 255);
     }
 
     /**

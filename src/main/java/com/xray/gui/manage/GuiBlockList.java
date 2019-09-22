@@ -3,7 +3,7 @@ package com.xray.gui.manage;
 import com.xray.XRay;
 import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.ScrollingList;
-import com.xray.reference.block.BlockItem;
+import com.xray.store.GameBlockStore.BlockWithItemStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class GuiBlockList extends GuiBase {
     private ScrollingBlockList blockList;
-    private ArrayList<BlockItem> blocks;
+    private ArrayList<BlockWithItemStack> blocks;
     private TextFieldWidget search;
     private String lastSearched = "";
 
@@ -91,7 +91,7 @@ public class GuiBlockList extends GuiBase {
     static class ScrollingBlockList extends ScrollingList<ScrollingBlockList.BlockSlot> {
         static final int SLOT_HEIGHT = 35;
 
-        ScrollingBlockList(int x, int y, int width, int height, List<BlockItem> blocks) {
+        ScrollingBlockList(int x, int y, int width, int height, List<BlockWithItemStack> blocks) {
             super(x, y, width, height, SLOT_HEIGHT);
             this.updateEntries(blocks);
         }
@@ -102,24 +102,24 @@ public class GuiBlockList extends GuiBase {
                 return;
 
             Minecraft.getInstance().player.closeScreen();
-            Minecraft.getInstance().displayGuiScreen(new GuiAddBlock(entry.getBlock(), null));
+            Minecraft.getInstance().displayGuiScreen(new GuiAddBlock(entry.getBlock().getBlock()));
         }
 
-        void updateEntries(List<BlockItem> blocks) {
+        void updateEntries(List<BlockWithItemStack> blocks) {
             this.clearEntries();
             blocks.forEach(block -> this.addEntry(new BlockSlot(block, this)));
         }
 
         public static class BlockSlot extends AbstractList.AbstractListEntry<ScrollingBlockList.BlockSlot> {
-            BlockItem block;
+            BlockWithItemStack block;
             ScrollingBlockList parent;
 
-            BlockSlot(BlockItem block, ScrollingBlockList parent) {
+            BlockSlot(BlockWithItemStack block, ScrollingBlockList parent) {
                 this.block = block;
                 this.parent = parent;
             }
 
-            public BlockItem getBlock() {
+            public BlockWithItemStack getBlock() {
                 return block;
             }
 

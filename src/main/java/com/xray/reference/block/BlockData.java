@@ -1,39 +1,32 @@
 package com.xray.reference.block;
 
 import com.xray.utils.OutlineColor;
-import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 
 public class BlockData {
 
-    private String entryKey;
     private String entryName;
-    private BlockState state;
+    private String blockName;
     private OutlineColor color;
     private ItemStack itemStack;
     private boolean drawing;
     private int order;
 
-    public BlockData(String entryKey, String entryName, BlockState state, OutlineColor color, ItemStack itemStack, boolean drawing, int order) {
-        this.entryKey = entryKey;
+    public BlockData(String entryName, String blockName, OutlineColor color, ItemStack itemStack, boolean drawing, int order) {
         this.entryName = entryName;
-        this.state = state;
+        this.blockName = blockName;
         this.color = color;
         this.itemStack = itemStack;
         this.drawing = drawing;
         this.order = order;
     }
 
-    public String getEntryKey() {
-        return entryKey;
-    }
-
     public String getEntryName() {
         return entryName;
     }
 
-    public BlockState getState() {
-        return state;
+    public String getBlockName() {
+        return blockName;
     }
 
     public OutlineColor getColor() {

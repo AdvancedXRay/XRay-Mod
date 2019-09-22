@@ -4,8 +4,10 @@ import com.xray.Configuration;
 import com.xray.XRay;
 import com.xray.reference.block.BlockData;
 import com.xray.reference.block.BlockInfo;
+import com.xray.store.BlockStore;
 import com.xray.utils.WorldRegion;
 import net.minecraft.block.BlockState;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -14,6 +16,7 @@ import net.minecraft.world.chunk.ChunkSection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class RenderEnqueue implements Runnable
 {
@@ -34,7 +37,7 @@ public class RenderEnqueue implements Runnable
 	 * Use Controller.requestBlockFinder() to trigger a scan.
 	 */
 	private void blockFinder() {
-        HashMap<String, BlockData> blocks = Controller.getBlockStore().getStore();
+        HashMap<UUID, BlockData> blocks = Controller.getBlockStore().getStore();
         if ( blocks.isEmpty() ) {
 		    if( !Render.ores.isEmpty() )
 		        Render.ores.clear();
@@ -49,7 +52,9 @@ public class RenderEnqueue implements Runnable
 		// Used for cleaning up the searching process
 		BlockState currentState;
 		BlockState defaultState;
-		BlockData blockData;
+
+		ResourceLocation block;
+		BlockStore.BlockDataWithUUID dataWithUUID;
 
 		// Loop on chunks (x, z)
 		for ( int chunkX = box.minChunkX; chunkX <= box.maxChunkX; chunkX++ )
@@ -96,22 +101,22 @@ public class RenderEnqueue implements Runnable
 								if( Controller.blackList.contains(currentState.getBlock()) )
 									continue;
 
-								defaultState = currentState.getBlock().getDefaultState();
-
-								boolean defaultExists = blocks.containsKey(defaultState.toString());
-								boolean currentExists = blocks.containsKey(currentState.toString());
-								if( !defaultExists && !currentExists )
+								block = currentState.getBlock().getRegistryName();
+								if( block == null )
 									continue;
 
-								blockData = blocks.get(currentExists ? currentState.toString() : defaultState.toString());
-								if( blockData == null || !blockData.isDrawing() ) // fail safe
+								dataWithUUID = Controller.getBlockStore().getStoreByReference(block.toString());
+								if( dataWithUUID == null )
+									continue;
+
+								if( dataWithUUID.getBlockData() == null || !dataWithUUID.getBlockData().isDrawing() ) // fail safe
 									continue;
 
 								// Calculate distance from player to block. Fade out futher away blocks
 								double alpha = !Configuration.general.shouldFade.get() ? 255 : Math.max(0, ((Controller.getRadius() - XRay.mc.player.getDistanceSq(x + i, y + j, z + k)) / Controller.getRadius() ) * 255);
 
 								// Push the block to the render queue
-								renderQueue.add(new BlockInfo(x + i, y + j, z + k, blockData.getColor().getColor(), 255));
+								renderQueue.add(new BlockInfo(x + i, y + j, z + k, dataWithUUID.getBlockData().getColor().getColor(), 255));
 							}
 						}
 					}

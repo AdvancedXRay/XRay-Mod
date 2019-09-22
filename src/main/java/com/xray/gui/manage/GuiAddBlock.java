@@ -6,12 +6,9 @@ import com.xray.gui.GuiSelectionScreen;
 import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.GuiSlider;
 import com.xray.reference.block.BlockData;
-import com.xray.reference.block.BlockItem;
 import com.xray.utils.OutlineColor;
 import com.xray.xray.Controller;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -19,10 +16,9 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraft.item.ItemStack;
 
-import javax.annotation.Nullable;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class GuiAddBlock extends GuiBase {
@@ -31,14 +27,16 @@ public class GuiAddBlock extends GuiBase {
     private GuiSlider redSlider;
     private GuiSlider greenSlider;
     private GuiSlider blueSlider;
-    private BlockItem selectBlock;
-    private boolean oreNameCleared = false;
-    private BlockState state;
 
-    public GuiAddBlock(BlockItem selectedBlock, @Nullable BlockState state) {
+    private Block selectBlock;
+    private ItemStack itemStack;
+
+    private boolean oreNameCleared = false;
+
+    public GuiAddBlock(Block selectedBlock) {
         super(false);
         this.selectBlock = selectedBlock;
-        this.state = state;
+        this.itemStack = new ItemStack(selectBlock, 1);
     }
 
     @Override
@@ -47,26 +45,22 @@ public class GuiAddBlock extends GuiBase {
         addButton(addBtn = new Button(width / 2 - 100, height / 2 + 85, 128, 20, I18n.format("xray.single.add"), b -> {
             this.onClose();
 
-            if (this.state == null)
-                this.state = Block.getBlockFromItem(this.selectBlock.getItemStack().getItem()).getDefaultState();
+            if( selectBlock.getRegistryName() == null )
+                return;
 
             // Push the block to the render stack
             Controller.getBlockStore().put(
-                    this.state.toString(),
-
                     new BlockData(
-                            this.state.toString(),
                             oreName.getText(),
-                            this.state,
+                            selectBlock.getRegistryName().toString(),
                             new OutlineColor((int) (redSlider.getValue() * 255), (int) (greenSlider.getValue() * 255), (int) (blueSlider.getValue() * 255)),
-                            selectBlock.getItemStack(),
+                            this.itemStack,
                             true,
                             Controller.getBlockStore().getStore().size() + 1
                     )
             );
 
-            XRay.blockStore.write(Controller.getBlockStore().getStore());
-
+            XRay.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
             getMinecraft().displayGuiScreen(new GuiSelectionScreen());
         }));
         addButton(new Button(width / 2 + 30, height / 2 + 85, 72, 20, I18n.format("xray.single.cancel"), b -> this.onClose()));
@@ -80,7 +74,7 @@ public class GuiAddBlock extends GuiBase {
         blueSlider.setValue(1.0F);
 
         oreName = new TextFieldWidget(getMinecraft().fontRenderer, width / 2 - 100, height / 2 - 70, 202, 20, "");
-        oreName.setText(this.selectBlock.getItemStack().getDisplayName().getFormattedText());
+        oreName.setText(this.selectBlock.getNameTextComponent().getFormattedText());
     }
 
     @Override
@@ -109,16 +103,13 @@ public class GuiAddBlock extends GuiBase {
     @Override
     public void render(int x, int y, float f) {
         super.render(x, y, f);
-        getFontRender().drawStringWithShadow(selectBlock.getItemStack().getDisplayName().getFormattedText(), width / 2f - 100, height / 2f - 90, 0xffffff);
+        getFontRender().drawStringWithShadow(selectBlock.getNameTextComponent().toString(), width / 2f - 100, height / 2f - 90, 0xffffff);
 
         oreName.render(x, y, f);
         renderPreview(width / 2 - 100, height / 2 - 40, (float) redSlider.getValue(), (float) greenSlider.getValue(), (float) blueSlider.getValue());
 
-        if (this.state == null && this.addBtn.isMouseOver(x, y))
-            GuiUtils.drawHoveringText(Arrays.asList(I18n.format("xray.message.state_warning").split("\n")), this.addBtn.x - 30, this.addBtn.y - 45, width, height, 250, Minecraft.getInstance().fontRenderer);
-
         RenderHelper.enableGUIStandardItemLighting();
-        this.itemRenderer.renderItemAndEffectIntoGUI(selectBlock.getItemStack(), width / 2 + 85, height / 2 - 105);
+        this.itemRenderer.renderItemAndEffectIntoGUI(this.itemStack, width / 2 + 85, height / 2 - 105);
         RenderHelper.disableStandardItemLighting();
     }
 

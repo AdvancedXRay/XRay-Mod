@@ -4,6 +4,7 @@ import com.xray.XRay;
 import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.GuiSlider;
 import com.xray.reference.block.BlockData;
+import com.xray.store.BlockStore;
 import com.xray.utils.OutlineColor;
 import com.xray.xray.Controller;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -11,45 +12,48 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 
+import java.util.ArrayList;
+
 public class GuiEdit extends GuiBase {
     private TextFieldWidget oreName;
     private GuiSlider redSlider;
     private GuiSlider greenSlider;
     private GuiSlider blueSlider;
     private BlockData block;
-    private String storeKey;
 
-    public GuiEdit(String storeKey, BlockData block) {
+    public GuiEdit(BlockData block) {
         super(true); // Has a sidebar
         this.setSideTitle(I18n.format("xray.single.tools"));
 
-        this.storeKey = storeKey;
         this.block = block;
     }
 
     @Override
     public void init() {
         addButton(new Button((width / 2) + 78, height / 2 - 60, 120, 20, I18n.format("xray.single.delete"), b -> {
-            Controller.getBlockStore().getStore().remove(this.storeKey);
-            XRay.blockStore.write(Controller.getBlockStore().getStore());
+            BlockStore.BlockDataWithUUID data = Controller.getBlockStore().getStoreByReference(block.getBlockName());
+            Controller.getBlockStore().getStore().remove(data.getUuid());
+            XRay.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
+
             this.onClose();
         }));
         addButton(new Button((width / 2) + 78, height / 2 + 58, 120, 20, I18n.format("xray.single.cancel"), b -> this.onClose()));
         addButton(new Button(width / 2 - 138, height / 2 + 83, 202, 20, I18n.format("xray.single.save"), b -> {
             BlockData block = new BlockData(
-                    this.storeKey,
                     this.oreName.getText(),
-                    this.block.getState(),
+                    this.block.getBlockName(),
                     new OutlineColor((int) (redSlider.getValue() * 255), (int) (greenSlider.getValue() * 255), (int) (blueSlider.getValue() * 255)),
                     this.block.getItemStack(),
                     this.block.isDrawing(),
                     this.block.getOrder()
             );
 
-            Controller.getBlockStore().getStore().remove(this.storeKey);
-            Controller.getBlockStore().getStore().put(this.storeKey, block);
+            BlockStore.BlockDataWithUUID data = Controller.getBlockStore().getStoreByReference(block.getBlockName());
+            Controller.getBlockStore().getStore().remove(data.getUuid());
 
-            XRay.blockStore.write(Controller.getBlockStore().getStore());
+            Controller.getBlockStore().getStore().put(data.getUuid(), block);
+
+            XRay.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
             this.onClose();
         }));
 

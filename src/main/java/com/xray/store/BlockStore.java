@@ -1,17 +1,13 @@
 package com.xray.store;
 
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.xray.reference.block.BlockData;
 import com.xray.reference.block.SimpleBlockData;
-import net.minecraft.block.BlockState;
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class BlockStore {
 
@@ -29,56 +25,66 @@ public class BlockStore {
         }
     };
 
-    private HashMap<String, BlockData> store = new HashMap<>();
+    private HashMap<UUID, BlockData> store = new HashMap<>();
+    private HashMap<String, UUID>    storeReference = new HashMap<>();
 
-    public void put(String key, BlockData data) {
-        if (this.store.containsKey(key))
+    public void put(BlockData data) {
+        UUID uniqueId = UUID.randomUUID();
+        this.store.put(uniqueId, data);
+        this.storeReference.put(data.getBlockName(), uniqueId);
+    }
+
+    public HashMap<UUID, BlockData> getStore() {
+        return store;
+    }
+
+    public void setStore(ArrayList<BlockData> store) {
+        this.store.clear();
+        this.storeReference.clear();
+
+        store.forEach(this::put);
+    }
+
+    public BlockDataWithUUID getStoreByReference(String name) {
+        UUID uniqueId = storeReference.get(name);
+        if( uniqueId == null )
+            return null;
+
+        BlockData blockData = this.store.get(uniqueId);
+        if( blockData == null )
+            return null;
+
+        return new BlockDataWithUUID(blockData, uniqueId);
+    }
+
+    public void toggleDrawing(BlockData data) {
+        UUID uniqueId = storeReference.get(data.getBlockName());
+        if( uniqueId == null )
             return;
 
-        this.store.put(key, data);
-    }
-
-    public HashMap<String, BlockData> getStore() {
-        return this.store;
-    }
-
-    public void setStore(HashMap<String, BlockData> store) {
-        this.store = store;
-    }
-
-    public void toggleDrawing(String key ) {
-        if( !this.store.containsKey(key) )
+        // We'd hope this never happens...
+        BlockData blockData = this.store.get(uniqueId);
+        if( blockData == null )
             return;
 
-        BlockData data = this.store.get(key);
-        data.setDrawing(!data.isDrawing());
+        blockData.setDrawing(!blockData.isDrawing());
     }
 
-    public static HashMap<String, BlockData> getFromSimpleBlockList(List<SimpleBlockData> simpleList)
+    public static ArrayList<BlockData> getFromSimpleBlockList(List<SimpleBlockData> simpleList)
     {
-        HashMap<String, BlockData> blockData = new HashMap<>();
+        ArrayList<BlockData> blockData = new ArrayList<>();
 
         for (SimpleBlockData e : simpleList) {
-            CompoundNBT compound = null;
-
-            try {
-                compound = JsonToNBT.getTagFromJson(e.getStateString());
-            } catch (CommandSyntaxException ex) {
-                ex.printStackTrace();
-            }
-
-            if(compound == null)
+            Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(e.getBlockName()));
+            if( block == null )
                 continue;
 
-            BlockState state = NBTUtil.readBlockState(compound);
-            blockData.put(
-                    e.getStateString(),
+            blockData.add(
                     new BlockData(
-                            e.getStateString(),
                             e.getName(),
-                            state,
+                            e.getBlockName(),
                             e.getColor(),
-                            new ItemStack( state.getBlock(), 1),
+                            new ItemStack( block, 1),
                             e.isDrawing(),
                             e.getOrder()
                     )
@@ -88,4 +94,21 @@ public class BlockStore {
         return blockData;
     }
 
+    public static final class BlockDataWithUUID {
+        BlockData blockData;
+        UUID uuid;
+
+        public BlockDataWithUUID(BlockData blockData, UUID uuid) {
+            this.blockData = blockData;
+            this.uuid = uuid;
+        }
+
+        public BlockData getBlockData() {
+            return blockData;
+        }
+
+        public UUID getUuid() {
+            return uuid;
+        }
+    }
 }

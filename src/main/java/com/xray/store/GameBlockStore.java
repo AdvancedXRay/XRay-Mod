@@ -1,6 +1,5 @@
 package com.xray.store;
 
-import com.xray.reference.block.BlockItem;
 import com.xray.xray.Controller;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 
 public class GameBlockStore {
 
-    private ArrayList<com.xray.reference.block.BlockItem> store = new ArrayList<>();
+    private ArrayList<BlockWithItemStack> store = new ArrayList<>();
 
     /**
      * This method is used to fill the store as we do not intend to update this after
@@ -34,7 +33,7 @@ public class GameBlockStore {
             if ( item == Items.AIR || block == Blocks.AIR || Controller.blackList.contains(block) )
                 continue; // avoids troubles
 
-            store.add(new BlockItem(Block.getStateId(Block.getBlockFromItem(item.getItem()).getDefaultState()), new ItemStack(item)));
+            store.add(new BlockWithItemStack(block, new ItemStack(item)));
         }
 
         System.out.println(store.size());
@@ -46,7 +45,25 @@ public class GameBlockStore {
         this.populate();
     }
 
-    public ArrayList<com.xray.reference.block.BlockItem> getStore() {
+    public ArrayList<BlockWithItemStack> getStore() {
         return this.store;
+    }
+
+    public static final class BlockWithItemStack {
+        private Block block;
+        private ItemStack itemStack;
+
+        public BlockWithItemStack(Block block, ItemStack itemStack) {
+            this.block = block;
+            this.itemStack = itemStack;
+        }
+
+        public Block getBlock() {
+            return block;
+        }
+
+        public ItemStack getItemStack() {
+            return itemStack;
+        }
     }
 }
