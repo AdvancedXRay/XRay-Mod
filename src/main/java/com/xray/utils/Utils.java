@@ -3,12 +3,8 @@ package com.xray.utils;
 import com.xray.reference.block.BlockInfo;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 
-/**
- * Created by MiKeY on 29/12/17.
- */
 public class Utils {
 
     /**
@@ -21,15 +17,8 @@ public class Utils {
         player.sendMessage( new StringTextComponent(message) );
     }
 
-    public static int clampColor(int c)
-    {
-        return c < 0 ? 0 : Math.min(c, 255);
-    }
-
     /**
      * Renders a bounding box around a specific block.
-     * Could be done better and should use {@link net.minecraft.util.math.AxisAlignedBB#AxisAlignedBB(BlockPos)}
-     * logically...
      *
      * @param buffer render buffer
      * @param b Block Information

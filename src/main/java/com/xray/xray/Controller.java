@@ -21,6 +21,7 @@ public class Controller
     private static final int[] distanceList = new int[] {8, 16, 32, 48, 64, 80, 128, 256};
 
     // Block blackList
+	// Todo: move this to a configurable thing
 	public static ArrayList blackList = new ArrayList<Block>() {{
 		add(Blocks.AIR);
 		add(Blocks.BEDROCK);
