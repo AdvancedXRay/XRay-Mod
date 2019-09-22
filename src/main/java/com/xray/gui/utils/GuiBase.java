@@ -16,6 +16,9 @@ import java.awt.*;
 
 public class GuiBase extends Screen {
 
+    public static final ResourceLocation BG_NORMAL = new ResourceLocation(Reference.PREFIX_GUI + "bg.png");
+    public static final ResourceLocation BG_LARGE = new ResourceLocation(Reference.PREFIX_GUI + "bg-help.png");
+
     private boolean hasSide;
     private String sideTitle = "";
     private int backgroundWidth = 229;
@@ -74,25 +77,19 @@ public class GuiBase extends Screen {
     public void render(int x, int y, float partialTicks) {
         GlStateManager.pushMatrix();
 
-        if( colorBackground() == null )
-            getMinecraft().getTextureManager().bindTexture(new ResourceLocation(Reference.PREFIX_GUI + "bg.png"));
-        else
-            GlStateManager.disableTexture();
-
+        getMinecraft().getTextureManager().bindTexture(getBackground());
         if( this.hasSide ) {
-            drawTexturedQuadFit((double) width / 2 + 60, (float) height / 2 -((float) 180/2), 150, 180, colorBackground());
-            drawTexturedQuadFit((float) width / 2 - 150, (float) height / 2 - 118, this.backgroundWidth, this.backgroundHeight, colorBackground());
+            drawTexturedQuadFit((double) width / 2 + 60, (float) height / 2 -((float) 180/2), 150, 180, Color.WHITE);
+            drawTexturedQuadFit((float) width / 2 - 150, (float) height / 2 - 118, this.backgroundWidth, this.backgroundHeight, Color.WHITE);
 
             if( hasSideTitle() )
                 getFontRender().drawStringWithShadow(this.sideTitle, (float) width / 2 + 80, (float) height / 2 - 77, 0xffff00);
         }
 
         if( !this.hasSide )
-            drawTexturedQuadFit((float) width / 2 - ((float) this.backgroundWidth / 2) + 1, (float) height / 2 - ((float) this.backgroundHeight / 2), this.backgroundWidth, this.backgroundHeight, colorBackground());
+            drawTexturedQuadFit((float) width / 2 - ((float) this.backgroundWidth / 2) + 1, (float) height / 2 - ((float) this.backgroundHeight / 2), this.backgroundWidth, this.backgroundHeight, Color.WHITE);
 
-        if( colorBackground() != null )
-            GlStateManager.enableTexture();
-
+        GlStateManager.enableTexture();
         if( hasTitle() ) {
             if( this.hasSide )
                 getFontRender().drawStringWithShadow(title(), (float) width / 2 - 138, (float) height / 2 - 105, 0xffff00);
@@ -104,9 +101,8 @@ public class GuiBase extends Screen {
         super.render(x, y, partialTicks);
     }
 
-
-    public Color colorBackground() {
-        return null;
+    public ResourceLocation getBackground() {
+        return BG_NORMAL;
     }
 
     public boolean hasTitle() {

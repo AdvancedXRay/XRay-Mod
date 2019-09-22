@@ -43,7 +43,6 @@ public class XRay
 
 		eventBus.addListener(this::onSetup);
 		eventBus.addListener(this::onLoadComplete);
-//		eventBus.addListener(this::onConfigChanged);
 		eventBus.addListener(this::onExit);
 	}
 
@@ -72,12 +71,4 @@ public class XRay
 	{
 		Controller.shutdownExecutor();
 	}
-
-//	private void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
-//	{
-//		if (event.getModID().equals(Reference.MOD_ID))
-//		{
-////			Config.sync(Reference.MOD_ID, Config.Type.INSTANCE);
-//		}
-//	}
 }
