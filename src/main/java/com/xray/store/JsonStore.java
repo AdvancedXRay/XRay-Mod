@@ -2,6 +2,7 @@ package com.xray.store;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.xray.XRay;
 import com.xray.reference.Reference;
@@ -68,6 +69,9 @@ public class JsonStore
             try (BufferedReader reader = new BufferedReader(new FileReader(jsonFile)))
             {
                 return gson.fromJson(reader, type);
+            }
+            catch (JsonSyntaxException ex) {
+                XRay.logger.log(Level.ERROR, "Failed to read json data from " + FILE);
             }
         }
         catch (IOException e)

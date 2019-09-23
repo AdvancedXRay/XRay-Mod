@@ -78,7 +78,17 @@ public class BlockStore {
         ArrayList<BlockData> blockData = new ArrayList<>();
 
         for (SimpleBlockData e : simpleList) {
-            Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(e.getBlockName()));
+            if( e == null )
+                continue;
+
+            ResourceLocation location = null;
+            try {
+                location = new ResourceLocation(e.getBlockName());
+            } catch (Exception ignored) {};
+            if( location == null )
+                continue;
+
+            Block block = ForgeRegistries.BLOCKS.getValue(location);
             if( block == null )
                 continue;
 
