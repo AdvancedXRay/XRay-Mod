@@ -1,21 +1,18 @@
 package com.xray.store;
 
-import com.xray.reference.block.BlockItem;
 import com.xray.xray.Controller;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraft.item.Items;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 
 public class GameBlockStore {
 
-    private ArrayList<BlockItem> store = new ArrayList<>();
+    private ArrayList<BlockWithItemStack> store = new ArrayList<>();
 
     /**
      * This method is used to fill the store as we do not intend to update this after
@@ -29,30 +26,14 @@ public class GameBlockStore {
             return;
 
         for ( Item item : ForgeRegistries.ITEMS ) {
-
-            if( !(item instanceof ItemBlock) )
+            if( !(item instanceof net.minecraft.item.BlockItem) )
                 continue;
 
             Block block = Block.getBlockFromItem(item);
-            if ( item == Items.AIR || block == Blocks.AIR )
+            if ( item == Items.AIR || block == Blocks.AIR || Controller.blackList.contains(block) )
                 continue; // avoids troubles
 
-            if( item.getHasSubtypes() && item.getCreativeTab() != null ) {
-                NonNullList<ItemStack> subItems = NonNullList.create();
-                item.getSubItems(item.getCreativeTab(), subItems);
-                for (ItemStack subItem : subItems) {
-                    if (subItem.equals(ItemStack.EMPTY) || subItem.getItem() == Items.AIR || Controller.blackList.contains(block))
-                        continue;
-
-                    store.add(new BlockItem(Block.getStateId(Block.getBlockFromItem(subItem.getItem()).getBlockState().getBaseState()), subItem));
-                }
-            }
-            else {
-                if( Controller.blackList.contains(block) )
-                    continue;
-
-                store.add(new BlockItem(Block.getStateId(block.getBlockState().getBaseState()), new ItemStack(item)));
-            }
+            store.add(new BlockWithItemStack(block, new ItemStack(item)));
         }
     }
 
@@ -62,7 +43,25 @@ public class GameBlockStore {
         this.populate();
     }
 
-    public ArrayList<BlockItem> getStore() {
+    public ArrayList<BlockWithItemStack> getStore() {
         return this.store;
+    }
+
+    public static final class BlockWithItemStack {
+        private Block block;
+        private ItemStack itemStack;
+
+        public BlockWithItemStack(Block block, ItemStack itemStack) {
+            this.block = block;
+            this.itemStack = itemStack;
+        }
+
+        public Block getBlock() {
+            return block;
+        }
+
+        public ItemStack getItemStack() {
+            return itemStack;
+        }
     }
 }

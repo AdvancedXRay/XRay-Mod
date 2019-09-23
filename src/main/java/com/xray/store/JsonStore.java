@@ -2,24 +2,23 @@ package com.xray.store;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.xray.XRay;
 import com.xray.reference.Reference;
 import com.xray.reference.block.BlockData;
 import com.xray.reference.block.SimpleBlockData;
-import net.minecraft.block.Block;
 import org.apache.logging.log4j.Level;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class JsonStore
 {
     private static final String FILE = "block_store.json";
-    private static final String CONFIG_DIR = XRay.mc.mcDataDir + "/config/";
+    private static final String CONFIG_DIR = XRay.mc.gameDir + "/config/";
 
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -42,10 +41,10 @@ public class JsonStore
             this.write(simpleBlockData);
         }
     }
-
-    public void write(HashMap<String, BlockData> blockData) {
+    
+    public void write(ArrayList<BlockData> blockData) {
         List<SimpleBlockData> simpleBlockData = new ArrayList<>();
-        blockData.forEach( (k, v) -> simpleBlockData.add(new SimpleBlockData(v.getEntryName(), k, v.getStateId(), v.getColor(), v.isDrawing(), v.getOrder())) );
+        blockData.forEach( e -> simpleBlockData.add(new SimpleBlockData(e.getEntryName(), e.getBlockName(), e.getColor(), e.isDrawing(), e.getOrder())) );
 
         this.write(simpleBlockData);
     }
@@ -70,6 +69,9 @@ public class JsonStore
             try (BufferedReader reader = new BufferedReader(new FileReader(jsonFile)))
             {
                 return gson.fromJson(reader, type);
+            }
+            catch (JsonSyntaxException ex) {
+                XRay.logger.log(Level.ERROR, "Failed to read json data from " + FILE);
             }
         }
         catch (IOException e)

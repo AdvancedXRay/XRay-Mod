@@ -4,14 +4,19 @@ import com.xray.Configuration;
 import com.xray.XRay;
 import com.xray.reference.block.BlockData;
 import com.xray.reference.block.BlockInfo;
+import com.xray.store.BlockStore;
 import com.xray.utils.WorldRegion;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraft.world.chunk.ChunkSection;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 public class RenderEnqueue implements Runnable
 {
@@ -32,9 +37,8 @@ public class RenderEnqueue implements Runnable
 	 * Use Controller.requestBlockFinder() to trigger a scan.
 	 */
 	private void blockFinder() {
-        HashMap<String, BlockData> blocks = Controller.getBlockStore().getStore();
-
-		if ( blocks.isEmpty() ) {
+        HashMap<UUID, BlockData> blocks = Controller.getBlockStore().getStore();
+        if ( blocks.isEmpty() ) {
 		    if( !Render.ores.isEmpty() )
 		        Render.ores.clear();
             return; // no need to scan the region if there's nothing to find
@@ -46,9 +50,11 @@ public class RenderEnqueue implements Runnable
 		int lowBoundX, highBoundX, lowBoundY, highBoundY, lowBoundZ, highBoundZ;
 
 		// Used for cleaning up the searching process
-		IBlockState currentState;
-		IBlockState defaultState;
-		BlockData blockData;
+		BlockState currentState;
+		BlockState defaultState;
+
+		ResourceLocation block;
+		BlockStore.BlockDataWithUUID dataWithUUID;
 
 		// Loop on chunks (x, z)
 		for ( int chunkX = box.minChunkX; chunkX <= box.maxChunkX; chunkX++ )
@@ -61,11 +67,12 @@ public class RenderEnqueue implements Runnable
 			for ( int chunkZ = box.minChunkZ; chunkZ <= box.maxChunkZ; chunkZ++ )
 			{
 				// Time to getStore the chunk (16x256x16) and split it into 16 vertical extends (16x16x16)
-				Chunk chunk = world.getChunkFromChunkCoords( chunkX, chunkZ );
-				if (!chunk.isLoaded()) {
+				if (!world.chunkExists(chunkX, chunkZ)) {
 					continue; // We won't find anything interesting in unloaded chunks
 				}
-				ExtendedBlockStorage[] extendsList = chunk.getBlockStorageArray();
+
+				Chunk chunk = world.getChunk( chunkX, chunkZ );
+				ChunkSection[] extendsList = chunk.getSections();
 
 				// Pre-compute the extend bounds on Z
 				int z = chunkZ << 4;
@@ -75,7 +82,7 @@ public class RenderEnqueue implements Runnable
 				// Loop on the extends around the player's layer (6 down, 2 up)
 				for ( int curExtend = box.minChunkY; curExtend <= box.maxChunkY; curExtend++ )
 				{
-					ExtendedBlockStorage ebs = extendsList[curExtend];
+					ChunkSection ebs = extendsList[curExtend];
 					if (ebs == null) // happens quite often!
 						continue;
 
@@ -88,28 +95,28 @@ public class RenderEnqueue implements Runnable
 					for ( int i = lowBoundX; i <= highBoundX; i++ ) {
 						for ( int j = lowBoundY; j <= highBoundY; j++ ) {
 							for ( int k = lowBoundZ; k <= highBoundZ; k++ ) {
-								currentState = ebs.get(i, j, k);
+								currentState = ebs.getBlockState(i, j, k);
 
 								// Reject blacklisted blocks
 								if( Controller.blackList.contains(currentState.getBlock()) )
 									continue;
 
-								defaultState = currentState.getBlock().getDefaultState();
-
-								boolean defaultExists = blocks.containsKey(defaultState.toString());
-								boolean currentExists = blocks.containsKey(currentState.toString());
-								if( !defaultExists && !currentExists )
+								block = currentState.getBlock().getRegistryName();
+								if( block == null )
 									continue;
 
-								blockData = blocks.get(currentExists ? currentState.toString() : defaultState.toString());
-								if( blockData == null || !blockData.isDrawing() ) // fail safe
+								dataWithUUID = Controller.getBlockStore().getStoreByReference(block.toString());
+								if( dataWithUUID == null )
+									continue;
+
+								if( dataWithUUID.getBlockData() == null || !dataWithUUID.getBlockData().isDrawing() ) // fail safe
 									continue;
 
 								// Calculate distance from player to block. Fade out futher away blocks
-								double alpha = !Configuration.shouldFade ? 255 : Math.max(0, ((Controller.getRadius() - XRay.mc.player.getDistance(x + i, y + j, z + k)) / Controller.getRadius() ) * 255);
+								double alpha = !Configuration.general.shouldFade.get() ? 255 : Math.max(0, ((Controller.getRadius() - XRay.mc.player.getDistanceSq(x + i, y + j, z + k)) / Controller.getRadius() ) * 255);
 
 								// Push the block to the render queue
-								renderQueue.add(new BlockInfo(x + i, y + j, z + k, blockData.getColor().getColor(), alpha));
+								renderQueue.add(new BlockInfo(x + i, y + j, z + k, dataWithUUID.getBlockData().getColor().getColor(), 255));
 							}
 						}
 					}
@@ -129,7 +136,7 @@ public class RenderEnqueue implements Runnable
 	 * @param state the current state of the block
 	 * @param add true if the block was added to world, false if it was removed
 	 */
-	public static void checkBlock( BlockPos pos, IBlockState state, boolean add )
+	public static void checkBlock(BlockPos pos, BlockState state, boolean add )
 	{
 		if ( !Controller.drawOres() || Controller.getBlockStore().getStore().isEmpty() )
 		    return; // just pass
@@ -152,7 +159,7 @@ public class RenderEnqueue implements Runnable
             if( data == null )
             	return;
 
-			double alpha = !Configuration.shouldFade ? 255 : Math.max(0, ((Controller.getRadius() - XRay.mc.player.getDistance(pos.getX(), pos.getY(), pos.getZ())) / Controller.getRadius() ) * 255);
+			double alpha = !Configuration.general.shouldFade.get() ? 255 : Math.max(0, ((Controller.getRadius() - XRay.mc.player.getDistanceSq(pos.getX(), pos.getY(), pos.getZ())) / Controller.getRadius() ) * 255);
 
             // the block was added to the world, let's add it to the drawing buffer
             Render.ores.add( new BlockInfo(pos, data.getColor().getColor(), alpha) );

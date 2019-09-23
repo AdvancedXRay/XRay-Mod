@@ -1,0 +1,30 @@
+{
+  "xray.debug.init": "XRay initialisé",
+
+  "xray.single.cancel": "Annuler",
+  "xray.single.add": "Ajouter",
+  "xray.single.delete": "Supprimer",
+  "xray.single.save": "Sauvegarder",
+
+  "xray.color.red": "Rouge",
+  "xray.color.green": "Vert",
+  "xray.color.blue": "Bleu",
+
+  "xray.input.gui": "Nom GUI",
+  "xray.input.add": "Ajouter un minerai",
+  "xray.input.distance": "Distance",
+  "xray.input.toggle_oredict": "Substitutions",
+
+  "xray.title.config": "Configurer le bloc",
+  "xray.title.edit": "Modifier le bloc",
+
+  "xray.message.missing_input": "Toutes les entrées doivent être remplies.",
+  "xray.message.already_exists": "Ce bloc a déjà été ajouté à la liste des blocs",
+  "xray.message.added_block": "%s a été ajouté avec succès.",
+  "xray.message.unknown": "On dirait que le bloc que vous avez essayé de modifier n'existe pas.",
+  "xray.message.removed": "%s a été retiré avec succès.",
+  "xray.message.config_missing": "Le fichier de configuration est introuvable. Création en cours.",
+
+  "xray.config.toggle": "Activer XRay",
+  "xray.config.open": "Ouvrir le menu de XRay"
+}

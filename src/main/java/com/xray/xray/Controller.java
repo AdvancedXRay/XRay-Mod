@@ -4,12 +4,11 @@ import com.xray.Configuration;
 import com.xray.XRay;
 import com.xray.store.BlockStore;
 import com.xray.utils.WorldRegion;
-
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -22,6 +21,7 @@ public class Controller
     private static final int[] distanceList = new int[] {8, 16, 32, 48, 64, 80, 128, 256};
 
     // Block blackList
+	// Todo: move this to a configurable thing
 	public static ArrayList blackList = new ArrayList<Block>() {{
 		add(Blocks.AIR);
 		add(Blocks.BEDROCK);
@@ -60,34 +60,34 @@ public class Controller
 			drawOres = true; // then, enable drawing
 			requestBlockFinder( true ); // finally, force a refresh
 
-			if( !Configuration.showOverlay )
-				XRay.mc.player.sendMessage( new TextComponentString(I18n.format("xray.toggle.activated")) );
+			if( !Configuration.general.showOverlay.get() )
+				XRay.mc.player.sendMessage( new StringTextComponent(I18n.format("xray.toggle.activated")) );
 		}
 		else // disable drawing
 		{
-			if( !Configuration.showOverlay )
-				XRay.mc.player.sendMessage( new TextComponentString(I18n.format("xray.toggle.deactivated")) );
+			if( !Configuration.general.showOverlay.get() )
+				XRay.mc.player.sendMessage( new StringTextComponent(I18n.format("xray.toggle.deactivated")) );
 
 			shutdownExecutor();
 		}
 	}
 
-	public static int getRadius() { return distanceList[Configuration.radius]; }
+	public static int getRadius() { return distanceList[Configuration.general.radius.get()]; }
 
 	public static void incrementCurrentDist()
 	{
-		if ( Configuration.radius < distanceList.length - 1 )
-			Configuration.radius++;
+		if ( Configuration.general.radius.get() < distanceList.length - 1 )
+			Configuration.general.radius.set(Configuration.general.radius.get() + 1);
 		else
-			Configuration.radius = 0;
+			Configuration.general.radius.set(0);
 	}
 
 	public static void decrementCurrentDist()
 	{
-		if ( Configuration.radius > 0 )
-			Configuration.radius--;
+		if ( Configuration.general.radius.get() > 0 )
+			Configuration.general.radius.set(Configuration.general.radius.get() - 1);
 		else
-			Configuration.radius = distanceList.length - 1;
+			Configuration.general.radius.set( distanceList.length - 1 );
 	}
 
 	/**

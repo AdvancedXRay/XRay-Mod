@@ -1,10 +1,9 @@
 package com.xray.gui;
 
-import com.xray.XRay;
 import com.xray.gui.utils.GuiBase;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -19,20 +18,19 @@ public class GuiHelp extends GuiBase {
     private List<LinedText> areas = new ArrayList<>();
 
     @Override
-    public void initGui() {
-        super.initGui();
+    public void init() {
+        super.init();
 
         areas.clear();
-        areas.add(new LinedText("xray.message.help.state"));
         areas.add(new LinedText("xray.message.help.gui"));
         areas.add(new LinedText("xray.message.help.warning"));
 
-        this.addButton(new GuiButton(1, (width / 2) - 100, (height / 2) + 80, I18n.format("xray.single.close")));
+        this.addButton(new Button((width / 2) - 100, (height / 2) + 80, 200, 20, I18n.format("xray.single.close"), b -> this.onClose()));
     }
 
     @Override
-    public void drawScreen(int x, int y, float f) {
-        super.drawScreen(x, y, f);
+    public void render(int x, int y, float partialTicks) {
+        super.render(x, y, partialTicks);
 
         float lineY = (height / 2f) - 85;
         for (LinedText linedText : areas) {
@@ -45,21 +43,13 @@ public class GuiHelp extends GuiBase {
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) {
-        if (button.id == 1) {
-            XRay.mc.player.closeScreen();
-            XRay.mc.displayGuiScreen(new GuiSelectionScreen());
-        }
-    }
-
-    @Override
     public boolean hasTitle() {
         return true;
     }
 
     @Override
-    public Color colorBackground() {
-        return Color.LIGHT_GRAY;
+    public ResourceLocation getBackground() {
+        return BG_LARGE;
     }
 
     @Override
@@ -70,11 +60,11 @@ public class GuiHelp extends GuiBase {
     private static class LinedText {
         private String[] lines;
 
-        public LinedText(String key) {
-            this.lines = I18n.format(key).split("\n");
+        LinedText(String key) {
+            this.lines = I18n.format(key).split("\\R");
         }
 
-        public String[] getLines() {
+        String[] getLines() {
             return lines;
         }
     }

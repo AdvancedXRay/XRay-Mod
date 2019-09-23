@@ -1,21 +1,10 @@
 package com.xray.utils;
 
 import com.xray.reference.block.BlockInfo;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.World;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.StringTextComponent;
 
-/**
- * Created by MiKeY on 29/12/17.
- */
 public class Utils {
 
     /**
@@ -24,33 +13,12 @@ public class Utils {
      * @param player Minecraft Player
      * @param message String Message
      */
-    public static void sendMessage(EntityPlayerSP player, String message) {
-        player.sendMessage( new TextComponentString(message) );
-    }
-
-    /**
-     * Lazy function to auto fill some pars for getStateForPlacement
-     *
-     * @param world - mc world
-     * @param player - mc player
-     * @param stack - ItemStack
-     * @return IBlockState from {@link Block#getStateForPlacement(World, BlockPos, EnumFacing, float, float, float, int, EntityLivingBase, EnumHand)}
-     */
-    public static IBlockState getStateFromPlacement(World world, EntityLivingBase player, ItemStack stack) {
-        return Block.getBlockFromItem(stack.getItem()).getStateForPlacement(
-            world, player.getPosition(), EnumFacing.NORTH, 0.1f, 0.1f, 0.1f, stack.getMetadata(), player, player.getActiveHand()
-        );
-    }
-
-    public static int clampColor(int c)
-    {
-        return c < 0 ? 0 : c > 255 ? 255 : c;
+    public static void sendMessage(PlayerEntity player, String message) {
+        player.sendMessage( new StringTextComponent(message) );
     }
 
     /**
      * Renders a bounding box around a specific block.
-     * Could be done better and should use {@link net.minecraft.util.math.AxisAlignedBB#AxisAlignedBB(BlockPos)}
-     * logically...
      *
      * @param buffer render buffer
      * @param b Block Information

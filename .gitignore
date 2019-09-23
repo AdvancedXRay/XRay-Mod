@@ -23,10 +23,6 @@ run
 
 CREDITS-fml.txt
 *.txt
-gradle/wrapper/gradle-wrapper.jar
-gradle/wrapper/gradle-wrapper.properties
-gradlew
-gradlew.bat
-gradle.properties
 
 classes/
+.DS_Store
