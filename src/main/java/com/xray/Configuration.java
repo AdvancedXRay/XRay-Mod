@@ -1,21 +1,10 @@
 package com.xray;
 
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.xray.reference.Reference;
 import net.minecraftforge.common.ForgeConfigSpec;
-
-import java.nio.file.Paths;
 
 public class Configuration
 {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
-
-    public static void load()
-    {
-        SPEC.setConfig(CommentedFileConfig
-                .builder(Paths.get("config", Reference.MOD_ID + ".toml"))
-                .build());
-    }
 
     public static final General general = new General();
     public static class General
@@ -55,5 +44,5 @@ public class Configuration
         }
     }
 
-    private static final ForgeConfigSpec SPEC = BUILDER.build();
+    public static final ForgeConfigSpec SPEC = BUILDER.build();
 }
