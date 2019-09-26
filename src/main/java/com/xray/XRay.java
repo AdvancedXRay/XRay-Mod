@@ -14,7 +14,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
@@ -46,6 +48,8 @@ public class XRay
 		eventBus.addListener(this::onLoadComplete);
 		eventBus.addListener(this::onExit);
 
+		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configuration.SPEC);
+
 		// Keybindings
 		MinecraftForge.EVENT_BUS.register(KeyBindings.class);
 	}
@@ -54,10 +58,6 @@ public class XRay
 		logger.debug(I18n.format("xray.debug.init"));
 
 		KeyBindings.setup();
-
-		// Load the config
-		Configuration.load();
-
 		List<SimpleBlockData> data = blockStore.read();
 		if( data.isEmpty() )
 			return;
