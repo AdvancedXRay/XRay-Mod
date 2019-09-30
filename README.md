@@ -2,22 +2,24 @@
 # XRay Mod - [![Forge Downloads](http://cf.way2muchnoise.eu/advanced-xray.svg)](https://mods.curse.com/mc-mods/minecraft/256256-advanced-xray) [![Forge Available For](http://cf.way2muchnoise.eu/versions/advanced-xray.svg)](https://mods.curse.com/mc-mods/minecraft/256256-advanced-xray)
 Minecraft Forge based XRay mod designed to aid players who don't like the ore searching process.
 
-### Help wanted
-I'm extreamly busy as of late, because of this I'd like to attempt to find someone willing to help maintain this project as it's a passions project for me and would hate to see it go downhill. Please contact me at hello.michaelhillcox@gmail.com, on Discord: MiKeY#3704 or anything from https://mikey.pro if you're intrested in helping out :D
+### Feature
+- Built using Forge ⚒
+- Clean UI For Adding, Deleting and Editing the blocks you want to X-Ray
+- Full RGB Colour selector
+- Searchable List to find Blocks
+- Add Blocks from your hand
+- Add Blocks you're looking at! 
+- Searchable list of blocks you've added
+- Json store for the blocks you've added. Easy to edit and share!
 
-### Feature:
-- Built using Forge!
-- Simple and Clean UI For Adding, Deleting and Editing the blocks you want to see
-    - Full RGB Colour selector
-    - Searchable List to find Blocks
-    - Add Blocks from your hand
-    - Add Blocks you're looking at! 
-    - Rightclick Editing with support for custom Meta Data
-- Ore Dictionary Support
-    - Partial! Requires more work but it can do some mods ores. 
-    - Looks for help with this feature
+### Todo
+- Mob support
+- Show near lava / water
+   - Support for fluids now it's a new system in 1.14
+- Simpler color selector
+- Complete rewrite.
 
-### How to use:
+### How to use
 #### Using XRay
 - Press `[Default] Backslash` to toggle Xray on and off
 - Press `[Default] Z` to open the in-game GUI
@@ -30,7 +32,7 @@ I'm extreamly busy as of late, because of this I'd like to attempt to find someo
 - Right click on any item in the GUI and edit as needed
 - Click save and the changed will be applied
 
-### Previews:
+### Previews
 The [Imgur Album](http://imgur.com/a/23dX5)
 ![XRAY](http://i.imgur.com/N3KOEaE.png)
 
