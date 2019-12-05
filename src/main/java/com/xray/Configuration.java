@@ -11,7 +11,6 @@ public class Configuration
     {
         public final ForgeConfigSpec.IntValue radius;
         public final ForgeConfigSpec.BooleanValue showOverlay;
-        public final ForgeConfigSpec.BooleanValue shouldFade;
         public final ForgeConfigSpec.DoubleValue outlineThickness;
 
         General()
@@ -28,12 +27,6 @@ public class Configuration
             showOverlay = BUILDER
                     .comment("This allows you hide or show the overlay in the top right of the screen when XRay is enabled")
                     .define("showOverlay", true);
-
-            shouldFade = BUILDER
-                    .comment("By default the blocks will begin to fade out as you get further away, some may not like this as",
-                                "it can sometime causes things not to show. If you're a dirty cheater (lol) then you may want",
-                                "to disable this as you won't be able to see chests out of your range.")
-                    .define("shouldFade", true);
 
             outlineThickness = BUILDER
                     .comment("This allows you to set your own outline thickness, I find that 1.0 is perfect but others my",
