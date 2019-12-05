@@ -5,8 +5,13 @@ import com.xray.XRay;
 import com.xray.reference.block.BlockData;
 import com.xray.reference.block.BlockInfo;
 import com.xray.store.BlockStore;
+import com.xray.utils.OutlineColor;
 import com.xray.utils.WorldRegion;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -51,7 +56,7 @@ public class RenderEnqueue implements Runnable
 
 		// Used for cleaning up the searching process
 		BlockState currentState;
-		BlockState defaultState;
+		IFluidState currentFluid;
 
 		ResourceLocation block;
 		BlockStore.BlockDataWithUUID dataWithUUID;
@@ -96,6 +101,10 @@ public class RenderEnqueue implements Runnable
 						for ( int j = lowBoundY; j <= highBoundY; j++ ) {
 							for ( int k = lowBoundZ; k <= highBoundZ; k++ ) {
 								currentState = ebs.getBlockState(i, j, k);
+								currentFluid = currentState.getFluidState();
+
+								if( (currentFluid.getFluid() == Fluids.LAVA || currentFluid.getFluid() == Fluids.FLOWING_LAVA) )
+									renderQueue.add(new BlockInfo(x + i, y + j, z + k, new OutlineColor(255, 0, 0).getColor(), 255));
 
 								// Reject blacklisted blocks
 								if( Controller.blackList.contains(currentState.getBlock()) )
@@ -112,11 +121,8 @@ public class RenderEnqueue implements Runnable
 								if( dataWithUUID.getBlockData() == null || !dataWithUUID.getBlockData().isDrawing() ) // fail safe
 									continue;
 
-								// Calculate distance from player to block. Fade out futher away blocks
-								double alpha = !Configuration.general.shouldFade.get() ? 255 : Math.max(0, ((Controller.getRadius() - XRay.mc.player.getDistanceSq(x + i, y + j, z + k)) / Controller.getRadius() ) * 255);
-
 								// Push the block to the render queue
-								renderQueue.add(new BlockInfo(x + i, y + j, z + k, dataWithUUID.getBlockData().getColor().getColor(), alpha));
+								renderQueue.add(new BlockInfo(x + i, y + j, z + k, dataWithUUID.getBlockData().getColor().getColor(), 255));
 							}
 						}
 					}
@@ -141,28 +147,21 @@ public class RenderEnqueue implements Runnable
 		if ( !Controller.drawOres() || Controller.getBlockStore().getStore().isEmpty() )
 		    return; // just pass
 
-		String defaultState = state.getBlock().getDefaultState().toString();
-
-		// Let's see if the block to check is an ore we monitor
-		if ( Controller.getBlockStore().getStore().containsKey(defaultState) ) // it's a block we are monitoring
-		{
-		    if( !add )
-		    {
-                Render.ores.remove( new BlockInfo(pos, null, 0.0) );
-                return;
-            }
-
-		    BlockData data = null;
-            if( Controller.getBlockStore().getStore().containsKey(defaultState) )
-                data = Controller.getBlockStore().getStore().get(defaultState);
-
-            if( data == null )
-            	return;
-
-			double alpha = !Configuration.general.shouldFade.get() ? 255 : Math.max(0, ((Controller.getRadius() - XRay.mc.player.getDistanceSq(pos.getX(), pos.getY(), pos.getZ())) / Controller.getRadius() ) * 255);
-
-            // the block was added to the world, let's add it to the drawing buffer
-            Render.ores.add( new BlockInfo(pos, data.getColor().getColor(), alpha) );
+		// If we're removing then remove :D
+		if( !add ) {
+			Render.ores.remove( new BlockInfo(pos, null, 0.0) );
+			return;
 		}
+
+		ResourceLocation block = state.getBlock().getRegistryName();
+		if( block == null )
+			return;
+
+		BlockStore.BlockDataWithUUID dataWithUUID = Controller.getBlockStore().getStoreByReference(block.toString());
+		if( dataWithUUID == null || dataWithUUID.getBlockData() == null || !dataWithUUID.getBlockData().isDrawing() )
+			return;
+
+		// the block was added to the world, let's add it to the drawing buffer
+		Render.ores.add( new BlockInfo(pos, dataWithUUID.getBlockData().getColor().getColor(), 255) );
 	}
 }
