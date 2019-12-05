@@ -7,6 +7,7 @@ public class Configuration
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
     public static final General general = new General();
+
     public static class General
     {
         public final ForgeConfigSpec.IntValue radius;
@@ -16,6 +17,7 @@ public class Configuration
         General()
         {
             BUILDER.push("general");
+
             radius = BUILDER
                     .comment("DO NOT TOUCH!",
                             "This setting is for memory only and if changed to a value not supported",

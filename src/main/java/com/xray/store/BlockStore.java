@@ -5,25 +5,12 @@ import com.xray.reference.block.SimpleBlockData;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 
 public class BlockStore {
-
-    // Default blocks
-    static final List<SimpleBlockData> DEFAULT_BLOCKS = new ArrayList<SimpleBlockData>() {
-        {
-//            add( SimpleBlockData.firstOreInDictionary( "oreIron", "Iron Ore",             new int[]{170,117, 37}, false ));
-//            add( SimpleBlockData.firstOreInDictionary( "oreCoal", "Coal Ore",             new int[]{  0,  0,  0}, false ));
-//            add( SimpleBlockData.firstOreInDictionary( "oreGold", "Gold Ore",             new int[]{255,255,  0}, false ));
-//            add( SimpleBlockData.firstOreInDictionary( "oreRedstone", "Redstone Ore",     new int[]{255,  0,  0}, false ));
-//            add( SimpleBlockData.firstOreInDictionary( "oreDiamond", "Diamond Ore",       new int[]{136,136,255}, true  ));
-//            add( SimpleBlockData.firstOreInDictionary( "oreEmerald", "Emerald Ore",       new int[]{  0,136, 10}, true  ));
-//            add( SimpleBlockData.firstOreInDictionary( "oreQuartz","Nether Quart",        new int[]{ 30, 74,  0}, false ));
-//            add( SimpleBlockData.firstOreInDictionary( "oreLapis", "Lapis",               new int[]{  0,  0,255}, false ));
-        }
-    };
 
     private HashMap<UUID, BlockData> store = new HashMap<>();
     private HashMap<String, UUID>    storeReference = new HashMap<>();
@@ -106,7 +93,7 @@ public class BlockStore {
 
         return blockData;
     }
-
+    
     public static final class BlockDataWithUUID {
         BlockData blockData;
         UUID uuid;

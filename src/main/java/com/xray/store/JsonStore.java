@@ -8,12 +8,18 @@ import com.xray.XRay;
 import com.xray.reference.Reference;
 import com.xray.reference.block.BlockData;
 import com.xray.reference.block.SimpleBlockData;
+import com.xray.utils.OutlineColor;
+import com.xray.xray.Controller;
+import net.minecraft.block.Block;
+import net.minecraftforge.common.Tags;
 import org.apache.logging.log4j.Level;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 public class JsonStore
 {
@@ -22,6 +28,7 @@ public class JsonStore
 
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
+    public boolean created = false;
     private File jsonFile;
 
     // This should only be initialised once
@@ -34,11 +41,10 @@ public class JsonStore
 
         jsonFile = new File(CONFIG_DIR + Reference.MOD_ID, FILE);
         if( !jsonFile.exists() ) {
-            List<SimpleBlockData> simpleBlockData = new ArrayList<>(BlockStore.DEFAULT_BLOCKS);
-            for (int i = 0; i < simpleBlockData.size(); i++)
-                simpleBlockData.get(i).setOrder(i);
+            this.created = true;
 
-            this.write(simpleBlockData);
+            // Create a file with nothing inside
+            this.write(new ArrayList<SimpleBlockData>());
         }
     }
     
@@ -80,5 +86,27 @@ public class JsonStore
         }
 
         return new ArrayList<>();
+    }
+
+    public List<SimpleBlockData> populateDefault() {
+        List<SimpleBlockData> oresData = new ArrayList<>();
+        Tags.Blocks.ORES.getAllElements().forEach(e -> {
+            if( e.getRegistryName() == null )
+                return;
+
+            oresData.add(new SimpleBlockData(e.getNameTextComponent().getFormattedText(),
+                    e.getRegistryName().toString(),
+                    new OutlineColor(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)),
+                    false,
+                    0)
+            );
+        });
+
+        for (int i = 0; i < oresData.size(); i++)
+            oresData.get(i).setOrder(i);
+
+        XRay.logger.info("Setting up default ores");
+        this.write(oresData);
+        return oresData;
     }
 }

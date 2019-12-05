@@ -9,6 +9,8 @@ import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.ScrollingList;
 import com.xray.reference.Reference;
 import com.xray.reference.block.BlockData;
+import com.xray.reference.block.SimpleBlockData;
+import com.xray.store.BlockStore;
 import com.xray.utils.Utils;
 import com.xray.xray.Controller;
 import net.minecraft.block.Block;
@@ -30,6 +32,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -53,6 +56,14 @@ public class GuiSelectionScreen extends GuiBase {
     public GuiSelectionScreen() {
         super(true);
         this.setSideTitle(I18n.format("xray.single.tools"));
+
+        // Inject this hear as everything is loaded
+        if( XRay.blockStore.created ) {
+            List<SimpleBlockData> blocks = XRay.blockStore.populateDefault();
+            Controller.getBlockStore().setStore(BlockStore.getFromSimpleBlockList(blocks));
+
+            XRay.blockStore.created = false;
+        }
 
         this.itemList = new ArrayList<>(Controller.getBlockStore().getStore().values());
         this.itemList.sort(Comparator.comparingInt(BlockData::getOrder));
