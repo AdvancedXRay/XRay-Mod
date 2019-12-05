@@ -31,12 +31,12 @@ public class GuiEdit extends GuiBase {
     @Override
     public void init() {
         addButton(new Button((width / 2) + 78, height / 2 - 60, 120, 20, I18n.format("xray.single.delete"), b -> {
-            BlockStore.BlockDataWithUUID data = Controller.getBlockStore().getStoreByReference(block.getBlockName());
-            Controller.getBlockStore().getStore().remove(data.getUuid());
+            Controller.getBlockStore().remove(block.getBlockName());
             XRay.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
 
             this.onClose();
         }));
+
         addButton(new Button((width / 2) + 78, height / 2 + 58, 120, 20, I18n.format("xray.single.cancel"), b -> this.onClose()));
         addButton(new Button(width / 2 - 138, height / 2 + 83, 202, 20, I18n.format("xray.single.save"), b -> {
             BlockData block = new BlockData(

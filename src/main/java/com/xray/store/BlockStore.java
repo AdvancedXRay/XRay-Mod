@@ -24,6 +24,15 @@ public class BlockStore {
         this.storeReference.put(data.getBlockName(), uniqueId);
     }
 
+    public void remove(String blockRegistry) {
+        if( !this.storeReference.containsKey(blockRegistry) )
+            return;
+
+        UUID uuid = this.storeReference.get(blockRegistry);
+        this.storeReference.remove(blockRegistry);
+        this.store.remove(uuid);
+    }
+
     public HashMap<UUID, BlockData> getStore() {
         return store;
     }
