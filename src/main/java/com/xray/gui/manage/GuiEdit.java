@@ -3,16 +3,18 @@ package com.xray.gui.manage;
 import com.xray.XRay;
 import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.GuiSlider;
-import com.xray.reference.block.BlockData;
+import com.xray.utils.BlockData;
 import com.xray.store.BlockStore;
-import com.xray.utils.OutlineColor;
 import com.xray.xray.Controller;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import org.apache.commons.lang3.tuple.Pair;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class GuiEdit extends GuiBase {
     private TextFieldWidget oreName;
@@ -42,16 +44,15 @@ public class GuiEdit extends GuiBase {
             BlockData block = new BlockData(
                     this.oreName.getText(),
                     this.block.getBlockName(),
-                    new OutlineColor((int) (redSlider.getValue() * 255), (int) (greenSlider.getValue() * 255), (int) (blueSlider.getValue() * 255)),
+                    new Color((int) (redSlider.getValue() * 255), (int) (greenSlider.getValue() * 255), (int) (blueSlider.getValue() * 255)),
                     this.block.getItemStack(),
                     this.block.isDrawing(),
                     this.block.getOrder()
             );
 
-            BlockStore.BlockDataWithUUID data = Controller.getBlockStore().getStoreByReference(block.getBlockName());
-            Controller.getBlockStore().getStore().remove(data.getUuid());
-
-            Controller.getBlockStore().getStore().put(data.getUuid(), block);
+            Pair<BlockData, UUID> data = Controller.getBlockStore().getStoreByReference(block.getBlockName());
+            Controller.getBlockStore().getStore().remove(data.getValue());
+            Controller.getBlockStore().getStore().put(data.getValue(), block);
 
             XRay.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
             this.onClose();

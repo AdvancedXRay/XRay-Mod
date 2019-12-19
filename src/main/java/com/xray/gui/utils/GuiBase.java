@@ -1,7 +1,7 @@
 package com.xray.gui.utils;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.xray.reference.Reference;
+import com.xray.utils.Reference;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.BufferBuilder;

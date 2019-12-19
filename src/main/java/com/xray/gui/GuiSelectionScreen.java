@@ -7,11 +7,9 @@ import com.xray.gui.manage.GuiBlockList;
 import com.xray.gui.manage.GuiEdit;
 import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.ScrollingList;
-import com.xray.reference.Reference;
-import com.xray.reference.block.BlockData;
-import com.xray.reference.block.SimpleBlockData;
+import com.xray.utils.Reference;
+import com.xray.utils.BlockData;
 import com.xray.store.BlockStore;
-import com.xray.utils.Utils;
 import com.xray.xray.Controller;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -32,7 +30,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.common.Tags;
+import net.minecraft.util.text.StringTextComponent;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -59,7 +57,7 @@ public class GuiSelectionScreen extends GuiBase {
 
         // Inject this hear as everything is loaded
         if( XRay.blockStore.created ) {
-            List<SimpleBlockData> blocks = XRay.blockStore.populateDefault();
+            List<BlockData.SerializableBlockData> blocks = XRay.blockStore.populateDefault();
             Controller.getBlockStore().setStore(BlockStore.getFromSimpleBlockList(blocks));
 
             XRay.blockStore.created = false;
@@ -93,7 +91,7 @@ public class GuiSelectionScreen extends GuiBase {
 
             // Check if the hand item is a block or not
             if (!(handItem.getItem() instanceof net.minecraft.item.BlockItem)) {
-                Utils.sendMessage(getMinecraft().player, "[XRay] " + I18n.format("xray.message.invalid_hand", handItem.getDisplayName().getFormattedText()));
+                getMinecraft().player.sendMessage(new StringTextComponent("[XRay] " + I18n.format("xray.message.invalid_hand", handItem.getDisplayName().getFormattedText())));
                 return;
             }
 
@@ -119,9 +117,9 @@ public class GuiSelectionScreen extends GuiBase {
                     getMinecraft().player.closeScreen();
                     getMinecraft().displayGuiScreen(new GuiAddBlock(Block.getBlockFromItem(lookingStack.getItem())));
                 } else
-                    Utils.sendMessage(getMinecraft().player, "[XRay] " + I18n.format("xray.message.nothing_infront"));
+                    getMinecraft().player.sendMessage(new StringTextComponent("[XRay] " + I18n.format("xray.message.nothing_infront")));
             } catch (NullPointerException ex) {
-                Utils.sendMessage(getMinecraft().player, "[XRay] " + I18n.format("xray.message.thats_odd"));
+                getMinecraft().player.sendMessage(new StringTextComponent("[XRay] " + I18n.format("xray.message.thats_odd")));
             }
         }));
 
@@ -256,7 +254,7 @@ public class GuiSelectionScreen extends GuiBase {
 
                 Minecraft.getInstance().getRenderManager().textureManager.bindTexture(GuiSelectionScreen.CIRCLE);
                 GuiBase.drawTexturedQuadFit((left + entryWidth) - 22, top + (entryHeight / 2f) - 9, 14, 14, new int[]{255, 255, 255}, 80f);
-                GuiBase.drawTexturedQuadFit((left + entryWidth) - 20, top + (entryHeight / 2f) - 7, 10, 10, blockData.getColor().getColor());
+                GuiBase.drawTexturedQuadFit((left + entryWidth) - 20, top + (entryHeight / 2f) - 7, 10, 10, blockData.getColor());
             }
 
             @Override

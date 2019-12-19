@@ -5,8 +5,7 @@ import com.xray.XRay;
 import com.xray.gui.GuiSelectionScreen;
 import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.GuiSlider;
-import com.xray.reference.block.BlockData;
-import com.xray.utils.OutlineColor;
+import com.xray.utils.BlockData;
 import com.xray.xray.Controller;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -18,6 +17,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -53,7 +53,7 @@ public class GuiAddBlock extends GuiBase {
                     new BlockData(
                             oreName.getText(),
                             selectBlock.getRegistryName().toString(),
-                            new OutlineColor((int) (redSlider.getValue() * 255), (int) (greenSlider.getValue() * 255), (int) (blueSlider.getValue() * 255)),
+                            new Color((int) (redSlider.getValue() * 255), (int) (greenSlider.getValue() * 255), (int) (blueSlider.getValue() * 255)),
                             this.itemStack,
                             true,
                             Controller.getBlockStore().getStore().size() + 1

@@ -5,7 +5,7 @@ import net.minecraft.util.math.Vec3i;
 /**
  * A bounding box representing a world 3D area in both world and chunk coords.
  */
-public class WorldRegion {
+public class Region {
 
 	public int minX, minY, minZ, maxX, maxY, maxZ;
 	public int minChunkX, minChunkY, minChunkZ, maxChunkX, maxChunkY, maxChunkZ;
@@ -16,7 +16,7 @@ public class WorldRegion {
 	 * @param pos a world position
 	 * @param radius a block radius
 	 */
-	public WorldRegion(Vec3i pos, int radius)
+	public Region(Vec3i pos, int radius)
 	{
 		minX = pos.getX() - radius;
 		maxX = pos.getX() + radius;

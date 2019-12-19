@@ -3,10 +3,13 @@ package com.xray.gui;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.xray.Configuration;
 import com.xray.XRay;
-import com.xray.reference.Reference;
+import com.xray.utils.Reference;
+import com.xray.utils.RenderBlockProps;
 import com.xray.xray.Controller;
+import com.xray.xray.Render;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -36,5 +39,4 @@ public class GuiOverlay {
 
         XRay.mc.fontRenderer.drawStringWithShadow(I18n.format("xray.overlay"), 15, 4, Color.getHSBColor(0f, 0f, 1f).getRGB() + (30 << 24));
     }
-
 }

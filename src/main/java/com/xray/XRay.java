@@ -1,21 +1,17 @@
 package com.xray;
 
 import com.xray.keybinding.KeyBindings;
-import com.xray.reference.Reference;
-import com.xray.reference.block.BlockData;
-import com.xray.reference.block.SimpleBlockData;
+import com.xray.utils.Reference;
+import com.xray.utils.BlockData;
 import com.xray.store.BlockStore;
 import com.xray.store.GameBlockStore;
 import com.xray.store.JsonStore;
-import com.xray.utils.OutlineColor;
 import com.xray.xray.Controller;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -28,7 +24,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Mod(value= Reference.MOD_ID)
@@ -62,7 +57,7 @@ public class XRay
 		logger.debug(I18n.format("xray.debug.init"));
 
 		KeyBindings.setup();
-		List<SimpleBlockData> data = blockStore.read();
+		List<BlockData.SerializableBlockData> data = blockStore.read();
 		if( data.isEmpty() )
 			return;
 

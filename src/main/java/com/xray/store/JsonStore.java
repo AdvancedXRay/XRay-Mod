@@ -5,19 +5,15 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.xray.XRay;
-import com.xray.reference.Reference;
-import com.xray.reference.block.BlockData;
-import com.xray.reference.block.SimpleBlockData;
-import com.xray.utils.OutlineColor;
-import com.xray.xray.Controller;
-import net.minecraft.block.Block;
+import com.xray.utils.Reference;
+import com.xray.utils.BlockData;
 import net.minecraftforge.common.Tags;
 import org.apache.logging.log4j.Level;
 
+import java.awt.*;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -44,18 +40,18 @@ public class JsonStore
             this.created = true;
 
             // Create a file with nothing inside
-            this.write(new ArrayList<SimpleBlockData>());
+            this.write(new ArrayList<BlockData.SerializableBlockData>());
         }
     }
     
     public void write(ArrayList<BlockData> blockData) {
-        List<SimpleBlockData> simpleBlockData = new ArrayList<>();
-        blockData.forEach( e -> simpleBlockData.add(new SimpleBlockData(e.getEntryName(), e.getBlockName(), e.getColor(), e.isDrawing(), e.getOrder())) );
+        List<BlockData.SerializableBlockData> simpleBlockData = new ArrayList<>();
+        blockData.forEach( e -> simpleBlockData.add(new BlockData.SerializableBlockData(e.getEntryName(), e.getBlockName(), e.getColor(), e.isDrawing(), e.getOrder())) );
 
         this.write(simpleBlockData);
     }
 
-    private void write(List<SimpleBlockData> simpleBlockData) {
+    private void write(List<BlockData.SerializableBlockData> simpleBlockData) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(jsonFile)))
         {
             gson.toJson(simpleBlockData, writer);
@@ -65,13 +61,13 @@ public class JsonStore
         }
     }
 
-    public List<SimpleBlockData> read() {
+    public List<BlockData.SerializableBlockData> read() {
         if( !jsonFile.exists() )
             return new ArrayList<>();
 
         try
         {
-            Type type = new TypeToken<List<SimpleBlockData>>() {}.getType();
+            Type type = new TypeToken<List<BlockData.SerializableBlockData>>() {}.getType();
             try (BufferedReader reader = new BufferedReader(new FileReader(jsonFile)))
             {
                 return gson.fromJson(reader, type);
@@ -88,15 +84,15 @@ public class JsonStore
         return new ArrayList<>();
     }
 
-    public List<SimpleBlockData> populateDefault() {
-        List<SimpleBlockData> oresData = new ArrayList<>();
+    public List<BlockData.SerializableBlockData> populateDefault() {
+        List<BlockData.SerializableBlockData> oresData = new ArrayList<>();
         Tags.Blocks.ORES.getAllElements().forEach(e -> {
             if( e.getRegistryName() == null )
                 return;
 
-            oresData.add(new SimpleBlockData(e.getNameTextComponent().getFormattedText(),
+            oresData.add(new BlockData.SerializableBlockData(e.getNameTextComponent().getFormattedText(),
                     e.getRegistryName().toString(),
-                    new OutlineColor(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)),
+                    new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)),
                     false,
                     0)
             );
@@ -105,7 +101,7 @@ public class JsonStore
         for (int i = 0; i < oresData.size(); i++)
             oresData.get(i).setOrder(i);
 
-        XRay.logger.info("Setting up default ores");
+        XRay.logger.info("Setting up default syncRenderList");
         this.write(oresData);
         return oresData;
     }

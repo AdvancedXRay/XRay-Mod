@@ -1,7 +1,7 @@
 package com.xray.xray;
 
 import com.xray.XRay;
-import com.xray.reference.Reference;
+import com.xray.utils.Reference;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent;

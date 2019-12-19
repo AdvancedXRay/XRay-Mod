@@ -1,15 +1,11 @@
 package com.xray.xray;
 
-import com.xray.Configuration;
 import com.xray.XRay;
-import com.xray.reference.block.BlockData;
-import com.xray.reference.block.BlockInfo;
+import com.xray.utils.BlockData;
+import com.xray.utils.RenderBlockProps;
 import com.xray.store.BlockStore;
-import com.xray.utils.OutlineColor;
-import com.xray.utils.WorldRegion;
+import com.xray.utils.Region;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.util.ResourceLocation;
@@ -17,7 +13,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
+import org.apache.commons.lang3.tuple.Pair;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,15 +23,15 @@ import java.util.UUID;
 
 public class RenderEnqueue implements Runnable
 {
-	private final WorldRegion box;
+	private final Region box;
 
-	public RenderEnqueue(WorldRegion region )
+	public RenderEnqueue(Region region )
 	{
 		box = region;
 	}
 
 	@Override
-	public void run() // Our thread code for finding ores near the player.
+	public void run() // Our thread code for finding syncRenderList near the player.
 	{
 		blockFinder();
 	}
@@ -44,13 +42,13 @@ public class RenderEnqueue implements Runnable
 	private void blockFinder() {
         HashMap<UUID, BlockData> blocks = Controller.getBlockStore().getStore();
         if ( blocks.isEmpty() ) {
-		    if( !Render.ores.isEmpty() )
-		        Render.ores.clear();
+		    if( !Render.syncRenderList.isEmpty() )
+		        Render.syncRenderList.clear();
             return; // no need to scan the region if there's nothing to find
         }
 
 		final World world = XRay.mc.world;
-		final List<BlockInfo> renderQueue = new ArrayList<>();
+		final List<RenderBlockProps> renderQueue = new ArrayList<>();
 
 		int lowBoundX, highBoundX, lowBoundY, highBoundY, lowBoundZ, highBoundZ;
 
@@ -59,7 +57,7 @@ public class RenderEnqueue implements Runnable
 		IFluidState currentFluid;
 
 		ResourceLocation block;
-		BlockStore.BlockDataWithUUID dataWithUUID;
+		Pair<BlockData, UUID> dataWithUUID;
 
 		// Loop on chunks (x, z)
 		for ( int chunkX = box.minChunkX; chunkX <= box.maxChunkX; chunkX++ )
@@ -104,7 +102,7 @@ public class RenderEnqueue implements Runnable
 								currentFluid = currentState.getFluidState();
 
 								if( (currentFluid.getFluid() == Fluids.LAVA || currentFluid.getFluid() == Fluids.FLOWING_LAVA) )
-									renderQueue.add(new BlockInfo(x + i, y + j, z + k, new OutlineColor(255, 0, 0).getColor(), 255));
+									renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, currentState.getBlock(), new Color(255, 0, 0), 255, true));
 
 								// Reject blacklisted blocks
 								if( Controller.blackList.contains(currentState.getBlock()) )
@@ -118,11 +116,11 @@ public class RenderEnqueue implements Runnable
 								if( dataWithUUID == null )
 									continue;
 
-								if( dataWithUUID.getBlockData() == null || !dataWithUUID.getBlockData().isDrawing() ) // fail safe
+								if( dataWithUUID.getKey() == null || !dataWithUUID.getKey().isDrawing() ) // fail safe
 									continue;
 
 								// Push the block to the render queue
-								renderQueue.add(new BlockInfo(x + i, y + j, z + k, dataWithUUID.getBlockData().getColor().getColor(), 255));
+								renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, currentState.getBlock(), dataWithUUID.getKey().getColor(), 255));
 							}
 						}
 					}
@@ -131,8 +129,8 @@ public class RenderEnqueue implements Runnable
 		}
 		final BlockPos playerPos = XRay.mc.player.getPosition();
 		renderQueue.sort((t, t1) -> Double.compare(t1.distanceSq(playerPos), t.distanceSq(playerPos)));
-		Render.ores.clear();
-		Render.ores.addAll( renderQueue ); // Add all our found blocks to the Render.ores list. To be use by Render when drawing.
+		Render.syncRenderList.clear();
+		Render.syncRenderList.addAll( renderQueue ); // Add all our found blocks to the Render.syncRenderList list. To be use by Render when drawing.
 	}
 
 	/**
@@ -149,7 +147,7 @@ public class RenderEnqueue implements Runnable
 
 		// If we're removing then remove :D
 		if( !add ) {
-			Render.ores.remove( new BlockInfo(pos, null, 0.0) );
+			Render.syncRenderList.remove( new RenderBlockProps(pos, null, null, 0.0) );
 			return;
 		}
 
@@ -157,11 +155,11 @@ public class RenderEnqueue implements Runnable
 		if( block == null )
 			return;
 
-		BlockStore.BlockDataWithUUID dataWithUUID = Controller.getBlockStore().getStoreByReference(block.toString());
-		if( dataWithUUID == null || dataWithUUID.getBlockData() == null || !dataWithUUID.getBlockData().isDrawing() )
+		Pair<BlockData, UUID> dataWithUUID = Controller.getBlockStore().getStoreByReference(block.toString());
+		if( dataWithUUID == null || dataWithUUID.getKey() == null || !dataWithUUID.getKey().isDrawing() )
 			return;
 
 		// the block was added to the world, let's add it to the drawing buffer
-		Render.ores.add( new BlockInfo(pos, dataWithUUID.getBlockData().getColor().getColor(), 255) );
+		Render.syncRenderList.add(new RenderBlockProps(pos, state.getBlock(), dataWithUUID.getKey().getColor(), 255) );
 	}
 }

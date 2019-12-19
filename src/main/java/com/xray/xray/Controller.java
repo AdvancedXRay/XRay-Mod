@@ -3,7 +3,7 @@ package com.xray.xray;
 import com.xray.Configuration;
 import com.xray.XRay;
 import com.xray.store.BlockStore;
-import com.xray.utils.WorldRegion;
+import com.xray.utils.Region;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.resources.I18n;
@@ -55,7 +55,7 @@ public class Controller
 	{
 		if ( !drawOres ) // enable drawing
 		{
-			Render.ores.clear(); // first, clear the buffer
+			Render.syncRenderList.clear(); // first, clear the buffer
 			executor = Executors.newSingleThreadExecutor();
 			drawOres = true; // then, enable drawing
 			requestBlockFinder( true ); // finally, force a refresh
@@ -111,7 +111,7 @@ public class Controller
 
 	/**
 	 * Starts a region scan thread if possible, that is if:
-	 * - we actually want to draw ores
+	 * - we actually want to draw syncRenderList
 	 * - we are not already scanning an area
 	 * - either the player has moved since the last call
 	 * - or we want to (and can) force a scan
@@ -123,7 +123,7 @@ public class Controller
 		if ( drawOres() && (task == null || task.isDone()) && (force || playerHasMoved()) ) // world/player check done by drawOres()
 		{
 			updatePlayerPosition(); // since we're about to run, update the last known position
-			WorldRegion region = new WorldRegion( lastPlayerPos, getRadius() ); // the region to scan for ores
+			Region region = new Region( lastPlayerPos, getRadius() ); // the region to scan for syncRenderList
 			task = executor.submit( new RenderEnqueue(region) );
 		}
 	}

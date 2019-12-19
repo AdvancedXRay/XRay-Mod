@@ -1,12 +1,12 @@
 package com.xray.store;
 
-import com.xray.reference.block.BlockData;
-import com.xray.reference.block.SimpleBlockData;
+import com.xray.utils.BlockData;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
 
@@ -44,7 +44,7 @@ public class BlockStore {
         store.forEach(this::put);
     }
 
-    public BlockDataWithUUID getStoreByReference(String name) {
+    public Pair<BlockData, UUID> getStoreByReference(String name) {
         UUID uniqueId = storeReference.get(name);
         if( uniqueId == null )
             return null;
@@ -53,7 +53,7 @@ public class BlockStore {
         if( blockData == null )
             return null;
 
-        return new BlockDataWithUUID(blockData, uniqueId);
+        return new ImmutablePair<>(blockData, uniqueId);
     }
 
     public void toggleDrawing(BlockData data) {
@@ -69,11 +69,11 @@ public class BlockStore {
         blockData.setDrawing(!blockData.isDrawing());
     }
 
-    public static ArrayList<BlockData> getFromSimpleBlockList(List<SimpleBlockData> simpleList)
+    public static ArrayList<BlockData> getFromSimpleBlockList(List<BlockData.SerializableBlockData> simpleList)
     {
         ArrayList<BlockData> blockData = new ArrayList<>();
 
-        for (SimpleBlockData e : simpleList) {
+        for (BlockData.SerializableBlockData e : simpleList) {
             if( e == null )
                 continue;
 
@@ -101,23 +101,5 @@ public class BlockStore {
         }
 
         return blockData;
-    }
-    
-    public static final class BlockDataWithUUID {
-        BlockData blockData;
-        UUID uuid;
-
-        public BlockDataWithUUID(BlockData blockData, UUID uuid) {
-            this.blockData = blockData;
-            this.uuid = uuid;
-        }
-
-        public BlockData getBlockData() {
-            return blockData;
-        }
-
-        public UUID getUuid() {
-            return uuid;
-        }
     }
 }
