@@ -21,7 +21,7 @@ public class Render
     private static final int GL_FILL = 6914;
     private static final int GL_LINES = 1;
 
-	static void drawOres(float playerX, float playerY, float playerZ) {
+	static void renderBlocks(float playerX, float playerY, float playerZ) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         Profile.BLOCKS.apply(); // Sets GL state for block drawing

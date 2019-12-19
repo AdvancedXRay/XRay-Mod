@@ -3,7 +3,6 @@ package com.xray.xray;
 import com.xray.XRay;
 import com.xray.utils.BlockData;
 import com.xray.utils.RenderBlockProps;
-import com.xray.store.BlockStore;
 import com.xray.utils.Region;
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.Fluids;
@@ -101,7 +100,7 @@ public class RenderEnqueue implements Runnable
 								currentState = ebs.getBlockState(i, j, k);
 								currentFluid = currentState.getFluidState();
 
-								if( (currentFluid.getFluid() == Fluids.LAVA || currentFluid.getFluid() == Fluids.FLOWING_LAVA) )
+								if( (currentFluid.getFluid() == Fluids.LAVA || currentFluid.getFluid() == Fluids.FLOWING_LAVA) && Controller.isLavaActive() )
 									renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, currentState.getBlock(), new Color(255, 0, 0), 255, true));
 
 								// Reject blacklisted blocks
@@ -142,7 +141,7 @@ public class RenderEnqueue implements Runnable
 	 */
 	public static void checkBlock(BlockPos pos, BlockState state, boolean add )
 	{
-		if ( !Controller.drawOres() || Controller.getBlockStore().getStore().isEmpty() )
+		if ( !Controller.isXRayActive() || Controller.getBlockStore().getStore().isEmpty() )
 		    return; // just pass
 
 		// If we're removing then remove :D

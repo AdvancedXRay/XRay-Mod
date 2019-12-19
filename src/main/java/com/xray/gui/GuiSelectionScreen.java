@@ -123,9 +123,14 @@ public class GuiSelectionScreen extends GuiBase {
             }
         }));
 
-        addButton(distButtons = new Button((width / 2) + 79, height / 2 + 36, 120, 20, I18n.format("xray.input.distance") + ": " + Controller.getRadius(), button -> {
+        addButton(distButtons = new Button((width / 2) + 79, height / 2 + 6, 120, 20, I18n.format("xray.input.show-lava", Controller.isLavaActive()), button -> {
+            Controller.toggleLava();
+            button.setMessage(I18n.format("xray.input.show-lava", Controller.isLavaActive()));
+        }));
+
+        addButton(distButtons = new Button((width / 2) + 79, height / 2 + 36, 120, 20, I18n.format("xray.input.distance", Controller.getRadius()), button -> {
             Controller.incrementCurrentDist();
-            button.setMessage(I18n.format("xray.input.distance") + ": " + Controller.getRadius());
+            button.setMessage(I18n.format("xray.input.distance", Controller.getRadius()));
         }));
         addButton(new Button(width / 2 + 79, height / 2 + 58, 60, 20, I18n.format("xray.single.help"), button -> {
             getMinecraft().player.closeScreen();
@@ -172,7 +177,7 @@ public class GuiSelectionScreen extends GuiBase {
 
         if (mouse == 1 && distButtons.isMouseOver(x, y)) {
             Controller.decrementCurrentDist();
-            distButtons.setMessage(I18n.format("xray.input.distance") + ": " + Controller.getRadius());
+            distButtons.setMessage(I18n.format("xray.input.distance", Controller.getRadius()));
             distButtons.playDownSound(Minecraft.getInstance().getSoundHandler());
         }
 
@@ -192,7 +197,7 @@ public class GuiSelectionScreen extends GuiBase {
 
     @Override
     public void onClose() {
-        Configuration.general.radius.save();
+        Configuration.store.radius.save();
         XRay.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
 
         Controller.requestBlockFinder(true);

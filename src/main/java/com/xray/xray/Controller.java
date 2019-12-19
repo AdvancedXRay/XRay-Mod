@@ -43,21 +43,22 @@ public class Controller
     private static ExecutorService executor;
 
 	// Draw states
-	private static boolean drawOres = false; // Off by default
+	private static boolean xrayActive = false; // Off by default
+	private static boolean lavaActive = Configuration.store.lavaActive.get();
 
     public static BlockStore getBlockStore() {
         return blockStore;
     }
 
     // Public accessors
-	public static boolean drawOres() { return drawOres && XRay.mc.world != null && XRay.mc.player != null; }
-	public static void toggleDrawOres()
+	public static boolean isXRayActive() { return xrayActive && XRay.mc.world != null && XRay.mc.player != null; }
+	public static void toggleXRay()
 	{
-		if ( !drawOres ) // enable drawing
+		if ( !xrayActive) // enable drawing
 		{
 			Render.syncRenderList.clear(); // first, clear the buffer
 			executor = Executors.newSingleThreadExecutor();
-			drawOres = true; // then, enable drawing
+			xrayActive = true; // then, enable drawing
 			requestBlockFinder( true ); // finally, force a refresh
 
 			if( !Configuration.general.showOverlay.get() )
@@ -72,22 +73,31 @@ public class Controller
 		}
 	}
 
-	public static int getRadius() { return distanceList[Configuration.general.radius.get()]; }
+	public static boolean isLavaActive() {
+		return lavaActive;
+	}
+
+	public static void toggleLava() {
+    	lavaActive = !lavaActive;
+    	Configuration.store.lavaActive.set(lavaActive);
+	}
+
+	public static int getRadius() { return distanceList[Configuration.store.radius.get()]; }
 
 	public static void incrementCurrentDist()
 	{
-		if ( Configuration.general.radius.get() < distanceList.length - 1 )
-			Configuration.general.radius.set(Configuration.general.radius.get() + 1);
+		if ( Configuration.store.radius.get() < distanceList.length - 1 )
+			Configuration.store.radius.set(Configuration.store.radius.get() + 1);
 		else
-			Configuration.general.radius.set(0);
+			Configuration.store.radius.set(0);
 	}
 
 	public static void decrementCurrentDist()
 	{
-		if ( Configuration.general.radius.get() > 0 )
-			Configuration.general.radius.set(Configuration.general.radius.get() - 1);
+		if ( Configuration.store.radius.get() > 0 )
+			Configuration.store.radius.set(Configuration.store.radius.get() - 1);
 		else
-			Configuration.general.radius.set( distanceList.length - 1 );
+			Configuration.store.radius.set( distanceList.length - 1 );
 	}
 
 	/**
@@ -120,7 +130,7 @@ public class Controller
 	 */
 	public static synchronized void requestBlockFinder( boolean force )
 	{
-		if ( drawOres() && (task == null || task.isDone()) && (force || playerHasMoved()) ) // world/player check done by drawOres()
+		if ( isXRayActive() && (task == null || task.isDone()) && (force || playerHasMoved()) ) // world/player check done by xrayActive()
 		{
 			updatePlayerPosition(); // since we're about to run, update the last known position
 			Region region = new Region( lastPlayerPos, getRadius() ); // the region to scan for syncRenderList
@@ -133,8 +143,8 @@ public class Controller
 	 */
 	public static void shutdownExecutor()
 	{
-		// Important. If drawOres is true when a player logs out then logs back in, the next requestBlockFinder will crash
-		drawOres = false;
+		// Important. If xrayActive is true when a player logs out then logs back in, the next requestBlockFinder will crash
+		xrayActive = false;
 		try { executor.shutdownNow(); }
 		catch (Throwable ignore) {}
 	}

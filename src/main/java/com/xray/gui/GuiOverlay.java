@@ -4,12 +4,9 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.xray.Configuration;
 import com.xray.XRay;
 import com.xray.utils.Reference;
-import com.xray.utils.RenderBlockProps;
 import com.xray.xray.Controller;
-import com.xray.xray.Render;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -28,7 +25,7 @@ public class GuiOverlay {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void RenderGameOverlayEvent(RenderGameOverlayEvent event) {
         // Draw Indicator
-        if(!Controller.drawOres() || !Configuration.general.showOverlay.get() || event.isCanceled() || event.getType() != RenderGameOverlayEvent.ElementType.HOTBAR )
+        if(!Controller.isXRayActive() || !Configuration.general.showOverlay.get() || event.isCanceled() || event.getType() != RenderGameOverlayEvent.ElementType.HOTBAR )
             return;
 
         GlStateManager.pushMatrix();

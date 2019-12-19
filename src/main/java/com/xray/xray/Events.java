@@ -43,12 +43,12 @@ public class Events
 	@SubscribeEvent
 	public static void onWorldRenderLast( RenderWorldLastEvent event ) // Called when drawing the world.
 	{
-		if ( Controller.drawOres() )
+		if ( Controller.isXRayActive() )
 		{
 			float f = event.getPartialTicks();
 
 			// this is a world pos of the player
-			Render.drawOres(
+			Render.renderBlocks(
 				(float)XRay.mc.player.prevPosX + ( (float)XRay.mc.player.posX - (float)XRay.mc.player.prevPosX ) * f,
 				(float)XRay.mc.player.prevPosY + ( (float)XRay.mc.player.posY - (float)XRay.mc.player.prevPosY ) * f,
 				(float)XRay.mc.player.prevPosZ + ( (float)XRay.mc.player.posZ - (float)XRay.mc.player.prevPosZ ) * f

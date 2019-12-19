@@ -20,7 +20,8 @@
   "xray.input.add": "Add Block",
   "xray.input.add_hand": "Add Block in hand",
   "xray.input.add_look": "Add Looking at",
-  "xray.input.distance": "Distance",
+  "xray.input.distance": "Distance: %s",
+  "xray.input.show-lava": "Show Lava: %s",
   "xray.input.toggle_oredict": "Use Dictionary",
 
   "xray.title.config": "Configure Block",

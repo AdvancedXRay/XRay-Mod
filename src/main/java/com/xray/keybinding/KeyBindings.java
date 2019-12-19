@@ -19,7 +19,7 @@ public class KeyBindings {
     private static List<KeyActionable> keyBindings = new ArrayList<>();
 
     public static void setup() {
-        keyBindings.add(new KeyActionable(GLFW.GLFW_KEY_BACKSLASH, I18n.format("xray.config.toggle"), Controller::toggleDrawOres));
+        keyBindings.add(new KeyActionable(GLFW.GLFW_KEY_BACKSLASH, I18n.format("xray.config.toggle"), Controller::toggleXRay));
         keyBindings.add(new KeyActionable(GLFW.GLFW_KEY_G, I18n.format("xray.config.open"), () -> XRay.mc.displayGuiScreen( new GuiSelectionScreen() )));
 
         keyBindings.forEach(e -> ClientRegistry.registerKeyBinding(e.getKeyBinding()));
