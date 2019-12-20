@@ -10,6 +10,7 @@ import com.xray.gui.utils.ScrollingList;
 import com.xray.utils.Reference;
 import com.xray.utils.BlockData;
 import com.xray.store.BlockStore;
+import com.xray.utils.TempMapping;
 import com.xray.xray.Controller;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -101,12 +102,15 @@ public class GuiSelectionScreen extends GuiBase {
             getMinecraft().displayGuiScreen(new GuiAddBlock(((BlockItem) handItem.getItem()).getBlock()));
         }));
         addButton(new Button(width / 2 + 79, height / 2 - 16, 120, 20, I18n.format("xray.input.add_look"), button -> {
+            PlayerEntity player = getMinecraft().player;
+            if( getMinecraft().world == null || player == null )
+                return;
+
             this.onClose();
             try {
-                PlayerEntity player = getMinecraft().player;
                 Vec3d look = player.getLookVec();
-                Vec3d start = new Vec3d(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-                Vec3d end = new Vec3d(player.posX + look.x * 100, player.posY + player.getEyeHeight() + look.y * 100, player.posZ + look.z * 100);
+                Vec3d start = new Vec3d(TempMapping.Player.getPosX(player), TempMapping.Player.getPosY(player) + player.getEyeHeight(), TempMapping.Player.getPosZ(player));
+                Vec3d end = new Vec3d(TempMapping.Player.getPosX(player) + look.x * 100, TempMapping.Player.getPosY(player) + player.getEyeHeight() + look.y * 100, TempMapping.Player.getPosZ(player) + look.z * 100);
 
                 RayTraceContext context = new RayTraceContext(start, end, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, player);
                 BlockRayTraceResult result = getMinecraft().world.rayTraceBlocks(context);
@@ -117,12 +121,12 @@ public class GuiSelectionScreen extends GuiBase {
 
                     ItemStack lookingStack = lookingAt.getPickBlock(state, result, getMinecraft().world, result.getPos(), getMinecraft().player);
 
-                    getMinecraft().player.closeScreen();
+                    player.closeScreen();
                     getMinecraft().displayGuiScreen(new GuiAddBlock(Block.getBlockFromItem(lookingStack.getItem())));
                 } else
-                    getMinecraft().player.sendMessage(new StringTextComponent("[XRay] " + I18n.format("xray.message.nothing_infront")));
+                    player.sendMessage(new StringTextComponent("[XRay] " + I18n.format("xray.message.nothing_infront")));
             } catch (NullPointerException ex) {
-                getMinecraft().player.sendMessage(new StringTextComponent("[XRay] " + I18n.format("xray.message.thats_odd")));
+                player.sendMessage(new StringTextComponent("[XRay] " + I18n.format("xray.message.thats_odd")));
             }
         }));
 
@@ -256,7 +260,7 @@ public class GuiSelectionScreen extends GuiBase {
                 font.drawString(blockData.getEntryName(), left + 30, top + 7, 0xFFFFFF);
                 font.drawString(blockData.isDrawing() ? "Enabled" : "Disabled", left + 30, top + 17, blockData.isDrawing() ? Color.GREEN.getRGB() : Color.RED.getRGB());
 
-                RenderHelper.enableGUIStandardItemLighting();
+                TempMapping.Render.enableGUIStandardItemLighting();
                 Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(blockData.getItemStack(), left + 5, top + 7);
                 RenderHelper.disableStandardItemLighting();
 

@@ -1,7 +1,14 @@
 package com.xray.xray;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.xray.XRay;
 import com.xray.utils.Reference;
+import com.xray.utils.TempMapping;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent;
@@ -14,14 +21,12 @@ import net.minecraftforge.fml.common.Mod;
 public class Events
 {
 	@SubscribeEvent
-	public static void pickupItem( BlockEvent.BreakEvent event )
-	{
+	public static void pickupItem( BlockEvent.BreakEvent event ) {
 		RenderEnqueue.checkBlock( event.getPos(), event.getState(), false);
 	}
 
 	@SubscribeEvent
-	public static void placeItem( BlockEvent.EntityPlaceEvent event )
-	{
+	public static void placeItem( BlockEvent.EntityPlaceEvent event ) {
 		RenderEnqueue.checkBlock( event.getPos(), event.getState(), true);
 	}
 
@@ -32,10 +37,8 @@ public class Events
 	}
 
 	@SubscribeEvent
-	public static void tickEnd( TickEvent.ClientTickEvent event )
-	{
-		if ( event.phase == TickEvent.Phase.END )
-		{
+	public static void tickEnd( TickEvent.ClientTickEvent event ) {
+		if ( event.phase == TickEvent.Phase.END ) {
 			Controller.requestBlockFinder( false );
 		}
 	}
@@ -43,15 +46,16 @@ public class Events
 	@SubscribeEvent
 	public static void onWorldRenderLast( RenderWorldLastEvent event ) // Called when drawing the world.
 	{
-		if ( Controller.isXRayActive() )
+		if ( Controller.isXRayActive() && XRay.mc.player != null )
 		{
 			float f = event.getPartialTicks();
 
 			// this is a world pos of the player
 			Render.renderBlocks(
-				(float)XRay.mc.player.prevPosX + ( (float)XRay.mc.player.posX - (float)XRay.mc.player.prevPosX ) * f,
-				(float)XRay.mc.player.prevPosY + ( (float)XRay.mc.player.posY - (float)XRay.mc.player.prevPosY ) * f,
-				(float)XRay.mc.player.prevPosZ + ( (float)XRay.mc.player.posZ - (float)XRay.mc.player.prevPosZ ) * f
+					event.getMatrixStack(),
+				(float)XRay.mc.player.prevPosX + ( (float)TempMapping.Player.getPosX(XRay.mc.player) - (float)XRay.mc.player.prevPosX ) * f,
+				(float)XRay.mc.player.prevPosY + ( (float)TempMapping.Player.getPosY(XRay.mc.player) - (float)XRay.mc.player.prevPosY ) * f,
+				(float)XRay.mc.player.prevPosZ + ( (float)TempMapping.Player.getPosZ(XRay.mc.player) - (float)XRay.mc.player.prevPosZ ) * f
 			);
 		}
 	}

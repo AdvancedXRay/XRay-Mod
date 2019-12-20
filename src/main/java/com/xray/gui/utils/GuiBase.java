@@ -1,6 +1,7 @@
 package com.xray.gui.utils;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.xray.utils.Reference;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -33,7 +34,7 @@ public class GuiBase extends Screen {
     public boolean charTyped(char keyTyped, int __unknown) {
         super.charTyped(keyTyped, __unknown);
 
-        if( keyTyped == 1 )
+        if( keyTyped == 1 && getMinecraft().player != null )
             getMinecraft().player.closeScreen();
 
         return false;
@@ -50,19 +51,20 @@ public class GuiBase extends Screen {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder tessellate = tessellator.getBuffer();
 
-        GlStateManager.pushMatrix();
+        RenderSystem.pushMatrix();
         tessellate.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
         if ( color != null )
-            GlStateManager.color4f((float) color[0] / 255, (float) color[1] / 255, (float) color[2] / 255, alpha / 255);
+            RenderSystem.color4f((float) color[0] / 255, (float) color[1] / 255, (float) color[2] / 255, alpha / 255);
 
-        tessellate.pos(x + 0, y + height, (double) 0).tex( 0,1).endVertex();
-        tessellate.pos(x + width, y + height, (double) 0).tex( 1, 1).endVertex();
-        tessellate.pos(x + width, y + 0, (double) 0).tex( 1,0).endVertex();
-        tessellate.pos(x + 0, y + 0, (double) 0).tex( 0, 0).endVertex();
+        //func_225583_a_ = TEX
+        tessellate.func_225582_a_(x + 0, y + height, (double) 0).func_225583_a_( 0,1).endVertex();
+        tessellate.func_225582_a_(x + width, y + height, (double) 0).func_225583_a_( 1, 1).endVertex();
+        tessellate.func_225582_a_(x + width, y + 0, (double) 0).func_225583_a_( 1,0).endVertex();
+        tessellate.func_225582_a_(x + 0, y + 0, (double) 0).func_225583_a_( 0, 0).endVertex();
         tessellator.draw();
 
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
     }
 
     public static void drawTexturedQuadFit(double x, double y, double width, double height, int[] color) {
@@ -75,7 +77,7 @@ public class GuiBase extends Screen {
 
     @Override
     public void render(int x, int y, float partialTicks) {
-        GlStateManager.pushMatrix();
+        RenderSystem.pushMatrix();
 
         getMinecraft().getTextureManager().bindTexture(getBackground());
         if( this.hasSide ) {
@@ -89,7 +91,7 @@ public class GuiBase extends Screen {
         if( !this.hasSide )
             drawTexturedQuadFit((float) width / 2 - ((float) this.backgroundWidth / 2) + 1, (float) height / 2 - ((float) this.backgroundHeight / 2), this.backgroundWidth, this.backgroundHeight, Color.WHITE);
 
-        GlStateManager.enableTexture();
+        RenderSystem.enableTexture();
         if( hasTitle() ) {
             if( this.hasSide )
                 getFontRender().drawStringWithShadow(title(), (float) width / 2 - 138, (float) height / 2 - 105, 0xffff00);
@@ -97,7 +99,7 @@ public class GuiBase extends Screen {
                 getFontRender().drawStringWithShadow(title(), (float) width / 2 - ((float) this.backgroundWidth / 2 ) + 14, (float) height / 2 - ((float) this.backgroundHeight / 2) + 13, 0xffff00);
         }
 
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
         super.render(x, y, partialTicks);
     }
 

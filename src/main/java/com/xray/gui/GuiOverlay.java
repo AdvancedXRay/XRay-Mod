@@ -1,6 +1,7 @@
 package com.xray.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.xray.Configuration;
 import com.xray.XRay;
 import com.xray.utils.Reference;
@@ -28,11 +29,11 @@ public class GuiOverlay {
         if(!Controller.isXRayActive() || !Configuration.general.showOverlay.get() || event.isCanceled() || event.getType() != RenderGameOverlayEvent.ElementType.HOTBAR )
             return;
 
-        GlStateManager.pushMatrix();
-        GlStateManager.color3f(0, 255, 0);
+        RenderSystem.pushMatrix();
+        RenderSystem.color3f(0, 255, 0);
         XRay.mc.getTextureManager().bindTexture(circle);
         Screen.blit(5, 5, 0f, 0f, 5, 5, 5, 5);
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
 
         XRay.mc.fontRenderer.drawStringWithShadow(I18n.format("xray.overlay"), 15, 4, Color.getHSBColor(0f, 0f, 1f).getRGB() + (30 << 24));
     }

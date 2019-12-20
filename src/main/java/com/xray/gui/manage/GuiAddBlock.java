@@ -1,11 +1,13 @@
 package com.xray.gui.manage;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.xray.XRay;
 import com.xray.gui.GuiSelectionScreen;
 import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.GuiSlider;
 import com.xray.utils.BlockData;
+import com.xray.utils.TempMapping;
 import com.xray.xray.Controller;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -92,7 +94,7 @@ public class GuiAddBlock extends GuiBase {
         oreName.render(x, y, f);
         renderPreview(width / 2 - 100, height / 2 - 40, (float) redSlider.getValue(), (float) greenSlider.getValue(), (float) blueSlider.getValue());
 
-        RenderHelper.enableGUIStandardItemLighting();
+        TempMapping.Render.enableGUIStandardItemLighting();
         this.itemRenderer.renderItemAndEffectIntoGUI(this.itemStack, width / 2 + 85, height / 2 - 105);
         RenderHelper.disableStandardItemLighting();
     }
@@ -100,18 +102,18 @@ public class GuiAddBlock extends GuiBase {
     static void renderPreview(int x, int y, float r, float g, float b) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder tessellate = tessellator.getBuffer();
-        GlStateManager.enableBlend();
-        GlStateManager.disableTexture();
-        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.color4f(r, g, b, 1);
+        RenderSystem.enableBlend();
+        RenderSystem.disableTexture();
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        RenderSystem.color4f(r, g, b, 1);
         tessellate.begin(7, DefaultVertexFormats.POSITION);
-        tessellate.pos(x, y, 0.0D).endVertex();
-        tessellate.pos(x, y + 45, 0.0D).endVertex();
-        tessellate.pos(x + 202, y + 45, 0.0D).endVertex();
-        tessellate.pos(x + 202, y, 0.0D).endVertex();
+        tessellate.func_225582_a_(x, y, 0.0D).endVertex();
+        tessellate.func_225582_a_(x, y + 45, 0.0D).endVertex();
+        tessellate.func_225582_a_(x + 202, y + 45, 0.0D).endVertex();
+        tessellate.func_225582_a_(x + 202, y, 0.0D).endVertex();
         tessellator.draw();
-        GlStateManager.enableTexture();
-        GlStateManager.disableBlend();
+        RenderSystem.enableTexture();
+        RenderSystem.disableBlend();
     }
 
     @Override

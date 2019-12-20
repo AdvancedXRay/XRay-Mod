@@ -5,6 +5,7 @@ import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.GuiSlider;
 import com.xray.utils.BlockData;
 import com.xray.store.BlockStore;
+import com.xray.utils.TempMapping;
 import com.xray.xray.Controller;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -86,7 +87,7 @@ public class GuiEdit extends GuiBase {
 
         GuiAddBlock.renderPreview(width / 2 - 138, height / 2 - 40, (float) redSlider.getValue(), (float) greenSlider.getValue(), (float) blueSlider.getValue());
 
-        RenderHelper.enableGUIStandardItemLighting();
+        TempMapping.Render.enableGUIStandardItemLighting();
         this.itemRenderer.renderItemAndEffectIntoGUI(this.block.getItemStack(), width / 2 + 50, height / 2 - 105);
         RenderHelper.disableStandardItemLighting();
     }
