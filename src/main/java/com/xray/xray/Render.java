@@ -3,6 +3,7 @@ package com.xray.xray;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.xray.Configuration;
 import com.xray.XRay;
 import com.xray.utils.RenderBlockProps;
@@ -10,12 +11,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher;
 import net.minecraft.client.renderer.debug.ChunkBorderDebugRenderer;
+import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.tileentity.PistonTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.realms.Tezzelator;
 import net.minecraftforge.client.event.DrawHighlightEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.model.animation.TileEntityRendererAnimation;
 
 import java.util.ArrayList;
@@ -31,14 +34,12 @@ public class Render
     private static final int GL_FILL = 6914;
     private static final int GL_LINES = 1;
 
-	static void renderBlocks(MatrixStack stack, float playerX, float playerY, float playerZ) {
-//        MatrixStack matrixstack = new MatrixStack();
-//        matrixstack.func_227866_c_().func_227870_a_().func_226595_a_(Minecraft.getInstance().gameRenderer.func_228382_a_(Minecraft.getInstance().gameRenderer.getActiveRenderInfo(), partialTicks, true));
-        stack.func_227861_a_(-playerX, -playerY - (XRay.mc.player.getEyeHeight()), -playerZ);
+	static void renderBlocks(RenderWorldLastEvent event, float playerX, float playerY, float playerZ) {
+        MatrixStack stack = event.getMatrixStack();
+        stack.func_227861_a_(-playerX, -playerY - (XRay.mc.player.getEyeHeight()), -playerZ); // translate
 
         RenderSystem.pushMatrix();
         RenderSystem.multMatrix(stack.func_227866_c_().func_227870_a_());
-//        buffer.setTranslation( -playerX, -playerY - (XRay.mc.player.getEyeHeight()), -playerZ );
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
@@ -63,7 +64,6 @@ public class Render
         int red = b.getColor().getRed();
         int green = b.getColor().getGreen();
         int blue = b.getColor().getBlue();
-
 
         int x = b.getX();
         int y = b.getY();

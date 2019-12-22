@@ -101,7 +101,7 @@ public class RenderEnqueue implements Runnable
 								currentFluid = currentState.getFluidState();
 
 								if( (currentFluid.getFluid() == Fluids.LAVA || currentFluid.getFluid() == Fluids.FLOWING_LAVA) && Controller.isLavaActive() )
-									renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, currentState.getBlock(), new Color(255, 0, 0), 255, true));
+									renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, currentState.getBlock(), new Color(255, 0, 0), 1, true));
 
 								// Reject blacklisted blocks
 								if( Controller.blackList.contains(currentState.getBlock()) )
