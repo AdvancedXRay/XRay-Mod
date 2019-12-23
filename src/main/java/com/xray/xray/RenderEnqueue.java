@@ -5,10 +5,12 @@ import com.xray.utils.BlockData;
 import com.xray.utils.RenderBlockProps;
 import com.xray.utils.Region;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
@@ -46,8 +48,11 @@ public class RenderEnqueue implements Runnable
         }
 
 		final World world = XRay.mc.world;
-		final List<RenderBlockProps> renderQueue = new ArrayList<>();
+        final PlayerEntity player = XRay.mc.player;
+        if( world == null || player == null )
+        	return;
 
+		final List<RenderBlockProps> renderQueue = new ArrayList<>();
 		int lowBoundX, highBoundX, lowBoundY, highBoundY, lowBoundZ, highBoundZ;
 
 		// Used for cleaning up the searching process
@@ -99,8 +104,10 @@ public class RenderEnqueue implements Runnable
 								currentState = ebs.getBlockState(i, j, k);
 								currentFluid = currentState.getFluidState();
 
-								if( (currentFluid.getFluid() == Fluids.LAVA || currentFluid.getFluid() == Fluids.FLOWING_LAVA) && Controller.isLavaActive() )
-									renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, currentState.getBlock(), 0xff0000, 1, true));
+								if( (currentFluid.getFluid() == Fluids.LAVA || currentFluid.getFluid() == Fluids.FLOWING_LAVA) && Controller.isLavaActive() ) {
+									renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, 0xff0000));
+									continue;
+								}
 
 								// Reject blacklisted blocks
 								if( Controller.blackList.contains(currentState.getBlock()) )
@@ -118,14 +125,14 @@ public class RenderEnqueue implements Runnable
 									continue;
 
 								// Push the block to the render queue
-								renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, currentState.getBlock(), dataWithUUID.getKey().getColor(), 255));
+								renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, dataWithUUID.getKey().getColor()));
 							}
 						}
 					}
 				}
 			}
 		}
-		final BlockPos playerPos = XRay.mc.player.getPosition();
+		final BlockPos playerPos = player.getPosition();
 		renderQueue.sort((t, t1) -> Double.compare(t1.distanceSq(playerPos), t.distanceSq(playerPos)));
 		Render.syncRenderList.clear();
 		Render.syncRenderList.addAll( renderQueue ); // Add all our found blocks to the Render.syncRenderList list. To be use by Render when drawing.
@@ -145,7 +152,7 @@ public class RenderEnqueue implements Runnable
 
 		// If we're removing then remove :D
 		if( !add ) {
-			Render.syncRenderList.remove( new RenderBlockProps(pos, null, 0, 0.0) );
+			Render.syncRenderList.remove( new RenderBlockProps(pos,0) );
 			return;
 		}
 
@@ -158,6 +165,6 @@ public class RenderEnqueue implements Runnable
 			return;
 
 		// the block was added to the world, let's add it to the drawing buffer
-		Render.syncRenderList.add(new RenderBlockProps(pos, state.getBlock(), dataWithUUID.getKey().getColor(), 255) );
+		Render.syncRenderList.add(new RenderBlockProps(pos, dataWithUUID.getKey().getColor()) );
 	}
 }
