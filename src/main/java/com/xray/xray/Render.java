@@ -3,23 +3,14 @@ package com.xray.xray;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.xray.Configuration;
 import com.xray.XRay;
 import com.xray.utils.RenderBlockProps;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher;
-import net.minecraft.client.renderer.debug.ChunkBorderDebugRenderer;
-import net.minecraft.client.renderer.debug.DebugRenderer;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.tileentity.PistonTileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.realms.Tezzelator;
-import net.minecraftforge.client.event.DrawHighlightEvent;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.client.model.animation.TileEntityRendererAnimation;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,9 +25,11 @@ public class Render
     private static final int GL_FILL = 6914;
     private static final int GL_LINES = 1;
 
-	static void renderBlocks(RenderWorldLastEvent event, float playerX, float playerY, float playerZ) {
+	static void renderBlocks(RenderWorldLastEvent event) {
+        Vec3d view = XRay.mc.gameRenderer.getActiveRenderInfo().getProjectedView();
+
         MatrixStack stack = event.getMatrixStack();
-        stack.func_227861_a_(-playerX, -playerY - (XRay.mc.player.getEyeHeight()), -playerZ); // translate
+        stack.func_227861_a_(-view.x, -view.y, -view.z); // translate
 
         RenderSystem.pushMatrix();
         RenderSystem.multMatrix(stack.func_227866_c_().func_227870_a_());
@@ -61,9 +54,9 @@ public class Render
 
         final float size = 1.0f;
 
-        int red = b.getColor().getRed();
-        int green = b.getColor().getGreen();
-        int blue = b.getColor().getBlue();
+        int red = b.getColor() >> 16 & 0xff;
+        int green = b.getColor() >> 8 & 0xff;
+        int blue = b.getColor() & 0xff;
 
         int x = b.getX();
         int y = b.getY();

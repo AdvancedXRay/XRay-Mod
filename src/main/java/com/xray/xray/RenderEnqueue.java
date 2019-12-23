@@ -14,7 +14,6 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -101,7 +100,7 @@ public class RenderEnqueue implements Runnable
 								currentFluid = currentState.getFluidState();
 
 								if( (currentFluid.getFluid() == Fluids.LAVA || currentFluid.getFluid() == Fluids.FLOWING_LAVA) && Controller.isLavaActive() )
-									renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, currentState.getBlock(), new Color(255, 0, 0), 1, true));
+									renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, currentState.getBlock(), 0xff0000, 1, true));
 
 								// Reject blacklisted blocks
 								if( Controller.blackList.contains(currentState.getBlock()) )
@@ -146,7 +145,7 @@ public class RenderEnqueue implements Runnable
 
 		// If we're removing then remove :D
 		if( !add ) {
-			Render.syncRenderList.remove( new RenderBlockProps(pos, null, null, 0.0) );
+			Render.syncRenderList.remove( new RenderBlockProps(pos, null, 0, 0.0) );
 			return;
 		}
 
