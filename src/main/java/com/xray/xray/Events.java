@@ -2,7 +2,6 @@ package com.xray.xray;
 
 import com.xray.XRay;
 import com.xray.utils.Reference;
-import com.xray.utils.TempMapping;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent;
@@ -14,9 +13,6 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID, value = Dist.CLIENT)
 public class Events
 {
-	private static float renderPartialTicksPaused = 0f;
-	private static boolean gameWasPauseFlag = false;
-
 	@SubscribeEvent
 	public static void pickupItem( BlockEvent.BreakEvent event ) {
 		RenderEnqueue.checkBlock( event.getPos(), event.getState(), false);
@@ -45,28 +41,8 @@ public class Events
 	{
 		if ( Controller.isXRayActive() && XRay.mc.player != null )
 		{
-			// Replicate how the game naturally handles pause and partial ticks.
-			// todo: remove when https://github.com/MinecraftForge/MinecraftForge/issues/6380 has been resolved
-			if (XRay.mc.isGamePaused()) {
-				if( !gameWasPauseFlag ) {
-					renderPartialTicksPaused = XRay.mc.getRenderPartialTicks();
-					System.out.println(renderPartialTicksPaused);
-					gameWasPauseFlag = true;
-				}
-			}
-			else
-				gameWasPauseFlag = false;
-
-			// Used to use the event but it's broken as of 30.0.15 ^
-			float f = XRay.mc.isGamePaused() ? renderPartialTicksPaused : XRay.mc.getRenderPartialTicks();
-
 			// this is a world pos of the player
-			Render.renderBlocks(
-					event,
-				XRay.mc.player.prevPosX + ( TempMapping.Player.getPosX(XRay.mc.player) - XRay.mc.player.prevPosX ) * f,
-				XRay.mc.player.prevPosY + ( TempMapping.Player.getPosY(XRay.mc.player) - XRay.mc.player.prevPosY ) * f,
-				XRay.mc.player.prevPosZ + ( TempMapping.Player.getPosZ(XRay.mc.player) - XRay.mc.player.prevPosZ ) * f
-			);
+			Render.renderBlocks(event);
 		}
 	}
 }
