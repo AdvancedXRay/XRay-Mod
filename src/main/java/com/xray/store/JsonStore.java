@@ -10,7 +10,6 @@ import com.xray.utils.BlockData;
 import net.minecraftforge.common.Tags;
 import org.apache.logging.log4j.Level;
 
-import java.awt.*;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ public class JsonStore
 {
     private static final String FILE = "block_store.json";
     private static final String CONFIG_DIR = XRay.mc.gameDir + "/config/";
-
+    private static final Random rand = new Random();
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public boolean created = false;
@@ -92,7 +91,7 @@ public class JsonStore
 
             oresData.add(new BlockData.SerializableBlockData(e.getNameTextComponent().getFormattedText(),
                     e.getRegistryName().toString(),
-                    new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)),
+                            (rand.nextInt(255) << 16) + (rand.nextInt(255) << 8) + rand.nextInt(255),
                     false,
                     0)
             );

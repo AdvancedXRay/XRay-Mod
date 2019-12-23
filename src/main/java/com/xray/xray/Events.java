@@ -3,7 +3,6 @@ package com.xray.xray;
 import com.xray.XRay;
 import com.xray.utils.Reference;
 import com.xray.utils.TempMapping;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent;
@@ -64,9 +63,9 @@ public class Events
 			// this is a world pos of the player
 			Render.renderBlocks(
 					event,
-				(float)XRay.mc.player.prevPosX + ( (float)TempMapping.Player.getPosX(XRay.mc.player) - (float)XRay.mc.player.prevPosX ) * f,
-				(float)XRay.mc.player.prevPosY + ( (float)TempMapping.Player.getPosY(XRay.mc.player) - (float)XRay.mc.player.prevPosY ) * f,
-				(float)XRay.mc.player.prevPosZ + ( (float)TempMapping.Player.getPosZ(XRay.mc.player) - (float)XRay.mc.player.prevPosZ ) * f
+				XRay.mc.player.prevPosX + ( TempMapping.Player.getPosX(XRay.mc.player) - XRay.mc.player.prevPosX ) * f,
+				XRay.mc.player.prevPosY + ( TempMapping.Player.getPosY(XRay.mc.player) - XRay.mc.player.prevPosY ) * f,
+				XRay.mc.player.prevPosZ + ( TempMapping.Player.getPosZ(XRay.mc.player) - XRay.mc.player.prevPosZ ) * f
 			);
 		}
 	}

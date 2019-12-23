@@ -7,30 +7,30 @@ import java.awt.*;
 
 // so we benefit from Vec3i's hashCode() and equals()
 public class RenderBlockProps extends Vec3i {
-	private Color color;
+	private int color;
 	private double alpha;
 
 	// This is only used for rendering.
 	private Block block;
 	private boolean ignored = false;
 
-	public RenderBlockProps(int x, int y, int z, Block block, Color color, double alpha) {
+	public RenderBlockProps(int x, int y, int z, Block block, int color, double alpha) {
 		super( x, y, z );
 		this.color = color;
 		this.alpha = alpha;
 		this.block = block;
 	}
 
-	public RenderBlockProps(int x, int y, int z, Block block, Color color, double alpha, boolean ignored) {
+	public RenderBlockProps(int x, int y, int z, Block block, int color, double alpha, boolean ignored) {
 		this(x, y, z, block, color, alpha);
 		this.ignored = ignored;
 	}
 
-	public RenderBlockProps(Vec3i pos, Block block, Color color, double alpha ) {
+	public RenderBlockProps(Vec3i pos, Block block, int color, double alpha ) {
 		this( pos.getX(), pos.getY(), pos.getZ(), block, color, alpha );
 	}
 
-	public Color getColor() {
+	public int getColor() {
 		return color;
 	}
 

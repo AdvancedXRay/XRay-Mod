@@ -19,7 +19,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -55,7 +54,7 @@ public class GuiAddBlock extends GuiBase {
                     new BlockData(
                             oreName.getText(),
                             selectBlock.getRegistryName().toString(),
-                            new Color((int) (redSlider.getValue() * 255), (int) (greenSlider.getValue() * 255), (int) (blueSlider.getValue() * 255)),
+                            (((int) (redSlider.getValue() * 255) << 16) + ((int) (greenSlider.getValue() * 255) << 8) + (int) (blueSlider.getValue() * 255)),
                             this.itemStack,
                             true,
                             Controller.getBlockStore().getStore().size() + 1

@@ -4,7 +4,6 @@ import com.xray.XRay;
 import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.GuiSlider;
 import com.xray.utils.BlockData;
-import com.xray.store.BlockStore;
 import com.xray.utils.TempMapping;
 import com.xray.xray.Controller;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -13,7 +12,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -45,7 +43,7 @@ public class GuiEdit extends GuiBase {
             BlockData block = new BlockData(
                     this.oreName.getText(),
                     this.block.getBlockName(),
-                    new Color((int) (redSlider.getValue() * 255), (int) (greenSlider.getValue() * 255), (int) (blueSlider.getValue() * 255)),
+                    (((int) (redSlider.getValue() * 255) << 16) + ((int) (greenSlider.getValue() * 255) << 8) + (int) (blueSlider.getValue() * 255)),
                     this.block.getItemStack(),
                     this.block.isDrawing(),
                     this.block.getOrder()
@@ -63,9 +61,9 @@ public class GuiEdit extends GuiBase {
         addButton(greenSlider = new GuiSlider(width / 2 - 138, height / 2 + 30, I18n.format("xray.color.green"), 0, 255));
         addButton(blueSlider = new GuiSlider(width / 2 - 138, height / 2 + 53, I18n.format("xray.color.blue"), 0, 255));
 
-        redSlider.setValue((float) block.getColor().getRed() / 255);
-        greenSlider.setValue((float) block.getColor().getGreen() / 255);
-        blueSlider.setValue((float) block.getColor().getBlue() / 255);
+        redSlider.setValue((block.getColor() >> 16 & 0xff) / 255f);
+        greenSlider.setValue((block.getColor() >> 8 & 0xff) / 255f);
+        blueSlider.setValue((block.getColor() & 0xff) / 255f);
 
         oreName = new TextFieldWidget(getMinecraft().fontRenderer, width / 2 - 138, height / 2 - 63, 202, 20, "");
         oreName.setText(this.block.getEntryName());

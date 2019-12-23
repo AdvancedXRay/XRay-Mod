@@ -34,7 +34,7 @@ public class Render
     private static final int GL_FILL = 6914;
     private static final int GL_LINES = 1;
 
-	static void renderBlocks(RenderWorldLastEvent event, float playerX, float playerY, float playerZ) {
+	static void renderBlocks(RenderWorldLastEvent event, double playerX, double playerY, double playerZ) {
         MatrixStack stack = event.getMatrixStack();
         stack.func_227861_a_(-playerX, -playerY - (XRay.mc.player.getEyeHeight()), -playerZ); // translate
 
@@ -61,9 +61,9 @@ public class Render
 
         final float size = 1.0f;
 
-        int red = b.getColor().getRed();
-        int green = b.getColor().getGreen();
-        int blue = b.getColor().getBlue();
+        int red = b.getColor() >> 16 & 0xff;
+        int green = b.getColor() >> 8 & 0xff;
+        int blue = b.getColor() & 0xff;
 
         int x = b.getX();
         int y = b.getY();
