@@ -1,7 +1,6 @@
 package com.xray;
 
 import com.xray.keybinding.KeyBindings;
-import com.xray.utils.Reference;
 import com.xray.utils.BlockData;
 import com.xray.store.BlockStore;
 import com.xray.store.GameBlockStore;
@@ -26,11 +25,14 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod(value= Reference.MOD_ID)
-@Mod.EventBusSubscriber(modid = Reference.MOD_ID)
+@Mod(value= XRay.MOD_ID)
+@Mod.EventBusSubscriber(modid = XRay.MOD_ID)
 @OnlyIn(Dist.CLIENT)
 public class XRay
 {
+	public static final String MOD_ID = "xray";
+	public static final String PREFIX_GUI = MOD_ID +":"+"textures/gui/";
+
 	// This contains all of the games blocks to allow us to reference them
 	// when needed. This allows us to avoid continually rebuilding
 	public static GameBlockStore gameBlockStore = new GameBlockStore();

@@ -69,10 +69,9 @@ public class GuiBlockList extends GuiBase {
     }
 
     @Override
-    public void render(int x, int y, float f) {
-        super.render(x, y, f);
-        search.render(x, y, f);
-        blockList.render(x, y, f);
+    public void renderExtra(int x, int y, float partialTicks) {
+        search.render(x, y, partialTicks);
+        blockList.render(x, y, partialTicks);
     }
 
     @Override

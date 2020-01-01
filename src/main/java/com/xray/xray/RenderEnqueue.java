@@ -2,15 +2,14 @@ package com.xray.xray;
 
 import com.xray.XRay;
 import com.xray.utils.BlockData;
-import com.xray.utils.RenderBlockProps;
 import com.xray.utils.Region;
+import com.xray.utils.RenderBlockProps;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;

@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.xray.XRay;
-import com.xray.utils.Reference;
 import com.xray.utils.BlockData;
 import net.minecraftforge.common.Tags;
 import org.apache.logging.log4j.Level;
@@ -29,12 +28,12 @@ public class JsonStore
     // This should only be initialised once
     public JsonStore()
     {
-        File configDir = new File(CONFIG_DIR, Reference.MOD_ID);
+        File configDir = new File(CONFIG_DIR, XRay.MOD_ID);
 
         if( !configDir.exists() )
             configDir.mkdirs();
 
-        jsonFile = new File(CONFIG_DIR + Reference.MOD_ID, FILE);
+        jsonFile = new File(CONFIG_DIR + XRay.MOD_ID, FILE);
         if( !jsonFile.exists() ) {
             this.created = true;
 

@@ -86,11 +86,10 @@ public class GuiAddBlock extends GuiBase {
     }
 
     @Override
-    public void render(int x, int y, float f) {
-        super.render(x, y, f);
+    public void renderExtra(int x, int y, float partialTicks) {
         getFontRender().drawStringWithShadow(selectBlock.getNameTextComponent().getFormattedText(), width / 2f - 100, height / 2f - 90, 0xffffff);
 
-        oreName.render(x, y, f);
+        oreName.render(x, y, partialTicks);
         renderPreview(width / 2 - 100, height / 2 - 40, (float) redSlider.getValue(), (float) greenSlider.getValue(), (float) blueSlider.getValue());
 
         TempMapping.Render.enableGUIStandardItemLighting();

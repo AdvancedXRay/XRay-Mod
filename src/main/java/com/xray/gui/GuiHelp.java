@@ -29,9 +29,7 @@ public class GuiHelp extends GuiBase {
     }
 
     @Override
-    public void render(int x, int y, float partialTicks) {
-        super.render(x, y, partialTicks);
-
+    public void renderExtra(int x, int y, float partialTicks) {
         float lineY = (height / 2f) - 85;
         for (LinedText linedText : areas) {
             for (String line : linedText.getLines()) {

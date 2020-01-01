@@ -1,7 +1,6 @@
 package com.xray.xray;
 
 import com.xray.XRay;
-import com.xray.utils.Reference;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent;
@@ -10,7 +9,7 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = Reference.MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = XRay.MOD_ID, value = Dist.CLIENT)
 public class Events
 {
 	@SubscribeEvent

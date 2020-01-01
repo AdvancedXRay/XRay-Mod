@@ -77,11 +77,10 @@ public class GuiEdit extends GuiBase {
     }
 
     @Override
-    public void render(int x, int y, float f) {
-        super.render(x, y, f);
+    public void renderExtra(int x, int y, float partialTicks) {
         getFontRender().drawStringWithShadow(this.block.getItemStack().getDisplayName().getFormattedText(), width / 2f - 138, height / 2f - 90, 0xffffff);
 
-        oreName.render(x, y, f);
+        oreName.render(x, y, partialTicks);
 
         GuiAddBlock.renderPreview(width / 2 - 138, height / 2 - 40, (float) redSlider.getValue(), (float) greenSlider.getValue(), (float) blueSlider.getValue());
 

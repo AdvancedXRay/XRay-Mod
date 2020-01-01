@@ -1,9 +1,10 @@
 package com.xray.gui.utils;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.xray.utils.Reference;
+import com.xray.XRay;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -11,15 +12,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import org.lwjgl.opengl.GL11;
 
-public class GuiBase extends Screen {
+public abstract class GuiBase extends Screen {
 
-    public static final ResourceLocation BG_NORMAL = new ResourceLocation(Reference.PREFIX_GUI + "bg.png");
-    public static final ResourceLocation BG_LARGE = new ResourceLocation(Reference.PREFIX_GUI + "bg-help.png");
+    public static final ResourceLocation BG_NORMAL = new ResourceLocation(XRay.PREFIX_GUI + "bg.png");
+    public static final ResourceLocation BG_LARGE = new ResourceLocation(XRay.PREFIX_GUI + "bg-help.png");
 
     private boolean hasSide;
     private String sideTitle = "";
     private int backgroundWidth = 229;
     private int backgroundHeight = 235;
+
+    public abstract void renderExtra(int x, int y, float partialTicks);
 
     public GuiBase(boolean hasSide ) {
         super(new StringTextComponent(""));
@@ -73,6 +76,7 @@ public class GuiBase extends Screen {
 
     @Override
     public void render(int x, int y, float partialTicks) {
+        renderBackground();
         RenderSystem.pushMatrix();
 
         getMinecraft().getTextureManager().bindTexture(getBackground());
@@ -96,7 +100,17 @@ public class GuiBase extends Screen {
         }
 
         RenderSystem.popMatrix();
-        super.render(x, y, partialTicks);
+
+        renderExtra(x, y, partialTicks);
+
+        for (Widget button : this.buttons) {
+            button.render(x, y, partialTicks);
+        }
+
+        for(Widget button : this.buttons) {
+            if (button instanceof SupportButton && button.isHovered())
+                renderTooltip(((SupportButton) button).getSupport(), x, y);
+        }
     }
 
     public ResourceLocation getBackground() {

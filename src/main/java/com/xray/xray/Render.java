@@ -7,11 +7,7 @@ import com.xray.Configuration;
 import com.xray.XRay;
 import com.xray.utils.RenderBlockProps;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher;
-import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -41,7 +37,7 @@ public class Render
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         Profile.BLOCKS.apply(); // Sets GL state for block drawing
-        GameRenderer
+
         syncRenderList.forEach(blockProps -> {
             buffer.begin( GL_LINES, DefaultVertexFormats.POSITION_COLOR );
             renderBlockBounding(buffer, blockProps);

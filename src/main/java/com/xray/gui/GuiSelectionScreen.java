@@ -1,5 +1,7 @@
 package com.xray.gui;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.xray.Configuration;
 import com.xray.XRay;
 import com.xray.gui.manage.GuiAddBlock;
@@ -7,9 +9,9 @@ import com.xray.gui.manage.GuiBlockList;
 import com.xray.gui.manage.GuiEdit;
 import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.ScrollingList;
-import com.xray.utils.Reference;
-import com.xray.utils.BlockData;
+import com.xray.gui.utils.SupportButton;
 import com.xray.store.BlockStore;
+import com.xray.utils.BlockData;
 import com.xray.utils.TempMapping;
 import com.xray.xray.Controller;
 import net.minecraft.block.Block;
@@ -21,13 +23,10 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.list.AbstractList;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.ItemFrameRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemFrameItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.NameTagItem;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -39,12 +38,13 @@ import net.minecraft.util.text.StringTextComponent;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class GuiSelectionScreen extends GuiBase {
-    private static final ResourceLocation CIRCLE = new ResourceLocation(Reference.PREFIX_GUI + "circle.png");
+    private static final ResourceLocation CIRCLE = new ResourceLocation(XRay.PREFIX_GUI + "circle.png");
 
     private Button distButtons;
     private TextFieldWidget search;
@@ -75,6 +75,9 @@ public class GuiSelectionScreen extends GuiBase {
 
     @Override
     public void init() {
+        if( getMinecraft().player == null )
+            return;
+
         this.render = this.itemRenderer;
         this.buttons.clear();
 
@@ -85,11 +88,11 @@ public class GuiSelectionScreen extends GuiBase {
         this.search.setCanLoseFocus(true);
 
         // side bar buttons
-        addButton(new Button((width / 2) + 79, height / 2 - 60, 120, 20, I18n.format("xray.input.add"), button -> {
+        addButton(new SupportButtonInner((width / 2) + 79, height / 2 - 60, 120, 20, I18n.format("xray.input.add"), "xray.tooltips.add_block", button -> {
             getMinecraft().player.closeScreen();
             getMinecraft().displayGuiScreen(new GuiBlockList());
         }));
-        addButton(new Button(width / 2 + 79, height / 2 - 38, 120, 20, I18n.format("xray.input.add_hand"), button -> {
+        addButton(new SupportButtonInner(width / 2 + 79, height / 2 - 38, 120, 20, I18n.format("xray.input.add_hand"), "xray.tooltips.add_block_in_hand", button -> {
             getMinecraft().player.closeScreen();
             ItemStack handItem = getMinecraft().player.getHeldItem(Hand.MAIN_HAND);
 
@@ -101,7 +104,7 @@ public class GuiSelectionScreen extends GuiBase {
 
             getMinecraft().displayGuiScreen(new GuiAddBlock(((BlockItem) handItem.getItem()).getBlock()));
         }));
-        addButton(new Button(width / 2 + 79, height / 2 - 16, 120, 20, I18n.format("xray.input.add_look"), button -> {
+        addButton(new SupportButtonInner(width / 2 + 79, height / 2 - 16, 120, 20, I18n.format("xray.input.add_look"), "xray.tooltips.add_block_looking_at", button -> {
             PlayerEntity player = getMinecraft().player;
             if( getMinecraft().world == null || player == null )
                 return;
@@ -130,12 +133,12 @@ public class GuiSelectionScreen extends GuiBase {
             }
         }));
 
-        addButton(distButtons = new Button((width / 2) + 79, height / 2 + 6, 120, 20, I18n.format("xray.input.show-lava", Controller.isLavaActive()), button -> {
+        addButton(distButtons = new SupportButtonInner((width / 2) + 79, height / 2 + 6, 120, 20, I18n.format("xray.input.show-lava", Controller.isLavaActive()), "xray.tooltips.show_lava", button -> {
             Controller.toggleLava();
             button.setMessage(I18n.format("xray.input.show-lava", Controller.isLavaActive()));
         }));
 
-        addButton(distButtons = new Button((width / 2) + 79, height / 2 + 36, 120, 20, I18n.format("xray.input.distance", Controller.getRadius()), button -> {
+        addButton(distButtons = new SupportButtonInner((width / 2) + 79, height / 2 + 36, 120, 20, I18n.format("xray.input.distance", Controller.getRadius()), "xray.tooltips.distance", button -> {
             Controller.incrementCurrentDist();
             button.setMessage(I18n.format("xray.input.distance", Controller.getRadius()));
         }));
@@ -192,11 +195,9 @@ public class GuiSelectionScreen extends GuiBase {
     }
 
     @Override
-    public void render(int x, int y, float partialTicks) {
-        super.render(x, y, partialTicks);
-
+    public void renderExtra(int x, int y, float partialTicks) {
         this.search.render(x, y, partialTicks);
-		this.scrollList.render( x, y, partialTicks );
+        this.scrollList.render( x, y, partialTicks );
 
         if (!search.isFocused() && search.getText().equals(""))
             XRay.mc.fontRenderer.drawStringWithShadow(I18n.format("xray.single.search"), (float) width / 2 - 130, (float) height / 2 - 101, Color.GRAY.getRGB());
@@ -209,6 +210,12 @@ public class GuiSelectionScreen extends GuiBase {
 
         Controller.requestBlockFinder(true);
         super.onClose();
+    }
+
+    static final class SupportButtonInner extends SupportButton {
+        public SupportButtonInner(int widthIn, int heightIn, int width, int height, String text, String i18nKey, IPressable onPress) {
+            super(widthIn, heightIn, width, height, I18n.format(text), Arrays.asList(I18n.format(i18nKey).split("\n")), onPress);
+        }
     }
 
     static class ScrollingBlockList extends ScrollingList<ScrollingBlockList.BlockSlot> {
@@ -264,9 +271,14 @@ public class GuiSelectionScreen extends GuiBase {
                 Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(blockData.getItemStack(), left + 5, top + 7);
                 RenderHelper.disableStandardItemLighting();
 
+                RenderSystem.enableAlphaTest();
+                RenderSystem.enableBlend();
+                RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
                 Minecraft.getInstance().getRenderManager().textureManager.bindTexture(GuiSelectionScreen.CIRCLE);
-                GuiBase.drawTexturedQuadFit((left + entryWidth) - 22, top + (entryHeight / 2f) - 9, 14, 14, new int[]{255, 255, 255}, 80f);
+                GuiBase.drawTexturedQuadFit((left + entryWidth) - 22, top + (entryHeight / 2f) - 9, 14, 14, new int[]{255, 255, 255}, 50f);
                 GuiBase.drawTexturedQuadFit((left + entryWidth) - 20, top + (entryHeight / 2f) - 7, 10, 10, blockData.getColor());
+                RenderSystem.disableAlphaTest();
+                RenderSystem.disableBlend();
             }
 
             @Override
