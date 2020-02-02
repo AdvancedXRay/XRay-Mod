@@ -12,7 +12,6 @@ import com.xray.gui.utils.ScrollingList;
 import com.xray.gui.utils.SupportButton;
 import com.xray.store.BlockStore;
 import com.xray.utils.BlockData;
-import com.xray.utils.TempMapping;
 import com.xray.xray.Controller;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -112,8 +111,8 @@ public class GuiSelectionScreen extends GuiBase {
             this.onClose();
             try {
                 Vec3d look = player.getLookVec();
-                Vec3d start = new Vec3d(TempMapping.Player.getPosX(player), TempMapping.Player.getPosY(player) + player.getEyeHeight(), TempMapping.Player.getPosZ(player));
-                Vec3d end = new Vec3d(TempMapping.Player.getPosX(player) + look.x * 100, TempMapping.Player.getPosY(player) + player.getEyeHeight() + look.y * 100, TempMapping.Player.getPosZ(player) + look.z * 100);
+                Vec3d start = new Vec3d(player.getPosition().getX(), player.getPosition().getY() + player.getEyeHeight(), player.getPosition().getZ());
+                Vec3d end = new Vec3d(player.getPosition().getX() + look.x * 100, player.getPosition().getY() + player.getEyeHeight() + look.y * 100, player.getPosition().getZ() + look.z * 100);
 
                 RayTraceContext context = new RayTraceContext(start, end, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, player);
                 BlockRayTraceResult result = getMinecraft().world.rayTraceBlocks(context);
@@ -267,7 +266,7 @@ public class GuiSelectionScreen extends GuiBase {
                 font.drawString(blockData.getEntryName(), left + 30, top + 7, 0xFFFFFF);
                 font.drawString(blockData.isDrawing() ? "Enabled" : "Disabled", left + 30, top + 17, blockData.isDrawing() ? Color.GREEN.getRGB() : Color.RED.getRGB());
 
-                TempMapping.Render.enableGUIStandardItemLighting();
+                RenderHelper.enableStandardItemLighting();
                 Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(blockData.getItemStack(), left + 5, top + 7);
                 RenderHelper.disableStandardItemLighting();
 

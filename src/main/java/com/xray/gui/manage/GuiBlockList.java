@@ -4,7 +4,6 @@ import com.xray.XRay;
 import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.ScrollingList;
 import com.xray.store.GameBlockStore.BlockWithItemStack;
-import com.xray.utils.TempMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -131,7 +130,7 @@ public class GuiBlockList extends GuiBase {
                 font.drawString(this.block.getItemStack().getItem().getName().getFormattedText(), left + 30, top + 7, Color.WHITE.getRGB());
                 font.drawString(resource != null ? resource.getNamespace() : "", left + 30, top + 17, Color.WHITE.getRGB());
 
-                TempMapping.Render.enableGUIStandardItemLighting();
+                RenderHelper.enableStandardItemLighting();
                 this.parent.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(this.block.getItemStack(), left + 5, top + 7);
                 RenderHelper.disableStandardItemLighting();
             }

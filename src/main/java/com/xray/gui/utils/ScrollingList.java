@@ -1,6 +1,5 @@
 package com.xray.gui.utils;
 
-import com.xray.utils.TempMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.list.AbstractList;
 import org.lwjgl.opengl.GL11;
@@ -19,10 +18,10 @@ public class ScrollingList<E extends AbstractList.AbstractListEntry<E>> extends 
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
-        double scale = TempMapping.MinecraftInstance.mainWindow().getGuiScaleFactor();
+        double scale = Minecraft.getInstance().getMainWindow().getGuiScaleFactor();
 
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor((int) (this.x0 * scale), (int) (TempMapping.MinecraftInstance.mainWindow().getHeight() - ((this.y0 + height) * scale)),
+        GL11.glScissor((int) (this.x0 * scale), (int) (Minecraft.getInstance().getMainWindow().getHeight() - ((this.y0 + height) * scale)),
                 (int) (width * scale), (int) (height * scale));
 
         super.render(mouseX, mouseY, partialTicks);

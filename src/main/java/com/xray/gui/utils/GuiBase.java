@@ -56,11 +56,10 @@ public abstract class GuiBase extends Screen {
         if ( color != null )
             RenderSystem.color4f((float) color[0] / 255, (float) color[1] / 255, (float) color[2] / 255, alpha / 255);
 
-        //func_225583_a_ = TEX
-        tessellate.func_225582_a_(x + 0, y + height, (double) 0).func_225583_a_( 0,1).endVertex();
-        tessellate.func_225582_a_(x + width, y + height, (double) 0).func_225583_a_( 1, 1).endVertex();
-        tessellate.func_225582_a_(x + width, y + 0, (double) 0).func_225583_a_( 1,0).endVertex();
-        tessellate.func_225582_a_(x + 0, y + 0, (double) 0).func_225583_a_( 0, 0).endVertex();
+        tessellate.pos(x + 0, y + height, (double) 0).tex( 0,1).endVertex();
+        tessellate.pos(x + width, y + height, (double) 0).tex( 1, 1).endVertex();
+        tessellate.pos(x + width, y + 0, (double) 0).tex( 1,0).endVertex();
+        tessellate.pos(x + 0, y + 0, (double) 0).tex( 0, 0).endVertex();
         tessellator.draw();
 
         RenderSystem.popMatrix();

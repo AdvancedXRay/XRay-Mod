@@ -29,10 +29,10 @@ public class Render
         Vec3d view = XRay.mc.gameRenderer.getActiveRenderInfo().getProjectedView();
 
         MatrixStack stack = event.getMatrixStack();
-        stack.func_227861_a_(-view.x, -view.y, -view.z); // translate
+        stack.translate(-view.x, -view.y, -view.z); // translate
 
         RenderSystem.pushMatrix();
-        RenderSystem.multMatrix(stack.func_227866_c_().func_227870_a_());
+        RenderSystem.multMatrix(stack.getLast().getPositionMatrix());
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
@@ -59,43 +59,40 @@ public class Render
         final float green = (b.getColor() >> 8 & 0xff) / 255f;
         final float blue = (b.getColor() & 0xff) / 255f;
 
-        // TOP
-        // func_225582_a_ = POS
-        // func_227885_a_ = COLOR
-        buffer.func_225582_a_(x, y + size, z).func_227885_a_(red, green, blue, opacity).endVertex();
-        buffer.func_225582_a_(x + size, y + size, z).func_227885_a_(red, green, blue, opacity).endVertex();
-        buffer.func_225582_a_(x + size, y + size, z).func_227885_a_(red, green, blue, opacity).endVertex();
-        buffer.func_225582_a_(x + size, y + size, z + size).func_227885_a_(red, green, blue, opacity).endVertex();
-        buffer.func_225582_a_(x + size, y + size, z + size).func_227885_a_(red, green, blue, opacity).endVertex();
-        buffer.func_225582_a_(x, y + size, z + size).func_227885_a_(red, green, blue, opacity).endVertex();
-        buffer.func_225582_a_(x, y + size, z + size).func_227885_a_(red, green, blue, opacity).endVertex();
-        buffer.func_225582_a_(x, y + size, z).func_227885_a_(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y + size, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y + size, z).color(red, green, blue, opacity).endVertex();
 
         // BOTTOM
-        buffer.func_225582_a_(x + size, y, z).func_227885_a_(red, green, blue, opacity).endVertex();
-        buffer.func_225582_a_(x + size, y, z + size).func_227885_a_(red, green, blue, opacity).endVertex();
-        buffer.func_225582_a_(x + size, y, z + size).func_227885_a_(red, green, blue, opacity).endVertex();
-        buffer.func_225582_a_(x, y, z + size).func_227885_a_(red, green, blue, opacity).endVertex();
-        buffer.func_225582_a_(x, y, z + size).func_227885_a_(red, green, blue, opacity).endVertex();
-        buffer.func_225582_a_(x, y, z).func_227885_a_(red, green, blue, opacity).endVertex();
-        buffer.func_225582_a_(x, y, z).func_227885_a_(red, green, blue, opacity).endVertex();
-        buffer.func_225582_a_(x + size, y, z).func_227885_a_(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y, z).color(red, green, blue, opacity).endVertex();
 
         // Edge 1
-        buffer.func_225582_a_(x + size, y, z + size).func_227885_a_(red, green, blue, opacity).endVertex();
-        buffer.func_225582_a_(x + size, y + size, z + size).func_227885_a_(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
 
         // Edge 2
-        buffer.func_225582_a_(x + size, y, z).func_227885_a_(red, green, blue, opacity).endVertex();
-        buffer.func_225582_a_(x + size, y + size, z).func_227885_a_(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
 
         // Edge 3
-        buffer.func_225582_a_(x, y, z + size).func_227885_a_(red, green, blue, opacity).endVertex();
-        buffer.func_225582_a_(x, y + size, z + size).func_227885_a_(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
 
         // Edge 4
-        buffer.func_225582_a_(x, y, z).func_227885_a_(red, green, blue, opacity).endVertex();
-        buffer.func_225582_a_(x, y + size, z).func_227885_a_(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(x, y + size, z).color(red, green, blue, opacity).endVertex();
     }
 
     /**

@@ -7,7 +7,6 @@ import com.xray.gui.GuiSelectionScreen;
 import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.GuiSlider;
 import com.xray.utils.BlockData;
-import com.xray.utils.TempMapping;
 import com.xray.xray.Controller;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -92,7 +91,7 @@ public class GuiAddBlock extends GuiBase {
         oreName.render(x, y, partialTicks);
         renderPreview(width / 2 - 100, height / 2 - 40, (float) redSlider.getValue(), (float) greenSlider.getValue(), (float) blueSlider.getValue());
 
-        TempMapping.Render.enableGUIStandardItemLighting();
+        RenderHelper.enableStandardItemLighting();
         this.itemRenderer.renderItemAndEffectIntoGUI(this.itemStack, width / 2 + 85, height / 2 - 105);
         RenderHelper.disableStandardItemLighting();
     }
@@ -105,10 +104,10 @@ public class GuiAddBlock extends GuiBase {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.color4f(r, g, b, 1);
         tessellate.begin(7, DefaultVertexFormats.POSITION);
-        tessellate.func_225582_a_(x, y, 0.0D).endVertex();
-        tessellate.func_225582_a_(x, y + 45, 0.0D).endVertex();
-        tessellate.func_225582_a_(x + 202, y + 45, 0.0D).endVertex();
-        tessellate.func_225582_a_(x + 202, y, 0.0D).endVertex();
+        tessellate.pos(x, y, 0.0D).endVertex();
+        tessellate.pos(x, y + 45, 0.0D).endVertex();
+        tessellate.pos(x + 202, y + 45, 0.0D).endVertex();
+        tessellate.pos(x + 202, y, 0.0D).endVertex();
         tessellator.draw();
         RenderSystem.enableTexture();
         RenderSystem.disableBlend();
