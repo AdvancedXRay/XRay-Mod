@@ -44,7 +44,7 @@ A quick note on version. I try and support everything I can but with limited tim
 
 |Minecraft Version   | Mod Version | Branch | Author
 |---|---|---|---
-|1.15.2 | [2.0.0](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.15.2-v2.2.0) | [/master](https://github.com/MichaelHillcox/XRay-Mod/tree/master) | [Michael Hillcox](https://github.com/MichaelHillcox)
+|1.15.2 | [2.2.0](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.15.2-v2.2.0) | [/master](https://github.com/MichaelHillcox/XRay-Mod/tree/master) | [Michael Hillcox](https://github.com/MichaelHillcox)
 |1.15.1 | [2.1.0](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.15.1-v2.1.0) | [/master](https://github.com/MichaelHillcox/XRay-Mod/tree/1.15.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
 |1.14.4 | [2.0.4](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.14.4-v2.0.4) | [/master](https://github.com/MichaelHillcox/XRay-Mod/tree/1.14.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
 |1.12.2 | [1.5.0](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.12.2-v1.5.0) | [/1.12.2](https://github.com/MichaelHillcox/XRay-Mod/tree/1.12.2) | [Michael Hillcox](https://github.com/MichaelHillcox)
