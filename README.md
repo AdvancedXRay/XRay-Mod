@@ -36,6 +36,9 @@ Minecraft Forge based XRay mod designed to aid players who don't like the ore se
 The [Imgur Album](http://imgur.com/a/23dX5)
 ![XRAY](http://i.imgur.com/N3KOEaE.png)
 
+### Use on public servers
+**note on use of the mod on servers:** I want to make this very clear, I **DO NOT** support using this mod on servers, if you create an issue and I see you've tried to join a server, I will close the issue. This mod is only maintained because I personally use it for myself, on my own worlds. Do not break other servers rules, they are there because the owners want you to play a specific way, respect that or plan on a different server.
+
 ### Supports
 A quick note on version. I try and support everything I can but with limited time I opt to discontinue every version 2 versions below the current game version. Example: we're currently on 1.14.4 so I will support 1.14.4 and 1.12.2 ( we missed 1.13 ). If you find a very big bug in an old version I might be abe to resolve it if you submit a detailed bug report. 
 
