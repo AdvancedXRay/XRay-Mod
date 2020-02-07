@@ -60,16 +60,6 @@ dependencies {
     minecraft "net.minecraftforge:forge:${game_version}-${forge_version}"
 }
 
-processResources { 
-    from("$buildDir/tmp/modMeta") {
-        expand 'version':project.version
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'META-INF/mods.toml'
-    }
-}
-
 jar {
     manifest {
         attributes([
