@@ -22,15 +22,13 @@ public class GuiOverlay {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void RenderGameOverlayEvent(RenderGameOverlayEvent event) {
         // Draw Indicator
-        if(!Controller.isXRayActive() || !Configuration.general.showOverlay.get() || event.isCanceled() || event.getType() != RenderGameOverlayEvent.ElementType.HOTBAR )
+        if(!Controller.isXRayActive() || !Configuration.general.showOverlay.get() || event.isCanceled() || event.getType() != RenderGameOverlayEvent.ElementType.TEXT )
             return;
 
-        RenderSystem.pushMatrix();
         RenderSystem.color3f(0, 255, 0);
         XRay.mc.getTextureManager().bindTexture(circle);
         Screen.blit(5, 5, 0f, 0f, 5, 5, 5, 5);
-        RenderSystem.popMatrix();
 
-        XRay.mc.fontRenderer.drawStringWithShadow(I18n.format("xray.overlay"), 15, 4, 0x5affffff);
+        XRay.mc.fontRenderer.drawStringWithShadow(I18n.format("xray.overlay"), 15, 4, 0xffffffff);
     }
 }

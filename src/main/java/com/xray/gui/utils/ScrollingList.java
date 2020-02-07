@@ -21,8 +21,8 @@ public class ScrollingList<E extends AbstractList.AbstractListEntry<E>> extends 
         double scale = Minecraft.getInstance().getMainWindow().getGuiScaleFactor();
 
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor((int) (this.x0 * scale), (int) (Minecraft.getInstance().getMainWindow().getHeight() - ((this.y0 + height) * scale)),
-                (int) (width * scale), (int) (height * scale));
+        GL11.glScissor((int)(this.x0  * scale), (int)(Minecraft.getInstance().getMainWindow().getFramebufferHeight() - ((this.y0 + height) * scale)),
+                (int)(width * scale), (int)(height * scale));
 
         super.render(mouseX, mouseY, partialTicks);
 
