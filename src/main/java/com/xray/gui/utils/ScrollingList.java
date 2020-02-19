@@ -2,6 +2,7 @@ package com.xray.gui.utils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.list.AbstractList;
+import net.minecraftforge.client.gui.ScrollPanel;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -21,8 +22,8 @@ public class ScrollingList<E extends AbstractList.AbstractListEntry<E>> extends 
         double scale = Minecraft.getInstance().mainWindow.getGuiScaleFactor();
 
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor((int) (this.x0 * scale), (int) (Minecraft.getInstance().mainWindow.getHeight() - ((this.y0 + height) * scale)),
-                (int) (width * scale), (int) (height * scale));
+        GL11.glScissor((int)(this.x0  * scale), (int)(Minecraft.getInstance().mainWindow.getFramebufferHeight() - ((this.y0 + height) * scale)),
+                (int)(width * scale), (int)(height * scale));
 
         super.render(mouseX, mouseY, partialTicks);
 
