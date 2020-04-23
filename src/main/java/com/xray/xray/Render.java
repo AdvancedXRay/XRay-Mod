@@ -3,11 +3,12 @@ package com.xray.xray;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.xray.Configuration;
 import com.xray.XRay;
 import com.xray.utils.RenderBlockProps;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -29,26 +30,21 @@ public class Render
         Vec3d view = XRay.mc.gameRenderer.getActiveRenderInfo().getProjectedView();
 
         MatrixStack stack = event.getMatrixStack();
+        stack.push();
         stack.translate(-view.x, -view.y, -view.z); // translate
 
-        RenderSystem.pushMatrix();
-        RenderSystem.multMatrix(stack.getLast().getPositionMatrix());
-
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-        Profile.BLOCKS.apply(); // Sets GL state for block drawing
+        IRenderTypeBuffer.Impl bufferSource = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
+        IVertexBuilder builder = bufferSource.getBuffer(ModRenderTypes.LINES);
 
         syncRenderList.forEach(blockProps -> {
-            buffer.begin( GL_LINES, DefaultVertexFormats.POSITION_COLOR );
-            renderBlockBounding(buffer, blockProps);
-            tessellator.draw();
-        } );
+            renderBlockBounding(stack.getLast().getMatrix(), builder, blockProps);
+        });
 
-        Profile.BLOCKS.clean();
-        RenderSystem.popMatrix();
-	}
+        bufferSource.finish();
+        stack.pop();
+    }
 
-    private static void renderBlockBounding(BufferBuilder buffer, RenderBlockProps b) {
+    private static void renderBlockBounding(Matrix4f matrix4f, IVertexBuilder builder, RenderBlockProps b) {
         if( b == null )
             return;
 
@@ -59,40 +55,40 @@ public class Render
         final float green = (b.getColor() >> 8 & 0xff) / 255f;
         final float blue = (b.getColor() & 0xff) / 255f;
 
-        buffer.pos(x, y + size, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y + size, z).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x, y + size, z).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x + size, y + size, z).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x + size, y + size, z).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x, y + size, z + size).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x, y + size, z + size).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x, y + size, z).color(red, green, blue, opacity).endVertex();
 
         // BOTTOM
-        buffer.pos(x + size, y, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + size, y, z).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x + size, y, z).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x + size, y, z + size).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x + size, y, z + size).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x, y, z + size).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x, y, z + size).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x, y, z).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x, y, z).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x + size, y, z).color(red, green, blue, opacity).endVertex();
 
         // Edge 1
-        buffer.pos(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x + size, y, z + size).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
 
         // Edge 2
-        buffer.pos(x + size, y, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x + size, y, z).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x + size, y + size, z).color(red, green, blue, opacity).endVertex();
 
         // Edge 3
-        buffer.pos(x, y, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x, y, z + size).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x, y + size, z + size).color(red, green, blue, opacity).endVertex();
 
         // Edge 4
-        buffer.pos(x, y, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y + size, z).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x, y, z).color(red, green, blue, opacity).endVertex();
+        builder.pos(matrix4f, x, y + size, z).color(red, green, blue, opacity).endVertex();
     }
 
     /**
