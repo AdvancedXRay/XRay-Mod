@@ -27,21 +27,21 @@ public class Render
     private static final int GL_LINES = 1;
 
 	static void renderBlocks(RenderWorldLastEvent event) {
-        Vec3d view = XRay.mc.gameRenderer.getActiveRenderInfo().getProjectedView();
+        IRenderTypeBuffer.Impl bufferSource = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
+        IVertexBuilder builder = bufferSource.getBuffer(ModRenderTypes.OVERLAY_LINES);
+	    Vec3d view = XRay.mc.gameRenderer.getActiveRenderInfo().getProjectedView();
 
         MatrixStack stack = event.getMatrixStack();
         stack.push();
         stack.translate(-view.x, -view.y, -view.z); // translate
 
-        IRenderTypeBuffer.Impl bufferSource = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
-        IVertexBuilder builder = bufferSource.getBuffer(ModRenderTypes.LINES);
-
         syncRenderList.forEach(blockProps -> {
             renderBlockBounding(stack.getLast().getMatrix(), builder, blockProps);
         });
 
-        bufferSource.finish();
         stack.pop();
+        RenderSystem.disableDepthTest();
+        bufferSource.finish(ModRenderTypes.OVERLAY_LINES);
     }
 
     private static void renderBlockBounding(Matrix4f matrix4f, IVertexBuilder builder, RenderBlockProps b) {
