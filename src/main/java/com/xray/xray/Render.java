@@ -21,11 +21,6 @@ public class Render
 {
     public static List<RenderBlockProps> syncRenderList = Collections.synchronizedList( new ArrayList<>() ); // this is accessed by threads
 
-    private static final int GL_FRONT_AND_BACK = 1032;
-    private static final int GL_LINE = 6913;
-    private static final int GL_FILL = 6914;
-    private static final int GL_LINES = 1;
-
 	static void renderBlocks(RenderWorldLastEvent event) {
         IRenderTypeBuffer.Impl bufferSource = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
         IVertexBuilder builder = bufferSource.getBuffer(ModRenderTypes.OVERLAY_LINES);
@@ -89,49 +84,5 @@ public class Render
         // Edge 4
         builder.pos(matrix4f, x, y, z).color(red, green, blue, opacity).endVertex();
         builder.pos(matrix4f, x, y + size, z).color(red, green, blue, opacity).endVertex();
-    }
-
-    /**
-     * OpenGL Profiles used for rendering blocks and entities
-     */
-    private enum Profile
-    {
-        BLOCKS {
-            @Override
-            public void apply()
-            {
-                RenderSystem.disableTexture();
-                RenderSystem.disableDepthTest();
-                RenderSystem.depthMask( false );
-                RenderSystem.polygonMode( GL_FRONT_AND_BACK, GL_LINE );
-                RenderSystem.blendFunc( GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA );
-                RenderSystem.enableBlend();
-                RenderSystem.lineWidth( (float) Configuration.general.outlineThickness.get().doubleValue() );
-            }
-
-            @Override
-            public void clean()
-            {
-                RenderSystem.polygonMode( GL_FRONT_AND_BACK, GL_FILL );
-                RenderSystem.disableBlend();
-                RenderSystem.enableDepthTest();
-                RenderSystem.depthMask( true );
-                RenderSystem.enableTexture();
-            }
-        },
-        // TODO:
-        ENTITIES {
-            @Override
-            public void apply()
-            {}
-
-            @Override
-            public void clean()
-            {}
-        };
-
-        private Profile() {}
-        public abstract void apply();
-        public abstract void clean();
     }
 }

@@ -1,6 +1,9 @@
 package com.xray.xray;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.xray.XRay;
+import net.minecraft.entity.item.ArmorStandEntity;
+import net.minecraft.entity.passive.WolfEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent;
