@@ -33,6 +33,7 @@ import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -213,7 +214,7 @@ public class GuiSelectionScreen extends GuiBase {
 
     static final class SupportButtonInner extends SupportButton {
         public SupportButtonInner(int widthIn, int heightIn, int width, int height, String text, String i18nKey, IPressable onPress) {
-            super(widthIn, heightIn, width, height, I18n.format(text), Arrays.asList(I18n.format(i18nKey).split("\n")), onPress);
+            super(widthIn, heightIn, width, height, new StringTextComponent(text), new TranslationTextComponent(i18nKey), onPress);
         }
     }
 

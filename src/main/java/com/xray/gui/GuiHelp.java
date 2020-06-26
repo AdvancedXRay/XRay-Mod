@@ -1,9 +1,11 @@
 package com.xray.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.xray.gui.utils.GuiBase;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -17,24 +19,24 @@ public class GuiHelp extends GuiBase {
 
     private List<LinedText> areas = new ArrayList<>();
 
-    @Override
-    public void init() {
-        super.init();
+    @Override // @mcp: func_231160_c_ = init
+    public void func_231160_c_() {
+        super.func_231160_c_();
 
         areas.clear();
         areas.add(new LinedText("xray.message.help.gui"));
         areas.add(new LinedText("xray.message.help.warning"));
 
-        this.addButton(new Button((width / 2) - 100, (height / 2) + 80, 200, 20, I18n.format("xray.single.close"), b -> this.onClose()));
+        this.addButton(new Button((getWidth() / 2) - 100, (getHeight() / 2) + 80, 200, 20, new TranslationTextComponent("xray.single.close"), b -> this.onClose()));
     }
 
     @Override
-    public void renderExtra(int x, int y, float partialTicks) {
-        float lineY = (height / 2f) - 85;
+    public void renderExtra(MatrixStack stack, int x, int y, float partialTicks) {
+        float lineY = (getHeight() / 2f) - 85;
         for (LinedText linedText : areas) {
             for (String line : linedText.getLines()) {
                 lineY += 12;
-                this.getFontRender().drawStringWithShadow(line,(width / 2f) - 176, lineY, Color.WHITE.getRGB());
+                this.getFontRender().func_238405_a_(stack, line,(getWidth() / 2f) - 176, lineY, Color.WHITE.getRGB()); // @mcp: func_238405_a_ = drawtextwithshadow
             }
             lineY += 10;
         }

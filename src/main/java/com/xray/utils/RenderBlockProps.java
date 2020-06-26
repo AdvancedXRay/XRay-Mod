@@ -1,10 +1,10 @@
 package com.xray.utils;
 
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3i;
 
 // so we benefit from Vec3i's hashCode() and equals()
-public class RenderBlockProps extends Vec3i {
+public class RenderBlockProps extends Vector3i {
 	private int color;
 
 	public RenderBlockProps(double x, double y, double z, int color) {

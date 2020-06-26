@@ -6,6 +6,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.xray.XRay;
 import com.xray.utils.BlockData;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.Tags;
 import org.apache.logging.log4j.Level;
 
@@ -84,11 +85,12 @@ public class JsonStore
 
     public List<BlockData.SerializableBlockData> populateDefault() {
         List<BlockData.SerializableBlockData> oresData = new ArrayList<>();
-        Tags.Blocks.ORES.getAllElements().forEach(e -> {
+        Tags.Blocks.ORES.func_230236_b_().forEach(e -> {
             if( e.getRegistryName() == null )
                 return;
 
-            oresData.add(new BlockData.SerializableBlockData(e.getNameTextComponent().getFormattedText(),
+            // @fixme: might be broken
+            oresData.add(new BlockData.SerializableBlockData(new TranslationTextComponent(e.getTranslationKey()).toString(),
                     e.getRegistryName().toString(),
                             (rand.nextInt(255) << 16) + (rand.nextInt(255) << 8) + rand.nextInt(255),
                     false,

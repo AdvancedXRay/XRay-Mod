@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.xray.XRay;
 import com.xray.gui.GuiSelectionScreen;
 import com.xray.gui.utils.GuiBase;
-import com.xray.gui.utils.GuiSlider;
 import com.xray.utils.BlockData;
 import com.xray.xray.Controller;
 import net.minecraft.block.Block;

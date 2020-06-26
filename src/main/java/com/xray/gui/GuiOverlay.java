@@ -29,6 +29,8 @@ public class GuiOverlay {
         XRay.mc.getTextureManager().bindTexture(circle);
         Screen.blit(5, 5, 0f, 0f, 5, 5, 5, 5);
 
-        XRay.mc.fontRenderer.drawStringWithShadow(I18n.format("xray.overlay"), 15, 4, 0xffffffff);
+        
+        // @mcp: func_238405_a_ = drawStringWithShadow
+        XRay.mc.fontRenderer.func_238405_a_(I18n.format("xray.overlay"), 15, 4, 0xffffffff);
     }
 }

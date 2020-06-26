@@ -1,19 +1,25 @@
 package com.xray.gui.utils;
 
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class SupportButton extends Button {
-    private List<String> support;
+    private List<StringTextComponent> support;
 
-    public SupportButton(int widthIn, int heightIn, int width, int height, String text, List<String> support, IPressable onPress) {
+    public SupportButton(int widthIn, int heightIn, int width, int height, ITextComponent text, TranslationTextComponent support, IPressable onPress) {
         super(widthIn, heightIn, width, height, text, onPress);
 
-        this.support = support;
+        for(String line : support.toString().split("\n")) {
+            this.support.add(new StringTextComponent(line));
+        }
     }
 
-    public List<String> getSupport() {
+    public List<StringTextComponent> getSupport() {
         return support;
     }
 }
