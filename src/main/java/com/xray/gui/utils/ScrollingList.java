@@ -39,9 +39,4 @@ public class ScrollingList<E extends AbstractList.AbstractListEntry<E>> extends 
     protected int func_230952_d_() {
         return (this.field_230675_l_ + this.field_230670_d_) - 6;
     }
-
-    @Override // @mcp: func_230968_n_ = getRowLeft
-    public int func_230968_n_() {
-        return this.field_230670_d_;
-    }
 }

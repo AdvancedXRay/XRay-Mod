@@ -25,12 +25,13 @@ public class GuiOverlay {
         if(!Controller.isXRayActive() || !Configuration.general.showOverlay.get() || event.isCanceled() || event.getType() != RenderGameOverlayEvent.ElementType.TEXT )
             return;
 
+        // @fixme add back
         RenderSystem.color3f(0, 255, 0);
         XRay.mc.getTextureManager().bindTexture(circle);
-        Screen.blit(5, 5, 0f, 0f, 5, 5, 5, 5);
+        Screen.func_238463_a_(event.getMatrixStack(), 5, 5, 0f, 0f, 5, 5, 5, 5); // @mcp: func_238463_a_ = blit (7 parms) =
 
-        
+
         // @mcp: func_238405_a_ = drawStringWithShadow
-        XRay.mc.fontRenderer.func_238405_a_(I18n.format("xray.overlay"), 15, 4, 0xffffffff);
+        XRay.mc.fontRenderer.func_238405_a_(event.getMatrixStack(), I18n.format("xray.overlay"), 15, 4, 0xffffffff);
     }
 }

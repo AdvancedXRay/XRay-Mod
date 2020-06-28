@@ -90,7 +90,7 @@ public class JsonStore
                 return;
 
             // @fixme: might be broken
-            oresData.add(new BlockData.SerializableBlockData(new TranslationTextComponent(e.getTranslationKey()).toString(),
+            oresData.add(new BlockData.SerializableBlockData(new TranslationTextComponent(e.getTranslationKey()).getString(),
                     e.getRegistryName().toString(),
                             (rand.nextInt(255) << 16) + (rand.nextInt(255) << 8) + rand.nextInt(255),
                     false,
