@@ -9,6 +9,7 @@ import com.xray.gui.utils.GuiBase;
 import com.xray.utils.BlockData;
 import com.xray.xray.Controller;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -20,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.fml.client.gui.widget.Slider;
 
 import java.util.ArrayList;
@@ -28,9 +30,9 @@ import java.util.Objects;
 public class GuiAddBlock extends GuiBase {
     private TextFieldWidget oreName;
     private Button addBtn;
-    private Slider redSlider;
-    private Slider greenSlider;
-    private Slider blueSlider;
+    private CustomSlider redSlider;
+    private CustomSlider greenSlider;
+    private CustomSlider blueSlider;
 
     private Block selectBlock;
     private ItemStack itemStack;
@@ -69,9 +71,9 @@ public class GuiAddBlock extends GuiBase {
         }));
         addButton(new Button(getWidth() / 2 + 30, getHeight() / 2 + 85, 72, 20, new TranslationTextComponent("xray.single.cancel"), b -> this.onClose()));
 
-        addButton(redSlider = new Slider(getWidth() / 2 - 100, getHeight() / 2 + 7, 202, 20, new TranslationTextComponent("xray.color.red"), new StringTextComponent(""), 0, 255, 0, false, true, (e) -> {}, (e) -> {}));
-        addButton(greenSlider = new Slider(getWidth() / 2 - 100, getHeight() / 2 + 30, 202, 20, new TranslationTextComponent("xray.color.green"), new StringTextComponent(""), 0, 255, 165, false, true, (e) -> {}, (e) -> {}));
-        addButton(blueSlider = new Slider(getWidth() / 2 - 100, getHeight() / 2 + 53, 202, 20, new TranslationTextComponent("xray.color.blue"), new StringTextComponent(""), 0, 255, 255, false, true, (e) -> {}, (e) -> {}));
+        addButton(redSlider = new CustomSlider(getWidth() / 2 - 100, getHeight() / 2 + 7, new TranslationTextComponent("xray.color.red"), 0, 255, 0, (e) -> {}, (e) -> {}));
+        addButton(greenSlider = new CustomSlider(getWidth() / 2 - 100, getHeight() / 2 + 30, new TranslationTextComponent("xray.color.green"), 0, 255, 165, (e) -> {}, (e) -> {}));
+        addButton(blueSlider = new CustomSlider(getWidth() / 2 - 100, getHeight() / 2 + 53, new TranslationTextComponent("xray.color.blue"), 0, 255, 255, (e) -> {}, (e) -> {}));
 
         oreName = new TextFieldWidget(getMinecraft().fontRenderer, getWidth() / 2 - 100, getHeight() / 2 - 70, 202, 20, StringTextComponent.field_240750_d_); // @mcp: field_240750_d_ = empty
         oreName.setText(this.selectBlock.func_235333_g_().getString()); // @mcp: func_235333_g_ = getNameTextComponent
@@ -105,7 +107,7 @@ public class GuiAddBlock extends GuiBase {
         RenderSystem.enableBlend();
         RenderSystem.disableTexture();
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        RenderSystem.color4f(r, g, b, 1);
+        RenderSystem.color4f(r/255, g/255, b/255, 1);
         tessellate.begin(7, DefaultVertexFormats.POSITION);
         tessellate.pos(x, y, 0.0D).endVertex();
         tessellate.pos(x, y + 45, 0.0D).endVertex();
@@ -134,6 +136,20 @@ public class GuiAddBlock extends GuiBase {
         return super.func_231044_a_(x, y, mouse);
     }
 
+    @Override // @mcp: func_231048_c_ = mouseReleased
+    public boolean func_231048_c_(double x, double y, int mouse) {
+        if (redSlider.dragging && !redSlider.func_230999_j_())
+            redSlider.dragging = false;
+
+        if (greenSlider.dragging && !greenSlider.func_230999_j_())
+            greenSlider.dragging = false;
+
+        if (blueSlider.dragging && !blueSlider.func_230999_j_())
+            blueSlider.dragging = false;
+
+        return super.func_231048_c_(x, y, mouse);
+    }
+
     @Override
     public boolean hasTitle() {
         return true;
@@ -142,5 +158,35 @@ public class GuiAddBlock extends GuiBase {
     @Override
     public String title() {
         return I18n.format("xray.title.config");
+    }
+
+    public static class CustomSlider extends Slider {
+        public CustomSlider(int xPos, int yPos, ITextComponent displayStr, double minVal, double maxVal, double currentVal, IPressable handler, ISlider par) {
+            super(xPos, yPos, 202, 20, displayStr, new StringTextComponent(""), minVal, maxVal, currentVal, false, true, handler, par);
+        }
+
+        // note: overriding this because the forge one has a bug in it causing the title to have %s button after it...
+        @Override
+        public void func_230431_b_(MatrixStack mStack, int mouseX, int mouseY, float partial)
+        {
+            if (this.field_230694_p_)
+            {
+                Minecraft mc = Minecraft.getInstance();
+                this.field_230692_n_ = mouseX >= this.field_230690_l_ && mouseY >= this.field_230691_m_ && mouseX < this.field_230690_l_ + this.field_230688_j_ && mouseY < this.field_230691_m_ + this.field_230689_k_;
+                int k = this.func_230989_a_(this.func_230449_g_());
+                GuiUtils.drawContinuousTexturedBox(field_230687_i_, this.field_230690_l_, this.field_230691_m_, 0, 46 + k * 20, this.field_230688_j_, this.field_230689_k_, 200, 20, 2, 3, 2, 2, this.func_230927_p_());
+                this.func_230441_a_(mStack, mc, mouseX, mouseY);
+
+                ITextComponent buttonText = this.func_230458_i_();
+                int strWidth = mc.fontRenderer.func_238414_a_(buttonText);
+                int ellipsisWidth = mc.fontRenderer.getStringWidth("...");
+
+                if (strWidth > field_230688_j_ - 6 && strWidth > ellipsisWidth)
+                    //TODO, srg names make it hard to figure out how to append to an ITextProperties from this trim operation, wraping this in StringTextComponent is kinda dirty.
+                    buttonText = new StringTextComponent(mc.fontRenderer.func_238417_a_(buttonText, field_230688_j_ - 6 - ellipsisWidth).getString() + "...");
+
+                this.func_238472_a_(mStack, mc.fontRenderer, buttonText, this.field_230690_l_ + this.field_230688_j_ / 2, this.field_230691_m_ + (this.field_230689_k_ - 8) / 2, getFGColor());
+            }
+        }
     }
 }

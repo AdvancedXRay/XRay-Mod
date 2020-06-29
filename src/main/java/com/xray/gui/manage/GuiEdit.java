@@ -2,6 +2,7 @@ package com.xray.gui.manage;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.xray.XRay;
+import com.xray.gui.manage.GuiAddBlock.CustomSlider;
 import com.xray.gui.utils.GuiBase;
 import com.xray.utils.BlockData;
 import com.xray.xray.Controller;
@@ -11,7 +12,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.client.gui.widget.Slider;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -19,9 +19,9 @@ import java.util.UUID;
 
 public class GuiEdit extends GuiBase {
     private TextFieldWidget oreName;
-    private Slider redSlider;
-    private Slider greenSlider;
-    private Slider blueSlider;
+    private CustomSlider redSlider;
+    private CustomSlider greenSlider;
+    private CustomSlider blueSlider;
     private BlockData block;
 
     public GuiEdit(BlockData block) {
@@ -59,14 +59,9 @@ public class GuiEdit extends GuiBase {
             this.onClose();
         }));
 
-        // @fixme
-        addButton(redSlider = new Slider(getWidth() / 2 - 138, getHeight() / 2 + 7, 202, 20, new TranslationTextComponent("xray.color.red"), new StringTextComponent(""), 0, 255, 0, false, true, (e) -> {}, (e) -> {}));
-        addButton(greenSlider = new Slider(getWidth() / 2 - 138, getHeight() / 2 + 30, 202, 20, new TranslationTextComponent("xray.color.green"), new StringTextComponent(""), 0, 255, 0, false, true, (e) -> {}, (e) -> {}));
-        addButton(blueSlider = new Slider(getWidth() / 2 - 138, getHeight() / 2 + 53, 202, 20, new TranslationTextComponent("xray.color.blue"), new StringTextComponent(""), 0, 255, 0, false, true, (e) -> {}, (e) -> {}));
-
-        redSlider.setValue((block.getColor() >> 16 & 0xff) / 255f);
-        greenSlider.setValue((block.getColor() >> 8 & 0xff) / 255f);
-        blueSlider.setValue((block.getColor() & 0xff) / 255f);
+        addButton(redSlider = new CustomSlider(getWidth() / 2 - 138, getHeight() / 2 + 7, new TranslationTextComponent("xray.color.red"), 0, 255, (block.getColor() >> 16 & 0xff), (e) -> {}, (e) -> {}));
+        addButton(greenSlider = new CustomSlider(getWidth() / 2 - 138, getHeight() / 2 + 30, new TranslationTextComponent("xray.color.green"), 0, 255, (block.getColor() >> 8 & 0xff), (e) -> {}, (e) -> {}));
+        addButton(blueSlider = new CustomSlider(getWidth() / 2 - 138, getHeight() / 2 + 53, new TranslationTextComponent("xray.color.blue"), 0, 255, (block.getColor() & 0xff) , (e) -> {}, (e) -> {}));
 
         oreName = new TextFieldWidget(getMinecraft().fontRenderer, getWidth() / 2 - 138, getHeight() / 2 - 63, 202, 20, new StringTextComponent(""));
         oreName.setText(this.block.getEntryName());
@@ -98,6 +93,20 @@ public class GuiEdit extends GuiBase {
             this.func_231035_a_(oreName); // @mcp: func_231035_a_ = setFocused
 
         return super.func_231044_a_(x, y, mouse);
+    }
+
+    @Override // @mcp: func_231048_c_ = mouseReleased
+    public boolean func_231048_c_(double x, double y, int mouse) {
+        if (redSlider.dragging && !redSlider.func_230999_j_())
+            redSlider.dragging = false;
+
+        if (greenSlider.dragging && !greenSlider.func_230999_j_())
+            greenSlider.dragging = false;
+
+        if (blueSlider.dragging && !blueSlider.func_230999_j_())
+            blueSlider.dragging = false;
+
+        return super.func_231048_c_(x, y, mouse);
     }
 
     @Override

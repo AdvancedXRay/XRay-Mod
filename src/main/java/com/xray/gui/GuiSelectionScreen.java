@@ -17,7 +17,9 @@ import com.xray.xray.Controller;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.list.AbstractList;
@@ -39,8 +41,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,7 +83,7 @@ public class GuiSelectionScreen extends GuiBase {
         this.render = this.field_230707_j_; // @mcp: field_230707_j_ = itemRender
         this.field_230710_m_.clear(); // @mcp: field_230710_m_ = buttons
 
-		this.scrollList = new ScrollingBlockList((getWidth() / 2) - 37, getHeight() / 2 + 10, 203, 185, this.itemList);
+		this.scrollList = new ScrollingBlockList((getWidth() / 2) - 37, getHeight() / 2 + 10, 203, 185, this.itemList, this);
         this.field_230705_e_.add(this.scrollList); // @mcp: field_230705_e_ = children
 
         this.search = new TextFieldWidget(getFontRender(), getWidth() / 2 - 137, getHeight() / 2 - 105, 202, 18, StringTextComponent.field_240750_d_); // @mcp: field_240750_d_ = empty
@@ -221,10 +222,12 @@ public class GuiSelectionScreen extends GuiBase {
 
     static class ScrollingBlockList extends ScrollingList<ScrollingBlockList.BlockSlot> {
         static final int SLOT_HEIGHT = 35;
+        public GuiSelectionScreen parent;
 
-        ScrollingBlockList(int x, int y, int width, int height, List<BlockData> blocks) {
+        ScrollingBlockList(int x, int y, int width, int height, List<BlockData> blocks, GuiSelectionScreen parent) {
             super(x, y, width, height, SLOT_HEIGHT);
             this.updateEntries(blocks);
+            this.parent = parent;
         }
 
         public void setSelected(@Nullable BlockSlot entry, int mouse) {
@@ -271,6 +274,14 @@ public class GuiSelectionScreen extends GuiBase {
                 RenderHelper.enableStandardItemLighting();
                 Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(blockData.getItemStack(), left + 15, top + 7);
                 RenderHelper.disableStandardItemLighting();
+                if (mouseX > left && mouseX < (left + entryWidth) && mouseY > top && mouseY < (top + entryHeight) && mouseY < (this.parent.getTop() + this.parent.getHeight()) && mouseY > this.parent.getTop()) {
+                    this.parent.parent.func_238654_b_(
+                            stack,
+                            Arrays.asList(new TranslationTextComponent("xray.tooltips.edit1"), new TranslationTextComponent("xray.tooltips.edit2")),
+                            left + 15,
+                            (entryIdx == this.parent.func_231039_at__().size() - 1 ? (top - (entryHeight - 20)) : (top + (entryHeight + 15))) // @mcp: func_231039_at__ = getEntries
+                    );  // @mcp: func_230457_a_ = renderTooltip
+                }
 
                 RenderSystem.enableAlphaTest();
                 RenderSystem.enableBlend();
