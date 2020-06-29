@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.gui.widget.Slider;
@@ -69,14 +70,11 @@ public class GuiAddBlock extends GuiBase {
         addButton(new Button(getWidth() / 2 + 30, getHeight() / 2 + 85, 72, 20, new TranslationTextComponent("xray.single.cancel"), b -> this.onClose()));
 
         addButton(redSlider = new Slider(getWidth() / 2 - 100, getHeight() / 2 + 7, 202, 20, new TranslationTextComponent("xray.color.red"), new StringTextComponent(""), 0, 255, 0, false, true, (e) -> {}, (e) -> {}));
-        addButton(greenSlider = new Slider(getWidth() / 2 - 100, getHeight() / 2 + 30, 202, 20, new TranslationTextComponent("xray.color.green"), new StringTextComponent(""), 0, 255, 0, false, true, (e) -> {}, (e) -> {}));
-        addButton(blueSlider = new Slider(getWidth() / 2 - 100, getHeight() / 2 + 53, 202, 20, new TranslationTextComponent("xray.color.blue"), new StringTextComponent(""), 0, 255, 0, false, true, (e) -> {}, (e) -> {}));
-        redSlider.setValue(0.0F);
-        greenSlider.setValue(0.654F);
-        blueSlider.setValue(1.0F);
+        addButton(greenSlider = new Slider(getWidth() / 2 - 100, getHeight() / 2 + 30, 202, 20, new TranslationTextComponent("xray.color.green"), new StringTextComponent(""), 0, 255, 165, false, true, (e) -> {}, (e) -> {}));
+        addButton(blueSlider = new Slider(getWidth() / 2 - 100, getHeight() / 2 + 53, 202, 20, new TranslationTextComponent("xray.color.blue"), new StringTextComponent(""), 0, 255, 255, false, true, (e) -> {}, (e) -> {}));
 
         oreName = new TextFieldWidget(getMinecraft().fontRenderer, getWidth() / 2 - 100, getHeight() / 2 - 70, 202, 20, StringTextComponent.field_240750_d_); // @mcp: field_240750_d_ = empty
-        oreName.setText(this.selectBlock.func_235333_g_().toString()); // @mcp: func_235333_g_ = getNameTextComponent
+        oreName.setText(this.selectBlock.func_235333_g_().getString()); // @mcp: func_235333_g_ = getNameTextComponent
         this.field_230705_e_.add(oreName);// @mcp: field_230705_e_ = children
     }
 
@@ -90,7 +88,7 @@ public class GuiAddBlock extends GuiBase {
     public void renderExtra(MatrixStack stack, int x, int y, float partialTicks) {
         // @mcp: func_238405_a_ = drawStringWithShadow
         // @mcp: func_235333_g_ = getNameTextComponent
-        getFontRender().func_238405_a_(stack, selectBlock.func_235333_g_().toString(), getWidth() / 2f - 100, getHeight() / 2f - 90, 0xffffff);
+        getFontRender().func_238405_a_(stack, selectBlock.func_235333_g_().getString(), getWidth() / 2f - 100, getHeight() / 2f - 90, 0xffffff);
 
         oreName.func_230430_a_(stack, x, y, partialTicks); // @mcp: func_230430_a_ = render
         renderPreview(getWidth() / 2 - 100, getHeight() / 2 - 40, (float) redSlider.getValue(), (float) greenSlider.getValue(), (float) blueSlider.getValue());

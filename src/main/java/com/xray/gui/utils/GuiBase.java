@@ -154,7 +154,7 @@ public abstract class GuiBase extends Screen {
         this.func_231175_as__(); // @mcp: Screen::onClose
     }
 
-    @Override
+    @Override // @mcp: func_231177_au__ = isPauseScreen
     public boolean func_231177_au__() {
         return false;
     }

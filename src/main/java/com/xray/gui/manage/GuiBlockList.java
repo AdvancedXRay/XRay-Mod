@@ -7,6 +7,7 @@ import com.xray.gui.utils.ScrollingList;
 import com.xray.store.GameBlockStore.BlockWithItemStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.screen.OptionsScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.list.AbstractList;
@@ -131,12 +132,12 @@ public class GuiBlockList extends GuiBase {
                 FontRenderer font = this.parent.field_230668_b_.fontRenderer; // @mcp: field_230668_b_ = minecraft
 
                 ResourceLocation resource = this.block.getItemStack().getItem().getRegistryName();
-                font.func_238407_a_(stack,this.block.getItemStack().getItem().getName(), left + 30, top + 7, Color.WHITE.getRGB()); // @mcp: func_238407_a_ = drawString
-                font.func_238407_a_(stack, ITextProperties.func_240652_a_(resource != null ? resource.getNamespace() : ""), left + 30, top + 17, Color.WHITE.getRGB()); // @mcp: func_238407_a_ = drawString
+                font.func_238407_a_(stack,this.block.getItemStack().getItem().getName(), left + 40, top + 7, Color.WHITE.getRGB()); // @mcp: func_238407_a_ = drawString
+                font.func_238407_a_(stack, ITextProperties.func_240652_a_(resource != null ? resource.getNamespace() : ""), left + 40, top + 17, Color.WHITE.getRGB()); // @mcp: func_238407_a_ = drawString
                 // @mcp: func_240652_a_ = unknown... Code recommendation
 
                 RenderHelper.enableStandardItemLighting();
-                this.parent.field_230668_b_.getItemRenderer().renderItemAndEffectIntoGUI(this.block.getItemStack(), left + 5, top + 7); // @mcp: field_230668_b_ = minecraft
+                this.parent.field_230668_b_.getItemRenderer().renderItemAndEffectIntoGUI(this.block.getItemStack(), left + 15, top + 7); // @mcp: field_230668_b_ = minecraft
                 RenderHelper.disableStandardItemLighting();
             }
 

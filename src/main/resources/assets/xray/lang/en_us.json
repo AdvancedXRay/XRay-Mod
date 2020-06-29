@@ -12,9 +12,9 @@
 
   "xray.overlay": "XRay Active",
 
-  "xray.color.red": "Red",
-  "xray.color.green": "Green",
-  "xray.color.blue": "Blue",
+  "xray.color.red": "Red: ",
+  "xray.color.green": "Green: ",
+  "xray.color.blue": "Blue: ",
 
   "xray.input.gui": "GUI Name",
   "xray.input.add": "Add Block",
