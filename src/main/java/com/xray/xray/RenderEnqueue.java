@@ -6,8 +6,8 @@ import com.xray.utils.Region;
 import com.xray.utils.RenderBlockProps;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -56,7 +56,7 @@ public class RenderEnqueue implements Runnable
 
 		// Used for cleaning up the searching process
 		BlockState currentState;
-		IFluidState currentFluid;
+		FluidState currentFluid;
 
 		ResourceLocation block;
 		Pair<BlockData, UUID> dataWithUUID;
@@ -131,7 +131,7 @@ public class RenderEnqueue implements Runnable
 				}
 			}
 		}
-		final BlockPos playerPos = player.getPosition();
+		final BlockPos playerPos = player.func_233580_cy_(); // @mcp: func_233580_cy_ = getPosition (blockPos)
 		renderQueue.sort((t, t1) -> Double.compare(t1.distanceSq(playerPos), t.distanceSq(playerPos)));
 		Render.syncRenderList.clear();
 		Render.syncRenderList.addAll( renderQueue ); // Add all our found blocks to the Render.syncRenderList list. To be use by Render when drawing.

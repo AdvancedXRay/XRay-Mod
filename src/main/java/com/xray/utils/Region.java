@@ -1,6 +1,6 @@
 package com.xray.utils;
 
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3i;
 
 /**
  * A bounding box representing a world 3D area in both world and chunk coords.
@@ -16,7 +16,7 @@ public class Region {
 	 * @param pos a world position
 	 * @param radius a block radius
 	 */
-	public Region(Vec3i pos, int radius)
+	public Region(Vector3i pos, int radius)
 	{
 		minX = pos.getX() - radius;
 		maxX = pos.getX() + radius;

@@ -9,7 +9,7 @@ import com.xray.utils.RenderBlockProps;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import java.util.ArrayList;
@@ -26,13 +26,13 @@ public class Render
     private static final int GL_LINES = 1;
 
 	static void renderBlocks(RenderWorldLastEvent event) {
-        Vec3d view = XRay.mc.gameRenderer.getActiveRenderInfo().getProjectedView();
+        Vector3d view = XRay.mc.gameRenderer.getActiveRenderInfo().getProjectedView();
 
         MatrixStack stack = event.getMatrixStack();
         stack.translate(-view.x, -view.y, -view.z); // translate
 
         RenderSystem.pushMatrix();
-        RenderSystem.multMatrix(stack.getLast().getPositionMatrix());
+        RenderSystem.multMatrix(stack.getLast().getMatrix());
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();

@@ -1,5 +1,6 @@
 package com.xray.gui.utils;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.list.AbstractList;
 import org.lwjgl.opengl.GL11;
@@ -10,35 +11,32 @@ import org.lwjgl.opengl.GL11;
  *
  * This is how an abstract implementation should look... :cry:
  */
+
+// @mcp: field_230675_l_ = this.x0
+// @mcp: field_230672_i_ = this.y0
+// @mcp: field_230670_d_ = this.width
+// @mcp: field_230671_e_ = this.height
 public class ScrollingList<E extends AbstractList.AbstractListEntry<E>> extends AbstractList<E> {
     public ScrollingList(int x, int y, int width, int height, int slotHeightIn) {
         super(Minecraft.getInstance(), width, height, y - (height / 2), (y - (height / 2)) + height, slotHeightIn);
-        this.setLeftPos(x - (width / 2));
+        this.func_230959_g_(x - (width / 2)); // @mcp: func_230959_g_ = setLeftPro
     }
 
-    @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
+    @Override // @mcp: func_230430_a_ = render
+    public void func_230430_a_(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         double scale = Minecraft.getInstance().getMainWindow().getGuiScaleFactor();
 
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor((int)(this.x0  * scale), (int)(Minecraft.getInstance().getMainWindow().getFramebufferHeight() - ((this.y0 + height) * scale)),
-                (int)(width * scale), (int)(height * scale));
+        GL11.glScissor((int)(this.field_230675_l_  * scale), (int)(Minecraft.getInstance().getMainWindow().getFramebufferHeight() - ((this.field_230672_i_ + this.field_230671_e_) * scale)),
+                (int)(this.field_230670_d_ * scale), (int)(this.field_230671_e_ * scale));
 
-        super.render(mouseX, mouseY, partialTicks);
+        super.func_230430_a_(stack, mouseX, mouseY, partialTicks);
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
 
-    @Override
-    protected int getScrollbarPosition() {
-        return (this.x0 + this.width) - 6;
+    @Override // @mcp: func_230952_d_ = getScrollbarPosition
+    protected int func_230952_d_() {
+        return (this.field_230675_l_ + this.field_230670_d_) - 6;
     }
-
-    @Override
-    public int getRowWidth() {
-        return this.width;
-    }
-
-    @Override
-    protected void renderHoleBackground(int p_renderHoleBackground_1_, int p_renderHoleBackground_2_, int p_renderHoleBackground_3_, int p_renderHoleBackground_4_) { }
 }

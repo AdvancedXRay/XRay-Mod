@@ -6,9 +6,8 @@ import com.xray.store.BlockStore;
 import com.xray.utils.Region;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -30,7 +29,7 @@ public class Controller
 		add(Blocks.DIRT);
 	}};
 
-	private static Vec3i lastPlayerPos = null;
+	private static Vector3i lastPlayerPos = null;
 
 	/**
      * Global blockStore used for:
@@ -61,13 +60,13 @@ public class Controller
 			xrayActive = true; // then, enable drawing
 			requestBlockFinder( true ); // finally, force a refresh
 
-			if( !Configuration.general.showOverlay.get() )
-				XRay.mc.player.sendMessage( new StringTextComponent(I18n.format("xray.toggle.activated")) );
+			if( !Configuration.general.showOverlay.get() && XRay.mc.player != null )
+				XRay.mc.player.sendStatusMessage(new TranslationTextComponent("xray.toggle.activated"), false);
 		}
 		else // disable drawing
 		{
-			if( !Configuration.general.showOverlay.get() )
-				XRay.mc.player.sendMessage( new StringTextComponent(I18n.format("xray.toggle.deactivated")) );
+			if( !Configuration.general.showOverlay.get() && XRay.mc.player != null )
+				XRay.mc.player.sendStatusMessage(new TranslationTextComponent("xray.toggle.deactivated"), false);
 
 			shutdownExecutor();
 		}
@@ -108,15 +107,18 @@ public class Controller
 	 * @return true if the player has moved since the last blockFinder call
 	 */
 	private static boolean playerHasMoved()
-	{
-		return lastPlayerPos == null
-			|| lastPlayerPos.getX() != XRay.mc.player.getPosition().getX()
-			|| lastPlayerPos.getZ() != XRay.mc.player.getPosition().getZ();
-	}
+	{// @mcp: func_233580_cy_ = getPosition (blockPos)
+		if (XRay.mc.player == null)
+			return false;
 
+		return lastPlayerPos == null
+			|| lastPlayerPos.getX() != XRay.mc.player.func_233580_cy_().getX()
+			|| lastPlayerPos.getZ() != XRay.mc.player.func_233580_cy_().getZ();
+	}
+	// @mcp: func_233580_cy_ = getPosition (blockPos)
 	private static void updatePlayerPosition()
 	{
-		lastPlayerPos = XRay.mc.player.getPosition();
+		lastPlayerPos = XRay.mc.player.func_233580_cy_();
 	}
 
 	/**
