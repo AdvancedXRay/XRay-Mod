@@ -63,8 +63,8 @@ public class GuiBlockList extends GuiBase {
         this.blockList.updateEntries(
                 search.getText().length() == 0
                         ? this.blocks
-                        : this.blocks.stream() // @fixme: format issue likely
-                            .filter(e -> e.getItemStack().getDisplayName().toString().toLowerCase().contains(search.getText().toLowerCase()))
+                        : this.blocks.stream()
+                            .filter(e -> e.getItemStack().getDisplayName().getString().toLowerCase().contains(search.getText().toLowerCase()))
                             .collect(Collectors.toList())
         );
 

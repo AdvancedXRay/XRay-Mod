@@ -89,7 +89,6 @@ public class JsonStore
             if( e.getRegistryName() == null )
                 return;
 
-            // @fixme: might be broken
             oresData.add(new BlockData.SerializableBlockData(new TranslationTextComponent(e.getTranslationKey()).getString(),
                     e.getRegistryName().toString(),
                             (rand.nextInt(255) << 16) + (rand.nextInt(255) << 8) + rand.nextInt(255),

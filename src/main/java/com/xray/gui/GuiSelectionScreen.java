@@ -100,7 +100,7 @@ public class GuiSelectionScreen extends GuiBase {
 
             // Check if the hand item is a block or not
             if (!(handItem.getItem() instanceof net.minecraft.item.BlockItem)) {
-                getMinecraft().player.sendStatusMessage(new StringTextComponent("[XRay] " + I18n.format("xray.message.invalid_hand", handItem.getDisplayName().getString())), false); // FIXME: 28/06/2020 Might be broke
+                getMinecraft().player.sendStatusMessage(new StringTextComponent("[XRay] " + I18n.format("xray.message.invalid_hand", handItem.getDisplayName().getString())), false);
                 return;
             }
 
@@ -269,7 +269,7 @@ public class GuiSelectionScreen extends GuiBase {
                 FontRenderer font = Minecraft.getInstance().fontRenderer;
                 // @mcp: func_238407_a_ = drawString
                 font.func_238407_a_(stack, ITextProperties.func_240652_a_(blockData.getEntryName()), left + 40, top + 7, 0xFFFFFF);
-                font.func_238407_a_(stack, ITextProperties.func_240652_a_(blockData.isDrawing() ? "Enabled" : "Disabled"), left + 40, top + 17, blockData.isDrawing() ? Color.GREEN.getRGB() : Color.RED.getRGB()); // FIXME: 28/06/2020 this might not work
+                font.func_238407_a_(stack, ITextProperties.func_240652_a_(blockData.isDrawing() ? "Enabled" : "Disabled"), left + 40, top + 17, blockData.isDrawing() ? Color.GREEN.getRGB() : Color.RED.getRGB());
 
                 RenderHelper.enableStandardItemLighting();
                 Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(blockData.getItemStack(), left + 15, top + 7);
