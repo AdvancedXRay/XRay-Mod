@@ -19,9 +19,9 @@ public class GuiHelp extends GuiBase {
 
     private List<LinedText> areas = new ArrayList<>();
 
-    @Override // @mcp: func_231160_c_ = init
-    public void func_231160_c_() {
-        super.func_231160_c_();
+    @Override
+    public void init() {
+        super.init();
 
         areas.clear();
         areas.add(new LinedText("xray.message.help.gui"));
@@ -36,7 +36,7 @@ public class GuiHelp extends GuiBase {
         for (LinedText linedText : areas) {
             for (String line : linedText.getLines()) {
                 lineY += 12;
-                this.getFontRender().func_238405_a_(stack, line,(getWidth() / 2f) - 176, lineY, Color.WHITE.getRGB()); // @mcp: func_238405_a_ = drawtextwithshadow
+                this.getFontRender().drawStringWithShadow(stack, line,(getWidth() / 2f) - 176, lineY, Color.WHITE.getRGB());
             }
             lineY += 10;
         }

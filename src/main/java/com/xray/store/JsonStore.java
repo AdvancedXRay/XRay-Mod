@@ -85,7 +85,7 @@ public class JsonStore
 
     public List<BlockData.SerializableBlockData> populateDefault() {
         List<BlockData.SerializableBlockData> oresData = new ArrayList<>();
-        Tags.Blocks.ORES.func_230236_b_().forEach(e -> {
+        Tags.Blocks.ORES.getAllElements().forEach(e -> {
             if( e.getRegistryName() == null )
                 return;
 

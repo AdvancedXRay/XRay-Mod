@@ -30,9 +30,9 @@ import java.util.Objects;
 public class GuiAddBlock extends GuiBase {
     private TextFieldWidget oreName;
     private Button addBtn;
-    private CustomSlider redSlider;
-    private CustomSlider greenSlider;
-    private CustomSlider blueSlider;
+    private Slider redSlider;
+    private Slider greenSlider;
+    private Slider blueSlider;
 
     private Block selectBlock;
     private ItemStack itemStack;
@@ -46,7 +46,7 @@ public class GuiAddBlock extends GuiBase {
     }
 
     @Override
-    public void func_231160_c_() {// @mcp: func_231160_c_ = init
+    public void init() {
         // Called when the gui should be (re)created
         addButton(addBtn = new Button(getWidth() / 2 - 100, getHeight() / 2 + 85, 128, 20, new TranslationTextComponent("xray.single.add"), b -> {
             this.onClose();
@@ -59,7 +59,7 @@ public class GuiAddBlock extends GuiBase {
                     new BlockData(
                             oreName.getText(),
                             selectBlock.getRegistryName().toString(),
-                            (((int) (redSlider.getValue() * 255) << 16) + ((int) (greenSlider.getValue() * 255) << 8) + (int) (blueSlider.getValue() * 255)),
+                            (((int) (redSlider.getValue()) << 16) + ((int) (greenSlider.getValue()) << 8) + (int) (blueSlider.getValue() )),
                             this.itemStack,
                             true,
                             Controller.getBlockStore().getStore().size() + 1
@@ -71,32 +71,30 @@ public class GuiAddBlock extends GuiBase {
         }));
         addButton(new Button(getWidth() / 2 + 30, getHeight() / 2 + 85, 72, 20, new TranslationTextComponent("xray.single.cancel"), b -> this.onClose()));
 
-        addButton(redSlider = new CustomSlider(getWidth() / 2 - 100, getHeight() / 2 + 7, new TranslationTextComponent("xray.color.red"), 0, 255, 0, (e) -> {}, (e) -> {}));
-        addButton(greenSlider = new CustomSlider(getWidth() / 2 - 100, getHeight() / 2 + 30, new TranslationTextComponent("xray.color.green"), 0, 255, 165, (e) -> {}, (e) -> {}));
-        addButton(blueSlider = new CustomSlider(getWidth() / 2 - 100, getHeight() / 2 + 53, new TranslationTextComponent("xray.color.blue"), 0, 255, 255, (e) -> {}, (e) -> {}));
+        addButton(redSlider = new Slider(getWidth() / 2 - 100, getHeight() / 2 + 7, 202, 20, new TranslationTextComponent("xray.color.red"), StringTextComponent.EMPTY, 0, 255, 0, false, true, (e) -> {}, (e) -> {}));
+        addButton(greenSlider = new Slider(getWidth() / 2 - 100, getHeight() / 2 + 30, 202, 20, new TranslationTextComponent("xray.color.green"), StringTextComponent.EMPTY, 0, 255, 165, false, true, (e) -> {}, (e) -> {}));
+        addButton(blueSlider = new Slider(getWidth() / 2 - 100, getHeight() / 2 + 53,202, 20,  new TranslationTextComponent("xray.color.blue"), StringTextComponent.EMPTY, 0, 255, 255, false, true, (e) -> {}, (e) -> {}));
 
-        oreName = new TextFieldWidget(getMinecraft().fontRenderer, getWidth() / 2 - 100, getHeight() / 2 - 70, 202, 20, StringTextComponent.field_240750_d_); // @mcp: field_240750_d_ = empty
-        oreName.setText(this.selectBlock.func_235333_g_().getString()); // @mcp: func_235333_g_ = getNameTextComponent
-        this.field_230705_e_.add(oreName);// @mcp: field_230705_e_ = children
+        oreName = new TextFieldWidget(getMinecraft().fontRenderer, getWidth() / 2 - 100, getHeight() / 2 - 70, 202, 20, StringTextComponent.EMPTY);
+        oreName.setText(this.selectBlock.getTranslatedName().getString());
+        this.children.add(oreName);
     }
 
-    @Override // @mcp: func_231023_e_ = tick
-    public void func_231023_e_() {
-        super.func_231023_e_();
+    @Override
+    public void tick() {
+        super.tick();
         oreName.tick();
     }
 
     @Override
     public void renderExtra(MatrixStack stack, int x, int y, float partialTicks) {
-        // @mcp: func_238405_a_ = drawStringWithShadow
-        // @mcp: func_235333_g_ = getNameTextComponent
-        getFontRender().func_238405_a_(stack, selectBlock.func_235333_g_().getString(), getWidth() / 2f - 100, getHeight() / 2f - 90, 0xffffff);
+        getFontRender().drawStringWithShadow(stack, selectBlock.getTranslatedName().getString(), getWidth() / 2f - 100, getHeight() / 2f - 90, 0xffffff);
 
-        oreName.func_230430_a_(stack, x, y, partialTicks); // @mcp: func_230430_a_ = render
+        oreName.render(stack, x, y, partialTicks);
         renderPreview(getWidth() / 2 - 100, getHeight() / 2 - 40, (float) redSlider.getValue(), (float) greenSlider.getValue(), (float) blueSlider.getValue());
 
         RenderHelper.enableStandardItemLighting();
-        this.field_230707_j_.renderItemAndEffectIntoGUI(this.itemStack, getWidth() / 2 + 85, getHeight() / 2 - 105); // @mcp: field_230707_j_ = itemRender
+        this.itemRenderer.renderItemAndEffectIntoGUI(this.itemStack, getWidth() / 2 + 85, getHeight() / 2 - 105);
         RenderHelper.disableStandardItemLighting();
     }
 
@@ -118,36 +116,36 @@ public class GuiAddBlock extends GuiBase {
         RenderSystem.disableBlend();
     }
 
-    @Override // @mcp: func_231044_a_ = mouseClicked
-    public boolean func_231044_a_(double x, double y, int mouse) {
-        if (oreName.func_231044_a_(x, y, mouse))
-            this.func_231035_a_(oreName); // @mcp: func_231035_a_ = setFocused
+    @Override
+    public boolean mouseClicked(double x, double y, int mouse) {
+        if (oreName.mouseClicked(x, y, mouse))
+            this.setFocused(oreName);
 
-        if (oreName.func_230999_j_() && !oreNameCleared) { // @mcp: func_230999_j_ = isFocused
+        if (oreName.isFocused() && !oreNameCleared) {
             oreName.setText("");
             oreNameCleared = true;
         }
 
-        if (!oreName.func_230999_j_() && oreNameCleared && Objects.equals(oreName.getText(), "")) { // @mcp: func_230999_j_ = isFocused
+        if (!oreName.isFocused() && oreNameCleared && Objects.equals(oreName.getText(), "")) {
             oreNameCleared = false;
             oreName.setText(I18n.format("xray.input.gui"));
         }
 
-        return super.func_231044_a_(x, y, mouse);
+        return super.mouseClicked(x, y, mouse);
     }
 
-    @Override // @mcp: func_231048_c_ = mouseReleased
-    public boolean func_231048_c_(double x, double y, int mouse) {
-        if (redSlider.dragging && !redSlider.func_230999_j_())
+    @Override
+    public boolean mouseReleased(double x, double y, int mouse) {
+        if (redSlider.dragging && !redSlider.isFocused())
             redSlider.dragging = false;
 
-        if (greenSlider.dragging && !greenSlider.func_230999_j_())
+        if (greenSlider.dragging && !greenSlider.isFocused())
             greenSlider.dragging = false;
 
-        if (blueSlider.dragging && !blueSlider.func_230999_j_())
+        if (blueSlider.dragging && !blueSlider.isFocused())
             blueSlider.dragging = false;
 
-        return super.func_231048_c_(x, y, mouse);
+        return super.mouseReleased(x, y, mouse);
     }
 
     @Override
@@ -158,35 +156,5 @@ public class GuiAddBlock extends GuiBase {
     @Override
     public String title() {
         return I18n.format("xray.title.config");
-    }
-
-    public static class CustomSlider extends Slider {
-        public CustomSlider(int xPos, int yPos, ITextComponent displayStr, double minVal, double maxVal, double currentVal, IPressable handler, ISlider par) {
-            super(xPos, yPos, 202, 20, displayStr, new StringTextComponent(""), minVal, maxVal, currentVal, false, true, handler, par);
-        }
-
-        // note: overriding this because the forge one has a bug in it causing the title to have %s button after it...
-        @Override
-        public void func_230431_b_(MatrixStack mStack, int mouseX, int mouseY, float partial)
-        {
-            if (this.field_230694_p_)
-            {
-                Minecraft mc = Minecraft.getInstance();
-                this.field_230692_n_ = mouseX >= this.field_230690_l_ && mouseY >= this.field_230691_m_ && mouseX < this.field_230690_l_ + this.field_230688_j_ && mouseY < this.field_230691_m_ + this.field_230689_k_;
-                int k = this.func_230989_a_(this.func_230449_g_());
-                GuiUtils.drawContinuousTexturedBox(field_230687_i_, this.field_230690_l_, this.field_230691_m_, 0, 46 + k * 20, this.field_230688_j_, this.field_230689_k_, 200, 20, 2, 3, 2, 2, this.func_230927_p_());
-                this.func_230441_a_(mStack, mc, mouseX, mouseY);
-
-                ITextComponent buttonText = this.func_230458_i_();
-                int strWidth = mc.fontRenderer.func_238414_a_(buttonText);
-                int ellipsisWidth = mc.fontRenderer.getStringWidth("...");
-
-                if (strWidth > field_230688_j_ - 6 && strWidth > ellipsisWidth)
-                    //TODO, srg names make it hard to figure out how to append to an ITextProperties from this trim operation, wraping this in StringTextComponent is kinda dirty.
-                    buttonText = new StringTextComponent(mc.fontRenderer.func_238417_a_(buttonText, field_230688_j_ - 6 - ellipsisWidth).getString() + "...");
-
-                this.func_238472_a_(mStack, mc.fontRenderer, buttonText, this.field_230690_l_ + this.field_230688_j_ / 2, this.field_230691_m_ + (this.field_230689_k_ - 8) / 2, getFGColor());
-            }
-        }
     }
 }

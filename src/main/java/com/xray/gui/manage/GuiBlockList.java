@@ -35,25 +35,25 @@ public class GuiBlockList extends GuiBase {
         this.blocks = XRay.gameBlockStore.getStore();
     }
 
-    @Override // @mcp: func_231160_c_ = init
-    public void func_231160_c_() {
+    @Override
+    public void init() {
         this.blockList = new ScrollingBlockList((getWidth() / 2) + 1, getHeight() / 2 - 12, 202, 185, this.blocks);
-        this.field_230705_e_.add(this.blockList); // @mcp: field_230705_e_ = children
+        this.children.add(this.blockList);
 
         search = new TextFieldWidget(getFontRender(), getWidth() / 2 - 100, getHeight() / 2 + 85, 140, 18, new StringTextComponent(""));
-        search.func_231049_c__(true); // @mcp: func_231049_c__ = changeFocus
-        this.func_231035_a_(search);// @mcp: func_231035_a_ = setFocused
+        search.changeFocus(true);
+        this.setFocused(search);
 
         addButton(new Button(getWidth() / 2 + 43, getHeight() / 2 + 84, 60, 20, new TranslationTextComponent("xray.single.cancel"), b -> this.onClose()));
     }
 
-    @Override // @mcp: func_231023_e_ = tick
-    public void func_231023_e_() {
+    @Override
+    public void tick() {
         search.tick();
         if (!search.getText().equals(this.lastSearched))
             reloadBlocks();
 
-        super.func_231023_e_();
+        super.tick();
     }
 
     private void reloadBlocks() {
@@ -69,27 +69,27 @@ public class GuiBlockList extends GuiBase {
         );
 
         lastSearched = search.getText();
-        this.blockList.func_230932_a_(0); // @mcp: func_230932_a_ = setScrollAmount
+        this.blockList.setScrollAmount(0);
     }
 
     @Override
     public void renderExtra(MatrixStack stack, int x, int y, float partialTicks) {
-        search.func_230430_a_(stack, x, y, partialTicks); // @mcp: func_230430_a_ = render
-        blockList.func_230430_a_(stack, x, y, partialTicks); // @mcp: func_230430_a_ = render
+        search.render(stack, x, y, partialTicks);
+        blockList.render(stack, x, y, partialTicks);
     }
 
-    @Override // @mcp: func_231044_a_ = mouseClicked
-    public boolean func_231044_a_ (double x, double y, int button) {
-        if( this.search.func_231044_a_ (x, y, button) )
-            this.func_231035_a_(this.search); // @mcp: func_231035_a_ = setFocused
+    @Override
+    public boolean mouseClicked(double x, double y, int button) {
+        if( this.search.mouseClicked (x, y, button) )
+            this.setFocused(this.search);
 
-        return super.func_231044_a_ (x, y, button);
+        return super.mouseClicked(x, y, button);
     }
 
-    @Override // @mcp: func_231043_a_ = mouseScrolled
-    public boolean func_231043_a_(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
-        blockList.func_231043_a_(p_mouseScrolled_1_, p_mouseScrolled_3_, p_mouseScrolled_5_);
-        return super.func_231043_a_(p_mouseScrolled_1_, p_mouseScrolled_3_, p_mouseScrolled_5_);
+    @Override
+    public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
+        blockList.mouseScrolled(p_mouseScrolled_1_, p_mouseScrolled_3_, p_mouseScrolled_5_);
+        return super.mouseScrolled(p_mouseScrolled_1_, p_mouseScrolled_3_, p_mouseScrolled_5_);
     }
 
     static class ScrollingBlockList extends ScrollingList<ScrollingBlockList.BlockSlot> {
@@ -100,8 +100,8 @@ public class GuiBlockList extends GuiBase {
             this.updateEntries(blocks);
         }
 
-        @Override // @mcp: func_241215_a_ = setSelected
-        public void func_241215_a_(@Nullable BlockSlot entry) {
+        @Override
+        public void setSelected(@Nullable BlockSlot entry) {
             if (entry == null)
                 return;
 
@@ -110,8 +110,8 @@ public class GuiBlockList extends GuiBase {
         }
 
         void updateEntries(List<BlockWithItemStack> blocks) {
-            this.func_230963_j_(); // @mcp: func_230963_j_ = clearEntries
-            blocks.forEach(block -> this.func_230513_b_(new BlockSlot(block, this))); // @mcp: func_230513_b_ = addEntry
+            this.clearEntries(); // @mcp: func_230963_j_ = clearEntries
+            blocks.forEach(block -> this.addEntry(new BlockSlot(block, this)));
         }
 
         public static class BlockSlot extends AbstractList.AbstractListEntry<ScrollingBlockList.BlockSlot> {
@@ -127,23 +127,23 @@ public class GuiBlockList extends GuiBase {
                 return block;
             }
 
-            @Override // @mcp; render
-            public void func_230432_a_(MatrixStack stack, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean p_194999_5_, float partialTicks) {
-                FontRenderer font = this.parent.field_230668_b_.fontRenderer; // @mcp: field_230668_b_ = minecraft
+            @Override
+            public void render(MatrixStack stack, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean p_194999_5_, float partialTicks) {
+                FontRenderer font = this.parent.minecraft.fontRenderer;
 
                 ResourceLocation resource = this.block.getItemStack().getItem().getRegistryName();
-                font.func_238407_a_(stack,this.block.getItemStack().getItem().getName(), left + 40, top + 7, Color.WHITE.getRGB()); // @mcp: func_238407_a_ = drawString
-                font.func_238407_a_(stack, ITextProperties.func_240652_a_(resource != null ? resource.getNamespace() : ""), left + 40, top + 17, Color.WHITE.getRGB()); // @mcp: func_238407_a_ = drawString
+                font.drawString(stack,this.block.getItemStack().getItem().getName().getString(), left + 40, top + 7, Color.WHITE.getRGB());
+                font.drawString(stack, resource != null ? resource.getNamespace() : "", left + 40, top + 17, Color.WHITE.getRGB());
                 // @mcp: func_240652_a_ = unknown... Code recommendation
 
                 RenderHelper.enableStandardItemLighting();
-                this.parent.field_230668_b_.getItemRenderer().renderItemAndEffectIntoGUI(this.block.getItemStack(), left + 15, top + 7); // @mcp: field_230668_b_ = minecraft
+                this.parent.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(this.block.getItemStack(), left + 15, top + 7);
                 RenderHelper.disableStandardItemLighting();
             }
 
-            @Override // @mcp: func_231044_a_ = mouseClicked
-            public boolean func_231044_a_(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
-                this.parent.func_241215_a_(this); // @mcp: func_241215_a_ = setSelected
+            @Override
+            public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
+                this.parent.setSelected(this);
                 return false;
             }
         }

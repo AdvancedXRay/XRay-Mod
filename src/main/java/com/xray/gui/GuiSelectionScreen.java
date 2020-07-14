@@ -75,18 +75,18 @@ public class GuiSelectionScreen extends GuiBase {
         this.originalList = this.itemList;
     }
 
-    @Override // @mcp: func_231160_c_ = init
-    public void func_231160_c_() {
+    @Override
+    public void init() {
         if( getMinecraft().player == null )
             return;
 
-        this.render = this.field_230707_j_; // @mcp: field_230707_j_ = itemRender
-        this.field_230710_m_.clear(); // @mcp: field_230710_m_ = buttons
+        this.render = this.itemRenderer;
+        this.buttons.clear();
 
 		this.scrollList = new ScrollingBlockList((getWidth() / 2) - 37, getHeight() / 2 + 10, 203, 185, this.itemList, this);
-        this.field_230705_e_.add(this.scrollList); // @mcp: field_230705_e_ = children
+        this.children.add(this.scrollList);
 
-        this.search = new TextFieldWidget(getFontRender(), getWidth() / 2 - 137, getHeight() / 2 - 105, 202, 18, StringTextComponent.field_240750_d_); // @mcp: field_240750_d_ = empty
+        this.search = new TextFieldWidget(getFontRender(), getWidth() / 2 - 137, getHeight() / 2 - 105, 202, 18, StringTextComponent.EMPTY);
         this.search.setCanLoseFocus(true);
 
         // side bar buttons
@@ -137,12 +137,12 @@ public class GuiSelectionScreen extends GuiBase {
 
         addButton(distButtons = new SupportButtonInner((getWidth() / 2) + 79, getHeight() / 2 + 6, 120, 20, I18n.format("xray.input.show-lava", Controller.isLavaActive()), "xray.tooltips.show_lava", button -> {
             Controller.toggleLava();
-            button.func_238482_a_(new TranslationTextComponent("xray.input.show-lava", Controller.isLavaActive())); // @mcp: func_238482_a_  = setMessage
+            button.setMessage(new TranslationTextComponent("xray.input.show-lava", Controller.isLavaActive()));
         }));
 
         addButton(distButtons = new SupportButtonInner((getWidth() / 2) + 79, getHeight() / 2 + 36, 120, 20, I18n.format("xray.input.distance", Controller.getRadius()), "xray.tooltips.distance", button -> {
             Controller.incrementCurrentDist();
-            button.func_238482_a_(new TranslationTextComponent("xray.input.distance", Controller.getRadius())); // @mcp: func_238482_a_  = setMessage
+            button.setMessage(new TranslationTextComponent("xray.input.distance", Controller.getRadius()));
         }));
         addButton(new Button(getWidth() / 2 + 79, getHeight() / 2 + 58, 60, 20, new TranslationTextComponent("xray.single.help"), button -> {
             getMinecraft().player.closeScreen();
@@ -174,35 +174,35 @@ public class GuiSelectionScreen extends GuiBase {
         lastSearch = search.getText();
     }
 
-    @Override // @mcp: func_231023_e_ = tick
-    public void func_231023_e_() {
-        super.func_231023_e_();
+    @Override
+    public void tick() {
+        super.tick();
         search.tick();
 
         updateSearch();
     }
 
-    @Override // @mcp: func_231044_a_ = mouseClicked
-    public boolean func_231044_a_(double x, double y, int mouse) {
-        if( search.func_231044_a_(x, y, mouse) )
-            this.func_231035_a_(search); // @mcp: func_231035_a_ = setFocused
+    @Override
+    public boolean mouseClicked(double x, double y, int mouse) {
+        if( search.mouseClicked(x, y, mouse) )
+            this.setFocused(search);
 
-        if (mouse == 1 && distButtons.func_231047_b_(x, y)) { // @mcp: func_231047_b_  = isMouseOver
+        if (mouse == 1 && distButtons.isMouseOver(x, y)) {
             Controller.decrementCurrentDist();
-            distButtons.func_238482_a_(new TranslationTextComponent("xray.input.distance", Controller.getRadius())); // @mcp: func_238482_a_ = setMessage
-            distButtons.func_230988_a_(Minecraft.getInstance().getSoundHandler()); // @mcp: func_230988_a_ = PlayDownSound
+            distButtons.setMessage(new TranslationTextComponent("xray.input.distance", Controller.getRadius()));
+            distButtons.playDownSound(Minecraft.getInstance().getSoundHandler());
         }
 
-        return super.func_231044_a_(x, y, mouse);
+        return super.mouseClicked(x, y, mouse);
     }
 
     @Override
     public void renderExtra(MatrixStack stack, int x, int y, float partialTicks) {
-        this.search.func_230430_a_(stack, x, y, partialTicks); // @mcp: func_230430_a_ = render
-        this.scrollList.func_230430_a_(stack, x, y, partialTicks ); // @mcp: func_230430_a_ = render
-        // @mcp: func_238405_a_ = drawStringWithShadow
-        if (!search.func_230999_j_() && search.getText().equals("")) // @mcp: func_230999_j_  = isFocused
-            XRay.mc.fontRenderer.func_238405_a_(stack, I18n.format("xray.single.search"), (float) getWidth() / 2 - 130, (float) getHeight() / 2 - 101, Color.GRAY.getRGB());
+        this.search.render(stack, x, y, partialTicks);
+        this.scrollList.render(stack, x, y, partialTicks );
+
+        if (!search.isFocused() && search.getText().equals(""))
+            XRay.mc.fontRenderer.drawStringWithShadow(stack, I18n.format("xray.single.search"), (float) getWidth() / 2 - 130, (float) getHeight() / 2 - 101, Color.GRAY.getRGB());
     }
 
     @Override
@@ -234,7 +234,7 @@ public class GuiSelectionScreen extends GuiBase {
             if (entry == null)
                 return;
 
-            if( GuiSelectionScreen.func_231173_s_() ) { // @mcp: func_231173_s_  = hasShiftDown
+            if( GuiSelectionScreen.hasShiftDown() ) {
                 XRay.mc.player.closeScreen();
                 XRay.mc.displayGuiScreen( new GuiEdit(entry.block) );
                 return;
@@ -245,8 +245,8 @@ public class GuiSelectionScreen extends GuiBase {
         }
 
         void updateEntries(List<BlockData> blocks) {
-            this.func_230963_j_ (); // @mcp: func_230963_j_  = clearEntries
-            blocks.forEach(block -> this.func_230513_b_(new BlockSlot(block, this))); // @mcp: func_230513_b_ = addEntry
+            this.clearEntries ();
+            blocks.forEach(block -> this.addEntry(new BlockSlot(block, this))); // @mcp: func_230513_b_ = addEntry
         }
 
         public static class BlockSlot extends AbstractList.AbstractListEntry<ScrollingBlockList.BlockSlot> {
@@ -262,8 +262,8 @@ public class GuiSelectionScreen extends GuiBase {
                 return block;
             }
 
-            @Override // @mcp: func_230432_a_  = render
-            public void func_230432_a_(MatrixStack stack, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean p_194999_5_, float partialTicks) {
+            @Override
+            public void render(MatrixStack stack, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean p_194999_5_, float partialTicks) {
                 BlockData blockData = this.block;
 
                 FontRenderer font = Minecraft.getInstance().fontRenderer;
@@ -275,12 +275,12 @@ public class GuiSelectionScreen extends GuiBase {
                 Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(blockData.getItemStack(), left + 15, top + 7);
                 RenderHelper.disableStandardItemLighting();
                 if (mouseX > left && mouseX < (left + entryWidth) && mouseY > top && mouseY < (top + entryHeight) && mouseY < (this.parent.getTop() + this.parent.getHeight()) && mouseY > this.parent.getTop()) {
-                    this.parent.parent.func_238654_b_(
+                    this.parent.parent.renderTooltip(
                             stack,
                             Arrays.asList(new TranslationTextComponent("xray.tooltips.edit1"), new TranslationTextComponent("xray.tooltips.edit2")),
                             left + 15,
-                            (entryIdx == this.parent.func_231039_at__().size() - 1 ? (top - (entryHeight - 20)) : (top + (entryHeight + 15))) // @mcp: func_231039_at__ = getEntries
-                    );  // @mcp: func_230457_a_ = renderTooltip
+                            (entryIdx == this.parent.children().size() - 1 ? (top - (entryHeight - 20)) : (top + (entryHeight + 15))) // @mcp: func_231039_at__ = getEntries
+                    );
                 }
 
                 RenderSystem.enableAlphaTest();
@@ -293,8 +293,8 @@ public class GuiSelectionScreen extends GuiBase {
                 RenderSystem.disableBlend();
             }
 
-            @Override // @mcp: func_231044_a_ = mouseClicked
-            public boolean func_231044_a_(double p_mouseClicked_1_, double p_mouseClicked_3_, int mouse) {
+            @Override
+            public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int mouse) {
                 this.parent.setSelected(this, mouse);
                 return false;
             }

@@ -3,6 +3,8 @@ package com.xray.gui.utils;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.xray.XRay;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.BedBlock;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
@@ -30,11 +32,12 @@ public abstract class GuiBase extends Screen {
     public GuiBase(boolean hasSide ) {
         super(new StringTextComponent(""));
         this.hasSide = hasSide;
+
     }
 
-    @Override    //charTyped
-    public boolean func_231042_a_(char keyTyped, int __unknown) {
-        super.func_231042_a_(keyTyped, __unknown);
+    @Override
+    public boolean charTyped(char keyTyped, int __unknown) {
+        super.charTyped(keyTyped, __unknown);
 
         if( keyTyped == 1 && getMinecraft().player != null )
             getMinecraft().player.closeScreen();
@@ -71,23 +74,20 @@ public abstract class GuiBase extends Screen {
         drawTexturedQuadFit(x, y, width, height, new int[]{color >> 16 & 0xff, color >> 8 & 0xff,color & 0xff }, 255f);
     }
 
-    @Override  // @mcp: func_230430_a_ = render
-    public void func_230430_a_(MatrixStack stack, int x, int y, float partialTicks) {
-        func_230446_a_(stack); // @mcp: func_230446_a_ = renderBackground();
+    @Override
+    public void render(MatrixStack stack, int x, int y, float partialTicks) {
+        renderBackground(stack);
         RenderSystem.pushMatrix();
 
-        // @mcp: field_230708_k_ = width
-        // @mcp: field_230709_l_ = height
-        int width = field_230708_k_;
-        int height = field_230709_l_;
+        int width = this.width;
+        int height = this.height;
         getMinecraft().getTextureManager().bindTexture(getBackground());
         if( this.hasSide ) {
             drawTexturedQuadFit((double) width / 2 + 60, (float) height / 2 -((float) 180/2), 150, 180, 0xffffff);
             drawTexturedQuadFit((float) width / 2 - 150, (float) height / 2 - 118, this.backgroundWidth, this.backgroundHeight, 0xffffff);
 
-            // @mcp: func_238405_a_ = drawStringWithShadow
             if( hasSideTitle() )
-                getFontRender().func_238405_a_(stack, this.sideTitle, (float) width / 2 + 80, (float) height / 2 - 77, 0xffff00);
+                getFontRender().drawStringWithShadow(stack, this.sideTitle, (float) width / 2 + 80, (float) height / 2 - 77, 0xffff00);
         }
 
         if( !this.hasSide )
@@ -96,26 +96,26 @@ public abstract class GuiBase extends Screen {
         RenderSystem.enableTexture();
         if( hasTitle() ) {
             if( this.hasSide )
-                getFontRender().func_238405_a_(stack, title(), (float) width / 2 - 138, (float) height / 2 - 105, 0xffff00);
+                getFontRender().drawStringWithShadow(stack, title(), (float) width / 2 - 138, (float) height / 2 - 105, 0xffff00);
             else
-                getFontRender().func_238405_a_(stack, title(), (float) width / 2 - ((float) this.backgroundWidth / 2 ) + 14, (float) height / 2 - ((float) this.backgroundHeight / 2) + 13, 0xffff00);
+                getFontRender().drawStringWithShadow(stack, title(), (float) width / 2 - ((float) this.backgroundWidth / 2 ) + 14, (float) height / 2 - ((float) this.backgroundHeight / 2) + 13, 0xffff00);
         }
 
         RenderSystem.popMatrix();
 
         renderExtra(stack, x, y, partialTicks);
 
-        List<Widget> buttons = this.field_230710_m_; // this.buttons
+        List<Widget> buttons = this.buttons;
         for (Widget button : buttons) {
-            button.func_230430_a_(stack, x, y, partialTicks); // @mcp: func_230430_a_ = render
+            button.render(stack, x, y, partialTicks);
         }
 
         for(Widget button : buttons) {
-            if (button instanceof SupportButton && button.func_230449_g_()) // @mcp: func_230449_g_ = isHovered
-                func_238654_b_(stack, ((SupportButton) button).getSupport(), x, y); // @mcp: func_230457_a_ = renderTooltip
+            if (button instanceof SupportButton && button.isHovered())
+                renderTooltip(stack, ((SupportButton) button).getSupport(), x, y);
         }
 
-        super.func_230430_a_(stack, x, y, partialTicks);
+        super.render(stack, x, y, partialTicks);
     }
 
     public ResourceLocation getBackground() {
@@ -142,20 +142,11 @@ public abstract class GuiBase extends Screen {
         return getMinecraft().fontRenderer;
     }
 
-    // temp helpers
-    protected <T extends Widget> T addButton(T button) {
-        return this.func_230480_a_(button); // @mcp: func_230480_a_ = Widget::addButton
-    }
+    public int getWidth() { return this.width; }
+    public int getHeight() { return this.height; }
 
-    public int getWidth() { return this.field_230708_k_; }
-    public int getHeight() { return this.field_230709_l_; }
-
-    public void onClose() {
-        this.func_231175_as__(); // @mcp: Screen::onClose
-    }
-
-    @Override // @mcp: func_231177_au__ = isPauseScreen
-    public boolean func_231177_au__() {
+    @Override
+    public boolean isPauseScreen() {
         return false;
     }
 }

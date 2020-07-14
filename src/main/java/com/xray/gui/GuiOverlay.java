@@ -28,9 +28,8 @@ public class GuiOverlay {
 
         RenderSystem.color3f(0, 255, 0);
         XRay.mc.getTextureManager().bindTexture(circle);
-        Screen.func_238463_a_(event.getMatrixStack(), 5, 5, 0f, 0f, 5, 5, 5, 5); // @mcp: func_238463_a_ = blit (7 parms) =
+        Screen.blit(event.getMatrixStack(), 5, 5, 0f, 0f, 5, 5, 5, 5);
 
-        // @mcp: func_238405_a_ = drawStringWithShadow
-        XRay.mc.fontRenderer.func_238405_a_(event.getMatrixStack(), I18n.format("xray.overlay"), 15, 4, 0xffffffff);
+        XRay.mc.fontRenderer.drawStringWithShadow(event.getMatrixStack(), I18n.format("xray.overlay"), 15, 4, 0xffffffff);
     }
 }
