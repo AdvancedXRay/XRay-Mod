@@ -51,14 +51,15 @@ The [Imgur Album](http://imgur.com/a/23dX5)
 
 ## Supports
 
-A quick note on version. I try and support everything I can but with limited time I opt to discontinue every version 2 versions below the current game version. Example: we're currently on 1.14.4 so I will support 1.14.4 and 1.12.2 ( we missed 1.13 ). If you find a very big bug in an old version I might be abe to resolve it if you submit a detailed bug report.
+A quick note on versioning. I try to support everything I can but with limited time I opt to discontinue every version 2 versions below the current game version. Example: we're currently on 1.14.4 so I will support 1.14.4 and 1.12.2 ( we missed 1.13 ). If you find a very big bug in an old version I might be abe to resolve it if you submit a detailed bug report.
 
 |Minecraft Version   | Mod Version | Branch | Author
 |---|---|---|---
-|1.15.2 | [2.2.0](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.15.2-v2.2.0) | [/master](https://github.com/MichaelHillcox/XRay-Mod/tree/master) | [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.15.1 | [2.1.0](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.15.1-v2.1.0) | [/master](https://github.com/MichaelHillcox/XRay-Mod/tree/1.15.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.14.4 | [2.0.4](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.14.4-v2.0.4) | [/master](https://github.com/MichaelHillcox/XRay-Mod/tree/1.14.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.12.2 | [1.5.0](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.12.2-v1.5.0) | [/1.12.2](https://github.com/MichaelHillcox/XRay-Mod/tree/1.12.2) | [Michael Hillcox](https://github.com/MichaelHillcox)
+|1.16.1 | [2.3.1](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.16-v2.3.1) | [/1.16](https://github.com/MichaelHillcox/XRay-Mod/tree/1.16) | [Michael Hillcox](https://github.com/MichaelHillcox)
+|1.15.2 | [2.2.0](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.15.2-v2.2.0) | [/1.15.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.15.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
+|1.15.1 | [2.1.0](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.15.1-v2.1.0) | [/1.15.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.15.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
+|1.14.4 | [2.0.4 *Limited support*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.14.4-v2.0.4) | [/1.14.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.14.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
+|1.12.2 | [1.5.0 *Discontinued*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.12.2-v1.5.0) | [/1.12.2](https://github.com/MichaelHillcox/XRay-Mod/tree/1.12.2) | [Michael Hillcox](https://github.com/MichaelHillcox)
 |1.12.1 | [1.3.4 *Discontinued*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.12.1-v1.3.4) | [/1.12.1](https://github.com/MichaelHillcox/XRay-Mod/tree/1.12.1) | [Michael Hillcox](https://github.com/MichaelHillcox)
 |1.12 | [1.3.3 *Discontinued*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.12-v1.3.3) | [/1.12.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.12.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
 |1.11.2 | [1.3.3 *Discontinued*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.11.2-v1.3.3) | [/1.11.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.11.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
@@ -68,9 +69,6 @@ A quick note on version. I try and support everything I can but with limited tim
 |1.7.10 | [1.0.1.75 - *Discontinued*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.0.1.75) | [/1.7.10](https://github.com/MichaelHillcox/XRay-Mod/tree/1.7.10) | [mcd1992](https://github.com/mcd1992) ([mcd1992 / GitLab](https://gitlab.com/mcd1992)) & [Michael Hillcox](https://github.com/MichaelHillcox)
 |1.6.4 | 1.0.0 - *Discontinued* |  [/1.6.4](https://github.com/MichaelHillcox/XRay-Mod/tree/1.6.4) | [mcd1992](https://github.com/mcd1992) ([mcd1992 / GitLab](https://gitlab.com/mcd1992))
 
-- Discontinued
-  - This means the mod will no longer be supported unless a very large bug is reported.
-- Limited support
-  - This means the mod will only receive bug fixes when ones are listed. I will no longer be back porting feature changes unless I get bored
+**Discontinued**: This means the mod is longer supported unless a game breaking bug is found.
 
-> A big thanks CJB for his rendering system.
+**Limited support**: This means the mod will only receive bug fixes when ones are listed. I will no longer be back porting feature changes unless I get bored and have time to fix them.
