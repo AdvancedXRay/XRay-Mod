@@ -47,9 +47,9 @@ public class XRay
 
 		eventBus.addListener(this::onSetup);
 		eventBus.addListener(this::onLoadComplete);
-		eventBus.addListener(this::onExit);
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configuration.SPEC);
+		MinecraftForge.EVENT_BUS.addListener(this::onExit);
 
 		// Keybindings
 		MinecraftForge.EVENT_BUS.register(KeyBindings.class);
