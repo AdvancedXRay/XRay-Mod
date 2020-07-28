@@ -11,6 +11,7 @@ loaderVersion="[31,)" #mandatory
 credits="Michael Hillox" #optional
 # A text field displayed in the mod UI
 authors="Michael Hillcox" #optional
+license="GNU GPL v3.0 (https://github.com/MichaelHillcox/XRay-Mod/blob/master/LICENSE)"
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
     # The modid of the mod
