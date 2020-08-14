@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.LanguageMap;
 import net.minecraft.util.text.StringTextComponent;
 import org.lwjgl.opengl.GL11;
 
@@ -112,7 +113,7 @@ public abstract class GuiBase extends Screen {
 
         for(Widget button : buttons) {
             if (button instanceof SupportButton && button.isHovered())
-                renderTooltip(stack, ((SupportButton) button).getSupport(), x, y);
+                renderTooltip(stack, LanguageMap.getInstance().func_244260_a(((SupportButton) button).getSupport()), x, y);
         }
 
         super.render(stack, x, y, partialTicks);

@@ -6,7 +6,7 @@
 # The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
 modLoader="javafml" #mandatory
 # A version range to match for said mod loader - for regular FML @Mod it will be the minecraft version (without the 1.)
-loaderVersion="[31,)" #mandatory
+loaderVersion="[33,)" #mandatory
 # A text field displayed in the mod UI
 credits="Michael Hillox" #optional
 # A text field displayed in the mod UI
