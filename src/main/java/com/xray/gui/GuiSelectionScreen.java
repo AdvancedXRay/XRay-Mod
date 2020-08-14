@@ -36,6 +36,7 @@ import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextProperties;
+import net.minecraft.util.text.LanguageMap;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -267,9 +268,9 @@ public class GuiSelectionScreen extends GuiBase {
                 BlockData blockData = this.block;
 
                 FontRenderer font = Minecraft.getInstance().fontRenderer;
-                // @mcp: func_238407_a_ = drawString
-                font.func_238407_a_(stack, ITextProperties.func_240652_a_(blockData.getEntryName()), left + 40, top + 7, 0xFFFFFF);
-                font.func_238407_a_(stack, ITextProperties.func_240652_a_(blockData.isDrawing() ? "Enabled" : "Disabled"), left + 40, top + 17, blockData.isDrawing() ? Color.GREEN.getRGB() : Color.RED.getRGB());
+
+                font.drawString(stack, blockData.getEntryName(), left + 40, top + 7, 0xFFFFFF);
+                font.drawString(stack, blockData.isDrawing() ? "Enabled" : "Disabled", left + 40, top + 17, blockData.isDrawing() ? Color.GREEN.getRGB() : Color.RED.getRGB());
 
                 RenderHelper.enableStandardItemLighting();
                 Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(blockData.getItemStack(), left + 15, top + 7);
@@ -277,7 +278,7 @@ public class GuiSelectionScreen extends GuiBase {
                 if (mouseX > left && mouseX < (left + entryWidth) && mouseY > top && mouseY < (top + entryHeight) && mouseY < (this.parent.getTop() + this.parent.getHeight()) && mouseY > this.parent.getTop()) {
                     this.parent.parent.renderTooltip(
                             stack,
-                            Arrays.asList(new TranslationTextComponent("xray.tooltips.edit1"), new TranslationTextComponent("xray.tooltips.edit2")),
+                            LanguageMap.getInstance().func_244260_a(Arrays.asList(new TranslationTextComponent("xray.tooltips.edit1"), new TranslationTextComponent("xray.tooltips.edit2"))),
                             left + 15,
                             (entryIdx == this.parent.children().size() - 1 ? (top - (entryHeight - 20)) : (top + (entryHeight + 15))) // @mcp: func_231039_at__ = getEntries
                     );
