@@ -48,7 +48,7 @@ The [Imgur Album](http://imgur.com/a/23dX5)
 
 ## Use on public servers
 
-**note on use of the mod on servers:** I want to make this very clear, I **DO NOT** support using this mod on servers, if you create an issue and I see you've tried to join a server, I will close the issue. This mod is only maintained because I personally use it for myself, on my own worlds. Do not break other servers rules, they are there because the owners want you to play a specific way, respect that or plan on a different server.
+**note on use of the mod on servers:** I want to make this very clear, I **DO NOT** support using this mod on servers, if you create an issue and I see you've tried to join a server, I will close the issue. This mod is only maintained because I personally use it for myself, on my own worlds. Do not break other servers rules, they are there because the owners want you to play a specific way, respect that or play on a different server.
 
 ## A note on Optifine
 Currently, the mod does not and has not work with Optifine since MC `1.7.x`. I am not sure why the two mods do not work 
