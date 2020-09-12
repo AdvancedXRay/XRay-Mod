@@ -2,6 +2,7 @@ package com.xray.gui.manage;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.xray.XRay;
+import com.xray.gui.GuiSelectionScreen;
 import com.xray.gui.utils.GuiBase;
 import com.xray.utils.BlockData;
 import com.xray.xray.Controller;
@@ -37,10 +38,14 @@ public class GuiEdit extends GuiBase {
             Controller.getBlockStore().remove(block.getBlockName());
             XRay.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
 
-            this.onClose();
+            this.closeScreen();
+            getMinecraft().displayGuiScreen(new GuiSelectionScreen());
         }));
 
-        addButton(new Button((getWidth() / 2) + 78, getHeight() / 2 + 58, 120, 20, new TranslationTextComponent("xray.single.cancel"), b -> this.onClose()));
+        addButton(new Button((getWidth() / 2) + 78, getHeight() / 2 + 58, 120, 20, new TranslationTextComponent("xray.single.cancel"), b -> {
+            this.closeScreen();
+            this.getMinecraft().displayGuiScreen(new GuiSelectionScreen());
+        }));
         addButton(new Button(getWidth() / 2 - 138, getHeight() / 2 + 83, 202, 20, new TranslationTextComponent("xray.single.save"), b -> {
             BlockData block = new BlockData(
                     this.oreName.getText(),
@@ -56,7 +61,7 @@ public class GuiEdit extends GuiBase {
             Controller.getBlockStore().getStore().put(data.getValue(), block);
 
             XRay.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
-            this.onClose();
+            this.closeScreen();
         }));
 
         addButton(redSlider = new Slider(getWidth() / 2 - 138, getHeight() / 2 + 7, 202, 20, new TranslationTextComponent("xray.color.red"), StringTextComponent.EMPTY, 0, 255, (block.getColor() >> 16 & 0xff), false, true, (e) -> {}, (e) -> {}));
@@ -90,7 +95,7 @@ public class GuiEdit extends GuiBase {
     @Override
     public boolean mouseClicked(double x, double y, int mouse) {
         if( oreName.mouseClicked(x, y, mouse) )
-            this.setFocused(oreName);
+            this.setListener(oreName);
 
         return super.mouseClicked(x, y, mouse);
     }

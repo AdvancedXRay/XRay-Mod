@@ -105,18 +105,18 @@ public class GuiSelectionScreen extends GuiBase {
                 return;
             }
 
-            getMinecraft().displayGuiScreen(new GuiAddBlock(((BlockItem) handItem.getItem()).getBlock()));
+            getMinecraft().displayGuiScreen(new GuiAddBlock(((BlockItem) handItem.getItem()).getBlock(), GuiSelectionScreen::new));
         }));
         addButton(new SupportButtonInner(getWidth() / 2 + 79, getHeight() / 2 - 16, 120, 20, I18n.format("xray.input.add_look"), "xray.tooltips.add_block_looking_at", button -> {
             PlayerEntity player = getMinecraft().player;
             if( getMinecraft().world == null || player == null )
                 return;
 
-            this.onClose();
+            this.closeScreen();
             try {
                 Vector3d look = player.getLookVec(); // @mcp: func_233580_cy_ = getPosition (blockPos)
-                Vector3d start = new Vector3d(player.func_233580_cy_().getX(), player.func_233580_cy_().getY() + player.getEyeHeight(), player.func_233580_cy_().getZ());
-                Vector3d end = new Vector3d(player.func_233580_cy_().getX() + look.x * 100, player.func_233580_cy_().getY() + player.getEyeHeight() + look.y * 100, player.func_233580_cy_().getZ() + look.z * 100);
+                Vector3d start = new Vector3d(player.getPosition().getX(), player.getPosition().getY() + player.getEyeHeight(), player.getPosition().getZ());
+                Vector3d end = new Vector3d(player.getPosition().getX() + look.x * 100, player.getPosition().getY() + player.getEyeHeight() + look.y * 100, player.getPosition().getZ() + look.z * 100);
 
                 RayTraceContext context = new RayTraceContext(start, end, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, player);
                 BlockRayTraceResult result = getMinecraft().world.rayTraceBlocks(context);
@@ -128,7 +128,7 @@ public class GuiSelectionScreen extends GuiBase {
                     ItemStack lookingStack = lookingAt.getPickBlock(state, result, getMinecraft().world, result.getPos(), getMinecraft().player);
 
                     player.closeScreen();
-                    getMinecraft().displayGuiScreen(new GuiAddBlock(Block.getBlockFromItem(lookingStack.getItem())));
+                    getMinecraft().displayGuiScreen(new GuiAddBlock(Block.getBlockFromItem(lookingStack.getItem()), GuiSelectionScreen::new));
                 } else
                     player.sendStatusMessage(new StringTextComponent("[XRay] " + I18n.format("xray.message.nothing_infront")), false);
             } catch (NullPointerException ex) {
@@ -150,7 +150,7 @@ public class GuiSelectionScreen extends GuiBase {
             getMinecraft().displayGuiScreen(new GuiHelp());
         }));
         addButton(new Button((getWidth() / 2 + 79) + 62, getHeight() / 2 + 58, 59, 20, new TranslationTextComponent("xray.single.close"), button -> {
-            this.onClose();
+            this.closeScreen();
         }));
     }
 
@@ -186,7 +186,7 @@ public class GuiSelectionScreen extends GuiBase {
     @Override
     public boolean mouseClicked(double x, double y, int mouse) {
         if( search.mouseClicked(x, y, mouse) )
-            this.setFocused(search);
+            this.setListener(search);
 
         if (mouse == 1 && distButtons.isMouseOver(x, y)) {
             Controller.decrementCurrentDist();
@@ -280,7 +280,7 @@ public class GuiSelectionScreen extends GuiBase {
                             stack,
                             LanguageMap.getInstance().func_244260_a(Arrays.asList(new TranslationTextComponent("xray.tooltips.edit1"), new TranslationTextComponent("xray.tooltips.edit2"))),
                             left + 15,
-                            (entryIdx == this.parent.children().size() - 1 ? (top - (entryHeight - 20)) : (top + (entryHeight + 15))) // @mcp: func_231039_at__ = getEntries
+                            (entryIdx == this.parent.getEventListeners().size() - 1 ? (top - (entryHeight - 20)) : (top + (entryHeight + 15))) // @mcp: func_231039_at__ = getEntries
                     );
                 }
 

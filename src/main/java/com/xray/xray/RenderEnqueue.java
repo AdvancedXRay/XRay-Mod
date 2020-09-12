@@ -131,7 +131,7 @@ public class RenderEnqueue implements Runnable
 				}
 			}
 		}
-		final BlockPos playerPos = player.func_233580_cy_(); // @mcp: func_233580_cy_ = getPosition (blockPos)
+		final BlockPos playerPos = player.getPosition();
 		renderQueue.sort((t, t1) -> Double.compare(t1.distanceSq(playerPos), t.distanceSq(playerPos)));
 		Render.syncRenderList.clear();
 		Render.syncRenderList.addAll( renderQueue ); // Add all our found blocks to the Render.syncRenderList list. To be use by Render when drawing.

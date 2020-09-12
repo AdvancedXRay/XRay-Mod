@@ -1,5 +1,8 @@
 {
 	"homepage": "https://github.com/MichaelHillcox/XRay-Mod",
+	"1.16.3": {
+		"1.16.3-r2.5.0": "See https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.16.3-v2.5.0"
+	},
 	"1.16.2": {
 		"1.16.2-r2.4.0": "See https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.16.2-v2.4.0"
 	},

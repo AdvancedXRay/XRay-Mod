@@ -2,6 +2,7 @@ package com.xray.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.xray.gui.utils.GuiBase;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -27,7 +28,10 @@ public class GuiHelp extends GuiBase {
         areas.add(new LinedText("xray.message.help.gui"));
         areas.add(new LinedText("xray.message.help.warning"));
 
-        this.addButton(new Button((getWidth() / 2) - 100, (getHeight() / 2) + 80, 200, 20, new TranslationTextComponent("xray.single.close"), b -> this.onClose()));
+        this.addButton(new Button((getWidth() / 2) - 100, (getHeight() / 2) + 80, 200, 20, new TranslationTextComponent("xray.single.close"), b -> {
+            this.closeScreen();
+            Minecraft.getInstance().displayGuiScreen(new GuiSelectionScreen());
+        }));
     }
 
     @Override

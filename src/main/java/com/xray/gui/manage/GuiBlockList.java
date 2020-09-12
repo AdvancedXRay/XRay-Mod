@@ -2,6 +2,7 @@ package com.xray.gui.manage;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.xray.XRay;
+import com.xray.gui.GuiSelectionScreen;
 import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.ScrollingList;
 import com.xray.store.GameBlockStore.BlockWithItemStack;
@@ -42,9 +43,12 @@ public class GuiBlockList extends GuiBase {
 
         search = new TextFieldWidget(getFontRender(), getWidth() / 2 - 100, getHeight() / 2 + 85, 140, 18, new StringTextComponent(""));
         search.changeFocus(true);
-        this.setFocused(search);
+        this.setListener(search);
 
-        addButton(new Button(getWidth() / 2 + 43, getHeight() / 2 + 84, 60, 20, new TranslationTextComponent("xray.single.cancel"), b -> this.onClose()));
+        addButton(new Button(getWidth() / 2 + 43, getHeight() / 2 + 84, 60, 20, new TranslationTextComponent("xray.single.cancel"), b -> {
+            this.closeScreen();
+            Minecraft.getInstance().displayGuiScreen(new GuiSelectionScreen());
+        }));
     }
 
     @Override
@@ -81,7 +85,7 @@ public class GuiBlockList extends GuiBase {
     @Override
     public boolean mouseClicked(double x, double y, int button) {
         if( this.search.mouseClicked (x, y, button) )
-            this.setFocused(this.search);
+            this.setListener(this.search);
 
         return super.mouseClicked(x, y, button);
     }
@@ -106,7 +110,7 @@ public class GuiBlockList extends GuiBase {
                 return;
 
             Minecraft.getInstance().player.closeScreen();
-            Minecraft.getInstance().displayGuiScreen(new GuiAddBlock(entry.getBlock().getBlock()));
+            Minecraft.getInstance().displayGuiScreen(new GuiAddBlock(entry.getBlock().getBlock(), GuiBlockList::new));
         }
 
         void updateEntries(List<BlockWithItemStack> blocks) {
