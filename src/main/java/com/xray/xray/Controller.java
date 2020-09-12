@@ -106,19 +106,18 @@ public class Controller
 	 * calls yield the same result.
 	 * @return true if the player has moved since the last blockFinder call
 	 */
-	private static boolean playerHasMoved()
-	{// @mcp: func_233580_cy_ = getPosition (blockPos)
+	private static boolean playerHasMoved() {
 		if (XRay.mc.player == null)
 			return false;
 
 		return lastPlayerPos == null
-			|| lastPlayerPos.getX() != XRay.mc.player.func_233580_cy_().getX()
-			|| lastPlayerPos.getZ() != XRay.mc.player.func_233580_cy_().getZ();
+			|| lastPlayerPos.getX() != XRay.mc.player.getPosition().getX()
+			|| lastPlayerPos.getZ() != XRay.mc.player.getPosition().getZ();
 	}
-	// @mcp: func_233580_cy_ = getPosition (blockPos)
+
 	private static void updatePlayerPosition()
 	{
-		lastPlayerPos = XRay.mc.player.func_233580_cy_();
+		lastPlayerPos = XRay.mc.player.getPosition();
 	}
 
 	/**

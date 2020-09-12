@@ -26,6 +26,7 @@ import net.minecraftforge.fml.client.gui.widget.Slider;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public class GuiAddBlock extends GuiBase {
     private TextFieldWidget oreName;
@@ -38,10 +39,12 @@ public class GuiAddBlock extends GuiBase {
     private ItemStack itemStack;
 
     private boolean oreNameCleared = false;
+    private Supplier<GuiBase> previousScreenCallback;
 
-    public GuiAddBlock(Block selectedBlock) {
+    public GuiAddBlock(Block selectedBlock, Supplier<GuiBase> previousScreenCallback) {
         super(false);
         this.selectBlock = selectedBlock;
+        this.previousScreenCallback = previousScreenCallback;
         this.itemStack = new ItemStack(selectBlock, 1);
     }
 
@@ -49,7 +52,7 @@ public class GuiAddBlock extends GuiBase {
     public void init() {
         // Called when the gui should be (re)created
         addButton(addBtn = new Button(getWidth() / 2 - 100, getHeight() / 2 + 85, 128, 20, new TranslationTextComponent("xray.single.add"), b -> {
-            this.onClose();
+            this.closeScreen();
 
             if (selectBlock.getRegistryName() == null)
                 return;
@@ -69,7 +72,10 @@ public class GuiAddBlock extends GuiBase {
             XRay.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
             getMinecraft().displayGuiScreen(new GuiSelectionScreen());
         }));
-        addButton(new Button(getWidth() / 2 + 30, getHeight() / 2 + 85, 72, 20, new TranslationTextComponent("xray.single.cancel"), b -> this.onClose()));
+        addButton(new Button(getWidth() / 2 + 30, getHeight() / 2 + 85, 72, 20, new TranslationTextComponent("xray.single.cancel"), b -> {
+            this.closeScreen();
+            Minecraft.getInstance().displayGuiScreen(this.previousScreenCallback.get());
+        }));
 
         addButton(redSlider = new Slider(getWidth() / 2 - 100, getHeight() / 2 + 7, 202, 20, new TranslationTextComponent("xray.color.red"), StringTextComponent.EMPTY, 0, 255, 0, false, true, (e) -> {}, (e) -> {}));
         addButton(greenSlider = new Slider(getWidth() / 2 - 100, getHeight() / 2 + 30, 202, 20, new TranslationTextComponent("xray.color.green"), StringTextComponent.EMPTY, 0, 255, 165, false, true, (e) -> {}, (e) -> {}));
@@ -119,7 +125,7 @@ public class GuiAddBlock extends GuiBase {
     @Override
     public boolean mouseClicked(double x, double y, int mouse) {
         if (oreName.mouseClicked(x, y, mouse))
-            this.setFocused(oreName);
+            this.setListener(oreName);
 
         if (oreName.isFocused() && !oreNameCleared) {
             oreName.setText("");

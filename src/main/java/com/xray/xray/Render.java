@@ -3,11 +3,13 @@ package com.xray.xray;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.xray.Configuration;
 import com.xray.XRay;
 import com.xray.utils.RenderBlockProps;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -39,60 +41,61 @@ public class Render
         Profile.BLOCKS.apply(); // Sets GL state for block drawing
 
         syncRenderList.forEach(blockProps -> {
+            if (blockProps == null) {
+                return;
+            }
+
+            RenderSystem.pushMatrix();
+            RenderSystem.translated(blockProps.getPos().getX(), blockProps.getPos().getY(), blockProps.getPos().getZ());
             buffer.begin( GL_LINES, DefaultVertexFormats.POSITION_COLOR );
-            renderBlockBounding(buffer, blockProps);
+            renderBlock(buffer, blockProps, 1);
             tessellator.draw();
+            RenderSystem.popMatrix();
         } );
 
         Profile.BLOCKS.clean();
         RenderSystem.popMatrix();
 	}
 
-    private static void renderBlockBounding(BufferBuilder buffer, RenderBlockProps b) {
-        if( b == null )
-            return;
+	private static void renderBlock(IVertexBuilder buffer, RenderBlockProps props, float opacity) {
+        final float red = (props.getColor() >> 16 & 0xff) / 255f;
+        final float green = (props.getColor() >> 8 & 0xff) / 255f;
+        final float blue = (props.getColor() & 0xff) / 255f;
 
-        final float size = 1.0f;
-        final int x = b.getX(), y = b.getY(), z = b.getZ(), opacity = 1;
-
-        final float red = (b.getColor() >> 16 & 0xff) / 255f;
-        final float green = (b.getColor() >> 8 & 0xff) / 255f;
-        final float blue = (b.getColor() & 0xff) / 255f;
-
-        buffer.pos(x, y + size, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y + size, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(0, 1, 0).color(red, green, blue, opacity).endVertex();
+        buffer.pos(1, 1, 0).color(red, green, blue, opacity).endVertex();
+        buffer.pos(1, 1, 0).color(red, green, blue, opacity).endVertex();
+        buffer.pos(1, 1, 1).color(red, green, blue, opacity).endVertex();
+        buffer.pos(1, 1, 1).color(red, green, blue, opacity).endVertex();
+        buffer.pos(0, 1, 1).color(red, green, blue, opacity).endVertex();
+        buffer.pos(0, 1, 1).color(red, green, blue, opacity).endVertex();
+        buffer.pos(0, 1, 0).color(red, green, blue, opacity).endVertex();
 
         // BOTTOM
-        buffer.pos(x + size, y, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + size, y, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(1, 0, 0).color(red, green, blue, opacity).endVertex();
+        buffer.pos(1, 0, 1).color(red, green, blue, opacity).endVertex();
+        buffer.pos(1, 0, 1).color(red, green, blue, opacity).endVertex();
+        buffer.pos(0, 0, 1).color(red, green, blue, opacity).endVertex();
+        buffer.pos(0, 0, 1).color(red, green, blue, opacity).endVertex();
+        buffer.pos(0, 0, 0).color(red, green, blue, opacity).endVertex();
+        buffer.pos(0, 0, 0).color(red, green, blue, opacity).endVertex();
+        buffer.pos(1, 0, 0).color(red, green, blue, opacity).endVertex();
 
         // Edge 1
-        buffer.pos(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(1, 0, 1).color(red, green, blue, opacity).endVertex();
+        buffer.pos(1, 1, 1).color(red, green, blue, opacity).endVertex();
 
         // Edge 2
-        buffer.pos(x + size, y, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(1, 0, 0).color(red, green, blue, opacity).endVertex();
+        buffer.pos(1, 1, 0).color(red, green, blue, opacity).endVertex();
 
         // Edge 3
-        buffer.pos(x, y, z + size).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
+        buffer.pos(0, 0, 1).color(red, green, blue, opacity).endVertex();
+        buffer.pos(0, 1, 1).color(red, green, blue, opacity).endVertex();
 
         // Edge 4
-        buffer.pos(x, y, z).color(red, green, blue, opacity).endVertex();
-        buffer.pos(x, y + size, z).color(red, green, blue, opacity).endVertex();
+        buffer.pos(0, 0, 0).color(red, green, blue, opacity).endVertex();
+        buffer.pos(0, 1, 0).color(red, green, blue, opacity).endVertex();
     }
 
     /**

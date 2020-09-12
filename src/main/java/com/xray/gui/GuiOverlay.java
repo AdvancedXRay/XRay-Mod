@@ -1,6 +1,5 @@
 package com.xray.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.xray.Configuration;
 import com.xray.XRay;
