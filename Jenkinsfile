@@ -1,17 +1,35 @@
 pipeline {
   agent any
   stages {
-    stage('Build') {
+    stage('Clean') {
       steps {
-        sh './gradlew --refresh-dependencies --continue build '
+        sh './gradlew clean --no-daemon'
       }
     }
 
-    stage('publish') {
+    stage('Build') {
+      steps {
+        sh './gradlew build --no-daemon'
+      }
+    }
+
+    stage('Upload Artifacts') {
       steps {
         archiveArtifacts(fingerprint: true, onlyIfSuccessful: true, artifacts: 'build/libs/**/*.jar')
       }
     }
 
+    stage('Publish') {
+      when { 
+        branch 'main'
+      }
+      steps {
+        sh './gradlew publish --no-daemon'
+      }
+    }
+
+  }
+  environment {
+    local_maven = '/var/jenkins_home/maven'
   }
 }
