@@ -1,6 +1,18 @@
 ![XRay Logo](http://i.imgur.com/002LJvM.jpg)
-# XRay Mod - [![Forge Downloads](http://cf.way2muchnoise.eu/advanced-xray.svg)](https://mods.curse.com/mc-mods/minecraft/256256-advanced-xray) [![Forge Available For](http://cf.way2muchnoise.eu/versions/advanced-xray.svg)](https://mods.curse.com/mc-mods/minecraft/256256-advanced-xray)
+# Advanced XRay Forge Edition
+
 Minecraft Forge based XRay mod designed to aid players who don't like the ore searching process.
+
+[![Forge Downloads](http://cf.way2muchnoise.eu/advanced-xray.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-xray) [![Forge Available For](http://cf.way2muchnoise.eu/versions/advanced-xray.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-xray)
+
+[![GitHub license](https://img.shields.io/github/license/MichaelHillcox/XRay-Mod)](https://github.com/MichaelHillcox/XRay-Mod/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/MichaelHillcox/XRay-Mod)](https://github.com/MichaelHillcox/XRay-Mod/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/MichaelHillcox/XRay-Mod)](https://github.com/MichaelHillcox/XRay-Mod/issues)
+![GitHub all releases](https://img.shields.io/github/downloads/michaelhillcox/xray-mod/total)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/michaelhillcox/xray-mod)
+![GitHub Release Date](https://img.shields.io/github/release-date/michaelhillcox/xray-mod)
+![GitHub last commit](https://img.shields.io/github/last-commit/michaelhillcox/xray-mod)
+[![Build Status](https://ci.mikey.pro/buildStatus/icon?job=XRay-Mod%2Fmaster)](https://ci.mikey.pro/job/XRay-Mod/job/master/)
 
 ## Feature
 
