@@ -17,7 +17,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,7 +48,6 @@ public class XRay
 		eventBus.addListener(this::onLoadComplete);
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configuration.SPEC);
-		MinecraftForge.EVENT_BUS.addListener(this::onExit);
 
 		// Keybindings
 		MinecraftForge.EVENT_BUS.register(KeyBindings.class);
@@ -70,10 +68,5 @@ public class XRay
 	private void onLoadComplete(FMLLoadCompleteEvent event)
 	{
 		gameBlockStore.populate();
-	}
-
-	private void onExit(FMLServerStoppingEvent event)
-	{
-		Controller.shutdownExecutor();
 	}
 }
