@@ -6,6 +6,7 @@ import com.xray.store.BlockStore;
 import com.xray.utils.Region;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -46,7 +47,7 @@ public class Controller
     }
 
     // Public accessors
-	public static boolean isXRayActive() { return xrayActive && XRay.mc.world != null && XRay.mc.player != null; }
+	public static boolean isXRayActive() { return xrayActive && Minecraft.getInstance().world != null && Minecraft.getInstance().player != null; }
 	public static void toggleXRay()
 	{
 		if ( !xrayActive) // enable drawing
@@ -55,13 +56,13 @@ public class Controller
 			xrayActive = true; // then, enable drawing
 			requestBlockFinder( true ); // finally, force a refresh
 
-			if( !Configuration.general.showOverlay.get() && XRay.mc.player != null )
-				XRay.mc.player.sendStatusMessage(new TranslationTextComponent("xray.toggle.activated"), false);
+			if( !Configuration.general.showOverlay.get() && Minecraft.getInstance().player != null )
+				Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("xray.toggle.activated"), false);
 		}
 		else // disable drawing
 		{
-			if( !Configuration.general.showOverlay.get() && XRay.mc.player != null )
-				XRay.mc.player.sendStatusMessage(new TranslationTextComponent("xray.toggle.deactivated"), false);
+			if( !Configuration.general.showOverlay.get() && Minecraft.getInstance().player != null )
+				Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("xray.toggle.deactivated"), false);
 
 			xrayActive = false;
 		}
@@ -102,17 +103,17 @@ public class Controller
 	 * @return true if the player has moved since the last blockFinder call
 	 */
 	private static boolean playerHasMoved() {
-		if (XRay.mc.player == null)
+		if (Minecraft.getInstance().player == null)
 			return false;
 
 		return lastPlayerPos == null
-			|| lastPlayerPos.getX() != XRay.mc.player.getPosition().getX()
-			|| lastPlayerPos.getZ() != XRay.mc.player.getPosition().getZ();
+			|| lastPlayerPos.getX() != Minecraft.getInstance().player.getPosition().getX()
+			|| lastPlayerPos.getZ() != Minecraft.getInstance().player.getPosition().getZ();
 	}
 
 	private static void updatePlayerPosition()
 	{
-		lastPlayerPos = XRay.mc.player.getPosition();
+		lastPlayerPos = Minecraft.getInstance().player.getPosition();
 	}
 
 	/**

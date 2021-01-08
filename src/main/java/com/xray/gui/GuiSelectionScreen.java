@@ -3,6 +3,7 @@ package com.xray.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.xray.ClientController;
 import com.xray.Configuration;
 import com.xray.XRay;
 import com.xray.gui.manage.GuiAddBlock;
@@ -17,9 +18,7 @@ import com.xray.xray.Controller;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.list.AbstractList;
@@ -35,7 +34,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.LanguageMap;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -63,11 +61,11 @@ public class GuiSelectionScreen extends GuiBase {
         this.setSideTitle(I18n.format("xray.single.tools"));
 
         // Inject this hear as everything is loaded
-        if( XRay.blockStore.created ) {
-            List<BlockData.SerializableBlockData> blocks = XRay.blockStore.populateDefault();
+        if( ClientController.blockStore.created ) {
+            List<BlockData.SerializableBlockData> blocks = ClientController.blockStore.populateDefault();
             Controller.getBlockStore().setStore(BlockStore.getFromSimpleBlockList(blocks));
 
-            XRay.blockStore.created = false;
+            ClientController.blockStore.created = false;
         }
 
         this.itemList = new ArrayList<>(Controller.getBlockStore().getStore().values());
@@ -203,13 +201,13 @@ public class GuiSelectionScreen extends GuiBase {
         this.scrollList.render(stack, x, y, partialTicks );
 
         if (!search.isFocused() && search.getText().equals(""))
-            XRay.mc.fontRenderer.drawStringWithShadow(stack, I18n.format("xray.single.search"), (float) getWidth() / 2 - 130, (float) getHeight() / 2 - 101, Color.GRAY.getRGB());
+            Minecraft.getInstance().fontRenderer.drawStringWithShadow(stack, I18n.format("xray.single.search"), (float) getWidth() / 2 - 130, (float) getHeight() / 2 - 101, Color.GRAY.getRGB());
     }
 
     @Override
     public void onClose() {
         Configuration.store.radius.save();
-        XRay.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
+        ClientController.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
 
         Controller.requestBlockFinder(true);
         super.onClose();
@@ -236,13 +234,13 @@ public class GuiSelectionScreen extends GuiBase {
                 return;
 
             if( GuiSelectionScreen.hasShiftDown() ) {
-                XRay.mc.player.closeScreen();
-                XRay.mc.displayGuiScreen( new GuiEdit(entry.block) );
+                Minecraft.getInstance().player.closeScreen();
+                Minecraft.getInstance().displayGuiScreen( new GuiEdit(entry.block) );
                 return;
             }
 
             Controller.getBlockStore().toggleDrawing(entry.block);
-            XRay.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
+            ClientController.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
         }
 
         void updateEntries(List<BlockData> blocks) {

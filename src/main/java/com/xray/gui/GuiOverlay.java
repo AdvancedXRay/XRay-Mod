@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.xray.Configuration;
 import com.xray.XRay;
 import com.xray.xray.Controller;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -26,9 +27,9 @@ public class GuiOverlay {
             return;
 
         RenderSystem.color3f(0, 255, 0);
-        XRay.mc.getTextureManager().bindTexture(circle);
+        Minecraft.getInstance().getTextureManager().bindTexture(circle);
         Screen.blit(event.getMatrixStack(), 5, 5, 0f, 0f, 5, 5, 5, 5);
 
-        XRay.mc.fontRenderer.drawStringWithShadow(event.getMatrixStack(), I18n.format("xray.overlay"), 15, 4, 0xffffffff);
+        Minecraft.getInstance().fontRenderer.drawStringWithShadow(event.getMatrixStack(), I18n.format("xray.overlay"), 15, 4, 0xffffffff);
     }
 }

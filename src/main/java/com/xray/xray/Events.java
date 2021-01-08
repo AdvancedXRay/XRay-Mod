@@ -1,6 +1,7 @@
 package com.xray.xray;
 
 import com.xray.XRay;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent;
@@ -38,7 +39,7 @@ public class Events
 	@SubscribeEvent
 	public static void onWorldRenderLast( RenderWorldLastEvent event ) // Called when drawing the world.
 	{
-		if ( Controller.isXRayActive() && XRay.mc.player != null )
+		if ( Controller.isXRayActive() && Minecraft.getInstance().player != null )
 		{
 			// this is a world pos of the player
 			Render.renderBlocks(event);

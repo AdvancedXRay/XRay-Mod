@@ -1,21 +1,18 @@
 package com.xray.gui.manage;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.xray.XRay;
+import com.xray.ClientController;
 import com.xray.gui.GuiSelectionScreen;
 import com.xray.gui.utils.GuiBase;
 import com.xray.gui.utils.ScrollingList;
 import com.xray.store.GameBlockStore.BlockWithItemStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.OptionsScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.list.AbstractList;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -33,7 +30,7 @@ public class GuiBlockList extends GuiBase {
 
     public GuiBlockList() {
         super(false);
-        this.blocks = XRay.gameBlockStore.getStore();
+        this.blocks = ClientController.gameBlockStore.getStore();
     }
 
     @Override

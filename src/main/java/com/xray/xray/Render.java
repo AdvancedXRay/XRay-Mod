@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.xray.Configuration;
 import com.xray.XRay;
 import com.xray.utils.RenderBlockProps;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer;
@@ -28,7 +29,7 @@ public class Render
     private static final int GL_LINES = 1;
 
 	static void renderBlocks(RenderWorldLastEvent event) {
-        Vector3d view = XRay.mc.gameRenderer.getActiveRenderInfo().getProjectedView();
+        Vector3d view = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
 
         MatrixStack stack = event.getMatrixStack();
         stack.translate(-view.x, -view.y, -view.z); // translate
