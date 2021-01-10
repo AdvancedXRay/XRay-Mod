@@ -19,7 +19,6 @@ import org.lwjgl.opengl.GL11;
 import java.util.List;
 
 public abstract class GuiBase extends Screen {
-
     public static final ResourceLocation BG_NORMAL = new ResourceLocation(XRay.PREFIX_GUI + "bg.png");
     public static final ResourceLocation BG_LARGE = new ResourceLocation(XRay.PREFIX_GUI + "bg-help.png");
 

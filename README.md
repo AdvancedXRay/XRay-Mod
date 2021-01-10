@@ -1,5 +1,5 @@
-![XRay Logo](http://i.imgur.com/002LJvM.jpg)
-# Advanced XRay Forge Edition
+![XRay Logo](.github/assets/xray-forge-logo.svg)
+# Advanced XRay (Forge Edition)
 
 Minecraft Forge based XRay mod designed to aid players who don't like the ore searching process.
 
@@ -13,6 +13,11 @@ Minecraft Forge based XRay mod designed to aid players who don't like the ore se
 ![GitHub Release Date](https://img.shields.io/github/release-date/michaelhillcox/xray-mod)
 ![GitHub last commit](https://img.shields.io/github/last-commit/michaelhillcox/xray-mod)
 [![Build Status](https://ci.mikey.pro/buildStatus/icon?job=XRay-Mod%2Fmaster)](https://ci.mikey.pro/job/XRay-Mod/job/master/)
+
+Looking for the Fabric version? Click the button below :tada:
+
+<a href="https://github.com/michaelhillcox/xray-fabric"><img src=".github/assets/xray-fabric-badge.svg" alt="drawing" width="250"/>
+</a>
 
 ## Feature
 
@@ -28,30 +33,31 @@ Minecraft Forge based XRay mod designed to aid players who don't like the ore se
 ## Todo
 
 - Mob support
-- Show near lava / water
-  - Support for fluids now it's a new system in 1.14
-- Simpler color selector
-- Complete rewrite.
-- Contact Optifine dev to figure out incompatibilities.
+- Support for all fluids now it's a new system in 1.14.
 
 ## How to use
 
-### Using XRay
+**Using XRay**
 
-- Press `[Default] Backslash` to toggle Xray on and off
-- Press `[Default] Z` to open the in-game GUI
+*Please note that these aren't always the ones set by default. Be sure to check your controls settings under `XRay` to find the correct keys*
 
-### Adding Ores
+- Press `Backslash` to toggle XRay `ON/OFF`
+- Press `Z` to open the `selection & settings` Gui 
 
-- Open the GUI Editor pressing `[Default] Z`
-- Select the method you'd like to use to add a block, either From hand, What you can see, or By searching a list
-- Modify the Name, Color, and anything else you'd like to change
-- Click add and Enable the Block
+**Adding Blocks**
 
-### Editing Ores
+- Open the `selection & settings` Gui
+- Select the method you'd like to use to add a block, either 
+  - `From hand` *will setup the basic version of the block. So no axis, facing, etc*
+  - `Looking At` *Will setup the complex version of the block, good for blocks you need specifc data from*
+  - `Searching a list` *Like `From hand`, it will only setup a basic block*
+- Set the Name, Color, and anything else you'd like to change
+- Click add and Enable the Block if it's not enabled. You can enable and disable blocks by clicking on them in the Gui.
 
-- Right click on any item in the GUI and edit as needed
-- Click save and the changed will be applied
+**Editing Blocks**
+
+- Right click on any item in the Gui and edit as needed
+- Click save and the changed will be applied instantly
 
 ## Previews
 
@@ -70,7 +76,7 @@ together and due to Optfine being closed source I don't have the ability to inve
 
 ## Supports
 
-A quick note on versioning. I try to support everything I can but with limited time I opt to discontinue every version 2 versions below the current game version. Example: we're currently on 1.14.4 so I will support 1.14.4 and 1.12.2 ( we missed 1.13 ). If you find a very big bug in an old version I might be abe to resolve it if you submit a detailed bug report.
+A quick note on versioning. I try to support everything I can but with limited time I opt to discontinue every version **`2`** versions below the current game version. Example: if we are on `1.14.4` I will support `1.14.4` and `1.12.2` (we missed 1.13). If you find a very big bug in an old version I might be abe to resolve it if you submit a detailed bug report.
 
 |Minecraft Version   | Mod Version | Branch | Author
 |---|---|---|---
