@@ -14,7 +14,9 @@ Minecraft Forge based XRay mod designed to aid players who don't like the ore se
 ![GitHub last commit](https://img.shields.io/github/last-commit/michaelhillcox/xray-mod)
 [![Build Status](https://ci.mikey.pro/buildStatus/icon?job=XRay-Mod%2Fmain)](https://ci.mikey.pro/job/XRay-Mod/job/main/)
 
-Looking for the Fabric version? Click the button below :tada:
+[![Discord invite link](.github/assets/discord-join-badge.svg)](https://discord.gg/yYNuqJxucJ)
+
+##### Looking for the Fabric version? Click the button below :tada:
 
 <a href="https://github.com/michaelhillcox/xray-fabric"><img src=".github/assets/xray-fabric-badge.svg" alt="drawing" width="250"/>
 </a>
