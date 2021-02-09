@@ -74,6 +74,21 @@ jar {
     }
 }
 
+task deobfJar(type: Jar) {
+    from(sourceSets.main.output)
+    archiveName = "${baseName}-${version}-deobf.${extension}"
+}
+
+task sourcesJar(type: Jar) {
+    from(sourceSets.main.allSource)
+    archiveName = "${baseName}-${version}-sources.${extension}"
+}
+
+artifacts {
+    archives deobfJar
+    archives sourcesJar
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -82,12 +97,12 @@ publishing {
             version project.version
             from components.java
 
-            artifact(remapJar) {
-                builtBy remapJar
+            artifact deobfJar {
+                classifier 'deobf'
             }
-            
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
+
+            artifact sourcesJar {
+                classifier 'sources'
             }
 
             pom.withXml {
