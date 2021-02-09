@@ -15,12 +15,12 @@ pipeline {
 
     stage('Upload Artifacts') {
       steps {
-        archiveArtifacts(fingerprint: true, onlyIfSuccessful: true, artifacts: 'build/libs/**/*.jar')
+        archiveArtifacts(artifacts: 'build/libs/**.jar', fingerprint: true)
       }
     }
 
     stage('Publish') {
-      when { 
+      when {
         branch 'main'
       }
       steps {
@@ -30,6 +30,6 @@ pipeline {
 
   }
   environment {
-    local_maven = '/var/jenkins_home/maven'
+    local_maven = '/var/jenkins_maven/'
   }
 }
