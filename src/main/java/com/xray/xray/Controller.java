@@ -6,13 +6,12 @@ import com.xray.store.BlockStore;
 import com.xray.utils.Region;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class Controller
 {
@@ -21,7 +20,7 @@ public class Controller
 
     // Block blackList
 	// Todo: move this to a configurable thing
-	public static ArrayList blackList = new ArrayList<Block>() {{
+    public static ArrayList blackList = new ArrayList<Block>() {{
 		add(Blocks.AIR);
 		add(Blocks.BEDROCK);
 		add(Blocks.STONE);
@@ -38,8 +37,6 @@ public class Controller
 	private static BlockStore blockStore = new BlockStore();
 
 	// Thread management
-	private static Future task;
-    private static ExecutorService executor;
 
 	// Draw states
 	private static boolean xrayActive = false; // Off by default
@@ -50,25 +47,24 @@ public class Controller
     }
 
     // Public accessors
-	public static boolean isXRayActive() { return xrayActive && XRay.mc.world != null && XRay.mc.player != null; }
+	public static boolean isXRayActive() { return xrayActive && Minecraft.getInstance().world != null && Minecraft.getInstance().player != null; }
 	public static void toggleXRay()
 	{
 		if ( !xrayActive) // enable drawing
 		{
 			Render.syncRenderList.clear(); // first, clear the buffer
-			executor = Executors.newSingleThreadExecutor();
 			xrayActive = true; // then, enable drawing
 			requestBlockFinder( true ); // finally, force a refresh
 
-			if( !Configuration.general.showOverlay.get() && XRay.mc.player != null )
-				XRay.mc.player.sendStatusMessage(new TranslationTextComponent("xray.toggle.activated"), false);
+			if( !Configuration.general.showOverlay.get() && Minecraft.getInstance().player != null )
+				Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("xray.toggle.activated"), false);
 		}
 		else // disable drawing
 		{
-			if( !Configuration.general.showOverlay.get() && XRay.mc.player != null )
-				XRay.mc.player.sendStatusMessage(new TranslationTextComponent("xray.toggle.deactivated"), false);
+			if( !Configuration.general.showOverlay.get() && Minecraft.getInstance().player != null )
+				Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("xray.toggle.deactivated"), false);
 
-			shutdownExecutor();
+			xrayActive = false;
 		}
 	}
 
@@ -107,17 +103,17 @@ public class Controller
 	 * @return true if the player has moved since the last blockFinder call
 	 */
 	private static boolean playerHasMoved() {
-		if (XRay.mc.player == null)
+		if (Minecraft.getInstance().player == null)
 			return false;
 
 		return lastPlayerPos == null
-			|| lastPlayerPos.getX() != XRay.mc.player.getPosition().getX()
-			|| lastPlayerPos.getZ() != XRay.mc.player.getPosition().getZ();
+			|| lastPlayerPos.getX() != Minecraft.getInstance().player.getPosition().getX()
+			|| lastPlayerPos.getZ() != Minecraft.getInstance().player.getPosition().getZ();
 	}
 
 	private static void updatePlayerPosition()
 	{
-		lastPlayerPos = XRay.mc.player.getPosition();
+		lastPlayerPos = Minecraft.getInstance().player.getPosition();
 	}
 
 	/**
@@ -131,22 +127,11 @@ public class Controller
 	 */
 	public static synchronized void requestBlockFinder( boolean force )
 	{
-		if ( isXRayActive() && (task == null || task.isDone()) && (force || playerHasMoved()) ) // world/player check done by xrayActive()
+		if ( isXRayActive() && (force || playerHasMoved()) ) // world/player check done by xrayActive()
 		{
 			updatePlayerPosition(); // since we're about to run, update the last known position
 			Region region = new Region( lastPlayerPos, getRadius() ); // the region to scan for syncRenderList
-			task = executor.submit( new RenderEnqueue(region) );
+			Util.getServerExecutor().execute(new RenderEnqueue(region));
 		}
-	}
-
-	/**
-	 * To be called at least when the game shutsdown
-	 */
-	public static void shutdownExecutor()
-	{
-		// Important. If xrayActive is true when a player logs out then logs back in, the next requestBlockFinder will crash
-		xrayActive = false;
-		try { executor.shutdownNow(); }
-		catch (Throwable ignore) {}
 	}
 }

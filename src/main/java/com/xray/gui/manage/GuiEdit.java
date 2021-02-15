@@ -1,7 +1,7 @@
 package com.xray.gui.manage;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.xray.XRay;
+import com.xray.ClientController;
 import com.xray.gui.GuiSelectionScreen;
 import com.xray.gui.utils.GuiBase;
 import com.xray.utils.BlockData;
@@ -36,7 +36,7 @@ public class GuiEdit extends GuiBase {
     public void init() {
         addButton(new Button((getWidth() / 2) + 78, getHeight() / 2 - 60, 120, 20, new TranslationTextComponent("xray.single.delete"), b -> {
             Controller.getBlockStore().remove(block.getBlockName());
-            XRay.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
+            ClientController.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
 
             this.closeScreen();
             getMinecraft().displayGuiScreen(new GuiSelectionScreen());
@@ -60,7 +60,7 @@ public class GuiEdit extends GuiBase {
             Controller.getBlockStore().getStore().remove(data.getValue());
             Controller.getBlockStore().getStore().put(data.getValue(), block);
 
-            XRay.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
+            ClientController.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
             this.closeScreen();
         }));
 

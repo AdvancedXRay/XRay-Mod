@@ -3,7 +3,7 @@ package com.xray.gui.manage;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.xray.XRay;
+import com.xray.ClientController;
 import com.xray.gui.GuiSelectionScreen;
 import com.xray.gui.utils.GuiBase;
 import com.xray.utils.BlockData;
@@ -18,10 +18,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.fml.client.gui.widget.Slider;
 
 import java.util.ArrayList;
@@ -69,7 +67,7 @@ public class GuiAddBlock extends GuiBase {
                     )
             );
 
-            XRay.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
+            ClientController.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
             getMinecraft().displayGuiScreen(new GuiSelectionScreen());
         }));
         addButton(new Button(getWidth() / 2 + 30, getHeight() / 2 + 85, 72, 20, new TranslationTextComponent("xray.single.cancel"), b -> {

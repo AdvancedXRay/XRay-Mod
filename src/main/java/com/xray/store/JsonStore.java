@@ -6,6 +6,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.xray.XRay;
 import com.xray.utils.BlockData;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.Tags;
 import org.apache.logging.log4j.Level;
@@ -19,7 +20,7 @@ import java.util.Random;
 public class JsonStore
 {
     private static final String FILE = "block_store.json";
-    private static final String CONFIG_DIR = XRay.mc.gameDir + "/config/";
+    private static final String CONFIG_DIR = Minecraft.getInstance().gameDir + "/config/";
     private static final Random rand = new Random();
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 

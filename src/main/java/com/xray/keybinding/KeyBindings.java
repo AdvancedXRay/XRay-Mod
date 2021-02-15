@@ -20,7 +20,7 @@ public class KeyBindings {
 
     public static void setup() {
         keyBindings.add(new KeyActionable(GLFW.GLFW_KEY_BACKSLASH, I18n.format("xray.config.toggle"), Controller::toggleXRay));
-        keyBindings.add(new KeyActionable(GLFW.GLFW_KEY_G, I18n.format("xray.config.open"), () -> XRay.mc.displayGuiScreen( new GuiSelectionScreen() )));
+        keyBindings.add(new KeyActionable(GLFW.GLFW_KEY_G, I18n.format("xray.config.open"), () -> Minecraft.getInstance().displayGuiScreen( new GuiSelectionScreen() )));
 
         keyBindings.forEach(e -> ClientRegistry.registerKeyBinding(e.getKeyBinding()));
     }
@@ -29,7 +29,7 @@ public class KeyBindings {
     public static void eventInput(TickEvent event)
     {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || event.phase == TickEvent.Phase.START || XRay.mc.currentScreen != null || XRay.mc.world == null)
+        if (mc.player == null || event.phase == TickEvent.Phase.START || Minecraft.getInstance().currentScreen != null || Minecraft.getInstance().world == null)
             return;
 
         keyBindings.forEach( e -> {

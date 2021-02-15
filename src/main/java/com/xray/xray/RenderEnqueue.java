@@ -5,6 +5,7 @@ import com.xray.utils.BlockData;
 import com.xray.utils.Region;
 import com.xray.utils.RenderBlockProps;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -46,8 +47,8 @@ public class RenderEnqueue implements Runnable
             return; // no need to scan the region if there's nothing to find
         }
 
-		final World world = XRay.mc.world;
-        final PlayerEntity player = XRay.mc.player;
+		final World world = Minecraft.getInstance().world;
+        final PlayerEntity player = Minecraft.getInstance().player;
         if( world == null || player == null )
         	return;
 

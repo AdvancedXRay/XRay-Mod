@@ -56,12 +56,6 @@ minecraft {
     }
 }
 
-repositories {
-    maven {
-        url 'https://www.dogforce-games.com/maven/'
-    }
-}
-
 dependencies {
     minecraft "net.minecraftforge:forge:${game_version}-${forge_version}"
 }
@@ -77,5 +71,50 @@ jar {
                 "Implementation-Vendor" :"advanced-xray",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
+    }
+}
+
+task deobfJar(type: Jar) {
+    from(sourceSets.main.output)
+    archiveName = "${baseName}-${version}-deobf.${extension}"
+}
+
+task sourcesJar(type: Jar) {
+    from(sourceSets.main.allSource)
+    archiveName = "${baseName}-${version}-sources.${extension}"
+}
+
+artifacts {
+    archives deobfJar
+    archives sourcesJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
+
+            artifact deobfJar {
+                classifier 'deobf'
+            }
+
+            artifact sourcesJar {
+                classifier 'sources'
+            }
+
+            pom.withXml {
+                def node = asNode()
+                if (node.dependencies.size() > 0)
+                    node.remove(node.dependencies)
+            }
+        }
+    }
+    repositories {
+        maven {
+            url "file://" + System.getenv("local_maven")
+        }
     }
 }

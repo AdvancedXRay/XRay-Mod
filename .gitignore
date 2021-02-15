@@ -26,3 +26,4 @@ CREDITS-fml.txt
 
 classes/
 .DS_Store
+/logs/
