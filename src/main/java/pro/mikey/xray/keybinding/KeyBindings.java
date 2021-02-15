@@ -17,9 +17,12 @@ public class KeyBindings {
     private static final String CATEGORY = "X-Ray";
     private static List<KeyActionable> keyBindings = new ArrayList<>();
 
+    public static KeyActionable toggleXRay = new KeyActionable(GLFW.GLFW_KEY_BACKSLASH, I18n.format("xray.config.toggle"), Controller::toggleXRay);
+    public static KeyActionable toggleGui = new KeyActionable(GLFW.GLFW_KEY_G, I18n.format("xray.config.open"), () -> Minecraft.getInstance().displayGuiScreen( new GuiSelectionScreen() ));
+
     public static void setup() {
-        keyBindings.add(new KeyActionable(GLFW.GLFW_KEY_BACKSLASH, I18n.format("xray.config.toggle"), Controller::toggleXRay));
-        keyBindings.add(new KeyActionable(GLFW.GLFW_KEY_G, I18n.format("xray.config.open"), () -> Minecraft.getInstance().displayGuiScreen( new GuiSelectionScreen() )));
+        keyBindings.add(toggleXRay);
+        keyBindings.add(toggleGui);
 
         keyBindings.forEach(e -> ClientRegistry.registerKeyBinding(e.getKeyBinding()));
     }
@@ -37,7 +40,7 @@ public class KeyBindings {
         });
     }
 
-    private static final class KeyActionable {
+    public static final class KeyActionable {
         private KeyBinding keyBinding;
         private Runnable onPress;
 
@@ -46,7 +49,7 @@ public class KeyBindings {
             this.keyBinding = new KeyBinding(description, key, CATEGORY);
         }
 
-        KeyBinding getKeyBinding() {
+        public KeyBinding getKeyBinding() {
             return keyBinding;
         }
     }

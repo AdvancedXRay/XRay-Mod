@@ -72,6 +72,10 @@ public abstract class GuiBase extends Screen {
         drawTexturedQuadFit(x, y, width, height, new int[]{color >> 16 & 0xff, color >> 8 & 0xff,color & 0xff }, 255f);
     }
 
+    public static void drawTexturedQuadFit(double x, double y, double width, double height, int color, float alpha) {
+        drawTexturedQuadFit(x, y, width, height, new int[]{color >> 16 & 0xff, color >> 8 & 0xff,color & 0xff }, alpha);
+    }
+
     @Override
     public void render(MatrixStack stack, int x, int y, float partialTicks) {
         renderBackground(stack);

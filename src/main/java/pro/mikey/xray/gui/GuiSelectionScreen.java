@@ -12,6 +12,7 @@ import pro.mikey.xray.gui.manage.GuiEdit;
 import pro.mikey.xray.gui.utils.GuiBase;
 import pro.mikey.xray.gui.utils.ScrollingList;
 import pro.mikey.xray.gui.utils.SupportButton;
+import pro.mikey.xray.keybinding.KeyBindings;
 import pro.mikey.xray.store.BlockStore;
 import pro.mikey.xray.utils.BlockData;
 import pro.mikey.xray.xray.Controller;
@@ -152,6 +153,15 @@ public class GuiSelectionScreen extends GuiBase {
         }));
     }
 
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (!search.isFocused() && keyCode == KeyBindings.toggleGui.getKeyBinding().getKey().getKeyCode()) {
+            this.closeScreen();
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
     private void updateSearch() {
         if (lastSearch.equals(search.getText()))
             return;
@@ -267,11 +277,11 @@ public class GuiSelectionScreen extends GuiBase {
 
                 FontRenderer font = Minecraft.getInstance().fontRenderer;
 
-                font.drawString(stack, blockData.getEntryName(), left + 40, top + 7, 0xFFFFFF);
-                font.drawString(stack, blockData.isDrawing() ? "Enabled" : "Disabled", left + 40, top + 17, blockData.isDrawing() ? Color.GREEN.getRGB() : Color.RED.getRGB());
+                font.drawString(stack, blockData.getEntryName(), left + 35, top + 7, 0xFFFFFF);
+                font.drawString(stack, blockData.isDrawing() ? "Enabled" : "Disabled", left + 35, top + 17, blockData.isDrawing() ? Color.GREEN.getRGB() : Color.RED.getRGB());
 
                 RenderHelper.enableStandardItemLighting();
-                Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(blockData.getItemStack(), left + 15, top + 7);
+                Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(blockData.getItemStack(), left + 8, top + 7);
                 RenderHelper.disableStandardItemLighting();
                 if (mouseX > left && mouseX < (left + entryWidth) && mouseY > top && mouseY < (top + entryHeight) && mouseY < (this.parent.getTop() + this.parent.getHeight()) && mouseY > this.parent.getTop()) {
                     this.parent.parent.renderTooltip(
@@ -286,8 +296,8 @@ public class GuiSelectionScreen extends GuiBase {
                 RenderSystem.enableBlend();
                 RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
                 Minecraft.getInstance().getRenderManager().textureManager.bindTexture(GuiSelectionScreen.CIRCLE);
-                GuiBase.drawTexturedQuadFit((left + entryWidth) - 37, top + (entryHeight / 2f) - 9, 14, 14, new int[]{255, 255, 255}, 50f);
-                GuiBase.drawTexturedQuadFit((left + entryWidth) - 35, top + (entryHeight / 2f) - 7, 10, 10, blockData.getColor());
+                GuiBase.drawTexturedQuadFit(((left + entryWidth)) - 34, top + (entryHeight / 2f) - 9, 14, 14, blockData.getColor(), 50f);
+                GuiBase.drawTexturedQuadFit(((left + entryWidth)) - 32, top + (entryHeight / 2f) - 7, 10, 10, blockData.getColor());
                 RenderSystem.disableAlphaTest();
                 RenderSystem.disableBlend();
             }

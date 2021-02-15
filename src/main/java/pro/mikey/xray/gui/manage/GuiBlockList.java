@@ -133,12 +133,12 @@ public class GuiBlockList extends GuiBase {
                 FontRenderer font = this.parent.minecraft.fontRenderer;
 
                 ResourceLocation resource = this.block.getItemStack().getItem().getRegistryName();
-                font.drawString(stack,this.block.getItemStack().getItem().getName().getString(), left + 40, top + 7, Color.WHITE.getRGB());
-                font.drawString(stack, resource != null ? resource.getNamespace() : "", left + 40, top + 17, Color.WHITE.getRGB());
+                font.drawString(stack,this.block.getItemStack().getItem().getName().getString(), left + 35, top + 7, Color.WHITE.getRGB());
+                font.drawString(stack, resource != null ? resource.getNamespace() : "", left + 35, top + 17, Color.WHITE.getRGB());
                 // @mcp: func_240652_a_ = unknown... Code recommendation
 
                 RenderHelper.enableStandardItemLighting();
-                this.parent.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(this.block.getItemStack(), left + 15, top + 7);
+                this.parent.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(this.block.getItemStack(), left + 8, top + 7);
                 RenderHelper.disableStandardItemLighting();
             }
 

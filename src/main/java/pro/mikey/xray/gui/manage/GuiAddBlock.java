@@ -132,7 +132,7 @@ public class GuiAddBlock extends GuiBase {
 
         if (!oreName.isFocused() && oreNameCleared && Objects.equals(oreName.getText(), "")) {
             oreNameCleared = false;
-            oreName.setText(I18n.format("xray.input.gui"));
+            oreName.setText(this.selectBlock.getTranslatedName().getString());
         }
 
         return super.mouseClicked(x, y, mouse);

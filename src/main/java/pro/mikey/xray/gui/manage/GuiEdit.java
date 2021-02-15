@@ -62,6 +62,7 @@ public class GuiEdit extends GuiBase {
 
             ClientController.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
             this.closeScreen();
+            getMinecraft().displayGuiScreen(new GuiSelectionScreen());
         }));
 
         addButton(redSlider = new Slider(getWidth() / 2 - 138, getHeight() / 2 + 7, 202, 20, new TranslationTextComponent("xray.color.red"), StringTextComponent.EMPTY, 0, 255, (block.getColor() >> 16 & 0xff), false, true, (e) -> {}, (e) -> {}));
