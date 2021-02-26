@@ -1,6 +1,7 @@
 package pro.mikey.xray.xray;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -11,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import org.apache.commons.lang3.tuple.Pair;
+import pro.mikey.xray.store.BlockStore;
 import pro.mikey.xray.utils.BlockData;
 import pro.mikey.xray.utils.Region;
 import pro.mikey.xray.utils.RenderBlockProps;
@@ -21,7 +23,7 @@ public class RenderEnqueue implements Runnable {
     private final Region box;
 
     public RenderEnqueue(Region region) {
-		this.box = region;
+        this.box = region;
     }
 
     /**
@@ -31,18 +33,18 @@ public class RenderEnqueue implements Runnable {
     public void run() // Our thread code for finding syncRenderList near the player.
     {
         HashMap<UUID, BlockData> blocks = Controller.getBlockStore().getStore();
-        if (blocks.isEmpty()) {
-			if (!Render.syncRenderList.isEmpty()) {
-				Render.syncRenderList.clear();
-			}
+        if (blocks.isEmpty() || !BlockStore.hasActiveBlocks()) {
+            if (!Render.syncRenderList.isEmpty()) {
+                Render.syncRenderList.clear();
+            }
             return; // no need to scan the region if there's nothing to find
         }
 
         final World world = Minecraft.getInstance().world;
         final PlayerEntity player = Minecraft.getInstance().player;
-		if (world == null || player == null) {
-			return;
-		}
+        if (world == null || player == null) {
+            return;
+        }
 
         final List<RenderBlockProps> renderQueue = new ArrayList<>();
         int lowBoundX, highBoundX, lowBoundY, highBoundY, lowBoundZ, highBoundZ;
@@ -79,10 +81,10 @@ public class RenderEnqueue implements Runnable {
                 // Loop on the extends around the player's layer (6 down, 2 up)
                 for (int curExtend = this.box.minChunkY; curExtend <= this.box.maxChunkY; curExtend++) {
                     ChunkSection ebs = extendsList[curExtend];
-					if (ebs == null) // happens quite often!
-					{
-						continue;
-					}
+                    if (ebs == null || ebs.isEmpty()) // happens quite often!
+                    {
+                        continue;
+                    }
 
                     // Pre-compute the extend bounds on Y
                     int y = curExtend << 4;
@@ -94,7 +96,8 @@ public class RenderEnqueue implements Runnable {
                         : 15;
 
                     // Now that we have an extend, let's check all its blocks
-                    renderQueue.addAll(this.scanBounds(ebs, x, y, z, lowBoundX, lowBoundY, lowBoundZ, highBoundX, highBoundY, highBoundZ));
+                    BlockPos pos = new BlockPos(x, y, z).toImmutable();
+                    renderQueue.addAll(this.scanBounds(world, ebs, pos, lowBoundX, lowBoundY, lowBoundZ, highBoundX, highBoundY, highBoundZ));
                 }
             }
         }
@@ -104,7 +107,7 @@ public class RenderEnqueue implements Runnable {
         Render.syncRenderList.addAll(renderQueue); // Add all our found blocks to the Render.syncRenderList list. To be use by Render when drawing.
     }
 
-    private Set<RenderBlockProps> scanBounds(ChunkSection chunkSection, int chunkX, int chunkY, int chunkZ, int lowerX, int lowerY, int lowerZ, int higherX, int higherY, int higherZ) {
+    private Set<RenderBlockProps> scanBounds(World world, ChunkSection chunkSection, BlockPos chunkRel, int lowerX, int lowerY, int lowerZ, int higherX, int higherY, int higherZ) {
         BlockState currentState;
         FluidState currentFluid;
         ResourceLocation blockName;
@@ -117,33 +120,38 @@ public class RenderEnqueue implements Runnable {
                     currentState = chunkSection.getBlockState(i, j, k);
                     currentFluid = currentState.getFluidState();
 
+                    if (currentState.getMaterial() == Material.AIR) {
+                        continue;
+                    }
+
+                    // Add Lava
                     if (Controller.isLavaActive() && (currentFluid.getFluid() == Fluids.LAVA || currentFluid.getFluid() == Fluids.FLOWING_LAVA)) {
-                        blocks.add(new RenderBlockProps(chunkX + i, chunkY + j, chunkZ + k, 0xff0000));
+                        blocks.add(new RenderBlockProps(chunkRel.add(i, j, k), 0xff0000));
                         continue;
                     }
 
                     // Reject blacklisted blocks
-					if (Controller.blackList.contains(currentState.getBlock())) {
-						continue;
-					}
+                    if (Controller.blackList.contains(currentState.getBlock())) {
+                        continue;
+                    }
 
                     blockName = currentState.getBlock().getRegistryName();
-					if (blockName == null) {
-						continue;
-					}
+                    if (blockName == null) {
+                        continue;
+                    }
 
                     dataWithUUID = Controller.getBlockStore().getStoreByReference(blockName.toString());
-					if (dataWithUUID == null) {
-						continue;
-					}
+                    if (dataWithUUID == null) {
+                        continue;
+                    }
 
-					if (dataWithUUID.getKey() == null || !dataWithUUID.getKey().isDrawing()) // fail safe
-					{
-						continue;
-					}
+                    // fail safe
+                    if (dataWithUUID.getKey() == null || !dataWithUUID.getKey().isDrawing()) {
+                        continue;
+                    }
 
                     // Push the block to the render queue
-                    blocks.add(new RenderBlockProps(chunkX + i, chunkY + j, chunkZ + k, dataWithUUID.getKey().getColor()));
+                    blocks.add(new RenderBlockProps(chunkRel.add(i, j, k), dataWithUUID.getKey().getColor()));
                 }
             }
         }
@@ -160,9 +168,9 @@ public class RenderEnqueue implements Runnable {
      * @param add   true if the block was added to world, false if it was removed
      */
     public static void checkBlock(BlockPos pos, BlockState state, boolean add) {
-		if (!Controller.isXRayActive() || Controller.getBlockStore().getStore().isEmpty()) {
-			return; // just pass
-		}
+        if (!Controller.isXRayActive() || Controller.getBlockStore().getStore().isEmpty()) {
+            return; // just pass
+        }
 
         // If we're removing then remove :D
         if (!add) {
@@ -171,14 +179,14 @@ public class RenderEnqueue implements Runnable {
         }
 
         ResourceLocation block = state.getBlock().getRegistryName();
-		if (block == null) {
-			return;
-		}
+        if (block == null) {
+            return;
+        }
 
         Pair<BlockData, UUID> dataWithUUID = Controller.getBlockStore().getStoreByReference(block.toString());
-		if (dataWithUUID == null || dataWithUUID.getKey() == null || !dataWithUUID.getKey().isDrawing()) {
-			return;
-		}
+        if (dataWithUUID == null || dataWithUUID.getKey() == null || !dataWithUUID.getKey().isDrawing()) {
+            return;
+        }
 
         // the block was added to the world, let's add it to the drawing buffer
         Render.syncRenderList.add(new RenderBlockProps(pos, dataWithUUID.getKey().getColor()));
