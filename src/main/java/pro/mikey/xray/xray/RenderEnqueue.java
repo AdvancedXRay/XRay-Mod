@@ -3,10 +3,14 @@ package pro.mikey.xray.xray;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -32,6 +36,7 @@ public class RenderEnqueue implements Runnable {
     @Override
     public void run() // Our thread code for finding syncRenderList near the player.
     {
+        this.scanForEntities();
         HashMap<UUID, BlockData> blocks = Controller.getBlockStore().getStore();
         if (blocks.isEmpty() || !BlockStore.hasActiveBlocks()) {
             if (!Render.syncRenderList.isEmpty()) {
@@ -105,6 +110,18 @@ public class RenderEnqueue implements Runnable {
         renderQueue.sort((t, t1) -> Double.compare(t1.getPos().distanceSq(playerPos), t.getPos().distanceSq((playerPos))));
         Render.syncRenderList.clear();
         Render.syncRenderList.addAll(renderQueue); // Add all our found blocks to the Render.syncRenderList list. To be use by Render when drawing.
+    }
+
+    private void scanForEntities() {
+        ClientWorld world = Minecraft.getInstance().world;
+        ClientPlayerEntity player = Minecraft.getInstance().player;
+        if (player == null || world == null) {
+            return;
+        }
+
+        List<LivingEntity> entitiesWithinAABB = world.getEntitiesWithinAABB(LivingEntity.class, AxisAlignedBB.fromVector(player.getPositionVec()).grow(100));
+        Render.entityList.clear();
+        entitiesWithinAABB.stream().filter(e -> !(e instanceof PlayerEntity)).forEach(Render.entityList::add);
     }
 
     private Set<RenderBlockProps> scanBounds(World world, ChunkSection chunkSection, BlockPos chunkRel, int lowerX, int lowerY, int lowerZ, int higherX, int higherY, int higherZ) {
