@@ -1,0 +1,35 @@
+name: CI Build & Release
+
+on:
+  create:
+    tags:
+      - v*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: |
+      !contains(github.event.head_commit.message, '[ciskip]')
+    steps:
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          # Ugly ugly ugly hack. I hate this
+          java-version: ${{ fromJSON('["16", "1.8"]')[github.ref != 'refs/heads/1.16'] }}
+      - name: Publish & Release to Curse
+        env:
+          SAPS_TOKEN: ${{ secrets.SAPS_TOKEN }}
+          CURSE_DEPLOY_TOKEN: ${{ secrets.CURSE_DEPLOY_TOKEN }}
+        run: |
+          chmod +x ./gradlew
+          ./gradlew build publish curseforge --stacktrace --no-daemon

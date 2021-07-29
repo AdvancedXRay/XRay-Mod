@@ -3,16 +3,16 @@ package pro.mikey.xray.xray;
 import pro.mikey.xray.utils.BlockData;
 import pro.mikey.xray.utils.Region;
 import pro.mikey.xray.utils.RenderBlockProps;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkSection;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.LevelChunkSection;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -46,8 +46,8 @@ public class RenderEnqueue implements Runnable
             return; // no need to scan the region if there's nothing to find
         }
 
-		final World world = Minecraft.getInstance().world;
-        final PlayerEntity player = Minecraft.getInstance().player;
+		final Level world = Minecraft.getInstance().level;
+        final Player player = Minecraft.getInstance().player;
         if( world == null || player == null )
         	return;
 
@@ -72,12 +72,12 @@ public class RenderEnqueue implements Runnable
 			for ( int chunkZ = box.minChunkZ; chunkZ <= box.maxChunkZ; chunkZ++ )
 			{
 				// Time to getStore the chunk (16x256x16) and split it into 16 vertical extends (16x16x16)
-				if (!world.chunkExists(chunkX, chunkZ)) {
+				if (!world.hasChunk(chunkX, chunkZ)) {
 					continue; // We won't find anything interesting in unloaded chunks
 				}
 
-				Chunk chunk = world.getChunk( chunkX, chunkZ );
-				ChunkSection[] extendsList = chunk.getSections();
+				LevelChunk chunk = world.getChunk( chunkX, chunkZ );
+				LevelChunkSection[] extendsList = chunk.getSections();
 
 				// Pre-compute the extend bounds on Z
 				int z = chunkZ << 4;
@@ -87,7 +87,7 @@ public class RenderEnqueue implements Runnable
 				// Loop on the extends around the player's layer (6 down, 2 up)
 				for ( int curExtend = box.minChunkY; curExtend <= box.maxChunkY; curExtend++ )
 				{
-					ChunkSection ebs = extendsList[curExtend];
+					LevelChunkSection ebs = extendsList[curExtend];
 					if (ebs == null) // happens quite often!
 						continue;
 
@@ -103,7 +103,7 @@ public class RenderEnqueue implements Runnable
 								currentState = ebs.getBlockState(i, j, k);
 								currentFluid = currentState.getFluidState();
 
-								if( (currentFluid.getFluid() == Fluids.LAVA || currentFluid.getFluid() == Fluids.FLOWING_LAVA) && Controller.isLavaActive() ) {
+								if( (currentFluid.getType() == Fluids.LAVA || currentFluid.getType() == Fluids.FLOWING_LAVA) && Controller.isLavaActive() ) {
 									renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, 0xff0000));
 									continue;
 								}
@@ -131,8 +131,8 @@ public class RenderEnqueue implements Runnable
 				}
 			}
 		}
-		final BlockPos playerPos = player.getPosition();
-		renderQueue.sort((t, t1) -> Double.compare(t1.getPos().distanceSq(playerPos), t.getPos().distanceSq((playerPos))));
+		final BlockPos playerPos = player.blockPosition();
+		renderQueue.sort((t, t1) -> Double.compare(t1.getPos().distSqr(playerPos), t.getPos().distSqr((playerPos))));
 		Render.syncRenderList.clear();
 		Render.syncRenderList.addAll( renderQueue ); // Add all our found blocks to the Render.syncRenderList list. To be use by Render when drawing.
 	}

@@ -7,7 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import pro.mikey.xray.XRay;
 import pro.mikey.xray.utils.BlockData;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.Tags;
 import org.apache.logging.log4j.Level;
 
@@ -20,7 +20,7 @@ import java.util.Random;
 public class JsonStore
 {
     private static final String FILE = "block_store.json";
-    private static final String CONFIG_DIR = Minecraft.getInstance().gameDir + "/config/";
+    private static final String CONFIG_DIR = Minecraft.getInstance().gameDirectory + "/config/";
     private static final Random rand = new Random();
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -86,11 +86,11 @@ public class JsonStore
 
     public List<BlockData.SerializableBlockData> populateDefault() {
         List<BlockData.SerializableBlockData> oresData = new ArrayList<>();
-        Tags.Blocks.ORES.getAllElements().forEach(e -> {
+        Tags.Blocks.ORES.getValues().forEach(e -> {
             if( e.getRegistryName() == null )
                 return;
 
-            oresData.add(new BlockData.SerializableBlockData(new TranslationTextComponent(e.getTranslationKey()).getString(),
+            oresData.add(new BlockData.SerializableBlockData(new TranslatableComponent(e.getDescriptionId()).getString(),
                     e.getRegistryName().toString(),
                             (rand.nextInt(255) << 16) + (rand.nextInt(255) << 8) + rand.nextInt(255),
                     false,

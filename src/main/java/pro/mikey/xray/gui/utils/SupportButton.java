@@ -1,28 +1,27 @@
 package pro.mikey.xray.gui.utils;
 
-import net.minecraft.client.gui.widget.GameSettingsSlider;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.ITextProperties;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class SupportButton extends Button {
-    private List<ITextProperties> support = new ArrayList<>();
 
-    public SupportButton(int widthIn, int heightIn, int width, int height, ITextComponent text, TranslationTextComponent support, IPressable onPress) {
+public class SupportButton extends Button {
+    private List<FormattedText> support = new ArrayList<>();
+
+    public SupportButton(int widthIn, int heightIn, int width, int height, Component text, TranslatableComponent support, OnPress onPress) {
         super(widthIn, heightIn, width, height, text, onPress);
 
         for(String line : support.getString().split("\n")) {
-            this.support.add(new StringTextComponent(line));
+            this.support.add(new TextComponent(line));
         }
     }
 
-    public List<ITextProperties> getSupport() {
+    public List<FormattedText> getSupport() {
         return support;
     }
 }

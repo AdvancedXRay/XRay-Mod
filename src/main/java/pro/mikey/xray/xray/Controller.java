@@ -3,12 +3,12 @@ package pro.mikey.xray.xray;
 import pro.mikey.xray.Configuration;
 import pro.mikey.xray.store.BlockStore;
 import pro.mikey.xray.utils.Region;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.vector.Vector3i;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.Util;
+import net.minecraft.core.Vec3i;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.ArrayList;
 
@@ -27,7 +27,7 @@ public class Controller
 		add(Blocks.DIRT);
 	}};
 
-	private static Vector3i lastPlayerPos = null;
+	private static Vec3i lastPlayerPos = null;
 
 	/**
      * Global blockStore used for:
@@ -46,7 +46,7 @@ public class Controller
     }
 
     // Public accessors
-	public static boolean isXRayActive() { return xrayActive && Minecraft.getInstance().world != null && Minecraft.getInstance().player != null; }
+	public static boolean isXRayActive() { return xrayActive && Minecraft.getInstance().level != null && Minecraft.getInstance().player != null; }
 	public static void toggleXRay()
 	{
 		if ( !xrayActive) // enable drawing
@@ -56,12 +56,12 @@ public class Controller
 			requestBlockFinder( true ); // finally, force a refresh
 
 			if( !Configuration.general.showOverlay.get() && Minecraft.getInstance().player != null )
-				Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("xray.toggle.activated"), false);
+				Minecraft.getInstance().player.displayClientMessage(new TranslatableComponent("xray.toggle.activated"), false);
 		}
 		else // disable drawing
 		{
 			if( !Configuration.general.showOverlay.get() && Minecraft.getInstance().player != null )
-				Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("xray.toggle.deactivated"), false);
+				Minecraft.getInstance().player.displayClientMessage(new TranslatableComponent("xray.toggle.deactivated"), false);
 
 			xrayActive = false;
 		}
@@ -106,13 +106,13 @@ public class Controller
 			return false;
 
 		return lastPlayerPos == null
-			|| lastPlayerPos.getX() != Minecraft.getInstance().player.getPosition().getX()
-			|| lastPlayerPos.getZ() != Minecraft.getInstance().player.getPosition().getZ();
+			|| lastPlayerPos.getX() != Minecraft.getInstance().player.blockPosition().getX()
+			|| lastPlayerPos.getZ() != Minecraft.getInstance().player.blockPosition().getZ();
 	}
 
 	private static void updatePlayerPosition()
 	{
-		lastPlayerPos = Minecraft.getInstance().player.getPosition();
+		lastPlayerPos = Minecraft.getInstance().player.blockPosition();
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class Controller
 		{
 			updatePlayerPosition(); // since we're about to run, update the last known position
 			Region region = new Region( lastPlayerPos, getRadius() ); // the region to scan for syncRenderList
-			Util.getServerExecutor().execute(new RenderEnqueue(region));
+			Util.backgroundExecutor().execute(new RenderEnqueue(region));
 		}
 	}
 }

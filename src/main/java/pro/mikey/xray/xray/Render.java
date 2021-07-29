@@ -1,16 +1,15 @@
 package pro.mikey.xray.xray;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.math.Matrix4f;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.BlockPos;
 import pro.mikey.xray.Configuration;
 import pro.mikey.xray.utils.RenderBlockProps;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import java.util.ArrayList;
@@ -27,74 +26,77 @@ public class Render
     private static final int GL_LINES = 1;
 
 	static void renderBlocks(RenderWorldLastEvent event) {
-        Vector3d view = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
+        Vec3 view = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
 
-        MatrixStack stack = event.getMatrixStack();
+        PoseStack stack = event.getMatrixStack();
+        stack.pushPose();
         stack.translate(-view.x, -view.y, -view.z); // translate
 
-        RenderSystem.pushMatrix();
-        RenderSystem.multMatrix(stack.getLast().getMatrix());
-
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
+        Tesselator tessellator = Tesselator.getInstance();
+        BufferBuilder buffer = tessellator.getBuilder();
         Profile.BLOCKS.apply(); // Sets GL state for block drawing
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 
         syncRenderList.forEach(blockProps -> {
             if (blockProps == null) {
                 return;
             }
 
-            RenderSystem.pushMatrix();
-            RenderSystem.translated(blockProps.getPos().getX(), blockProps.getPos().getY(), blockProps.getPos().getZ());
-            buffer.begin( GL_LINES, DefaultVertexFormats.POSITION_COLOR );
-            renderBlock(buffer, blockProps, 1);
-            tessellator.draw();
-            RenderSystem.popMatrix();
-        } );
+            buffer.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR );
+            stack.pushPose();
+            stack.translate(blockProps.getPos().getX(), blockProps.getPos().getY(), blockProps.getPos().getZ());
+            renderBlock(stack, buffer, blockProps, 1);
+            stack.popPose();
+            tessellator.end();
+        });
+
 
         Profile.BLOCKS.clean();
-        RenderSystem.popMatrix();
+//        RenderSystem.popMatrix();
+        stack.popPose();
+        RenderSystem.applyModelViewMatrix();
 	}
 
-	private static void renderBlock(IVertexBuilder buffer, RenderBlockProps props, float opacity) {
+	private static void renderBlock(PoseStack stack, VertexConsumer buffer, RenderBlockProps props, float opacity) {
         final float red = (props.getColor() >> 16 & 0xff) / 255f;
         final float green = (props.getColor() >> 8 & 0xff) / 255f;
         final float blue = (props.getColor() & 0xff) / 255f;
 
-        buffer.pos(0, 1, 0).color(red, green, blue, opacity).endVertex();
-        buffer.pos(1, 1, 0).color(red, green, blue, opacity).endVertex();
-        buffer.pos(1, 1, 0).color(red, green, blue, opacity).endVertex();
-        buffer.pos(1, 1, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(1, 1, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(0, 1, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(0, 1, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(0, 1, 0).color(red, green, blue, opacity).endVertex();
+        Matrix4f matrix4f = stack.last().pose();
+        buffer.vertex(matrix4f, 0, 1, 0).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 1, 1, 0).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 1, 1, 0).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 1, 1, 1).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 1, 1, 1).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 0, 1, 1).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 0, 1, 1).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 0, 1, 0).color(red, green, blue, opacity).endVertex();
 
         // BOTTOM
-        buffer.pos(1, 0, 0).color(red, green, blue, opacity).endVertex();
-        buffer.pos(1, 0, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(1, 0, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(0, 0, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(0, 0, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(0, 0, 0).color(red, green, blue, opacity).endVertex();
-        buffer.pos(0, 0, 0).color(red, green, blue, opacity).endVertex();
-        buffer.pos(1, 0, 0).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 1, 0, 0).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 1, 0, 1).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 1, 0, 1).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 0, 0, 1).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 0, 0, 1).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 0, 0, 0).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 0, 0, 0).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 1, 0, 0).color(red, green, blue, opacity).endVertex();
 
         // Edge 1
-        buffer.pos(1, 0, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(1, 1, 1).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 1, 0, 1).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 1, 1, 1).color(red, green, blue, opacity).endVertex();
 
         // Edge 2
-        buffer.pos(1, 0, 0).color(red, green, blue, opacity).endVertex();
-        buffer.pos(1, 1, 0).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 1, 0, 0).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 1, 1, 0).color(red, green, blue, opacity).endVertex();
 
         // Edge 3
-        buffer.pos(0, 0, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(0, 1, 1).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 0, 0, 1).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 0, 1, 1).color(red, green, blue, opacity).endVertex();
 
         // Edge 4
-        buffer.pos(0, 0, 0).color(red, green, blue, opacity).endVertex();
-        buffer.pos(0, 1, 0).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 0, 0, 0).color(red, green, blue, opacity).endVertex();
+        buffer.vertex(matrix4f, 0, 1, 0).color(red, green, blue, opacity).endVertex();
     }
 
     /**
@@ -109,17 +111,17 @@ public class Render
                 RenderSystem.disableTexture();
                 RenderSystem.disableDepthTest();
                 RenderSystem.depthMask( false );
-                RenderSystem.polygonMode( GL_FRONT_AND_BACK, GL_LINE );
-                RenderSystem.blendFunc( GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA );
-                RenderSystem.enableBlend();
+//                RenderSystem.polygonMode( GL_FRONT_AND_BACK, GL_LINE );
+//                RenderSystem.blendFunc( GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA );
+//                RenderSystem.enableBlend();
                 RenderSystem.lineWidth( (float) Configuration.general.outlineThickness.get().doubleValue() );
             }
 
             @Override
             public void clean()
             {
-                RenderSystem.polygonMode( GL_FRONT_AND_BACK, GL_FILL );
-                RenderSystem.disableBlend();
+//                RenderSystem.polygonMode( GL_FRONT_AND_BACK, GL_FILL );
+//                RenderSystem.disableBlend();
                 RenderSystem.enableDepthTest();
                 RenderSystem.depthMask( true );
                 RenderSystem.enableTexture();

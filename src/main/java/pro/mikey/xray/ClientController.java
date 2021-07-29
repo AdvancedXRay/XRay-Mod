@@ -6,7 +6,7 @@ import pro.mikey.xray.store.GameBlockStore;
 import pro.mikey.xray.store.JsonStore;
 import pro.mikey.xray.utils.BlockData;
 import pro.mikey.xray.xray.Controller;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -37,7 +37,7 @@ public class ClientController {
     }
 
     private static void onSetup(final FMLCommonSetupEvent event) {
-        XRay.logger.debug(I18n.format("xray.debug.init"));
+        XRay.logger.debug(I18n.get("xray.debug.init"));
 
         KeyBindings.setup();
         List<BlockData.SerializableBlockData> data = ClientController.blockStore.read();

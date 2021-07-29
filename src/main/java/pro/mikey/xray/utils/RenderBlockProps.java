@@ -1,7 +1,7 @@
 package pro.mikey.xray.utils;
 
 import com.google.common.base.Objects;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 
 import javax.annotation.concurrent.Immutable;
 
