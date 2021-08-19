@@ -23,7 +23,7 @@ public class GuiOverlay {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void RenderGameOverlayEvent(RenderGameOverlayEvent.Post event) {
         // Draw Indicator
-        if(!Controller.drawOres() || !Configuration.showOverlay)
+        if(!Controller.drawOres() || !Configuration.showOverlay || event.getType() != RenderGameOverlayEvent.ElementType.TEXT)
             return;
 
         GlStateManager.enableBlend();
