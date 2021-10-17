@@ -5,6 +5,9 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import pro.mikey.xray.Configuration;
 import pro.mikey.xray.utils.RenderBlockProps;
@@ -32,29 +35,40 @@ public class Render
         stack.pushPose();
         stack.translate(-view.x, -view.y, -view.z); // translate
 
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder buffer = tessellator.getBuilder();
-        Profile.BLOCKS.apply(); // Sets GL state for block drawing
-        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+//        Tesselator tessellator = Tesselator.getInstance();
+//        BufferBuilder buffer = tessellator.getBuilder();
+//        Profile.BLOCKS.apply(); // Sets GL state for block drawing
+//        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+//        RenderSystem.applyModelViewMatrix();
+
+        MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
+        VertexConsumer buffer = bufferSource.getBuffer(RenderTypes.LINES);
 
         syncRenderList.forEach(blockProps -> {
             if (blockProps == null) {
                 return;
             }
 
-            buffer.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR );
-            stack.pushPose();
-            stack.translate(blockProps.getPos().getX(), blockProps.getPos().getY(), blockProps.getPos().getZ());
-            renderBlock(stack, buffer, blockProps, 1);
-            stack.popPose();
-            tessellator.end();
+//            buffer.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR );
+//            stack.pushPose();
+//            stack.translate(blockProps.getPos().getX(), blockProps.getPos().getY(), blockProps.getPos().getZ());
+            final float red = (blockProps.getColor() >> 16 & 0xff) / 255f;
+            final float green = (blockProps.getColor() >> 8 & 0xff) / 255f;
+            final float blue = (blockProps.getColor() & 0xff) / 255f;
+
+            LevelRenderer.renderLineBox(stack, buffer, blockProps.getPos().getX(), blockProps.getPos().getY(), blockProps.getPos().getZ(), blockProps.getPos().getX() + 1, blockProps.getPos().getY() + 1, blockProps.getPos().getZ() + 1, red, green, blue, 1F);
+//            renderBlock(stack, buffer, blockProps, 1);
+//            stack.popPose();
+//            tessellator.end();
         });
 
+        bufferSource.endBatch(RenderTypes.LINES);
 
-        Profile.BLOCKS.clean();
+//        Profile.BLOCKS.clean();
 //        RenderSystem.popMatrix();
         stack.popPose();
-        RenderSystem.applyModelViewMatrix();
+//        RenderSystem.applyModelViewMatrix();
+//        RenderSystem.applyModelViewMatrix();
 	}
 
 	private static void renderBlock(PoseStack stack, VertexConsumer buffer, RenderBlockProps props, float opacity) {

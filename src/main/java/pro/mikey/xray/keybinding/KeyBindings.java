@@ -15,7 +15,7 @@ import java.util.List;
 
 public class KeyBindings {
     private static final String CATEGORY = "X-Ray";
-    private static List<KeyActionable> keyBindings = new ArrayList<>();
+    private static final List<KeyActionable> keyBindings = new ArrayList<>();
 
     public static KeyActionable toggleXRay = new KeyActionable(GLFW.GLFW_KEY_BACKSLASH, I18n.get("xray.config.toggle"), Controller::toggleXRay);
     public static KeyActionable toggleGui = new KeyActionable(GLFW.GLFW_KEY_G, I18n.get("xray.config.open"), () -> Minecraft.getInstance().setScreen( new GuiSelectionScreen() ));

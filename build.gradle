@@ -24,6 +24,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
 minecraft {
     mappings channel: 'official', version: "${game_version}"
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
         client {
@@ -36,15 +37,6 @@ minecraft {
                     source sourceSets.main
                 }
             }
-        }
-
-        server {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-
-            // Don't run the mod on the server. Well you could but why?
-            mods {}
         }
     }
 }
