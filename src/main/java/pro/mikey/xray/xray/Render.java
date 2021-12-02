@@ -113,47 +113,47 @@ public class Render
         buffer.vertex(matrix4f, 0, 1, 0).color(red, green, blue, opacity).endVertex();
     }
 
-    /**
-     * OpenGL Profiles used for rendering blocks and entities
-     */
-    private enum Profile
-    {
-        BLOCKS {
-            @Override
-            public void apply()
-            {
-                RenderSystem.disableTexture();
-                RenderSystem.disableDepthTest();
-                RenderSystem.depthMask( false );
-//                RenderSystem.polygonMode( GL_FRONT_AND_BACK, GL_LINE );
-//                RenderSystem.blendFunc( GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA );
-//                RenderSystem.enableBlend();
-                RenderSystem.lineWidth( (float) Configuration.general.outlineThickness.get().doubleValue() );
-            }
-
-            @Override
-            public void clean()
-            {
-//                RenderSystem.polygonMode( GL_FRONT_AND_BACK, GL_FILL );
-//                RenderSystem.disableBlend();
-                RenderSystem.enableDepthTest();
-                RenderSystem.depthMask( true );
-                RenderSystem.enableTexture();
-            }
-        },
-        // TODO:
-        ENTITIES {
-            @Override
-            public void apply()
-            {}
-
-            @Override
-            public void clean()
-            {}
-        };
-
-        private Profile() {}
-        public abstract void apply();
-        public abstract void clean();
-    }
+//    /**
+//     * OpenGL Profiles used for rendering blocks and entities
+//     */
+//    private enum Profile
+//    {
+//        BLOCKS {
+//            @Override
+//            public void apply()
+//            {
+//                RenderSystem.disableTexture();
+//                RenderSystem.disableDepthTest();
+//                RenderSystem.depthMask( false );
+////                RenderSystem.polygonMode( GL_FRONT_AND_BACK, GL_LINE );
+////                RenderSystem.blendFunc( GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA );
+////                RenderSystem.enableBlend();
+//                RenderSystem.lineWidth( (float) Configuration.general.outlineThickness.get().doubleValue() );
+//            }
+//
+//            @Override
+//            public void clean()
+//            {
+////                RenderSystem.polygonMode( GL_FRONT_AND_BACK, GL_FILL );
+////                RenderSystem.disableBlend();
+//                RenderSystem.enableDepthTest();
+//                RenderSystem.depthMask( true );
+//                RenderSystem.enableTexture();
+//            }
+//        },
+//        // TODO:
+//        ENTITIES {
+//            @Override
+//            public void apply()
+//            {}
+//
+//            @Override
+//            public void clean()
+//            {}
+//        };
+//
+//        private Profile() {}
+//        public abstract void apply();
+//        public abstract void clean();
+//    }
 }

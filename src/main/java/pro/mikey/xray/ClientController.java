@@ -48,8 +48,7 @@ public class ClientController {
         Controller.getBlockStore().setStore(map);
     }
 
-    private static void onLoadComplete(FMLLoadCompleteEvent event)
-    {
+    private static void onLoadComplete(FMLLoadCompleteEvent event) {
         ClientController.gameBlockStore.populate();
     }
 }
