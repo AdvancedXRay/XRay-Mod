@@ -1,9 +1,9 @@
 package pro.mikey.xray.xray;
 
+import net.minecraftforge.client.event.RenderLevelLastEvent;
 import pro.mikey.xray.XRay;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.ChunkEvent;
@@ -37,7 +37,7 @@ public class Events
 	}
 
 	@SubscribeEvent
-	public static void onWorldRenderLast( RenderWorldLastEvent event ) // Called when drawing the world.
+	public static void onWorldRenderLast( RenderLevelLastEvent event ) // Called when drawing the world.
 	{
 		if ( Controller.isXRayActive() && Minecraft.getInstance().player != null )
 		{

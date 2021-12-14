@@ -2,8 +2,8 @@ package pro.mikey.xray.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.gametest.framework.GameTestHelper;
 import pro.mikey.xray.ClientController;
 import pro.mikey.xray.Configuration;
 import pro.mikey.xray.XRay;
@@ -127,7 +127,7 @@ public class GuiSelectionScreen extends GuiBase {
                     BlockState state = getMinecraft().level.getBlockState(result.getBlockPos());
                     Block lookingAt = getMinecraft().level.getBlockState(result.getBlockPos()).getBlock();
 
-                    ItemStack lookingStack = lookingAt.getPickBlock(state, result, getMinecraft().level, result.getBlockPos(), getMinecraft().player);
+                    ItemStack lookingStack = lookingAt.getCloneItemStack(state, result, getMinecraft().level, result.getBlockPos(), getMinecraft().player);
 
                     player.closeContainer();
                     getMinecraft().setScreen(new GuiAddBlock(Block.byItem(lookingStack.getItem()), GuiSelectionScreen::new));
@@ -166,6 +166,7 @@ public class GuiSelectionScreen extends GuiBase {
     }
 
     private void updateSearch() {
+        if (search == null) return;
         if (lastSearch.equals(search.getValue()))
             return;
 

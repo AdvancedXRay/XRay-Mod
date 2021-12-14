@@ -1,14 +1,14 @@
 package pro.mikey.xray.keybinding;
 
-import net.minecraftforge.fmlclient.registry.ClientRegistry;
-import pro.mikey.xray.gui.GuiSelectionScreen;
-import pro.mikey.xray.xray.Controller;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.client.KeyMapping;
+import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
+import pro.mikey.xray.gui.GuiSelectionScreen;
+import pro.mikey.xray.xray.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,9 @@ public class KeyBindings {
     private static final List<KeyActionable> keyBindings = new ArrayList<>();
 
     public static KeyActionable toggleXRay = new KeyActionable(GLFW.GLFW_KEY_BACKSLASH, I18n.get("xray.config.toggle"), Controller::toggleXRay);
-    public static KeyActionable toggleGui = new KeyActionable(GLFW.GLFW_KEY_G, I18n.get("xray.config.open"), () -> Minecraft.getInstance().setScreen( new GuiSelectionScreen() ));
+    public static KeyActionable toggleGui = new KeyActionable(GLFW.GLFW_KEY_G, I18n.get("xray.config.open"), () -> Minecraft.getInstance().submit(() -> {
+        Minecraft.getInstance().setScreen(new GuiSelectionScreen());
+    }));
 
     public static void setup() {
         keyBindings.add(toggleXRay);

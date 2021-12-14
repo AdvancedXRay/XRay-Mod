@@ -20,8 +20,8 @@ public class Region {
 	{
 		minX = pos.getX() - radius;
 		maxX = pos.getX() + radius;
-		minY = Math.max(0, pos.getY() - 92);
-		maxY = Math.min(255, pos.getY() + 32);
+		minY = Math.max(0, pos.getY() - 32);
+		maxY = Math.min(255 + 64, pos.getY() + 92);
 		minZ = pos.getZ() - radius;
 		maxZ = pos.getZ() + radius;
 		minChunkX = minX >> 4;

@@ -124,7 +124,7 @@ public class RenderEnqueue implements Runnable
 									continue;
 
 								// Push the block to the render queue
-								renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, dataWithUUID.getKey().getColor()));
+								renderQueue.add(new RenderBlockProps(x + i, y + j - 64, z + k, dataWithUUID.getKey().getColor()));
 							}
 						}
 					}

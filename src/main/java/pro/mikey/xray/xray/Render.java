@@ -9,11 +9,11 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraftforge.client.event.RenderLevelLastEvent;
 import pro.mikey.xray.Configuration;
 import pro.mikey.xray.utils.RenderBlockProps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,10 +28,10 @@ public class Render
     private static final int GL_FILL = 6914;
     private static final int GL_LINES = 1;
 
-	static void renderBlocks(RenderWorldLastEvent event) {
+    static void renderBlocks(RenderLevelLastEvent event) {
         Vec3 view = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
 
-        PoseStack stack = event.getMatrixStack();
+        PoseStack stack = event.getPoseStack();
         stack.pushPose();
         stack.translate(-view.x, -view.y, -view.z); // translate
 
