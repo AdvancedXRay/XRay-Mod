@@ -7,6 +7,7 @@ import net.minecraft.core.Vec3i;
  */
 public class Region {
 
+	public int worldMinY;
 	public int minX, minY, minZ, maxX, maxY, maxZ;
 	public int minChunkX, minChunkY, minChunkZ, maxChunkX, maxChunkY, maxChunkZ;
 
@@ -16,12 +17,14 @@ public class Region {
 	 * @param pos a world position
 	 * @param radius a block radius
 	 */
-	public Region(Vec3i pos, int radius)
-	{
+	public Region(Vec3i pos, int radius, int worldMinY, int height)
+	{	
+		this.worldMinY = worldMinY;
+		
 		minX = pos.getX() - radius;
 		maxX = pos.getX() + radius;
-		minY = Math.max(0, pos.getY() - 32);
-		maxY = Math.min(383, pos.getY() + 96);
+		minY = Math.max(0, pos.getY() - 96 - worldMinY);
+		maxY = Math.min(worldMinY + height, pos.getY() + 32 - worldMinY);
 		minZ = pos.getZ() - radius;
 		maxZ = pos.getZ() + radius;
 		minChunkX = minX >> 4;
