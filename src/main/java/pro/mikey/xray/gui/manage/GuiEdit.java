@@ -69,7 +69,7 @@ public class GuiEdit extends GuiBase {
         addRenderableWidget(greenSlider = new Slider(getWidth() / 2 - 138, getHeight() / 2 + 30, 202, 20, new TranslatableComponent("xray.color.green"), TextComponent.EMPTY, 0, 255, (block.getColor() >> 8 & 0xff), false, true, (e) -> {}, (e) -> {}));
         addRenderableWidget(blueSlider = new Slider(getWidth() / 2 - 138, getHeight() / 2 + 53,202, 20,  new TranslatableComponent("xray.color.blue"), TextComponent.EMPTY, 0, 255, (block.getColor() & 0xff), false, true, (e) -> {}, (e) -> {}));
 
-        oreName = new EditBox(getMinecraft().font, getWidth() / 2 - 138, getHeight() / 2 - 63, 202, 20, new TextComponent(""));
+        oreName = new EditBox(getMinecraft().font, getWidth() / 2 - 138, getHeight() / 2 - 70, 202, 20, new TextComponent(""));
         oreName.setValue(this.block.getEntryName());
         addRenderableWidget(oreName);
     }
@@ -86,8 +86,8 @@ public class GuiEdit extends GuiBase {
 
         oreName.render(stack, x, y, partialTicks);
 
-        int color = (255 << 24) | ((int) (this.redSlider.getValue() * 255) << 16) | ((int) (this.greenSlider.getValue() * 255) << 8) | (int) (this.blueSlider.getValue() * 255);
-        fill(stack, this.getWidth() / 2 - 35, this.getHeight() / 2 - 40, (this.getWidth() / 2 - 35) + 100, (this.getHeight() / 2 - 40) + 64, color);
+        int color = (255 << 24) | ((int) (this.redSlider.getValue()) << 16) | ((int) (this.greenSlider.getValue()) << 8) | (int) (this.blueSlider.getValue());
+        fill(stack, this.getWidth() / 2 - 138, (this.getHeight() / 2) - 40, (this.getWidth() / 2) + 64, (this.getHeight() / 2) - 3, color);
 
         Lighting.setupForFlatItems();
         this.itemRenderer.renderAndDecorateItem(this.block.getItemStack(), getWidth() / 2 + 50, getHeight() / 2 - 105);
