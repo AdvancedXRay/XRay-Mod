@@ -129,7 +129,12 @@ public class Controller
 		if ( isXRayActive() && (force || playerHasMoved()) ) // world/player check done by xrayActive()
 		{
 			updatePlayerPosition(); // since we're about to run, update the last known position
-			Region region = new Region( lastPlayerPos, getRadius() ); // the region to scan for syncRenderList
+			Region region = new Region	( 
+											lastPlayerPos,
+											getRadius(),
+											Minecraft.getInstance().player.level.dimensionType().minY(),
+											Minecraft.getInstance().player.level.dimensionType().height()
+										); // the region to scan for syncRenderList
 			Util.backgroundExecutor().execute(new RenderEnqueue(region));
 		}
 	}

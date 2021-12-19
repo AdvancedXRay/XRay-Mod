@@ -104,7 +104,7 @@ public class RenderEnqueue implements Runnable
 								currentFluid = currentState.getFluidState();
 
 								if( (currentFluid.getType() == Fluids.LAVA || currentFluid.getType() == Fluids.FLOWING_LAVA) && Controller.isLavaActive() ) {
-									renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, 0xff0000));
+									renderQueue.add(new RenderBlockProps(x + i, y + j + box.worldMinY, z + k, 0xff0000));
 									continue;
 								}
 
@@ -124,7 +124,7 @@ public class RenderEnqueue implements Runnable
 									continue;
 
 								// Push the block to the render queue
-								renderQueue.add(new RenderBlockProps(x + i, y + j - 64, z + k, dataWithUUID.getKey().getColor()));
+								renderQueue.add(new RenderBlockProps(x + i, y + j + box.worldMinY, z + k, dataWithUUID.getKey().getColor()));
 							}
 						}
 					}
