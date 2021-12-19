@@ -12,7 +12,7 @@ public class Region {
 
 	/**
 	 * Constructs a world region from a player location and a radius.
-	 * Vertical extend is 92 blocks down and 32 blocks up
+	 * Vertical extend is 96 blocks down and 32 blocks up
 	 * @param pos a world position
 	 * @param radius a block radius
 	 */
@@ -21,7 +21,7 @@ public class Region {
 		minX = pos.getX() - radius;
 		maxX = pos.getX() + radius;
 		minY = Math.max(0, pos.getY() - 32);
-		maxY = Math.min(255 + 64, pos.getY() + 92);
+		maxY = Math.min(383, pos.getY() + 96);
 		minZ = pos.getZ() - radius;
 		maxZ = pos.getZ() + radius;
 		minChunkX = minX >> 4;
