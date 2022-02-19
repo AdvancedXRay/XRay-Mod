@@ -3,7 +3,7 @@ package pro.mikey.xray.gui.manage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraftforge.fmlclient.gui.widget.Slider;
+import net.minecraftforge.client.gui.widget.Slider;
 import pro.mikey.xray.ClientController;
 import pro.mikey.xray.gui.GuiSelectionScreen;
 import pro.mikey.xray.gui.utils.GuiBase;
@@ -94,8 +94,8 @@ public class GuiAddBlock extends GuiBase {
     public void renderExtra(PoseStack stack, int x, int y, float partialTicks) {
         getFontRender().drawShadow(stack, selectBlock.getName().getString(), getWidth() / 2f - 100, getHeight() / 2f - 90, 0xffffff);
 
-        int color = (255 << 24) | ((int) (this.redSlider.getValue() * 255) << 16) | ((int) (this.greenSlider.getValue() * 255) << 8) | (int) (this.blueSlider.getValue() * 255);
-        fill(stack, this.getWidth() / 2 + 2, this.getHeight() / 2 - 40, (this.getWidth() / 2 + 2) + 100, (this.getHeight() / 2 - 40) + 64, color);
+        int color = (255 << 24) | ((int) (this.redSlider.getValue()) << 16) | ((int) (this.greenSlider.getValue()) << 8) | (int) (this.blueSlider.getValue());
+        fill(stack, this.getWidth() / 2 - 100, this.getHeight() / 2 - 45, (this.getWidth() / 2 + 2) + 100, (this.getHeight() / 2 - 45) + 45, color);
 
         oreName.render(stack, x, y, partialTicks);
 

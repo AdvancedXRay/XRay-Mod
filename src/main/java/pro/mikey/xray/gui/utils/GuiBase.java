@@ -77,7 +77,7 @@ public abstract class GuiBase extends Screen {
 //        }
 
         for(GuiEventListener button : this.children()) {
-            if (button instanceof SupportButton && ((SupportButton) button).isHovered())
+            if (button instanceof SupportButton && ((SupportButton) button).isHoveredOrFocused())
                 renderTooltip(stack, Language.getInstance().getVisualOrder(((SupportButton) button).getSupport()), x, y);
         }
 

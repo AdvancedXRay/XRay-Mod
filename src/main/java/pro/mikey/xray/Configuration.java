@@ -37,12 +37,8 @@ public class Configuration
             BUILDER.comment("DO NOT TOUCH!").push("store");
 
             radius = BUILDER
-                    .comment("DO NOT TOUCH!",
-                            "This setting is for memory only and if changed to a value not supported",
-                            "the game will crash on start up. This value can be changed in game very simply.",
-                            "If you must change it then these are the valid values 0 -> 7",
-                            "but please leave it alone :P")
-                    .defineInRange("radius", 3, 0, 9);
+                    .comment("DO NOT TOUCH!", "This is not for you.")
+                    .defineInRange("radius", 2, 0, 5);
 
             lavaActive = BUILDER
                     .comment("Memory value for if you're currently wanting Lava to be rendered into the mix")

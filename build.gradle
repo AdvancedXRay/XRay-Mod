@@ -1,18 +1,21 @@
 buildscript {
     repositories {
         maven { url = 'https://maven.minecraftforge.net' }
-        jcenter()
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+//        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7.+'
     }
 }
+
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
+//apply plugin: 'org.spongepowered.mixin'
 
 def ENV = System.getenv()
 
@@ -20,15 +23,18 @@ version = "${game_version}-${mod_version}-build.${ENV.GITHUB_RUN_NUMBER ?: 9999}
 group= "pro.mikey.xray"
 archivesBaseName = "advanced-xray-forge-${game_version}"
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
     mappings channel: 'official', version: "${game_version}"
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+//    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
         client {
             workingDirectory project.file('run')
+
+//            arg "-mixin.config=xray.mixins.json"
+
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
 
@@ -41,13 +47,20 @@ minecraft {
     }
 }
 
+//mixin {
+//    add sourceSets.main, "xray.refmap.json"
+//    config 'xray.mixins.json'
+//}
+
 dependencies {
     minecraft "net.minecraftforge:forge:${game_version}-${forge_version}"
+//    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 }
 
 jar {
     manifest {
         attributes([
+//                "MixinConfigs": 'xray.mixins.json',
                 "Specification-Title": "Advanced XRay",
                 "Specification-Vendor": "",
                 "Specification-Version": "${version}",
@@ -74,13 +87,15 @@ artifacts {
     archives sourcesJar
 }
 
+jar.finalizedBy('reobfJar')
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
             groupId project.group
             artifactId project.archivesBaseName
             version project.version
-            from components.java
+            artifact jar
 
             artifact deobfJar {
                 classifier 'deobf'
@@ -88,12 +103,6 @@ publishing {
 
             artifact sourcesJar {
                 classifier 'sources'
-            }
-
-            pom.withXml {
-                def node = asNode()
-                if (node.dependencies.size() > 0)
-                    node.remove(node.dependencies)
             }
         }
     }

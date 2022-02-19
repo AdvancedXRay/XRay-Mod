@@ -65,7 +65,7 @@ public class GuiSelectionScreen extends GuiBase {
         this.setSideTitle(I18n.get("xray.single.tools"));
 
         // Inject this hear as everything is loaded
-        if( ClientController.blockStore.created ) {
+        if (ClientController.blockStore.created) {
             List<BlockData.SerializableBlockData> blocks = ClientController.blockStore.populateDefault();
             Controller.getBlockStore().setStore(BlockStore.getFromSimpleBlockList(blocks));
 
@@ -80,13 +80,13 @@ public class GuiSelectionScreen extends GuiBase {
 
     @Override
     public void init() {
-        if( getMinecraft().player == null )
+        if (getMinecraft().player == null)
             return;
 
         this.render = this.itemRenderer;
         this.children().clear();
 
-		this.scrollList = new ScrollingBlockList((getWidth() / 2) - 37, getHeight() / 2 + 10, 203, 185, this.itemList, this);
+        this.scrollList = new ScrollingBlockList((getWidth() / 2) - 37, getHeight() / 2 + 10, 203, 185, this.itemList, this);
         addRenderableWidget(this.scrollList);
 
         this.search = new EditBox(getFontRender(), getWidth() / 2 - 137, getHeight() / 2 - 105, 202, 18, TextComponent.EMPTY);
@@ -111,12 +111,12 @@ public class GuiSelectionScreen extends GuiBase {
         }));
         addRenderableWidget(new SupportButtonInner(getWidth() / 2 + 79, getHeight() / 2 - 16, 120, 20, I18n.get("xray.input.add_look"), "xray.tooltips.add_block_looking_at", button -> {
             Player player = getMinecraft().player;
-            if( getMinecraft().level == null || player == null )
+            if (getMinecraft().level == null || player == null)
                 return;
 
             this.onClose();
             try {
-                Vec3 look = player.getLookAngle(); // @mcp: blockPosition = getPosition (blockPos)
+                Vec3 look = player.getLookAngle();
                 Vec3 start = new Vec3(player.blockPosition().getX(), player.blockPosition().getY() + player.getEyeHeight(), player.blockPosition().getZ());
                 Vec3 end = new Vec3(player.blockPosition().getX() + look.x * 100, player.blockPosition().getY() + player.getEyeHeight() + look.y * 100, player.blockPosition().getZ() + look.z * 100);
 
@@ -124,13 +124,10 @@ public class GuiSelectionScreen extends GuiBase {
                 BlockHitResult result = getMinecraft().level.clip(context);
 
                 if (result.getType() == HitResult.Type.BLOCK) {
-                    BlockState state = getMinecraft().level.getBlockState(result.getBlockPos());
                     Block lookingAt = getMinecraft().level.getBlockState(result.getBlockPos()).getBlock();
 
-                    ItemStack lookingStack = lookingAt.getPickBlock(state, result, getMinecraft().level, result.getBlockPos(), getMinecraft().player);
-
                     player.closeContainer();
-                    getMinecraft().setScreen(new GuiAddBlock(Block.byItem(lookingStack.getItem()), GuiSelectionScreen::new));
+                    getMinecraft().setScreen(new GuiAddBlock(lookingAt, GuiSelectionScreen::new));
                 } else
                     player.displayClientMessage(new TextComponent("[XRay] " + I18n.get("xray.message.nothing_infront")), false);
             } catch (NullPointerException ex) {
@@ -143,9 +140,9 @@ public class GuiSelectionScreen extends GuiBase {
             button.setMessage(new TranslatableComponent("xray.input.show-lava", Controller.isLavaActive()));
         }));
 
-        addRenderableWidget(distButtons = new SupportButtonInner((getWidth() / 2) + 79, getHeight() / 2 + 36, 120, 20, I18n.get("xray.input.distance", Controller.getRadius()), "xray.tooltips.distance", button -> {
+        addRenderableWidget(distButtons = new SupportButtonInner((getWidth() / 2) + 79, getHeight() / 2 + 36, 120, 20, I18n.get("xray.input.distance", Controller.getVisualRadius()), "xray.tooltips.distance", button -> {
             Controller.incrementCurrentDist();
-            button.setMessage(new TranslatableComponent("xray.input.distance", Controller.getRadius()));
+            button.setMessage(new TranslatableComponent("xray.input.distance", Controller.getVisualRadius()));
         }));
         addRenderableWidget(new Button(getWidth() / 2 + 79, getHeight() / 2 + 58, 60, 20, new TranslatableComponent("xray.single.help"), button -> {
             getMinecraft().player.closeContainer();
@@ -158,7 +155,7 @@ public class GuiSelectionScreen extends GuiBase {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (!search.isFocused() && keyCode == KeyBindings.toggleGui.getKeyBinding().getKey().getValue()) {
+        if (!search.isFocused() && keyCode == KeyBindings.toggleGui.getKey().getValue()) {
             this.onClose();
             return true;
         }
@@ -171,7 +168,7 @@ public class GuiSelectionScreen extends GuiBase {
 
         if (search.getValue().equals("")) {
             this.itemList = this.originalList;
-			this.scrollList.updateEntries(this.itemList);
+            this.scrollList.updateEntries(this.itemList);
             lastSearch = "";
             return;
         }
@@ -182,7 +179,7 @@ public class GuiSelectionScreen extends GuiBase {
 
         this.itemList.sort(Comparator.comparingInt(BlockData::getOrder));
 
-		this.scrollList.updateEntries(this.itemList);
+        this.scrollList.updateEntries(this.itemList);
         lastSearch = search.getValue();
     }
 
@@ -199,12 +196,12 @@ public class GuiSelectionScreen extends GuiBase {
 
     @Override
     public boolean mouseClicked(double x, double y, int mouse) {
-        if( search.mouseClicked(x, y, mouse) )
+        if (search.mouseClicked(x, y, mouse))
             this.setFocused(search);
 
         if (mouse == 1 && distButtons.isMouseOver(x, y)) {
             Controller.decrementCurrentDist();
-            distButtons.setMessage(new TranslatableComponent("xray.input.distance", Controller.getRadius()));
+            distButtons.setMessage(new TranslatableComponent("xray.input.distance", Controller.getVisualRadius()));
             distButtons.playDownSound(Minecraft.getInstance().getSoundManager());
         }
 
@@ -214,7 +211,7 @@ public class GuiSelectionScreen extends GuiBase {
     @Override
     public void renderExtra(PoseStack stack, int x, int y, float partialTicks) {
         this.search.render(stack, x, y, partialTicks);
-        this.scrollList.render(stack, x, y, partialTicks );
+        this.scrollList.render(stack, x, y, partialTicks);
 
         if (!search.isFocused() && search.getValue().equals(""))
             Minecraft.getInstance().font.drawShadow(stack, I18n.get("xray.single.search"), (float) getWidth() / 2 - 130, (float) getHeight() / 2 - 101, Color.GRAY.getRGB());
@@ -249,9 +246,9 @@ public class GuiSelectionScreen extends GuiBase {
             if (entry == null)
                 return;
 
-            if( GuiSelectionScreen.hasShiftDown() ) {
+            if (GuiSelectionScreen.hasShiftDown()) {
                 Minecraft.getInstance().player.closeContainer();
-                Minecraft.getInstance().setScreen( new GuiEdit(entry.block) );
+                Minecraft.getInstance().setScreen(new GuiEdit(entry.block));
                 return;
             }
 
@@ -260,7 +257,7 @@ public class GuiSelectionScreen extends GuiBase {
         }
 
         void updateEntries(List<BlockData> blocks) {
-            this.clearEntries ();
+            this.clearEntries();
             blocks.forEach(block -> this.addEntry(new BlockSlot(block, this))); // @mcp: addEntry = addEntry
         }
 
