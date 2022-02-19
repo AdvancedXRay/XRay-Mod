@@ -24,7 +24,7 @@ def ENV = System.getenv()
 
 version = "${game_version}-${mod_version}-build.${ENV.GITHUB_RUN_NUMBER ?: 9999}"
 group= "pro.mikey.xray"
-archivesBaseName = "advanced-xray-forge-${game_version}"
+archivesBaseName = "advanced-xray-forge"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
