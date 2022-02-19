@@ -1,14 +1,14 @@
 package pro.mikey.xray.keybinding;
 
-import net.minecraftforge.client.ClientRegistry;
-import net.minecraftforge.client.event.InputEvent;
-import pro.mikey.xray.gui.GuiSelectionScreen;
-import pro.mikey.xray.xray.Controller;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.client.KeyMapping;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fmlclient.registry.ClientRegistry;
 import org.lwjgl.glfw.GLFW;
+import pro.mikey.xray.gui.GuiSelectionScreen;
+import pro.mikey.xray.xray.Controller;
 
 
 public class KeyBindings {

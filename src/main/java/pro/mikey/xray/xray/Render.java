@@ -4,14 +4,14 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.lwjgl.opengl.GL11;
 
 public class Render {
     private static VertexBuffer vertexBuffer;
     public static boolean requestedRefresh = false;
 
-	static void renderBlocks(RenderLevelLastEvent event) {
+	static void renderBlocks(RenderWorldLastEvent event) {
         if (vertexBuffer == null || requestedRefresh) {
             requestedRefresh = false;
             vertexBuffer = new VertexBuffer();
@@ -84,7 +84,7 @@ public class Render {
             GL11.glEnable(GL11.GL_LINE_SMOOTH);
             GL11.glDisable(GL11.GL_DEPTH_TEST);
 
-            PoseStack matrix = event.getPoseStack();
+            PoseStack matrix = event.getMatrixStack();
             matrix.pushPose();
             matrix.translate(-view.x, -view.y, -view.z);
             vertexBuffer.drawWithShader(matrix.last().pose(), event.getProjectionMatrix().copy(), GameRenderer.getPositionColorShader());
