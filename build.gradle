@@ -10,6 +10,9 @@ buildscript {
     }
 }
 
+plugins {
+    id "com.matthewprenger.cursegradle" version "1.4.0"
+}
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
