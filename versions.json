@@ -1,5 +1,14 @@
 {
 	"homepage": "https://github.com/MichaelHillcox/XRay-Mod",
+	"1.18.1": {
+		"1.18.1-r2.10.0": "See https://github.com/MichaelHillcox/XRay-Mod/commits/v1.18.1-r2.10.0"
+	},
+	"1.17.1": {
+		"1.17.1-r2.9.0": "See https://github.com/MichaelHillcox/XRay-Mod/commits/v1.17.1-r2.9.0"
+	},
+	"1.16.5": {
+		"1.16.5-r2.7.0": "See https://github.com/MichaelHillcox/XRay-Mod/commits/1.16.5-2.7.0"
+	},
 	"1.16.3": {
 		"1.16.3-r2.5.0": "See https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.16.3-v2.5.0"
 	},

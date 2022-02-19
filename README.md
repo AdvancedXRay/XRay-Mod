@@ -3,7 +3,7 @@
 
 Minecraft Forge based XRay mod designed to aid players who don't like the ore searching process.
 
-[![Forge Downloads](http://cf.way2muchnoise.eu/advanced-xray.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-xray) [![Forge Available For](http://cf.way2muchnoise.eu/versions/advanced-xray.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-xray)
+[![Forge Downloads](http://cf.way2muchnoise.eu/256256.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-xray) [![Forge Available For](http://cf.way2muchnoise.eu/versions/256256.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-xray)
 
 [![GitHub license](https://img.shields.io/github/license/MichaelHillcox/XRay-Mod)](https://github.com/MichaelHillcox/XRay-Mod/blob/main/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/MichaelHillcox/XRay-Mod)](https://github.com/MichaelHillcox/XRay-Mod/stargazers)
@@ -12,9 +12,6 @@ Minecraft Forge based XRay mod designed to aid players who don't like the ore se
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/michaelhillcox/xray-mod)
 ![GitHub Release Date](https://img.shields.io/github/release-date/michaelhillcox/xray-mod)
 ![GitHub last commit](https://img.shields.io/github/last-commit/michaelhillcox/xray-mod)
-[![Build Status](https://ci.mikey.pro/buildStatus/icon?job=XRay-Mod%2Fmain)](https://ci.mikey.pro/job/XRay-Mod/job/main/)
-
-[![Discord invite link](.github/assets/discord-join-badge.svg)](https://discord.gg/yYNuqJxucJ)
 
 ##### Looking for the Fabric version? Click the button below :tada:
 
@@ -32,7 +29,7 @@ Minecraft Forge based XRay mod designed to aid players who don't like the ore se
 - Searchable list of blocks you've added
 - Json store for the blocks you've added. Easy to edit and share!
 
-## Todo
+## Todo (TBA)
 
 - Mob support
 - Support for all fluids now it's a new system in 1.14.
@@ -41,7 +38,7 @@ Minecraft Forge based XRay mod designed to aid players who don't like the ore se
 
 **Using XRay**
 
-*Please note that these aren't always the ones set by default. Be sure to check your controls settings under `XRay` to find the correct keys*
+> Please note that these aren't always the ones set by default. Be sure to check your controls settings under `XRay` to find the correct keys*
 
 - Press `Backslash` to toggle XRay `ON/OFF`
 - Press `Z` to open the `selection & settings` Gui 
@@ -50,8 +47,8 @@ Minecraft Forge based XRay mod designed to aid players who don't like the ore se
 
 - Open the `selection & settings` Gui
 - Select the method you'd like to use to add a block, either 
-  - `From hand` *will setup the basic version of the block. So no axis, facing, etc*
-  - `Looking At` *Will setup the complex version of the block, good for blocks you need specifc data from*
+  - `From hand` *will set up the basic version of the block. So no axis, facing, etc*
+  - `Looking At` *Will set up the complex version of the block, good for blocks you need specifc data from*
   - `Searching a list` *Like `From hand`, it will only setup a basic block*
 - Set the Name, Color, and anything else you'd like to change
 - Click add and Enable the Block if it's not enabled. You can enable and disable blocks by clicking on them in the Gui.
@@ -60,6 +57,8 @@ Minecraft Forge based XRay mod designed to aid players who don't like the ore se
 
 - Right click on any item in the Gui and edit as needed
 - Click save and the changed will be applied instantly
+
+[![Discord invite link](.github/assets/discord-join-badge.svg)](https://discord.gg/yYNuqJxucJ)
 
 ## Previews
 
@@ -72,30 +71,12 @@ I **DO NOT** support the use of this mod on any public servers which do not allo
 
 If you wish to use this mod on private servers then that's on you. If you use this on public servers and are banned then that's on you and I will **not** support your use of this mod in that way. 
 
+Join my Discord and ask about how to change the mod to use it on a server, if you can use it on servers or anything related, you will be banned without warning.
+
 ## A note on Optifine
 Currently, the mod does not and has not work with Optifine since MC `1.7.x`. I am not sure why the two mods do not work 
 together and due to Optfine being closed source I don't have the ability to investigate it properly. For now, I just recommend not using the two mods together. I hope to have it fixed soon. 
 
-## Supports
+## Game support system
 
-A quick note on versioning. I try to support everything I can but with limited time I opt to discontinue every version **`2`** versions below the current game version. Example: if we are on `1.14.4` I will support `1.14.4` and `1.12.2` (we missed 1.13). If you find a very big bug in an old version I might be abe to resolve it if you submit a detailed bug report.
-
-|Minecraft Version   | Mod Version | Branch | Author
-|---|---|---|---
-|1.16.1 | [2.3.1](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.16-v2.3.1) | [/1.16](https://github.com/MichaelHillcox/XRay-Mod/tree/1.16) | [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.15.2 | [2.2.0](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.15.2-v2.2.0) | [/1.15.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.15.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.15.1 | [2.1.0](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.15.1-v2.1.0) | [/1.15.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.15.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.14.4 | [2.0.4 *Limited support*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.14.4-v2.0.4) | [/1.14.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.14.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.12.2 | [1.5.0 *Discontinued*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.12.2-v1.5.0) | [/1.12.2](https://github.com/MichaelHillcox/XRay-Mod/tree/1.12.2) | [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.12.1 | [1.3.4 *Discontinued*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.12.1-v1.3.4) | [/1.12.1](https://github.com/MichaelHillcox/XRay-Mod/tree/1.12.1) | [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.12 | [1.3.3 *Discontinued*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.12-v1.3.3) | [/1.12.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.12.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.11.2 | [1.3.3 *Discontinued*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.11.2-v1.3.3) | [/1.11.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.11.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.10.2 | [1.3.1 *Discontinued*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.10.2-v1.3.1) | [/1.10.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.10.x) | [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.9.4 | [1.0.9 - *Discontinued*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.9.4-v1.0.9) | [/1.9.4](https://github.com/MichaelHillcox/XRay-Mod/tree/1.9.4) | [BondarenkoArtur](https://github.com/BondarenkoArtur) & [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.8.9 | [1.1.0 - *Discontinued*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.8.9-v1.1.0) | [/1.8.x](https://github.com/MichaelHillcox/XRay-Mod/tree/1.8.x) | [Michael Hillcox](https://github.com/MichaelHillcox) With help from  [BondarenkoArtur](https://github.com/BondarenkoArtur)
-|1.7.10 | [1.0.1.75 - *Discontinued*](https://github.com/MichaelHillcox/XRay-Mod/releases/tag/1.0.1.75) | [/1.7.10](https://github.com/MichaelHillcox/XRay-Mod/tree/1.7.10) | [mcd1992](https://github.com/mcd1992) ([mcd1992 / GitLab](https://gitlab.com/mcd1992)) & [Michael Hillcox](https://github.com/MichaelHillcox)
-|1.6.4 | 1.0.0 - *Discontinued* |  [/1.6.4](https://github.com/MichaelHillcox/XRay-Mod/tree/1.6.4) | [mcd1992](https://github.com/mcd1992) ([mcd1992 / GitLab](https://gitlab.com/mcd1992))
-
-**Discontinued**: This means the mod is longer supported unless a game breaking bug is found.
-
-**Limited support**: This means the mod will only receive bug fixes when ones are listed. I will no longer be back porting feature changes unless I get bored and have time to fix them.
+I only support the last two major versions of Minecraft. For example `1.18` is the current (as of 02/2022) version of Minecraft, thus this is the First major version I support. The last long-lived versions of Minecraft was `1.16` and thus I will continue to support that until `1.18` is replaced by another long-lived version. At that point, I'll switch to `1.XX` & `1.18` for example.
