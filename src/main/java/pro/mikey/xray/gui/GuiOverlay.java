@@ -5,9 +5,9 @@ import pro.mikey.xray.Configuration;
 import pro.mikey.xray.XRay;
 import pro.mikey.xray.xray.Controller;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -26,10 +26,10 @@ public class GuiOverlay {
         if(!Controller.isXRayActive() || !Configuration.general.showOverlay.get() || event.isCanceled() || event.getType() != RenderGameOverlayEvent.ElementType.TEXT )
             return;
 
-        RenderSystem.color3f(0, 255, 0);
-        Minecraft.getInstance().getTextureManager().bindTexture(circle);
+        RenderSystem.setShaderColor(0, 1F, 0, 1F);
+        RenderSystem.setShaderTexture(0, circle);
         Screen.blit(event.getMatrixStack(), 5, 5, 0f, 0f, 5, 5, 5, 5);
 
-        Minecraft.getInstance().fontRenderer.drawStringWithShadow(event.getMatrixStack(), I18n.format("xray.overlay"), 15, 4, 0xffffffff);
+        Minecraft.getInstance().font.drawShadow(event.getMatrixStack(), I18n.get("xray.overlay"), 15, 4, 0xffffffff);
     }
 }

@@ -1,0 +1,25 @@
+name: CI Build & Release
+
+on:
+  create:
+    tags:
+      - v*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          cache: 'gradle'
+          distribution: 'temurin'
+      - name: Publish & Release to Curse
+        env:
+          SAPS_TOKEN: ${{ secrets.SAPS_TOKEN }}
+          CURSE_DEPLOY_TOKEN: ${{ secrets.CURSE_DEPLOY_TOKEN }}
+        run: |
+          chmod +x ./gradlew
+          ./gradlew build publish curseforge --stacktrace --no-daemon

@@ -1,11 +1,11 @@
 package pro.mikey.xray.store;
 
 import pro.mikey.xray.xray.Controller;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
@@ -26,10 +26,10 @@ public class GameBlockStore {
             return;
 
         for ( Item item : ForgeRegistries.ITEMS ) {
-            if( !(item instanceof net.minecraft.item.BlockItem) )
+            if( !(item instanceof net.minecraft.world.item.BlockItem) )
                 continue;
 
-            Block block = Block.getBlockFromItem(item);
+            Block block = Block.byItem(item);
             if ( item == Items.AIR || block == Blocks.AIR || Controller.blackList.contains(block) )
                 continue; // avoids troubles
 

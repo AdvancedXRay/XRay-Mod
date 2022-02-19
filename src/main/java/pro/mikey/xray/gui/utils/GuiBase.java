@@ -1,17 +1,18 @@
 package pro.mikey.xray.gui.utils;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import pro.mikey.xray.XRay;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.LanguageMap;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.AbstractWidget;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.locale.Language;
+import net.minecraft.network.chat.TextComponent;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -25,10 +26,10 @@ public abstract class GuiBase extends Screen {
     private int backgroundWidth = 229;
     private int backgroundHeight = 235;
 
-    public abstract void renderExtra(MatrixStack stack, int x, int y, float partialTicks);
+    public abstract void renderExtra(PoseStack stack, int x, int y, float partialTicks);
 
     public GuiBase(boolean hasSide ) {
-        super(new StringTextComponent(""));
+        super(new TextComponent(""));
         this.hasSide = hasSide;
 
     }
@@ -38,83 +39,46 @@ public abstract class GuiBase extends Screen {
         super.charTyped(keyTyped, __unknown);
 
         if( keyTyped == 1 && getMinecraft().player != null )
-            getMinecraft().player.closeScreen();
+            getMinecraft().player.closeContainer();
 
         return false;
     }
 
-    // this should be moved to some sort of utility package but fuck it :).
-    public static void drawTexturedQuadFit(double x, double y, double width, double height, int[] color, float alpha)
-    {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder tessellate = tessellator.getBuffer();
-
-        RenderSystem.pushMatrix();
-        tessellate.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-
-        if ( color != null )
-            RenderSystem.color4f((float) color[0] / 255, (float) color[1] / 255, (float) color[2] / 255, alpha / 255);
-
-        tessellate.pos(x + 0, y + height, (double) 0).tex( 0,1).endVertex();
-        tessellate.pos(x + width, y + height, (double) 0).tex( 1, 1).endVertex();
-        tessellate.pos(x + width, y + 0, (double) 0).tex( 1,0).endVertex();
-        tessellate.pos(x + 0, y + 0, (double) 0).tex( 0, 0).endVertex();
-        tessellator.draw();
-
-        RenderSystem.popMatrix();
-    }
-
-    public static void drawTexturedQuadFit(double x, double y, double width, double height, int[] color) {
-        drawTexturedQuadFit(x, y, width, height, color, 255f);
-    }
-
-    public static void drawTexturedQuadFit(double x, double y, double width, double height, int color) {
-        drawTexturedQuadFit(x, y, width, height, new int[]{color >> 16 & 0xff, color >> 8 & 0xff,color & 0xff }, 255f);
-    }
-
-    public static void drawTexturedQuadFit(double x, double y, double width, double height, int color, float alpha) {
-        drawTexturedQuadFit(x, y, width, height, new int[]{color >> 16 & 0xff, color >> 8 & 0xff,color & 0xff }, alpha);
-    }
-
     @Override
-    public void render(MatrixStack stack, int x, int y, float partialTicks) {
+    public void render(PoseStack stack, int x, int y, float partialTicks) {
         renderBackground(stack);
-        RenderSystem.pushMatrix();
 
         int width = this.width;
         int height = this.height;
-        getMinecraft().getTextureManager().bindTexture(getBackground());
+        RenderSystem.setShaderTexture(0, getBackground());
         if( this.hasSide ) {
-            drawTexturedQuadFit((double) width / 2 + 60, (float) height / 2 -((float) 180/2), 150, 180, 0xffffff);
-            drawTexturedQuadFit((float) width / 2 - 150, (float) height / 2 - 118, this.backgroundWidth, this.backgroundHeight, 0xffffff);
+            blit(stack, width / 2 + 60, height / 2 - 180 / 2, 0, 0, 150, 180, 150, 180);
+            blit(stack, width / 2 - 150, height / 2 - 118, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
 
             if( hasSideTitle() )
-                getFontRender().drawStringWithShadow(stack, this.sideTitle, (float) width / 2 + 80, (float) height / 2 - 77, 0xffff00);
+                getFontRender().drawShadow(stack, this.sideTitle, (float) width / 2 + 80, (float) height / 2 - 77, 0xffff00);
         }
 
         if( !this.hasSide )
-            drawTexturedQuadFit((float) width / 2 - ((float) this.backgroundWidth / 2) + 1, (float) height / 2 - ((float) this.backgroundHeight / 2), this.backgroundWidth, this.backgroundHeight, 0xffffff);
+            blit(stack, width / 2 - this.backgroundWidth / 2 + 1, height / 2 - this.backgroundHeight / 2, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
 
         RenderSystem.enableTexture();
         if( hasTitle() ) {
             if( this.hasSide )
-                getFontRender().drawStringWithShadow(stack, title(), (float) width / 2 - 138, (float) height / 2 - 105, 0xffff00);
+                getFontRender().drawShadow(stack, title(), (float) width / 2 - 138, (float) height / 2 - 105, 0xffff00);
             else
-                getFontRender().drawStringWithShadow(stack, title(), (float) width / 2 - ((float) this.backgroundWidth / 2 ) + 14, (float) height / 2 - ((float) this.backgroundHeight / 2) + 13, 0xffff00);
+                getFontRender().drawShadow(stack, title(), (float) width / 2 - ((float) this.backgroundWidth / 2 ) + 14, (float) height / 2 - ((float) this.backgroundHeight / 2) + 13, 0xffff00);
         }
-
-        RenderSystem.popMatrix();
 
         renderExtra(stack, x, y, partialTicks);
+//
+//        for (GuiEventListener button : this.children()) {
+//            button.render(stack, x, y, partialTicks);
+//        }
 
-        List<Widget> buttons = this.buttons;
-        for (Widget button : buttons) {
-            button.render(stack, x, y, partialTicks);
-        }
-
-        for(Widget button : buttons) {
-            if (button instanceof SupportButton && button.isHovered())
-                renderTooltip(stack, LanguageMap.getInstance().func_244260_a(((SupportButton) button).getSupport()), x, y);
+        for(GuiEventListener button : this.children()) {
+            if (button instanceof SupportButton && ((SupportButton) button).isHoveredOrFocused())
+                renderTooltip(stack, Language.getInstance().getVisualOrder(((SupportButton) button).getSupport()), x, y);
         }
 
         super.render(stack, x, y, partialTicks);
@@ -140,8 +104,8 @@ public abstract class GuiBase extends Screen {
         this.backgroundHeight = height;
     }
 
-    public FontRenderer getFontRender() {
-        return getMinecraft().fontRenderer;
+    public Font getFontRender() {
+        return getMinecraft().font;
     }
 
     public int getWidth() { return this.width; }

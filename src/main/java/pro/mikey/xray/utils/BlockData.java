@@ -1,6 +1,6 @@
 package pro.mikey.xray.utils;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.awt.*;
 

@@ -1,140 +1,192 @@
 package pro.mikey.xray.xray;
 
-import pro.mikey.xray.utils.BlockData;
-import pro.mikey.xray.utils.Region;
-import pro.mikey.xray.utils.RenderBlockProps;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkSection;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunkSection;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import org.apache.commons.lang3.tuple.Pair;
+import pro.mikey.xray.utils.BlockData;
+import pro.mikey.xray.utils.RenderBlockProps;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
-public class RenderEnqueue implements Runnable
-{
-	private final Region box;
-
-	public RenderEnqueue(Region region )
-	{
-		box = region;
-	}
-
-	@Override
-	public void run() // Our thread code for finding syncRenderList near the player.
-	{
-		blockFinder();
-	}
-
+public class RenderEnqueue {
 	/**
 	 * Use Controller.requestBlockFinder() to trigger a scan.
 	 */
-	private void blockFinder() {
+	public static Set<RenderBlockProps> blockFinder() {
         HashMap<UUID, BlockData> blocks = Controller.getBlockStore().getStore();
         if ( blocks.isEmpty() ) {
-		    if( !Render.syncRenderList.isEmpty() )
-		        Render.syncRenderList.clear();
-            return; // no need to scan the region if there's nothing to find
+            return new HashSet<>(); // no need to scan the region if there's nothing to find
         }
 
-		final World world = Minecraft.getInstance().world;
-        final PlayerEntity player = Minecraft.getInstance().player;
-        if( world == null || player == null )
-        	return;
+		final Level world = Minecraft.getInstance().level;
+        final Player player = Minecraft.getInstance().player;
 
-		final List<RenderBlockProps> renderQueue = new ArrayList<>();
-		int lowBoundX, highBoundX, lowBoundY, highBoundY, lowBoundZ, highBoundZ;
+		// Something is fatally wrong
+        if( world == null || player == null ) {
+			return new HashSet<>();
+		}
 
-		// Used for cleaning up the searching process
+		final Set<RenderBlockProps> renderQueue = new HashSet<>();
+
+		int range = Controller.getHalfRange();
+
+		int cX = player.chunkPosition().x;
+		int cZ = player.chunkPosition().z;
+
 		BlockState currentState;
 		FluidState currentFluid;
 
-		ResourceLocation block;
 		Pair<BlockData, UUID> dataWithUUID;
+		ResourceLocation block;
 
-		// Loop on chunks (x, z)
-		for ( int chunkX = box.minChunkX; chunkX <= box.maxChunkX; chunkX++ )
-		{
-			// Pre-compute the extend bounds on X
-			int x = chunkX << 4; // lowest x coord of the chunk in block/world coordinates
-			lowBoundX = (x < box.minX) ? box.minX - x : 0; // lower bound for x within the extend
-			highBoundX = (x + 15 > box.maxX) ? box.maxX - x : 15;// and higher bound. Basically, we clamp it to fit the radius.
+		for (int i = cX - range; i <= cX + range; i++) {
+			int chunkStartX = i << 4;
+			for (int j = cZ - range; j <= cZ + range; j++) {
+				int chunkStartZ = j << 4;
 
-			for ( int chunkZ = box.minChunkZ; chunkZ <= box.maxChunkZ; chunkZ++ )
-			{
-				// Time to getStore the chunk (16x256x16) and split it into 16 vertical extends (16x16x16)
-				if (!world.chunkExists(chunkX, chunkZ)) {
-					continue; // We won't find anything interesting in unloaded chunks
-				}
+				int height =
+						Arrays.stream(world.getChunk(i, j).getSections())
+								.filter(Objects::nonNull)
+								.mapToInt(LevelChunkSection::bottomBlockY)
+								.max()
+								.orElse(0);
 
-				Chunk chunk = world.getChunk( chunkX, chunkZ );
-				ChunkSection[] extendsList = chunk.getSections();
+				for (int k = chunkStartX; k < chunkStartX + 16; k++) {
+					for (int l = chunkStartZ; l < chunkStartZ + 16; l++) {
+						for (int m = world.getMinBuildHeight(); m < height + (1 << 4); m++) {
+							BlockPos pos = new BlockPos(k, m, l);
 
-				// Pre-compute the extend bounds on Z
-				int z = chunkZ << 4;
-				lowBoundZ = (z < box.minZ) ? box.minZ - z : 0;
-				highBoundZ = (z + 15 > box.maxZ) ? box.maxZ - z : 15;
+							currentState = world.getBlockState(pos);
+							currentFluid = currentState.getFluidState();
 
-				// Loop on the extends around the player's layer (6 down, 2 up)
-				for ( int curExtend = box.minChunkY; curExtend <= box.maxChunkY; curExtend++ )
-				{
-					ChunkSection ebs = extendsList[curExtend];
-					if (ebs == null) // happens quite often!
-						continue;
-
-					// Pre-compute the extend bounds on Y
-					int y = curExtend << 4;
-					lowBoundY = (y < box.minY) ? box.minY - y : 0;
-					highBoundY = (y + 15 > box.maxY) ? box.maxY - y : 15;
-
-					// Now that we have an extend, let's check all its blocks
-					for ( int i = lowBoundX; i <= highBoundX; i++ ) {
-						for ( int j = lowBoundY; j <= highBoundY; j++ ) {
-							for ( int k = lowBoundZ; k <= highBoundZ; k++ ) {
-								currentState = ebs.getBlockState(i, j, k);
-								currentFluid = currentState.getFluidState();
-
-								if( (currentFluid.getFluid() == Fluids.LAVA || currentFluid.getFluid() == Fluids.FLOWING_LAVA) && Controller.isLavaActive() ) {
-									renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, 0xff0000));
-									continue;
-								}
-
-								// Reject blacklisted blocks
-								if( Controller.blackList.contains(currentState.getBlock()) )
-									continue;
-
-								block = currentState.getBlock().getRegistryName();
-								if( block == null )
-									continue;
-
-								dataWithUUID = Controller.getBlockStore().getStoreByReference(block.toString());
-								if( dataWithUUID == null )
-									continue;
-
-								if( dataWithUUID.getKey() == null || !dataWithUUID.getKey().isDrawing() ) // fail safe
-									continue;
-
-								// Push the block to the render queue
-								renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, dataWithUUID.getKey().getColor()));
+							if( (currentFluid.getType() == Fluids.LAVA || currentFluid.getType() == Fluids.FLOWING_LAVA) && Controller.isLavaActive() ) {
+								renderQueue.add(new RenderBlockProps(pos.getX(), pos.getY(), pos.getZ(), 0xff0000));
+								continue;
 							}
+
+							// Reject blacklisted blocks
+							if( Controller.blackList.contains(currentState.getBlock()) )
+								continue;
+
+							block = currentState.getBlock().getRegistryName();
+							if( block == null )
+								continue;
+
+							dataWithUUID = Controller.getBlockStore().getStoreByReference(block.toString());
+							if( dataWithUUID == null )
+								continue;
+
+							if( dataWithUUID.getKey() == null || !dataWithUUID.getKey().isDrawing() ) // fail safe
+								continue;
+
+							// Push the block to the render queue
+							renderQueue.add(new RenderBlockProps(pos.getX(), pos.getY(), pos.getZ(), dataWithUUID.getKey().getColor()));
 						}
 					}
 				}
 			}
 		}
-		final BlockPos playerPos = player.getPosition();
-		renderQueue.sort((t, t1) -> Double.compare(t1.getPos().distanceSq(playerPos), t.getPos().distanceSq((playerPos))));
-		Render.syncRenderList.clear();
-		Render.syncRenderList.addAll( renderQueue ); // Add all our found blocks to the Render.syncRenderList list. To be use by Render when drawing.
+
+		return renderQueue;
+//
+////		final List<RenderBlockProps> renderQueue = new ArrayList<>();
+//		int lowBoundX, highBoundX, lowBoundY, highBoundY, lowBoundZ, highBoundZ;
+//
+//		// Used for cleaning up the searching process
+////		BlockState currentState;
+////		FluidState currentFluid;
+////
+////		ResourceLocation block;
+////		Pair<BlockData, UUID> dataWithUUID;
+////
+////		// Loop on chunks (x, z)
+////		for ( int chunkX = box.minChunkX; chunkX <= box.maxChunkX; chunkX++ )
+////		{
+////			// Pre-compute the extend bounds on X
+////			int x = chunkX << 4; // lowest x coord of the chunk in block/world coordinates
+////			lowBoundX = (x < box.minX) ? box.minX - x : 0; // lower bound for x within the extend
+////			highBoundX = (x + 15 > box.maxX) ? box.maxX - x : 15;// and higher bound. Basically, we clamp it to fit the radius.
+////
+////			for ( int chunkZ = box.minChunkZ; chunkZ <= box.maxChunkZ; chunkZ++ )
+////			{
+////				// Time to getStore the chunk (16x256x16) and split it into 16 vertical extends (16x16x16)
+////				if (!world.hasChunk(chunkX, chunkZ)) {
+////					continue; // We won't find anything interesting in unloaded chunks
+////				}
+////
+////				LevelChunk chunk = world.getChunk( chunkX, chunkZ );
+////				LevelChunkSection[] extendsList = chunk.getSections();
+////
+////				// Pre-compute the extend bounds on Z
+////				int z = chunkZ << 4;
+////				lowBoundZ = (z < box.minZ) ? box.minZ - z : 0;
+////				highBoundZ = (z + 15 > box.maxZ) ? box.maxZ - z : 15;
+////
+////				// Loop on the extends around the player's layer (6 down, 2 up)
+////				for ( int curExtend = box.minChunkY; curExtend <= box.maxChunkY; curExtend++ )
+////				{
+////					LevelChunkSection ebs = extendsList[curExtend];
+////					if (ebs == null) // happens quite often!
+////						continue;
+////
+////					// Pre-compute the extend bounds on Y
+////					int y = curExtend << 4;
+////					lowBoundY = (y < box.minY) ? box.minY - y : 0;
+////					highBoundY = (y + 15 > box.maxY) ? box.maxY - y : 15;
+////
+////					// Now that we have an extend, let's check all its blocks
+////					for ( int i = lowBoundX; i <= highBoundX; i++ ) {
+////						for ( int j = lowBoundY; j <= highBoundY; j++ ) {
+////							for ( int k = lowBoundZ; k <= highBoundZ; k++ ) {
+////								currentState = ebs.getBlockState(i, j, k);
+////								currentFluid = currentState.getFluidState();
+////
+////								if( (currentFluid.getType() == Fluids.LAVA || currentFluid.getType() == Fluids.FLOWING_LAVA) && Controller.isLavaActive() ) {
+////									renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, 0xff0000));
+////									continue;
+////								}
+////
+////								// Reject blacklisted blocks
+////								if( Controller.blackList.contains(currentState.getBlock()) )
+////									continue;
+////
+////								block = currentState.getBlock().getRegistryName();
+////								if( block == null )
+////									continue;
+////
+////								dataWithUUID = Controller.getBlockStore().getStoreByReference(block.toString());
+////								if( dataWithUUID == null )
+////									continue;
+////
+////								if( dataWithUUID.getKey() == null || !dataWithUUID.getKey().isDrawing() ) // fail safe
+////									continue;
+////
+////								System.out.println(new BlockPos(x + i, y + j, z + k));
+////								System.out.println(new BlockPos(x, y, z));
+////								System.out.println(new BlockPos(i, j, k));
+////
+////								System.out.printf("Expected: %d %d %d%n", 31, 80, 16);
+////								System.out.printf("Got:      %d %d %d%n", x + i, y + j, z + k);
+////
+////								// Push the block to the render queue
+////								renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, dataWithUUID.getKey().getColor()));
+////							}
+////						}
+////					}
+////				}
+////			}
+////		}
+////		final BlockPos playerPos = player.blockPosition();
+////		renderQueue.sort((t, t1) -> Double.compare(t1.getPos().distSqr(playerPos), t.getPos().distSqr((playerPos))));
+////		Render.syncRenderList.clear();
+////		Render.syncRenderList.addAll( renderQueue ); // Add all our found blocks to the Render.syncRenderList list. To be use by Render when drawing.
 	}
 
 	/**
@@ -151,7 +203,7 @@ public class RenderEnqueue implements Runnable
 
 		// If we're removing then remove :D
 		if( !add ) {
-			Render.syncRenderList.remove( new RenderBlockProps(pos,0) );
+			Controller.syncRenderList.remove( new RenderBlockProps(pos,0) );
 			return;
 		}
 
@@ -164,6 +216,7 @@ public class RenderEnqueue implements Runnable
 			return;
 
 		// the block was added to the world, let's add it to the drawing buffer
-		Render.syncRenderList.add(new RenderBlockProps(pos, dataWithUUID.getKey().getColor()) );
+		Controller.syncRenderList.add(new RenderBlockProps(pos, dataWithUUID.getKey().getColor()) );
+		Render.requestedRefresh = true;
 	}
 }

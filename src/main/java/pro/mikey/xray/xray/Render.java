@@ -1,143 +1,98 @@
 package pro.mikey.xray.xray;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import pro.mikey.xray.Configuration;
-import pro.mikey.xray.utils.RenderBlockProps;
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.event.RenderLevelLastEvent;
+import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+public class Render {
+    private static VertexBuffer vertexBuffer;
+    public static boolean requestedRefresh = false;
 
-public class Render
-{
-    public static List<RenderBlockProps> syncRenderList = Collections.synchronizedList( new ArrayList<>() ); // this is accessed by threads
+	static void renderBlocks(RenderLevelLastEvent event) {
+        if (vertexBuffer == null || requestedRefresh) {
+            requestedRefresh = false;
+            vertexBuffer = new VertexBuffer();
 
-    private static final int GL_FRONT_AND_BACK = 1032;
-    private static final int GL_LINE = 6913;
-    private static final int GL_FILL = 6914;
-    private static final int GL_LINES = 1;
+            Tesselator tessellator = Tesselator.getInstance();
+            BufferBuilder buffer = tessellator.getBuilder();
 
-	static void renderBlocks(RenderWorldLastEvent event) {
-        Vector3d view = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
+            var opacity = 1F;
 
-        MatrixStack stack = event.getMatrixStack();
-        stack.translate(-view.x, -view.y, -view.z); // translate
+            buffer.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
 
-        RenderSystem.pushMatrix();
-        RenderSystem.multMatrix(stack.getLast().getMatrix());
+            Controller.syncRenderList.forEach(blockProps -> {
+                if (blockProps == null) {
+                    return;
+                }
 
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-        Profile.BLOCKS.apply(); // Sets GL state for block drawing
+                final float size = 1.0f;
+                final double x = blockProps.getPos().getX(), y = blockProps.getPos().getY(), z = blockProps.getPos().getZ();
 
-        syncRenderList.forEach(blockProps -> {
-            if (blockProps == null) {
-                return;
-            }
+                final float red = (blockProps.getColor() >> 16 & 0xff) / 255f;
+                final float green = (blockProps.getColor() >> 8 & 0xff) / 255f;
+                final float blue = (blockProps.getColor() & 0xff) / 255f;
 
-            RenderSystem.pushMatrix();
-            RenderSystem.translated(blockProps.getPos().getX(), blockProps.getPos().getY(), blockProps.getPos().getZ());
-            buffer.begin( GL_LINES, DefaultVertexFormats.POSITION_COLOR );
-            renderBlock(buffer, blockProps, 1);
-            tessellator.draw();
-            RenderSystem.popMatrix();
-        } );
+                buffer.vertex(x, y + size, z).color(red, green, blue, opacity).endVertex();
+                buffer.vertex(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
+                buffer.vertex(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
+                buffer.vertex(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
+                buffer.vertex(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
+                buffer.vertex(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
+                buffer.vertex(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
+                buffer.vertex(x, y + size, z).color(red, green, blue, opacity).endVertex();
 
-        Profile.BLOCKS.clean();
-        RenderSystem.popMatrix();
+                // BOTTOM
+                buffer.vertex(x + size, y, z).color(red, green, blue, opacity).endVertex();
+                buffer.vertex(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
+                buffer.vertex(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
+                buffer.vertex(x, y, z + size).color(red, green, blue, opacity).endVertex();
+                buffer.vertex(x, y, z + size).color(red, green, blue, opacity).endVertex();
+                buffer.vertex(x, y, z).color(red, green, blue, opacity).endVertex();
+                buffer.vertex(x, y, z).color(red, green, blue, opacity).endVertex();
+                buffer.vertex(x + size, y, z).color(red, green, blue, opacity).endVertex();
+
+                // Edge 1
+                buffer.vertex(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
+                buffer.vertex(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
+
+                // Edge 2
+                buffer.vertex(x + size, y, z).color(red, green, blue, opacity).endVertex();
+                buffer.vertex(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
+
+                // Edge 3
+                buffer.vertex(x, y, z + size).color(red, green, blue, opacity).endVertex();
+                buffer.vertex(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
+
+                // Edge 4
+                buffer.vertex(x, y, z).color(red, green, blue, opacity).endVertex();
+                buffer.vertex(x, y + size, z).color(red, green, blue, opacity).endVertex();
+            });
+
+            buffer.end();
+
+            vertexBuffer.upload(buffer);
+        }
+
+        if (vertexBuffer != null) {
+            Vec3 view = Minecraft.getInstance().getEntityRenderDispatcher().camera.getPosition();
+
+            GL11.glEnable(GL11.GL_BLEND);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GL11.glEnable(GL11.GL_LINE_SMOOTH);
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+
+            PoseStack matrix = event.getPoseStack();
+            matrix.pushPose();
+            matrix.translate(-view.x, -view.y, -view.z);
+            vertexBuffer.drawWithShader(matrix.last().pose(), event.getProjectionMatrix().copy(), GameRenderer.getPositionColorShader());
+            matrix.popPose();
+
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
+            GL11.glDisable(GL11.GL_BLEND);
+            GL11.glDisable(GL11.GL_LINE_SMOOTH);
+        }
 	}
-
-	private static void renderBlock(IVertexBuilder buffer, RenderBlockProps props, float opacity) {
-        final float red = (props.getColor() >> 16 & 0xff) / 255f;
-        final float green = (props.getColor() >> 8 & 0xff) / 255f;
-        final float blue = (props.getColor() & 0xff) / 255f;
-
-        buffer.pos(0, 1, 0).color(red, green, blue, opacity).endVertex();
-        buffer.pos(1, 1, 0).color(red, green, blue, opacity).endVertex();
-        buffer.pos(1, 1, 0).color(red, green, blue, opacity).endVertex();
-        buffer.pos(1, 1, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(1, 1, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(0, 1, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(0, 1, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(0, 1, 0).color(red, green, blue, opacity).endVertex();
-
-        // BOTTOM
-        buffer.pos(1, 0, 0).color(red, green, blue, opacity).endVertex();
-        buffer.pos(1, 0, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(1, 0, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(0, 0, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(0, 0, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(0, 0, 0).color(red, green, blue, opacity).endVertex();
-        buffer.pos(0, 0, 0).color(red, green, blue, opacity).endVertex();
-        buffer.pos(1, 0, 0).color(red, green, blue, opacity).endVertex();
-
-        // Edge 1
-        buffer.pos(1, 0, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(1, 1, 1).color(red, green, blue, opacity).endVertex();
-
-        // Edge 2
-        buffer.pos(1, 0, 0).color(red, green, blue, opacity).endVertex();
-        buffer.pos(1, 1, 0).color(red, green, blue, opacity).endVertex();
-
-        // Edge 3
-        buffer.pos(0, 0, 1).color(red, green, blue, opacity).endVertex();
-        buffer.pos(0, 1, 1).color(red, green, blue, opacity).endVertex();
-
-        // Edge 4
-        buffer.pos(0, 0, 0).color(red, green, blue, opacity).endVertex();
-        buffer.pos(0, 1, 0).color(red, green, blue, opacity).endVertex();
-    }
-
-    /**
-     * OpenGL Profiles used for rendering blocks and entities
-     */
-    private enum Profile
-    {
-        BLOCKS {
-            @Override
-            public void apply()
-            {
-                RenderSystem.disableTexture();
-                RenderSystem.disableDepthTest();
-                RenderSystem.depthMask( false );
-                RenderSystem.polygonMode( GL_FRONT_AND_BACK, GL_LINE );
-                RenderSystem.blendFunc( GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA );
-                RenderSystem.enableBlend();
-                RenderSystem.lineWidth( (float) Configuration.general.outlineThickness.get().doubleValue() );
-            }
-
-            @Override
-            public void clean()
-            {
-                RenderSystem.polygonMode( GL_FRONT_AND_BACK, GL_FILL );
-                RenderSystem.disableBlend();
-                RenderSystem.enableDepthTest();
-                RenderSystem.depthMask( true );
-                RenderSystem.enableTexture();
-            }
-        },
-        // TODO:
-        ENTITIES {
-            @Override
-            public void apply()
-            {}
-
-            @Override
-            public void clean()
-            {}
-        };
-
-        private Profile() {}
-        public abstract void apply();
-        public abstract void clean();
-    }
 }
