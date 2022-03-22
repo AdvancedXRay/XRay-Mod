@@ -95,98 +95,6 @@ public class RenderEnqueue {
 		}
 
 		return renderQueue;
-//
-////		final List<RenderBlockProps> renderQueue = new ArrayList<>();
-//		int lowBoundX, highBoundX, lowBoundY, highBoundY, lowBoundZ, highBoundZ;
-//
-//		// Used for cleaning up the searching process
-////		BlockState currentState;
-////		FluidState currentFluid;
-////
-////		ResourceLocation block;
-////		Pair<BlockData, UUID> dataWithUUID;
-////
-////		// Loop on chunks (x, z)
-////		for ( int chunkX = box.minChunkX; chunkX <= box.maxChunkX; chunkX++ )
-////		{
-////			// Pre-compute the extend bounds on X
-////			int x = chunkX << 4; // lowest x coord of the chunk in block/world coordinates
-////			lowBoundX = (x < box.minX) ? box.minX - x : 0; // lower bound for x within the extend
-////			highBoundX = (x + 15 > box.maxX) ? box.maxX - x : 15;// and higher bound. Basically, we clamp it to fit the radius.
-////
-////			for ( int chunkZ = box.minChunkZ; chunkZ <= box.maxChunkZ; chunkZ++ )
-////			{
-////				// Time to getStore the chunk (16x256x16) and split it into 16 vertical extends (16x16x16)
-////				if (!world.hasChunk(chunkX, chunkZ)) {
-////					continue; // We won't find anything interesting in unloaded chunks
-////				}
-////
-////				LevelChunk chunk = world.getChunk( chunkX, chunkZ );
-////				LevelChunkSection[] extendsList = chunk.getSections();
-////
-////				// Pre-compute the extend bounds on Z
-////				int z = chunkZ << 4;
-////				lowBoundZ = (z < box.minZ) ? box.minZ - z : 0;
-////				highBoundZ = (z + 15 > box.maxZ) ? box.maxZ - z : 15;
-////
-////				// Loop on the extends around the player's layer (6 down, 2 up)
-////				for ( int curExtend = box.minChunkY; curExtend <= box.maxChunkY; curExtend++ )
-////				{
-////					LevelChunkSection ebs = extendsList[curExtend];
-////					if (ebs == null) // happens quite often!
-////						continue;
-////
-////					// Pre-compute the extend bounds on Y
-////					int y = curExtend << 4;
-////					lowBoundY = (y < box.minY) ? box.minY - y : 0;
-////					highBoundY = (y + 15 > box.maxY) ? box.maxY - y : 15;
-////
-////					// Now that we have an extend, let's check all its blocks
-////					for ( int i = lowBoundX; i <= highBoundX; i++ ) {
-////						for ( int j = lowBoundY; j <= highBoundY; j++ ) {
-////							for ( int k = lowBoundZ; k <= highBoundZ; k++ ) {
-////								currentState = ebs.getBlockState(i, j, k);
-////								currentFluid = currentState.getFluidState();
-////
-////								if( (currentFluid.getType() == Fluids.LAVA || currentFluid.getType() == Fluids.FLOWING_LAVA) && Controller.isLavaActive() ) {
-////									renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, 0xff0000));
-////									continue;
-////								}
-////
-////								// Reject blacklisted blocks
-////								if( Controller.blackList.contains(currentState.getBlock()) )
-////									continue;
-////
-////								block = currentState.getBlock().getRegistryName();
-////								if( block == null )
-////									continue;
-////
-////								dataWithUUID = Controller.getBlockStore().getStoreByReference(block.toString());
-////								if( dataWithUUID == null )
-////									continue;
-////
-////								if( dataWithUUID.getKey() == null || !dataWithUUID.getKey().isDrawing() ) // fail safe
-////									continue;
-////
-////								System.out.println(new BlockPos(x + i, y + j, z + k));
-////								System.out.println(new BlockPos(x, y, z));
-////								System.out.println(new BlockPos(i, j, k));
-////
-////								System.out.printf("Expected: %d %d %d%n", 31, 80, 16);
-////								System.out.printf("Got:      %d %d %d%n", x + i, y + j, z + k);
-////
-////								// Push the block to the render queue
-////								renderQueue.add(new RenderBlockProps(x + i, y + j, z + k, dataWithUUID.getKey().getColor()));
-////							}
-////						}
-////					}
-////				}
-////			}
-////		}
-////		final BlockPos playerPos = player.blockPosition();
-////		renderQueue.sort((t, t1) -> Double.compare(t1.getPos().distSqr(playerPos), t.getPos().distSqr((playerPos))));
-////		Render.syncRenderList.clear();
-////		Render.syncRenderList.addAll( renderQueue ); // Add all our found blocks to the Render.syncRenderList list. To be use by Render when drawing.
 	}
 
 	/**
@@ -203,7 +111,10 @@ public class RenderEnqueue {
 
 		// If we're removing then remove :D
 		if( !add ) {
-			Controller.syncRenderList.remove( new RenderBlockProps(pos,0) );
+			boolean removed = Controller.syncRenderList.remove(new RenderBlockProps(pos, 0));
+			if (removed) {
+				Render.requestedRefresh = true;
+			}
 			return;
 		}
 
