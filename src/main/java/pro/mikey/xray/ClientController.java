@@ -3,7 +3,7 @@ package pro.mikey.xray;
 import pro.mikey.xray.keybinding.KeyBindings;
 import pro.mikey.xray.store.BlockStore;
 import pro.mikey.xray.store.GameBlockStore;
-import pro.mikey.xray.store.JsonStore;
+import pro.mikey.xray.store.DiscoveryStorage;
 import pro.mikey.xray.utils.BlockData;
 import pro.mikey.xray.xray.Controller;
 import net.minecraft.client.resources.language.I18n;
@@ -22,7 +22,7 @@ public class ClientController {
     // This contains all of the games blocks to allow us to reference them
     // when needed. This allows us to avoid continually rebuilding
     public static GameBlockStore gameBlockStore = new GameBlockStore();
-    public static JsonStore blockStore = new JsonStore();
+    public static DiscoveryStorage blockStore = new DiscoveryStorage();
 
     public static void setup() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
