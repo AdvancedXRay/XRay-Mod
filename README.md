@@ -5,18 +5,22 @@ Minecraft Forge based XRay mod designed to aid players who don't like the ore se
 
 [![Forge Downloads](http://cf.way2muchnoise.eu/256256.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-xray) [![Forge Available For](http://cf.way2muchnoise.eu/versions/256256.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-xray)
 
-[![GitHub license](https://img.shields.io/github/license/MichaelHillcox/XRay-Mod)](https://github.com/MichaelHillcox/XRay-Mod/blob/main/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/MichaelHillcox/XRay-Mod)](https://github.com/MichaelHillcox/XRay-Mod/stargazers)
-[![GitHub issues](https://img.shields.io/github/issues/MichaelHillcox/XRay-Mod)](https://github.com/MichaelHillcox/XRay-Mod/issues)
-![GitHub all releases](https://img.shields.io/github/downloads/michaelhillcox/xray-mod/total)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/michaelhillcox/xray-mod)
-![GitHub Release Date](https://img.shields.io/github/release-date/michaelhillcox/xray-mod)
-![GitHub last commit](https://img.shields.io/github/last-commit/michaelhillcox/xray-mod)
+[![GitHub license](https://img.shields.io/github/license/AdvancedXRay/XRay-Mod)](https://github.com/AdvancedXRay/XRay-Mod/blob/main/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/AdvancedXRay/XRay-Mod)](https://github.com/AdvancedXRay/XRay-Mod/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/AdvancedXRay/XRay-Mod)](https://github.com/AdvancedXRay/XRay-Mod/issues)
+![GitHub all releases](https://img.shields.io/github/downloads/AdvancedXRay/xray-mod/total)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/AdvancedXRay/xray-mod)
+![GitHub Release Date](https://img.shields.io/github/release-date/AdvancedXRay/xray-mod)
+![GitHub last commit](https://img.shields.io/github/last-commit/AdvancedXRay/xray-mod)
 
 ##### Looking for the Fabric version? Click the button below :tada:
 
-<a href="https://github.com/michaelhillcox/xray-fabric"><img src=".github/assets/xray-fabric-badge.svg" alt="drawing" width="250"/>
+<a href="https://github.com/AdvancedXRay/xray-fabric"><img src=".github/assets/xray-fabric-badge.svg" alt="drawing" width="250"/>
 </a>
+
+## Notice
+
+> I'm currently looking for a new developer to take on Advanced XRay for forge and fabric, if you're intrested, please reach out to me on discord at `MiKeY#2628`
 
 ## Feature
 
