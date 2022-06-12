@@ -62,8 +62,7 @@ jar {
 
 publishing {
     publications {
-        mavenForge(MavenPublication) {
-            artifactId = rootProject.archivesBaseName
+        mavenJava(MavenPublication) {
             from components.java
         }
     }
