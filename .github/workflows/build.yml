@@ -24,9 +24,9 @@ jobs:
       - name: Setting mod version
         run: |
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version= >> $GITHUB_ENV
-          cat $GITHUB_WORKSPACE/gradle.properties | grep ^game_version= >> $GITHUB_ENV
+          cat $GITHUB_WORKSPACE/gradle.properties | grep ^minecraft_version= >> $GITHUB_ENV
       - name: Create package name
-        run: echo "package_name=Advanced-XRay-$game_version-$mod_version-${{ github.head_ref || 'main' }}-SNAPSHOT-$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
+        run: echo "package_name=Advanced-XRay-$minecraft_version-$mod_version-${{ github.head_ref || 'main' }}-SNAPSHOT-$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ env.package_name }}
