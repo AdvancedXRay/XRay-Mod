@@ -1,5 +1,6 @@
 package pro.mikey.xray.xray;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
@@ -71,9 +72,9 @@ public class Render {
                 buffer.vertex(x, y + size, z).color(red, green, blue, opacity).endVertex();
             });
 
-            buffer.end();
-
-            vertexBuffer.upload(buffer);
+            vertexBuffer.bind();
+            vertexBuffer.upload(buffer.end());
+            VertexBuffer.unbind();
         }
 
         if (vertexBuffer != null) {
@@ -84,10 +85,15 @@ public class Render {
             GL11.glEnable(GL11.GL_LINE_SMOOTH);
             GL11.glDisable(GL11.GL_DEPTH_TEST);
 
+            RenderSystem.setShader(GameRenderer::getPositionColorShader);
+
             PoseStack matrix = event.getPoseStack();
             matrix.pushPose();
             matrix.translate(-view.x, -view.y, -view.z);
-            vertexBuffer.drawWithShader(matrix.last().pose(), event.getProjectionMatrix().copy(), GameRenderer.getPositionColorShader());
+
+            vertexBuffer.bind();
+            vertexBuffer.drawWithShader(matrix.last().pose(), event.getProjectionMatrix().copy(), RenderSystem.getShader());
+            VertexBuffer.unbind();
             matrix.popPose();
 
             GL11.glEnable(GL11.GL_DEPTH_TEST);

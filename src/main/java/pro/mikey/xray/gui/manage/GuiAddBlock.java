@@ -1,26 +1,22 @@
 package pro.mikey.xray.gui.manage;
 
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraftforge.client.gui.widget.Slider;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.client.gui.widget.ForgeSlider;
+import net.minecraftforge.registries.ForgeRegistries;
 import pro.mikey.xray.ClientController;
 import pro.mikey.xray.gui.GuiSelectionScreen;
 import pro.mikey.xray.gui.utils.GuiBase;
 import pro.mikey.xray.utils.BlockData;
 import pro.mikey.xray.xray.Controller;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Button;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -28,16 +24,16 @@ import java.util.function.Supplier;
 
 public class GuiAddBlock extends GuiBase {
     private EditBox oreName;
-    private Button addBtn;
-    private Slider redSlider;
-    private Slider greenSlider;
-    private Slider blueSlider;
+    private ForgeSlider redSlider;
+    private ForgeSlider greenSlider;
+    private ForgeSlider blueSlider;
 
-    private Block selectBlock;
-    private ItemStack itemStack;
+    private final Block selectBlock;
+    private final ItemStack itemStack;
 
     private boolean oreNameCleared = false;
-    private Supplier<GuiBase> previousScreenCallback;
+
+    private final Supplier<GuiBase> previousScreenCallback;
 
     public GuiAddBlock(Block selectedBlock, Supplier<GuiBase> previousScreenCallback) {
         super(false);
@@ -49,17 +45,18 @@ public class GuiAddBlock extends GuiBase {
     @Override
     public void init() {
         // Called when the gui should be (re)created
-        addRenderableWidget(addBtn = new Button(getWidth() / 2 - 100, getHeight() / 2 + 85, 128, 20, new TranslatableComponent("xray.single.add"), b -> {
+        addRenderableWidget(new Button(getWidth() / 2 - 100, getHeight() / 2 + 85, 128, 20, Component.translatable("xray.single.add"), b -> {
             this.onClose();
 
-            if (selectBlock.getRegistryName() == null)
+            ResourceLocation key = ForgeRegistries.BLOCKS.getKey(selectBlock);
+            if (key == null)
                 return;
 
             // Push the block to the render stack
             Controller.getBlockStore().put(
                     new BlockData(
                             oreName.getValue(),
-                            selectBlock.getRegistryName().toString(),
+                            key.toString(),
                             (((int) (redSlider.getValue()) << 16) + ((int) (greenSlider.getValue()) << 8) + (int) (blueSlider.getValue() )),
                             this.itemStack,
                             true,
@@ -70,16 +67,16 @@ public class GuiAddBlock extends GuiBase {
             ClientController.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
             getMinecraft().setScreen(new GuiSelectionScreen());
         }));
-        addRenderableWidget(new Button(getWidth() / 2 + 30, getHeight() / 2 + 85, 72, 20, new TranslatableComponent("xray.single.cancel"), b -> {
+        addRenderableWidget(new Button(getWidth() / 2 + 30, getHeight() / 2 + 85, 72, 20, Component.translatable("xray.single.cancel"), b -> {
             this.onClose();
             Minecraft.getInstance().setScreen(this.previousScreenCallback.get());
         }));
 
-        addRenderableWidget(redSlider = new Slider(getWidth() / 2 - 100, getHeight() / 2 + 7, 202, 20, new TranslatableComponent("xray.color.red"), TextComponent.EMPTY, 0, 255, 0, false, true, (e) -> {}, (e) -> {}));
-        addRenderableWidget(greenSlider = new Slider(getWidth() / 2 - 100, getHeight() / 2 + 30, 202, 20, new TranslatableComponent("xray.color.green"), TextComponent.EMPTY, 0, 255, 165, false, true, (e) -> {}, (e) -> {}));
-        addRenderableWidget(blueSlider = new Slider(getWidth() / 2 - 100, getHeight() / 2 + 53,202, 20,  new TranslatableComponent("xray.color.blue"), TextComponent.EMPTY, 0, 255, 255, false, true, (e) -> {}, (e) -> {}));
+        addRenderableWidget(redSlider = new ForgeSlider(getWidth() / 2 - 100, getHeight() / 2 + 7, 202, 20, Component.translatable("xray.color.red"), Component.empty(), 0, 255, 0, true));
+        addRenderableWidget(greenSlider = new ForgeSlider(getWidth() / 2 - 100, getHeight() / 2 + 30, 202, 20, Component.translatable("xray.color.green"), Component.empty(), 0, 255, 165, true));
+        addRenderableWidget(blueSlider = new ForgeSlider(getWidth() / 2 - 100, getHeight() / 2 + 53,202, 20,  Component.translatable("xray.color.blue"), Component.empty(), 0, 255, 255, true));
 
-        oreName = new EditBox(getMinecraft().font, getWidth() / 2 - 100, getHeight() / 2 - 70, 202, 20, TextComponent.EMPTY);
+        oreName = new EditBox(getMinecraft().font, getWidth() / 2 - 100, getHeight() / 2 - 70, 202, 20, Component.empty());
         oreName.setValue(this.selectBlock.getName().getString());
         addRenderableWidget(oreName);
     }
@@ -120,20 +117,6 @@ public class GuiAddBlock extends GuiBase {
         }
 
         return super.mouseClicked(x, y, mouse);
-    }
-
-    @Override
-    public boolean mouseReleased(double x, double y, int mouse) {
-        if (redSlider.dragging && !redSlider.isFocused())
-            redSlider.dragging = false;
-
-        if (greenSlider.dragging && !greenSlider.isFocused())
-            greenSlider.dragging = false;
-
-        if (blueSlider.dragging && !blueSlider.isFocused())
-            blueSlider.dragging = false;
-
-        return super.mouseReleased(x, y, mouse);
     }
 
     @Override

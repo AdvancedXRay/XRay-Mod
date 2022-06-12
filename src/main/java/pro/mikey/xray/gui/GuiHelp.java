@@ -1,12 +1,12 @@
 package pro.mikey.xray.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import pro.mikey.xray.gui.utils.GuiBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.TranslatableComponent;
+import pro.mikey.xray.gui.utils.GuiBase;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class GuiHelp extends GuiBase {
         areas.add(new LinedText("xray.message.help.gui"));
         areas.add(new LinedText("xray.message.help.warning"));
 
-        this.addRenderableWidget(new Button((getWidth() / 2) - 100, (getHeight() / 2) + 80, 200, 20, new TranslatableComponent("xray.single.close"), b -> {
+        this.addRenderableWidget(new Button((getWidth() / 2) - 100, (getHeight() / 2) + 80, 200, 20, Component.translatable("xray.single.close"), b -> {
             this.onClose();
             Minecraft.getInstance().setScreen(new GuiSelectionScreen());
         }));
