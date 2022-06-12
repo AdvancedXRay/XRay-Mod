@@ -91,7 +91,7 @@ if (ENV.CURSE_DEPLOY_TOKEN) {
             addGameVersion "$minecraft_version"
             changelog = "See [Commit history](https://github.com/AdvancedXRay/XRay-Mod/commits/main)"
             changelogType = 'markdown'
-            mainArtifact(jar)
+            mainArtifact(remapJar)
         }
     }
 }
