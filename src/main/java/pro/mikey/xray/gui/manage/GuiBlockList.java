@@ -1,19 +1,19 @@
 package pro.mikey.xray.gui.manage;
 
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.AbstractSelectionList;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistries;
 import pro.mikey.xray.ClientController;
 import pro.mikey.xray.gui.GuiSelectionScreen;
 import pro.mikey.xray.gui.utils.GuiBase;
 import pro.mikey.xray.gui.utils.ScrollingList;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.AbstractSelectionList;
-import com.mojang.blaze3d.platform.Lighting;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import pro.mikey.xray.store.GameBlockStore;
 
 import javax.annotation.Nullable;
@@ -38,11 +38,11 @@ public class GuiBlockList extends GuiBase {
         this.blockList = new ScrollingBlockList((getWidth() / 2) + 1, getHeight() / 2 - 12, 202, 185, this.blocks);
         addRenderableWidget(this.blockList);
 
-        search = new EditBox(getFontRender(), getWidth() / 2 - 100, getHeight() / 2 + 85, 140, 18, new TextComponent(""));
+        search = new EditBox(getFontRender(), getWidth() / 2 - 100, getHeight() / 2 + 85, 140, 18, Component.literal(""));
         search.changeFocus(true);
         this.setFocused(search);
 
-        addRenderableWidget(new Button(getWidth() / 2 + 43, getHeight() / 2 + 84, 60, 20, new TranslatableComponent("xray.single.cancel"), b -> {
+        addRenderableWidget(new Button(getWidth() / 2 + 43, getHeight() / 2 + 84, 60, 20, Component.translatable("xray.single.cancel"), b -> {
             this.onClose();
             Minecraft.getInstance().setScreen(new GuiSelectionScreen());
         }));
@@ -132,7 +132,7 @@ public class GuiBlockList extends GuiBase {
             public void render(PoseStack stack, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean p_194999_5_, float partialTicks) {
                 Font font = this.parent.minecraft.font;
 
-                ResourceLocation resource = this.block.getItemStack().getItem().getRegistryName();
+                ResourceLocation resource = ForgeRegistries.ITEMS.getKey(this.block.getItemStack().getItem());
                 font.draw(stack,this.block.getItemStack().getItem().getDescription().getString(), left + 35, top + 7, Color.WHITE.getRGB());
                 font.draw(stack, resource != null ? resource.getNamespace() : "", left + 35, top + 17, Color.WHITE.getRGB());
                 // @mcp: of = unknown... Code recommendation

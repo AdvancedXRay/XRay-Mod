@@ -1,103 +1,81 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-    }
-}
-
 plugins {
+    id "dev.architectury.loom" version "0.11.0-SNAPSHOT"
+    id 'maven-publish'
     id "com.matthewprenger.cursegradle" version "1.4.0"
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'maven-publish'
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = 17
 
 def ENV = System.getenv()
-
-version = "${game_version}-${mod_version}-build.${ENV.GITHUB_RUN_NUMBER ?: 9999}"
+version = "${minecraft_version}-${mod_version}-build.${ENV.GITHUB_RUN_NUMBER ?: 9999}"
 group= "pro.mikey"
 archivesBaseName = "advanced-xray-forge"
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+loom {
+    silentMojangMappingsLicense()
 
-minecraft {
-    mappings channel: 'official', version: "${game_version}"
-//    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    forge {
 
-    runs {
-        client {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                xray {
-                    source sourceSets.main
-                }
+        launches {
+            data {
+                arg "--existing", file("src/main/resources").absolutePath
             }
         }
     }
 }
 
+repositories {
+}
+
 dependencies {
-    minecraft "net.minecraftforge:forge:${game_version}-${forge_version}"
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+
+    forge "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
+}
+
+compileJava {
+    options.encoding = "UTF-8"
+}
+
+java {
+    withSourcesJar()
 }
 
 jar {
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}" }
+    }
+
     manifest {
         attributes([
-                "Specification-Title": "Advanced XRay",
-                "Specification-Vendor": "",
-                "Specification-Version": "${version}",
-                "Implementation-Title": project.name,
-                "Implementation-Version": "${version}",
-                "Implementation-Vendor" :"advanced-xray",
+                "Specification-Title"     : "Advanced XRay",
+                "Specification-Vendor"    : "Advanced XRay",
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : "Advanced XRay",
+                "Implementation-Version"  : version,
+                "Implementation-Vendor"   : "Advanced XRay",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
 }
 
-task deobfJar(type: Jar) {
-    from(sourceSets.main.output)
-    classifier 'deobf'
-}
-
-task sourceJar(type: Jar) {
-    classifier 'sources'
-    from sourceSets.main.allJava
-}
-
-artifacts {
-    archives deobfJar
-    archives sourceJar
-}
-
-jar.finalizedBy('reobfJar')
-
 publishing {
     publications {
-        maven(MavenPublication) {
-            groupId project.group
-            artifactId project.archivesBaseName
-            version project.version
-
-            artifact jar
-            artifact deobfJar
-            artifact sourceJar
+        mavenForge(MavenPublication) {
+            artifactId = rootProject.archivesBaseName
+            from components.java
         }
     }
+
     repositories {
-        maven {
-            url "https://maven.saps.dev/releases"
-            credentials {
-                username = "mikeymods"
-                password = "${ENV.SAPS_TOKEN}"
+        if (ENV.SAPS_TOKEN) {
+            maven {
+                url "https://maven.saps.dev/releases"
+                credentials {
+                    username = "mikeymods"
+                    password = "${ENV.SAPS_TOKEN}"
+                }
             }
         }
     }
@@ -110,8 +88,8 @@ if (ENV.CURSE_DEPLOY_TOKEN) {
             id = project.curse_id
             releaseType = "release"
             addGameVersion "Forge"
-            addGameVersion "$game_version"
-            changelog = "See [Commit history](https://github.com/MichaelHillcox/XRay-Mod/commits/main)"
+            addGameVersion "$minecraft_version"
+            changelog = "See [Commit history](https://github.com/AdvancedXRay/XRay-Mod/commits/main)"
             changelogType = 'markdown'
             mainArtifact(jar)
         }

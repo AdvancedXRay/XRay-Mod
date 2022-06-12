@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class DiscoveryStorage {
@@ -103,13 +104,8 @@ public class DiscoveryStorage {
 
         int orderTrack = 0;
         for (Block block : blockTags.getTag(Tags.Blocks.ORES)) {
-            // Very rare but good to protected against
-            if (block.getRegistryName() == null) {
-                continue;
-            }
-
-            oresData.add(new BlockData.SerializableBlockData(new TranslatableComponent(block.getDescriptionId()).getString(),
-                    block.getRegistryName().toString(),
+            oresData.add(new BlockData.SerializableBlockData(Component.translatable(block.getDescriptionId()).getString(),
+                    Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)).toString(),
                     (RANDOM.nextInt(255) << 16) + (RANDOM.nextInt(255) << 8) + RANDOM.nextInt(255),
                     false,
                     orderTrack++)

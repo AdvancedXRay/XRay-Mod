@@ -28,8 +28,8 @@ public class GuiOverlay {
 
         RenderSystem.setShaderColor(0, 1F, 0, 1F);
         RenderSystem.setShaderTexture(0, circle);
-        Screen.blit(event.getMatrixStack(), 5, 5, 0f, 0f, 5, 5, 5, 5);
+        Screen.blit(event.getPoseStack(), 5, 5, 0f, 0f, 5, 5, 5, 5);
 
-        Minecraft.getInstance().font.drawShadow(event.getMatrixStack(), I18n.get("xray.overlay"), 15, 4, 0xffffffff);
+        Minecraft.getInstance().font.drawShadow(event.getPoseStack(), I18n.get("xray.overlay"), 15, 4, 0xffffffff);
     }
 }

@@ -1,9 +1,28 @@
 package pro.mikey.xray.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.gametest.framework.GameTestHelper;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.AbstractSelectionList;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.locale.Language;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import pro.mikey.xray.ClientController;
 import pro.mikey.xray.Configuration;
 import pro.mikey.xray.XRay;
@@ -17,36 +36,14 @@ import pro.mikey.xray.keybinding.KeyBindings;
 import pro.mikey.xray.store.BlockStore;
 import pro.mikey.xray.utils.BlockData;
 import pro.mikey.xray.xray.Controller;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.AbstractSelectionList;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import com.mojang.blaze3d.platform.Lighting;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.locale.Language;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import net.minecraft.client.gui.components.Button.OnPress;
 
 public class GuiSelectionScreen extends GuiBase {
     private static final ResourceLocation CIRCLE = new ResourceLocation(XRay.PREFIX_GUI + "circle.png");
@@ -89,7 +86,7 @@ public class GuiSelectionScreen extends GuiBase {
         this.scrollList = new ScrollingBlockList((getWidth() / 2) - 37, getHeight() / 2 + 10, 203, 185, this.itemList, this);
         addRenderableWidget(this.scrollList);
 
-        this.search = new EditBox(getFontRender(), getWidth() / 2 - 137, getHeight() / 2 - 105, 202, 18, TextComponent.EMPTY);
+        this.search = new EditBox(getFontRender(), getWidth() / 2 - 137, getHeight() / 2 - 105, 202, 18, Component.empty());
         this.search.setCanLoseFocus(true);
 
         // side bar buttons
@@ -103,7 +100,7 @@ public class GuiSelectionScreen extends GuiBase {
 
             // Check if the hand item is a block or not
             if (!(handItem.getItem() instanceof net.minecraft.world.item.BlockItem)) {
-                getMinecraft().player.displayClientMessage(new TextComponent("[XRay] " + I18n.get("xray.message.invalid_hand", handItem.getHoverName().getString())), false);
+                getMinecraft().player.displayClientMessage(Component.literal("[XRay] " + I18n.get("xray.message.invalid_hand", handItem.getHoverName().getString())), false);
                 return;
             }
 
@@ -129,26 +126,26 @@ public class GuiSelectionScreen extends GuiBase {
                     player.closeContainer();
                     getMinecraft().setScreen(new GuiAddBlock(lookingAt, GuiSelectionScreen::new));
                 } else
-                    player.displayClientMessage(new TextComponent("[XRay] " + I18n.get("xray.message.nothing_infront")), false);
+                    player.displayClientMessage(Component.literal("[XRay] " + I18n.get("xray.message.nothing_infront")), false);
             } catch (NullPointerException ex) {
-                player.displayClientMessage(new TextComponent("[XRay] " + I18n.get("xray.message.thats_odd")), false);
+                player.displayClientMessage(Component.literal("[XRay] " + I18n.get("xray.message.thats_odd")), false);
             }
         }));
 
         addRenderableWidget(distButtons = new SupportButtonInner((getWidth() / 2) + 79, getHeight() / 2 + 6, 120, 20, I18n.get("xray.input.show-lava", Controller.isLavaActive()), "xray.tooltips.show_lava", button -> {
             Controller.toggleLava();
-            button.setMessage(new TranslatableComponent("xray.input.show-lava", Controller.isLavaActive()));
+            button.setMessage(Component.translatable("xray.input.show-lava", Controller.isLavaActive()));
         }));
 
         addRenderableWidget(distButtons = new SupportButtonInner((getWidth() / 2) + 79, getHeight() / 2 + 36, 120, 20, I18n.get("xray.input.distance", Controller.getVisualRadius()), "xray.tooltips.distance", button -> {
             Controller.incrementCurrentDist();
-            button.setMessage(new TranslatableComponent("xray.input.distance", Controller.getVisualRadius()));
+            button.setMessage(Component.translatable("xray.input.distance", Controller.getVisualRadius()));
         }));
-        addRenderableWidget(new Button(getWidth() / 2 + 79, getHeight() / 2 + 58, 60, 20, new TranslatableComponent("xray.single.help"), button -> {
+        addRenderableWidget(new Button(getWidth() / 2 + 79, getHeight() / 2 + 58, 60, 20, Component.translatable("xray.single.help"), button -> {
             getMinecraft().player.closeContainer();
             getMinecraft().setScreen(new GuiHelp());
         }));
-        addRenderableWidget(new Button((getWidth() / 2 + 79) + 62, getHeight() / 2 + 58, 59, 20, new TranslatableComponent("xray.single.close"), button -> {
+        addRenderableWidget(new Button((getWidth() / 2 + 79) + 62, getHeight() / 2 + 58, 59, 20, Component.translatable("xray.single.close"), button -> {
             this.onClose();
         }));
     }
@@ -201,7 +198,7 @@ public class GuiSelectionScreen extends GuiBase {
 
         if (mouse == 1 && distButtons.isMouseOver(x, y)) {
             Controller.decrementCurrentDist();
-            distButtons.setMessage(new TranslatableComponent("xray.input.distance", Controller.getVisualRadius()));
+            distButtons.setMessage(Component.translatable("xray.input.distance", Controller.getVisualRadius()));
             distButtons.playDownSound(Minecraft.getInstance().getSoundManager());
         }
 
@@ -228,7 +225,7 @@ public class GuiSelectionScreen extends GuiBase {
 
     static final class SupportButtonInner extends SupportButton {
         public SupportButtonInner(int widthIn, int heightIn, int width, int height, String text, String i18nKey, OnPress onPress) {
-            super(widthIn, heightIn, width, height, new TextComponent(text), new TranslatableComponent(i18nKey), onPress);
+            super(widthIn, heightIn, width, height, Component.literal(text), Component.translatable(i18nKey), onPress);
         }
     }
 
@@ -290,7 +287,7 @@ public class GuiSelectionScreen extends GuiBase {
                 if (mouseX > left && mouseX < (left + entryWidth) && mouseY > top && mouseY < (top + entryHeight) && mouseY < (this.parent.getTop() + this.parent.getHeight()) && mouseY > this.parent.getTop()) {
                     this.parent.parent.renderTooltip(
                             stack,
-                            Language.getInstance().getVisualOrder(Arrays.asList(new TranslatableComponent("xray.tooltips.edit1"), new TranslatableComponent("xray.tooltips.edit2"))),
+                            Language.getInstance().getVisualOrder(Arrays.asList(Component.translatable("xray.tooltips.edit1"), Component.translatable("xray.tooltips.edit2"))),
                             left + 15,
                             (entryIdx == this.parent.children().size() - 1 ? (top - (entryHeight - 20)) : (top + (entryHeight + 15))) // @mcp: children = getEntries
                     );

@@ -1,21 +1,14 @@
 package pro.mikey.xray.gui.utils;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.components.events.GuiEventListener;
-import pro.mikey.xray.XRay;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.components.AbstractWidget;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.locale.Language;
-import net.minecraft.network.chat.TextComponent;
-import org.lwjgl.opengl.GL11;
-
-import java.util.List;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import pro.mikey.xray.XRay;
 
 public abstract class GuiBase extends Screen {
     public static final ResourceLocation BG_NORMAL = new ResourceLocation(XRay.PREFIX_GUI + "bg.png");
@@ -29,7 +22,7 @@ public abstract class GuiBase extends Screen {
     public abstract void renderExtra(PoseStack stack, int x, int y, float partialTicks);
 
     public GuiBase(boolean hasSide ) {
-        super(new TextComponent(""));
+        super(Component.literal(""));
         this.hasSide = hasSide;
 
     }
