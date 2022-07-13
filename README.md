@@ -45,7 +45,7 @@ Minecraft Forge based XRay mod designed to aid players who don't like the ore se
 > Please note that these aren't always the ones set by default. Be sure to check your controls settings under `XRay` to find the correct keys*
 
 - Press `Backslash` to toggle XRay `ON/OFF`
-- Press `Z` to open the `selection & settings` Gui 
+- Press `G` to open the `selection & settings` Gui 
 
 **Adding Blocks**
 
