@@ -12,6 +12,6 @@ license="GNU GPL v3.0 (https://github.com/MichaelHillcox/XRay-Mod/blob/master/LI
 [[dependencies.xray]]
     modId="forge"
     mandatory=true
-    versionRange="[37,)"
+    versionRange="[41.0.98,)"
     ordering="NONE"
     side="CLIENT"

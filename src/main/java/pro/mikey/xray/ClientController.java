@@ -1,11 +1,5 @@
 package pro.mikey.xray;
 
-import pro.mikey.xray.keybinding.KeyBindings;
-import pro.mikey.xray.store.BlockStore;
-import pro.mikey.xray.store.GameBlockStore;
-import pro.mikey.xray.store.DiscoveryStorage;
-import pro.mikey.xray.utils.BlockData;
-import pro.mikey.xray.xray.Controller;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -14,6 +8,12 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import pro.mikey.xray.keybinding.KeyBindings;
+import pro.mikey.xray.store.BlockStore;
+import pro.mikey.xray.store.DiscoveryStorage;
+import pro.mikey.xray.store.GameBlockStore;
+import pro.mikey.xray.utils.BlockData;
+import pro.mikey.xray.xray.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,6 @@ public class ClientController {
 
         eventBus.addListener(ClientController::onSetup);
         eventBus.addListener(ClientController::onLoadComplete);
-
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configuration.SPEC);
 
         // Keybindings

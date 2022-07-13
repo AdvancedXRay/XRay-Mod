@@ -5,14 +5,14 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import org.lwjgl.opengl.GL11;
 
 public class Render {
     private static VertexBuffer vertexBuffer;
     public static boolean requestedRefresh = false;
 
-	static void renderBlocks(RenderLevelLastEvent event) {
+	static void renderBlocks(RenderLevelStageEvent event) {
         if (vertexBuffer == null || requestedRefresh) {
             requestedRefresh = false;
             vertexBuffer = new VertexBuffer();
