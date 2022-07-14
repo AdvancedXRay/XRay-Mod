@@ -29,6 +29,7 @@ public class ClientController {
 
         eventBus.addListener(ClientController::onSetup);
         eventBus.addListener(ClientController::onLoadComplete);
+        eventBus.addListener(KeyBindings::registerKeyBinding);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configuration.SPEC);
 
         // Keybindings
