@@ -47,7 +47,7 @@
   "xray.tooltips.add_block": "选择要添加到 XRay 方块列表中的方块\n这使用方块默认值,如果您需要特定的方块\n请使用'添加目视方块'.",
   "xray.tooltips.add_block_in_hand": "自动选择您手中的方块\n将其添加到列表中.",
   "xray.tooltips.add_block_looking_at": "自动选择你目视的方块\n将其添加到列表中.",
-  "xray.tooltips.show_lava": "就像普通方块一样用红色显示岩浆.\n小心! 他很烫.",
+  "xray.tooltips.show_lava": "就像普通方块一样用红色显示岩浆.\n小心! 它很烫.",
   "xray.tooltips.distance": "警告: 较大的半径将在更新时延迟一秒钟.",
   "xray.tooltips.edit1": "点击切换启用/禁用",
   "xray.tooltips.edit2": "按住 Shift 并单击以编辑.",
