@@ -14,14 +14,7 @@ archivesBaseName = "advanced-xray-forge"
 loom {
     silentMojangMappingsLicense()
 
-    forge {
-
-        launches {
-            data {
-                arg "--existing", file("src/main/resources").absolutePath
-            }
-        }
-    }
+    forge
 }
 
 repositories {

@@ -13,7 +13,9 @@ public class SupportButton extends Button {
     private List<FormattedText> support = new ArrayList<>();
 
     public SupportButton(int widthIn, int heightIn, int width, int height, Component text, MutableComponent support, OnPress onPress) {
-        super(widthIn, heightIn, width, height, text, onPress);
+        super(builder(text, onPress)
+                .pos(widthIn, heightIn)
+                .size(width, height));
 
         for(String line : support.getString().split("\n")) {
             this.support.add(Component.literal(line));
