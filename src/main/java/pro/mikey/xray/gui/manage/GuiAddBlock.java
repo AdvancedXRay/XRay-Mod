@@ -45,7 +45,7 @@ public class GuiAddBlock extends GuiBase {
     @Override
     public void init() {
         // Called when the gui should be (re)created
-        addRenderableWidget(new Button(getWidth() / 2 - 100, getHeight() / 2 + 85, 128, 20, Component.translatable("xray.single.add"), b -> {
+        addRenderableWidget(Button.builder(Component.translatable("xray.single.add"), b -> {
             this.onClose();
 
             ResourceLocation key = ForgeRegistries.BLOCKS.getKey(selectBlock);
@@ -66,11 +66,18 @@ public class GuiAddBlock extends GuiBase {
 
             ClientController.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
             getMinecraft().setScreen(new GuiSelectionScreen());
-        }));
-        addRenderableWidget(new Button(getWidth() / 2 + 30, getHeight() / 2 + 85, 72, 20, Component.translatable("xray.single.cancel"), b -> {
+        })
+                .pos(getWidth() / 2 - 100, getHeight() / 2 + 85)
+                .size(128, 20)
+                .build());
+
+        addRenderableWidget(Button.builder(Component.translatable("xray.single.cancel"), b -> {
             this.onClose();
             Minecraft.getInstance().setScreen(this.previousScreenCallback.get());
-        }));
+        })
+                .pos(getWidth() / 2 + 30, getHeight() / 2 + 85)
+                .size(72, 20)
+                .build());
 
         addRenderableWidget(redSlider = new ForgeSlider(getWidth() / 2 - 100, getHeight() / 2 + 7, 202, 20, Component.translatable("xray.color.red"), Component.empty(), 0, 255, 0, true));
         addRenderableWidget(greenSlider = new ForgeSlider(getWidth() / 2 - 100, getHeight() / 2 + 30, 202, 20, Component.translatable("xray.color.green"), Component.empty(), 0, 255, 165, true));

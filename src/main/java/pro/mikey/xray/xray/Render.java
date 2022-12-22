@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
 public class Render {
@@ -92,7 +93,7 @@ public class Render {
             matrix.translate(-view.x, -view.y, -view.z);
 
             vertexBuffer.bind();
-            vertexBuffer.drawWithShader(matrix.last().pose(), event.getProjectionMatrix().copy(), RenderSystem.getShader());
+            vertexBuffer.drawWithShader(matrix.last().pose(), new Matrix4f(event.getProjectionMatrix()), RenderSystem.getShader());
             VertexBuffer.unbind();
             matrix.popPose();
 

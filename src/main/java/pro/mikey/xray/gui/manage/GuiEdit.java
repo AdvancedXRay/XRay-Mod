@@ -33,19 +33,26 @@ public class GuiEdit extends GuiBase {
 
     @Override
     public void init() {
-        addRenderableWidget(new Button((getWidth() / 2) + 78, getHeight() / 2 - 60, 120, 20, Component.translatable("xray.single.delete"), b -> {
+        addRenderableWidget(Button.builder(Component.translatable("xray.single.delete"), b -> {
             Controller.getBlockStore().remove(block.getBlockName());
             ClientController.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
 
             this.onClose();
             getMinecraft().setScreen(new GuiSelectionScreen());
-        }));
+        })
+                .pos((getWidth() / 2) + 78, getHeight() / 2 - 60)
+                .size(120, 20)
+                .build());
 
-        addRenderableWidget(new Button((getWidth() / 2) + 78, getHeight() / 2 + 58, 120, 20, Component.translatable("xray.single.cancel"), b -> {
+        addRenderableWidget(Button.builder(Component.translatable("xray.single.cancel"), b -> {
             this.onClose();
             this.getMinecraft().setScreen(new GuiSelectionScreen());
-        }));
-        addRenderableWidget(new Button(getWidth() / 2 - 138, getHeight() / 2 + 83, 202, 20, Component.translatable("xray.single.save"), b -> {
+        })
+                .pos((getWidth() / 2) + 78, getHeight() / 2 + 58)
+                .size(120, 20)
+                .build());
+
+        addRenderableWidget(Button.builder(Component.translatable("xray.single.save"), b -> {
             BlockData block = new BlockData(
                     this.oreName.getValue(),
                     this.block.getBlockName(),
@@ -62,7 +69,10 @@ public class GuiEdit extends GuiBase {
             ClientController.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
             this.onClose();
             getMinecraft().setScreen(new GuiSelectionScreen());
-        }));
+        })
+                .pos(getWidth() / 2 - 138, getHeight() / 2 + 83)
+                .size(202, 20)
+                .build());
 
         addRenderableWidget(redSlider = new ForgeSlider(getWidth() / 2 - 138, getHeight() / 2 + 7, 202, 20, Component.translatable("xray.color.red"), Component.empty(), 0, 255, (block.getColor() >> 16 & 0xff), true));
         addRenderableWidget(greenSlider = new ForgeSlider(getWidth() / 2 - 138, getHeight() / 2 + 30, 202, 20, Component.translatable("xray.color.green"), Component.empty(), 0, 255, (block.getColor() >> 8 & 0xff), true));

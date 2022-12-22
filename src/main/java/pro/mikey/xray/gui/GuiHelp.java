@@ -28,10 +28,14 @@ public class GuiHelp extends GuiBase {
         areas.add(new LinedText("xray.message.help.gui"));
         areas.add(new LinedText("xray.message.help.warning"));
 
-        this.addRenderableWidget(new Button((getWidth() / 2) - 100, (getHeight() / 2) + 80, 200, 20, Component.translatable("xray.single.close"), b -> {
-            this.onClose();
-            Minecraft.getInstance().setScreen(new GuiSelectionScreen());
-        }));
+        this.addRenderableWidget(Button.builder(Component.translatable("xray.single.close"), btn -> {
+                    this.onClose();
+                    Minecraft.getInstance().setScreen(new GuiSelectionScreen());
+            })
+            .pos((getWidth() / 2) - 100, (getHeight() / 2) + 80)
+            .size(200, 20)
+            .build()
+        );
     }
 
     @Override

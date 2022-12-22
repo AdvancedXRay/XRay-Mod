@@ -141,13 +141,23 @@ public class GuiSelectionScreen extends GuiBase {
             Controller.incrementCurrentDist();
             button.setMessage(Component.translatable("xray.input.distance", Controller.getVisualRadius()));
         }));
-        addRenderableWidget(new Button(getWidth() / 2 + 79, getHeight() / 2 + 58, 60, 20, Component.translatable("xray.single.help"), button -> {
-            getMinecraft().player.closeContainer();
-            getMinecraft().setScreen(new GuiHelp());
-        }));
-        addRenderableWidget(new Button((getWidth() / 2 + 79) + 62, getHeight() / 2 + 58, 59, 20, Component.translatable("xray.single.close"), button -> {
-            this.onClose();
-        }));
+        addRenderableWidget(
+            Button.builder(Component.translatable("xray.single.help"), button -> {
+                getMinecraft().player.closeContainer();
+                getMinecraft().setScreen(new GuiHelp());
+            })
+                    .pos(getWidth() / 2 + 79, getHeight() / 2 + 58)
+                    .size(60, 20)
+                    .build()
+        );
+        addRenderableWidget(
+                Button.builder(Component.translatable("xray.single.close"), button -> {
+                    this.onClose();
+                })
+                        .pos((getWidth() / 2 + 79) + 62, getHeight() / 2 + 58)
+                        .size(59, 20)
+                        .build()
+        );
     }
 
     @Override

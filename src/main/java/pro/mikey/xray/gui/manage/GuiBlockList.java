@@ -42,10 +42,13 @@ public class GuiBlockList extends GuiBase {
         search.changeFocus(true);
         this.setFocused(search);
 
-        addRenderableWidget(new Button(getWidth() / 2 + 43, getHeight() / 2 + 84, 60, 20, Component.translatable("xray.single.cancel"), b -> {
+        addRenderableWidget(Button.builder(Component.translatable("xray.single.cancel"), b -> {
             this.onClose();
             Minecraft.getInstance().setScreen(new GuiSelectionScreen());
-        }));
+        })
+                .pos(getWidth() / 2 + 43, getHeight() / 2 + 84)
+                .size(60, 20)
+                .build());
     }
 
     @Override
