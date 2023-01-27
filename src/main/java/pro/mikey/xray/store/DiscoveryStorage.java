@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import pro.mikey.xray.XRay;
 import pro.mikey.xray.utils.BlockData;
 
+import javax.annotation.Nullable;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
@@ -28,7 +29,8 @@ import java.util.Random;
 public class DiscoveryStorage {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private static final Path STORE_FILE = Minecraft.getInstance().gameDirectory.toPath().resolve(String.format("config/%s/block_store.json", XRay.MOD_ID));
+    @Nullable // Only null when minecraft launches in data generation
+    private static final Path STORE_FILE = resolveStoreFile();
 
     private static final Random RANDOM = new Random();
     private static final Gson PRETTY_JSON = new GsonBuilder().setPrettyPrinting().create();
@@ -37,7 +39,7 @@ public class DiscoveryStorage {
 
     // This should only be initialised once
     public DiscoveryStorage() {
-        if (Files.exists(STORE_FILE)) {
+        if (STORE_FILE == null || Files.exists(STORE_FILE)) {
             return;
         }
 
@@ -62,6 +64,10 @@ public class DiscoveryStorage {
     }
 
     private void write(List<BlockData.SerializableBlockData> simpleBlockData) {
+        if(STORE_FILE == null) {
+            return;
+        }
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(STORE_FILE.toFile()))) {
             PRETTY_JSON.toJson(simpleBlockData, writer);
         } catch (IOException e) {
@@ -70,7 +76,7 @@ public class DiscoveryStorage {
     }
 
     public List<BlockData.SerializableBlockData> read() {
-        if (!Files.exists(STORE_FILE))
+        if (STORE_FILE == null || !Files.exists(STORE_FILE))
             return new ArrayList<>();
 
         try {
@@ -115,5 +121,14 @@ public class DiscoveryStorage {
         LOGGER.info("Setting up default ores to the render list");
         this.write(oresData);
         return oresData;
+    }
+
+    /**
+     * @return An existing path if the game is not running in data generation.
+     */
+    @SuppressWarnings("ConstantValue")
+    private static Path resolveStoreFile() {
+        Minecraft mc = Minecraft.getInstance();
+        return mc == null ? null : mc.gameDirectory.toPath().resolve(String.format("config/%s/block_store.json", XRay.MOD_ID));
     }
 }
