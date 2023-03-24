@@ -62,7 +62,7 @@ Minecraft Forge based XRay mod designed to aid players who don't like the ore se
 - Right click on any item in the Gui and edit as needed
 - Click save and the changed will be applied instantly
 
-[![Discord invite link](.github/assets/discord-join-badge.svg)](https://discord.gg/yYNuqJxucJ)
+[![Discord invite link](.github/assets/discord-join-badge.svg)](https://discord.gg/KV7yDTfEkm)
 
 ## Previews
 
