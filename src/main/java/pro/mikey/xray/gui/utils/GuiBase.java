@@ -55,7 +55,7 @@ public abstract class GuiBase extends Screen {
         if( !this.hasSide )
             blit(stack, width / 2 - this.backgroundWidth / 2 + 1, height / 2 - this.backgroundHeight / 2, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
 
-        RenderSystem.enableTexture();
+//        RenderSystem.enableTexture();
         if( hasTitle() ) {
             if( this.hasSide )
                 getFontRender().drawShadow(stack, title(), (float) width / 2 - 138, (float) height / 2 - 105, 0xffff00);

@@ -14,7 +14,10 @@ archivesBaseName = "advanced-xray-forge"
 loom {
     silentMojangMappingsLicense()
 
-    forge
+    forge {
+    }
+
+    accessWidenerPath = file("src/main/resources/xray.accesswidener")
 }
 
 repositories {

@@ -39,7 +39,7 @@ public class GuiBlockList extends GuiBase {
         addRenderableWidget(this.blockList);
 
         search = new EditBox(getFontRender(), getWidth() / 2 - 100, getHeight() / 2 + 85, 140, 18, Component.literal(""));
-        search.changeFocus(true);
+        search.setFocused(true);
         this.setFocused(search);
 
         addRenderableWidget(Button.builder(Component.translatable("xray.single.cancel"), b -> {
@@ -141,7 +141,7 @@ public class GuiBlockList extends GuiBase {
                 // @mcp: of = unknown... Code recommendation
 
                 Lighting.setupFor3DItems();
-                this.parent.minecraft.getItemRenderer().renderAndDecorateItem(this.block.getItemStack(), left + 8, top + 7);
+                this.parent.minecraft.getItemRenderer().renderAndDecorateItem(stack, this.block.getItemStack(), left + 8, top + 7);
                 Lighting.setupForFlatItems();
             }
 

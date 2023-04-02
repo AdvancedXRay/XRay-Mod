@@ -104,7 +104,7 @@ public class GuiAddBlock extends GuiBase {
         oreName.render(stack, x, y, partialTicks);
 
         Lighting.setupForFlatItems();
-        this.itemRenderer.renderAndDecorateItem(this.itemStack, getWidth() / 2 + 85, getHeight() / 2 - 105);
+        this.itemRenderer.renderAndDecorateItem(stack, this.itemStack, getWidth() / 2 + 85, getHeight() / 2 - 105);
         Lighting.setupFor3DItems();
     }
 
