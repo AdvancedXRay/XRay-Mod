@@ -1,17 +1,24 @@
 modLoader="javafml" #mandatory
-loaderVersion="[39,)" #mandatory
-credits="Michael Hillox" #optional
-authors="Michael Hillcox" #optional
+loaderVersion="[${forge_version_range},)" #mandatory
+credits="ErrorMikey" #optional
+authors="AdvancedXRay Team" #optional
 license="GNU GPL v3.0 (https://github.com/MichaelHillcox/XRay-Mod/blob/master/LICENSE)"
 [[mods]]
     modId="xray"
-    version="${file.jarVersion}"
+    version="${version}"
     displayName="Advanced XRay"
     description="An advanced XRay mod for Minecraft."
 
 [[dependencies.xray]]
     modId="forge"
     mandatory=true
-    versionRange="[41.0.98,)"
+    versionRange="[${forge_version_range},)"
+    ordering="NONE"
+    side="CLIENT"
+
+[[dependencies.xray]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[${minecraft_version_range})"
     ordering="NONE"
     side="CLIENT"
