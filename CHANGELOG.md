@@ -1,9 +1,5 @@
-## [2.16.0]
+## [2.17.0]
 
 ### Changed
 
-- Ported to 1.20
-
-### Added
-
-- Added a one time message on first game join to inform players on how to use the mod. 
+- Ported to 1.20.1
