@@ -28,6 +28,9 @@
   "xray.title.edit": "Edit Block",
   "xray.title.edit_meta": "Edit Meta",
 
+  "xray.chat.first-time": "§6Thank you for using Advanced XRay, §rYou can open the menu by pressing §a[%s§a] §rand turn XRay on with §a[%s§a]§r.",
+  "xray.chat.first-time-line-2": "These can be changed in settings -> options -> controls -> keybindings. §cThis message will only show once.",
+
   "xray.message.missing_input": "You need to have all the inputs filled in",
   "xray.message.already_exists": "This block has already been added to the block list",
   "xray.message.added_block": "Successfully added %s.",

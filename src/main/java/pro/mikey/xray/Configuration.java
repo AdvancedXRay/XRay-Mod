@@ -9,6 +9,10 @@ public class Configuration
     public static final General general = new General();
     public static final Store store = new Store();
 
+    public static final ForgeConfigSpec.BooleanValue firstRun = BUILDER
+            .comment("DO NOT TOUCH!", "This is not for you.", "This is used to check if it's the first time the mod has been run")
+            .define("firstRun", true);
+
     public static class General {
         public final ForgeConfigSpec.BooleanValue showOverlay;
         public final ForgeConfigSpec.DoubleValue outlineThickness;

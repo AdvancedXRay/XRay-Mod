@@ -1,5 +1,5 @@
 plugins {
-    id "dev.architectury.loom" version "0.12.0-SNAPSHOT"
+    id "dev.architectury.loom" version "1.2-SNAPSHOT"
     id 'maven-publish'
     id "com.matthewprenger.cursegradle" version "1.4.0"
 }
@@ -85,7 +85,7 @@ if (ENV.CURSE_DEPLOY_TOKEN) {
             releaseType = "release"
             addGameVersion "Forge"
             addGameVersion "$minecraft_version"
-            changelog = "See [Commit history](https://github.com/AdvancedXRay/XRay-Mod/commits/main)"
+            changelog = file("./CHANGELOG.md")
             changelogType = 'markdown'
             mainArtifact(remapJar)
         }

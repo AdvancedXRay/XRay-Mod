@@ -2,9 +2,12 @@ package pro.mikey.xray.gui.utils;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSelectionList;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import org.lwjgl.opengl.GL11;
+
+import java.util.AbstractList;
 
 /**
  * A bare bones implementation of the {@link AbstractList} / {@link net.minecraft.client.gui.widget.list.ExtendedList}
@@ -21,14 +24,14 @@ public class ScrollingList<E extends AbstractSelectionList.Entry<E>> extends Abs
     }
 
     @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         double scale = Minecraft.getInstance().getWindow().getGuiScale();
 
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor((int)(this.x0  * scale), (int)(Minecraft.getInstance().getWindow().getHeight() - ((this.y0 + this.height) * scale)),
                 (int)(this.width * scale), (int)(this.height * scale));
 
-        super.render(stack, mouseX, mouseY, partialTicks);
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }

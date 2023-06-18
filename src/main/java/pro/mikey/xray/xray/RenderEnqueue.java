@@ -52,16 +52,9 @@ public class RenderEnqueue {
 			for (int j = cZ - range; j <= cZ + range; j++) {
 				int chunkStartZ = j << 4;
 
-				int height =
-						Arrays.stream(world.getChunk(i, j).getSections())
-								.filter(Objects::nonNull)
-								.mapToInt(LevelChunkSection::bottomBlockY)
-								.max()
-								.orElse(0);
-
 				for (int k = chunkStartX; k < chunkStartX + 16; k++) {
 					for (int l = chunkStartZ; l < chunkStartZ + 16; l++) {
-						for (int m = world.getMinBuildHeight(); m < height + (1 << 4); m++) {
+						for (int m = world.getMinBuildHeight(); m < world.getMaxBuildHeight(); m++) {
 							BlockPos pos = new BlockPos(k, m, l);
 
 							currentState = world.getBlockState(pos);

@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSelectionList;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -80,7 +81,7 @@ public class GuiSelectionScreen extends GuiBase {
         if (getMinecraft().player == null)
             return;
 
-        this.render = this.itemRenderer;
+        this.render = Minecraft.getInstance().getItemRenderer();
         this.children().clear();
 
         this.scrollList = new ScrollingBlockList((getWidth() / 2) - 37, getHeight() / 2 + 10, 203, 185, this.itemList, this);
@@ -216,12 +217,12 @@ public class GuiSelectionScreen extends GuiBase {
     }
 
     @Override
-    public void renderExtra(PoseStack stack, int x, int y, float partialTicks) {
-        this.search.render(stack, x, y, partialTicks);
-        this.scrollList.render(stack, x, y, partialTicks);
+    public void renderExtra(GuiGraphics graphics, int x, int y, float partialTicks) {
+        this.search.render(graphics, x, y, partialTicks);
+        this.scrollList.render(graphics, x, y, partialTicks);
 
         if (!search.isFocused() && search.getValue().equals(""))
-            Minecraft.getInstance().font.drawShadow(stack, I18n.get("xray.single.search"), (float) getWidth() / 2 - 130, (float) getHeight() / 2 - 101, Color.GRAY.getRGB());
+            graphics.drawString(getFontRender(), I18n.get("xray.single.search"), getWidth() / 2 - 130, getHeight() / 2 - 101, Color.GRAY.getRGB());
     }
 
     @Override
@@ -282,38 +283,42 @@ public class GuiSelectionScreen extends GuiBase {
             }
 
             @Override
-            public void render(PoseStack stack, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean p_194999_5_, float partialTicks) {
+            public void render(GuiGraphics guiGraphics, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean p_194999_5_, float partialTicks) {
                 BlockData blockData = this.block;
 
                 Font font = Minecraft.getInstance().font;
 
-                font.draw(stack, blockData.getEntryName(), left + 35, top + 7, 0xFFFFFF);
-                font.draw(stack, blockData.isDrawing() ? "Enabled" : "Disabled", left + 35, top + 17, blockData.isDrawing() ? Color.GREEN.getRGB() : Color.RED.getRGB());
+                guiGraphics.drawString(font, blockData.getEntryName(), left + 35, top + 7, 0xFFFFFF);
+                guiGraphics.drawString(font, blockData.isDrawing() ? "Enabled" : "Disabled", left + 35, top + 17, blockData.isDrawing() ? Color.GREEN.getRGB() : Color.RED.getRGB());
 
-                Lighting.setupFor3DItems();
-                Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, blockData.getItemStack(), left + 8, top + 7);
-                Lighting.setupForFlatItems();
+                guiGraphics.renderItem(blockData.getItemStack(), left + 8, top + 7);
+                guiGraphics.renderItemDecorations(font, blockData.getItemStack(), left + 8, top + 7); // TODO: verify
+
+                // old from < 1.20
+//                Lighting.setupFor3DItems();
+//                Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, blockData.getItemStack(), left + 8, top + 7);
+//                Lighting.setupForFlatItems();
 
                 if (mouseX > left && mouseX < (left + entryWidth) && mouseY > top && mouseY < (top + entryHeight) && mouseY < (this.parent.getTop() + this.parent.getHeight()) && mouseY > this.parent.getTop()) {
-                    this.parent.parent.renderTooltip(
-                            stack,
+                    guiGraphics.renderTooltip(
+                            font,
                             Language.getInstance().getVisualOrder(Arrays.asList(Component.translatable("xray.tooltips.edit1"), Component.translatable("xray.tooltips.edit2"))),
                             left + 15,
-                            (entryIdx == this.parent.children().size() - 1 ? (top - (entryHeight - 20)) : (top + (entryHeight + 15))) // @mcp: children = getEntries
+                            (entryIdx == this.parent.children().size() - 1 ? (top - (entryHeight - 20)) : (top + (entryHeight + 15)))
                     );
                 }
 
                 Color color = new Color(blockData.getColor());
 
+                var stack = guiGraphics.pose();
                 stack.pushPose();
                 RenderSystem.enableBlend();
                 RenderSystem.blendFunc(
                         GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-                RenderSystem.setShaderTexture(0, GuiSelectionScreen.CIRCLE);
                 RenderSystem.setShaderColor(0, 0, 0, .5f);
-                blit(stack, (left + entryWidth) - 35, (int) (top + (entryHeight / 2f) - 9), 0, 0, 14, 14, 14, 14);
+                guiGraphics.blit(GuiSelectionScreen.CIRCLE, (left + entryWidth) - 35, (int) (top + (entryHeight / 2f) - 9), 0, 0, 14, 14, 14, 14);
                 RenderSystem.setShaderColor(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, 1);
-                blit(stack, (left + entryWidth) - 33, (int) (top + (entryHeight / 2f) - 7), 0, 0, 10, 10, 10, 10);
+                guiGraphics.blit(GuiSelectionScreen.CIRCLE, (left + entryWidth) - 33, (int) (top + (entryHeight / 2f) - 7), 0, 0, 10, 10, 10, 10);
                 RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
                 RenderSystem.disableBlend();
                 stack.popPose();

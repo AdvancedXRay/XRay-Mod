@@ -2,6 +2,7 @@ package pro.mikey.xray.gui.manage;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.resources.language.I18n;
@@ -90,17 +91,20 @@ public class GuiEdit extends GuiBase {
     }
 
     @Override
-    public void renderExtra(PoseStack stack, int x, int y, float partialTicks) {
-        getFontRender().drawShadow(stack, this.block.getItemStack().getHoverName().getString(), getWidth() / 2f - 138, getHeight() / 2f - 90, 0xffffff);
+    public void renderExtra(GuiGraphics graphics, int x, int y, float partialTicks) {
+        graphics.drawString(font, this.block.getItemStack().getHoverName().getString(), getWidth() / 2 - 138, getHeight() / 2 - 90, 0xffffff);
 
-        oreName.render(stack, x, y, partialTicks);
+        oreName.render(graphics, x, y, partialTicks);
 
         int color = (255 << 24) | ((int) (this.redSlider.getValue()) << 16) | ((int) (this.greenSlider.getValue()) << 8) | (int) (this.blueSlider.getValue());
-        fill(stack, this.getWidth() / 2 - 138, this.getHeight() / 2 - 40, (this.getWidth() / 2 - 36) + 100, (this.getHeight() / 2 - 40) + 45, color);
+        graphics.fill(this.getWidth() / 2 - 138, this.getHeight() / 2 - 40, (this.getWidth() / 2 - 36) + 100, (this.getHeight() / 2 - 40) + 45, color);
 
-        Lighting.setupForFlatItems();
-        this.itemRenderer.renderAndDecorateItem(stack, this.block.getItemStack(), getWidth() / 2 + 50, getHeight() / 2 - 105);
-        Lighting.setupFor3DItems();
+        graphics.renderItem(this.block.getItemStack(), getWidth() / 2 + 50, getHeight() / 2 - 105);
+        graphics.renderItemDecorations(font, this.block.getItemStack(), getWidth() / 2 + 50, getHeight() / 2 - 105);
+
+//        Lighting.setupForFlatItems();
+//        this.itemRenderer.renderAndDecorateItem(stack, this.block.getItemStack(), getWidth() / 2 + 50, getHeight() / 2 - 105);
+//        Lighting.setupFor3DItems();
     }
 
     @Override
