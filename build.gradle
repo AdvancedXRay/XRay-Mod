@@ -23,6 +23,22 @@ loom {
 repositories {
 }
 
+def replaceProperties = [
+    minecraft_version: minecraft_version,
+    minecraft_version_range: minecraft_version_range.replace("[%base]", minecraft_version),
+    forge_version_range: forge_version.split("\\.").first(),
+    version: version,
+]
+
+processResources {
+    inputs.properties replaceProperties
+    replaceProperties.put 'project', project
+
+    filesMatching("META-INF/mods.toml") {
+        expand replaceProperties
+    }
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.officialMojangMappings()
