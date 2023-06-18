@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSelectionList;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -39,7 +40,7 @@ public class GuiBlockList extends GuiBase {
         addRenderableWidget(this.blockList);
 
         search = new EditBox(getFontRender(), getWidth() / 2 - 100, getHeight() / 2 + 85, 140, 18, Component.literal(""));
-        search.changeFocus(true);
+        search.setFocused(true);
         this.setFocused(search);
 
         addRenderableWidget(Button.builder(Component.translatable("xray.single.cancel"), b -> {
@@ -77,9 +78,9 @@ public class GuiBlockList extends GuiBase {
     }
 
     @Override
-    public void renderExtra(PoseStack stack, int x, int y, float partialTicks) {
-        search.render(stack, x, y, partialTicks);
-        blockList.render(stack, x, y, partialTicks);
+    public void renderExtra(GuiGraphics graphics, int x, int y, float partialTicks) {
+        search.render(graphics, x, y, partialTicks);
+        blockList.render(graphics, x, y, partialTicks);
     }
 
     @Override
@@ -132,17 +133,19 @@ public class GuiBlockList extends GuiBase {
             }
 
             @Override
-            public void render(PoseStack stack, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean p_194999_5_, float partialTicks) {
+            public void render(GuiGraphics graphics, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean p_194999_5_, float partialTicks) {
                 Font font = this.parent.minecraft.font;
 
                 ResourceLocation resource = ForgeRegistries.ITEMS.getKey(this.block.getItemStack().getItem());
-                font.draw(stack,this.block.getItemStack().getItem().getDescription().getString(), left + 35, top + 7, Color.WHITE.getRGB());
-                font.draw(stack, resource != null ? resource.getNamespace() : "", left + 35, top + 17, Color.WHITE.getRGB());
-                // @mcp: of = unknown... Code recommendation
+                graphics.drawString(font, this.block.getItemStack().getItem().getDescription().getString(), left + 35, top + 7, Color.WHITE.getRGB());
+                graphics.drawString(font, resource != null ? resource.getNamespace() : "", left + 35, top + 17, Color.WHITE.getRGB());
 
-                Lighting.setupFor3DItems();
-                this.parent.minecraft.getItemRenderer().renderAndDecorateItem(this.block.getItemStack(), left + 8, top + 7);
-                Lighting.setupForFlatItems();
+                graphics.renderItem(this.block.getItemStack(), left + 8, top + 7);
+                graphics.renderItemDecorations(font, this.block.getItemStack(), left + 8, top + 7);
+
+//                Lighting.setupFor3DItems();
+//                this.parent.minecraft.getItemRenderer().renderAndDecorateItem(graphics, this.block.getItemStack(), left + 8, top + 7);
+//                Lighting.setupForFlatItems();
             }
 
             @Override

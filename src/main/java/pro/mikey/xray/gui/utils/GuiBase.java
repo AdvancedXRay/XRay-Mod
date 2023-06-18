@@ -3,6 +3,7 @@ package pro.mikey.xray.gui.utils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.locale.Language;
@@ -19,7 +20,7 @@ public abstract class GuiBase extends Screen {
     private int backgroundWidth = 229;
     private int backgroundHeight = 235;
 
-    public abstract void renderExtra(PoseStack stack, int x, int y, float partialTicks);
+    public abstract void renderExtra(GuiGraphics guiGraphics, int x, int y, float partialTicks);
 
     public GuiBase(boolean hasSide ) {
         super(Component.literal(""));
@@ -38,32 +39,31 @@ public abstract class GuiBase extends Screen {
     }
 
     @Override
-    public void render(PoseStack stack, int x, int y, float partialTicks) {
-        renderBackground(stack);
+    public void render(GuiGraphics guiGraphics, int x, int y, float partialTicks) {
+        renderBackground(guiGraphics);
 
         int width = this.width;
         int height = this.height;
-        RenderSystem.setShaderTexture(0, getBackground());
         if( this.hasSide ) {
-            blit(stack, width / 2 + 60, height / 2 - 180 / 2, 0, 0, 150, 180, 150, 180);
-            blit(stack, width / 2 - 150, height / 2 - 118, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+            guiGraphics.blit(getBackground(), width / 2 + 60, height / 2 - 180 / 2, 0, 0, 150, 180, 150, 180);
+            guiGraphics.blit(getBackground(), width / 2 - 150, height / 2 - 118, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
 
             if( hasSideTitle() )
-                getFontRender().drawShadow(stack, this.sideTitle, (float) width / 2 + 80, (float) height / 2 - 77, 0xffff00);
+                guiGraphics.drawString(getFontRender(), this.sideTitle, width / 2 + 80, height / 2 - 77, 0xffff00);
         }
 
         if( !this.hasSide )
-            blit(stack, width / 2 - this.backgroundWidth / 2 + 1, height / 2 - this.backgroundHeight / 2, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+            guiGraphics.blit(getBackground(), width / 2 - this.backgroundWidth / 2 + 1, height / 2 - this.backgroundHeight / 2, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
 
-        RenderSystem.enableTexture();
+//        RenderSystem.enableTexture();
         if( hasTitle() ) {
             if( this.hasSide )
-                getFontRender().drawShadow(stack, title(), (float) width / 2 - 138, (float) height / 2 - 105, 0xffff00);
+                guiGraphics.drawString(getFontRender(), title(), width / 2 - 138, height / 2 - 105, 0xffff00);
             else
-                getFontRender().drawShadow(stack, title(), (float) width / 2 - ((float) this.backgroundWidth / 2 ) + 14, (float) height / 2 - ((float) this.backgroundHeight / 2) + 13, 0xffff00);
+                guiGraphics.drawString(getFontRender(), title(), width / 2 - (this.backgroundWidth / 2 ) + 14, height / 2 - (this.backgroundHeight / 2) + 13, 0xffff00);
         }
 
-        renderExtra(stack, x, y, partialTicks);
+        renderExtra(guiGraphics, x, y, partialTicks);
 //
 //        for (GuiEventListener button : this.children()) {
 //            button.render(stack, x, y, partialTicks);
@@ -71,10 +71,10 @@ public abstract class GuiBase extends Screen {
 
         for(GuiEventListener button : this.children()) {
             if (button instanceof SupportButton && ((SupportButton) button).isHoveredOrFocused())
-                renderTooltip(stack, Language.getInstance().getVisualOrder(((SupportButton) button).getSupport()), x, y);
+                guiGraphics.renderTooltip(getFontRender(), Language.getInstance().getVisualOrder(((SupportButton) button).getSupport()), x, y);
         }
 
-        super.render(stack, x, y, partialTicks);
+        super.render(guiGraphics, x, y, partialTicks);
     }
 
     public ResourceLocation getBackground() {

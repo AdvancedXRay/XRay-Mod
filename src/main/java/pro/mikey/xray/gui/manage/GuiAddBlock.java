@@ -3,6 +3,7 @@ package pro.mikey.xray.gui.manage;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.resources.language.I18n;
@@ -95,17 +96,20 @@ public class GuiAddBlock extends GuiBase {
     }
 
     @Override
-    public void renderExtra(PoseStack stack, int x, int y, float partialTicks) {
-        getFontRender().drawShadow(stack, selectBlock.getName().getString(), getWidth() / 2f - 100, getHeight() / 2f - 90, 0xffffff);
+    public void renderExtra(GuiGraphics graphics, int x, int y, float partialTicks) {
+        graphics.drawString(font, selectBlock.getName().getString(), getWidth() / 2 - 100, getHeight() / 2 - 90, 0xffffff);
 
         int color = (255 << 24) | ((int) (this.redSlider.getValue()) << 16) | ((int) (this.greenSlider.getValue()) << 8) | (int) (this.blueSlider.getValue());
-        fill(stack, this.getWidth() / 2 - 100, this.getHeight() / 2 - 45, (this.getWidth() / 2 + 2) + 100, (this.getHeight() / 2 - 45) + 45, color);
+        graphics.fill(this.getWidth() / 2 - 100, this.getHeight() / 2 - 45, (this.getWidth() / 2 + 2) + 100, (this.getHeight() / 2 - 45) + 45, color);
 
-        oreName.render(stack, x, y, partialTicks);
+        oreName.render(graphics, x, y, partialTicks);
 
-        Lighting.setupForFlatItems();
-        this.itemRenderer.renderAndDecorateItem(this.itemStack, getWidth() / 2 + 85, getHeight() / 2 - 105);
-        Lighting.setupFor3DItems();
+        graphics.renderItem(this.itemStack, this.getWidth() / 2 + 85, this.getHeight() / 2 - 105);
+        graphics.renderItemDecorations(font, this.itemStack, this.getWidth() / 2 + 85, this.getHeight() / 2 - 105); // TODO: Verify
+
+//        Lighting.setupForFlatItems();
+//        this.itemRenderer.renderAndDecorateItem(stack, this.itemStack, getWidth() / 2 + 85, getHeight() / 2 - 105);
+//        Lighting.setupFor3DItems();
     }
 
     @Override

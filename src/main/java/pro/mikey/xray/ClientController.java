@@ -1,7 +1,14 @@
 package pro.mikey.xray;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
@@ -19,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientController {
-    // This contains all of the games blocks to allow us to reference them
+    // This contains all the games blocks to allow us to reference them
     // when needed. This allows us to avoid continually rebuilding
     public static GameBlockStore gameBlockStore = new GameBlockStore();
     public static DiscoveryStorage blockStore = new DiscoveryStorage();
@@ -34,6 +41,7 @@ public class ClientController {
 
         // Keybindings
         MinecraftForge.EVENT_BUS.register(KeyBindings.class);
+        MinecraftForge.EVENT_BUS.addListener(ClientController::onGameJoin);
     }
 
     private static void onSetup(final FMLCommonSetupEvent event) {
@@ -46,6 +54,25 @@ public class ClientController {
 
         ArrayList<BlockData> map = BlockStore.getFromSimpleBlockList(data);
         Controller.getBlockStore().setStore(map);
+    }
+
+    private static void onGameJoin(final EntityJoinLevelEvent event) {
+        if (!Configuration.firstRun.get()) {
+            return;
+        }
+
+        if (!event.getLevel().isClientSide() || !( event.getEntity() instanceof Player player)) {
+            return;
+        }
+
+        if (player != Minecraft.getInstance().player) {
+            return;
+        }
+
+        player.displayClientMessage(Component.translatable("xray.chat.first-time", KeyBindings.toggleGui.getKey().getDisplayName().copy().withStyle(ChatFormatting.GREEN), KeyBindings.toggleXRay.getKey().getDisplayName().copy().withStyle(ChatFormatting.GREEN)), false);
+        player.displayClientMessage(Component.translatable("xray.chat.first-time-line-2"), false);
+        Configuration.firstRun.set(false);
+        Configuration.firstRun.save();
     }
 
     private static void onLoadComplete(FMLLoadCompleteEvent event) {

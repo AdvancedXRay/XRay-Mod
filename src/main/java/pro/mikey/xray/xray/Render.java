@@ -16,7 +16,7 @@ public class Render {
 	static void renderBlocks(RenderLevelStageEvent event) {
         if (vertexBuffer == null || requestedRefresh) {
             requestedRefresh = false;
-            vertexBuffer = new VertexBuffer();
+            vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
 
             Tesselator tessellator = Tesselator.getInstance();
             BufferBuilder buffer = tessellator.getBuilder();
