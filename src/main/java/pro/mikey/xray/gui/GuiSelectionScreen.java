@@ -214,14 +214,14 @@ public class GuiSelectionScreen extends GuiBase {
 
     @Override
     public boolean mouseClicked(double x, double y, int mouse) {
-//        if (search.mouseClicked(x, y, mouse))
-//            this.setFocused(search);
-//
-//        if (mouse == 1 && distButtons.isMouseOver(x, y)) {
-//            Controller.decrementCurrentDist();
-//            distButtons.setMessage(Component.translatable("xray.input.distance", Controller.getVisualRadius()));
-//            distButtons.playDownSound(Minecraft.getInstance().getSoundManager());
-//        }
+        if (search.mouseClicked(x, y, mouse))
+            this.setFocused(search);
+
+        if (mouse == 1 && distButtons.isMouseOver(x, y)) {
+            Controller.decrementCurrentDist();
+            distButtons.setMessage(Component.translatable("xray.input.distance", Controller.getVisualRadius()));
+            distButtons.playDownSound(Minecraft.getInstance().getSoundManager());
+        }
 
         return super.mouseClicked(x, y, mouse);
     }
