@@ -174,10 +174,22 @@ public class GuiSelectionScreen extends GuiBase {
         if (lastSearch.equals(search.getValue()))
             return;
 
-        if (search.getValue().equals("")) {
+        if (search.getValue().isEmpty()) {
             this.itemList = this.originalList;
             this.scrollList.updateEntries(this.itemList);
             lastSearch = "";
+            return;
+        }
+
+        // Special cases
+        if (search.getValue().equals(":on")) {
+            this.itemList = this.originalList.stream()
+                    .filter(BlockData::isDrawing)
+                    .collect(Collectors.toCollection(ArrayList::new));
+
+            this.itemList.sort(Comparator.comparingInt(BlockData::getOrder));
+            this.scrollList.updateEntries(this.itemList);
+            lastSearch = search.getValue();
             return;
         }
 
