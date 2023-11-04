@@ -1,5 +1,11 @@
-## [2.17.0]
+## [2.18.1]
 
-### Changed
+### Added
 
-- Ported to 1.20.1
+- `:on` and `:off` special search cases to show only on or off items
+
+### Fixed
+
+- GUI color leak
+- GUI render issues
+- Mixin crash
