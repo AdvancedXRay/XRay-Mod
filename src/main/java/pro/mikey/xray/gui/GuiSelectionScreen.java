@@ -92,15 +92,13 @@ public class GuiSelectionScreen extends GuiBase {
 
         // side bar buttons
         addRenderableWidget(new SupportButtonInner((getWidth() / 2) + 79, getHeight() / 2 - 60, 120, 20, I18n.get("xray.input.add"), "xray.tooltips.add_block", button -> {
-            getMinecraft().player.closeContainer();
             getMinecraft().setScreen(new GuiBlockList());
         }));
         addRenderableWidget(new SupportButtonInner(getWidth() / 2 + 79, getHeight() / 2 - 38, 120, 20, I18n.get("xray.input.add_hand"), "xray.tooltips.add_block_in_hand", button -> {
-            getMinecraft().player.closeContainer();
             ItemStack handItem = getMinecraft().player.getItemInHand(InteractionHand.MAIN_HAND);
 
             // Check if the hand item is a block or not
-            if (!(handItem.getItem() instanceof net.minecraft.world.item.BlockItem)) {
+            if (!(handItem.getItem() instanceof BlockItem)) {
                 getMinecraft().player.displayClientMessage(Component.literal("[XRay] " + I18n.get("xray.message.invalid_hand", handItem.getHoverName().getString())), false);
                 return;
             }
@@ -144,7 +142,6 @@ public class GuiSelectionScreen extends GuiBase {
         }));
         addRenderableWidget(
             Button.builder(Component.translatable("xray.single.help"), button -> {
-                getMinecraft().player.closeContainer();
                 getMinecraft().setScreen(new GuiHelp());
             })
                     .pos(getWidth() / 2 + 79, getHeight() / 2 + 58)
@@ -217,14 +214,14 @@ public class GuiSelectionScreen extends GuiBase {
 
     @Override
     public boolean mouseClicked(double x, double y, int mouse) {
-        if (search.mouseClicked(x, y, mouse))
-            this.setFocused(search);
-
-        if (mouse == 1 && distButtons.isMouseOver(x, y)) {
-            Controller.decrementCurrentDist();
-            distButtons.setMessage(Component.translatable("xray.input.distance", Controller.getVisualRadius()));
-            distButtons.playDownSound(Minecraft.getInstance().getSoundManager());
-        }
+//        if (search.mouseClicked(x, y, mouse))
+//            this.setFocused(search);
+//
+//        if (mouse == 1 && distButtons.isMouseOver(x, y)) {
+//            Controller.decrementCurrentDist();
+//            distButtons.setMessage(Component.translatable("xray.input.distance", Controller.getVisualRadius()));
+//            distButtons.playDownSound(Minecraft.getInstance().getSoundManager());
+//        }
 
         return super.mouseClicked(x, y, mouse);
     }

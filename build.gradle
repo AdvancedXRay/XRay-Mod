@@ -15,6 +15,9 @@ loom {
     silentMojangMappingsLicense()
 
     forge {
+        mixinConfigs = [
+                "xray.mixins.json"
+        ]
     }
 
     accessWidenerPath = file("src/main/resources/xray.accesswidener")
@@ -43,7 +46,13 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.officialMojangMappings()
 
-    forge "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
+    forge "net.neoforged:forge:${project.minecraft_version}-${project.forge_version}"
+}
+
+repositories {
+    maven {
+        url "https://maven.saps.dev/mirror"
+    }
 }
 
 compileJava {

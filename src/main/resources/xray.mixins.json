@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "xray.refmap.json",
   "client": [
+    "ClientDestroyBlockEvent",
     "BlockRenderMixin"
   ],
   "mixins": [],

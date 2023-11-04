@@ -6,4 +6,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'Advanced XRay (forge)'
+rootProject.name = 'advanced-xray-forge'
