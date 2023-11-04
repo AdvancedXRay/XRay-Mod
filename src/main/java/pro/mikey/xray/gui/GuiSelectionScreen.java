@@ -182,9 +182,10 @@ public class GuiSelectionScreen extends GuiBase {
         }
 
         // Special cases
-        if (search.getValue().equals(":on")) {
+        if (search.getValue().equals(":on") || search.getValue().equals(":off")) {
+            var state = search.getValue().equals(":on");
             this.itemList = this.originalList.stream()
-                    .filter(BlockData::isDrawing)
+                    .filter(e -> e.isDrawing() == state)
                     .collect(Collectors.toCollection(ArrayList::new));
 
             this.itemList.sort(Comparator.comparingInt(BlockData::getOrder));
