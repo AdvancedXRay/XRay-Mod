@@ -157,5 +157,7 @@ publishMods {
         repository = "AdvancedXRay/XRay-Mod"
         commitish = providers.environmentVariable("GITHUB_SHA").orElse("dryRun")
         tagName = providers.environmentVariable("GITHUB_REF_NAME").orElse("dryRun")
+
+        file = project.tasks.jar.archiveFile
     }
 }
