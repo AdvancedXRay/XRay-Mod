@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="[${forge_version_range},)" #mandatory
+loaderVersion="[1,)" #mandatory
 credits="ErrorMikey" #optional
 authors="AdvancedXRay Team" #optional
 license="GNU GPL v3.0 (https://github.com/MichaelHillcox/XRay-Mod/blob/master/LICENSE)"
@@ -10,7 +10,7 @@ license="GNU GPL v3.0 (https://github.com/MichaelHillcox/XRay-Mod/blob/master/LI
     description="An advanced XRay mod for Minecraft."
 
 [[dependencies.xray]]
-    modId="forge"
+    modId="neoforge"
     mandatory=true
     versionRange="[${forge_version_range},)"
     ordering="NONE"

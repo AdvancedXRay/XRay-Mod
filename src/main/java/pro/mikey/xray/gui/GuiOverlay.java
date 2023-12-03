@@ -5,12 +5,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
 import pro.mikey.xray.Configuration;
 import pro.mikey.xray.XRay;
 import pro.mikey.xray.xray.Controller;
@@ -21,9 +21,9 @@ public class GuiOverlay {
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void RenderGameOverlayEvent(RenderGuiOverlayEvent event) {
+    public static void RenderGameOverlayEvent(RenderGuiOverlayEvent.Post event) {
         // Draw Indicator
-        if(!Controller.isXRayActive() || !Configuration.general.showOverlay.get() || event.isCanceled())
+        if(!Controller.isXRayActive() || !Configuration.general.showOverlay.get())
             return;
 
         RenderSystem.setShaderColor(0, 1F, 0, 1F);

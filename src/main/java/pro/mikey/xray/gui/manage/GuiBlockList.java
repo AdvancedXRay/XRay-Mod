@@ -6,9 +6,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSelectionList;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.registries.ForgeRegistries;
 import pro.mikey.xray.ClientController;
 import pro.mikey.xray.gui.GuiSelectionScreen;
 import pro.mikey.xray.gui.utils.GuiBase;
@@ -133,7 +133,7 @@ public class GuiBlockList extends GuiBase {
             public void render(GuiGraphics graphics, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean p_194999_5_, float partialTicks) {
                 Font font = this.parent.minecraft.font;
 
-                ResourceLocation resource = ForgeRegistries.ITEMS.getKey(this.block.getItemStack().getItem());
+                ResourceLocation resource = BuiltInRegistries.ITEM.getKey(this.block.getItemStack().getItem());
                 graphics.drawString(font, this.block.getItemStack().getItem().getDescription().getString(), left + 35, top + 7, Color.WHITE.getRGB());
                 graphics.drawString(font, resource != null ? resource.getNamespace() : "", left + 35, top + 17, Color.WHITE.getRGB());
 

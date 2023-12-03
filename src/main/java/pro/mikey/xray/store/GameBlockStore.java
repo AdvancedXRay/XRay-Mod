@@ -1,12 +1,13 @@
 package pro.mikey.xray.store;
 
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import pro.mikey.xray.xray.Controller;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 
@@ -25,7 +26,7 @@ public class GameBlockStore {
         if( this.store.size() != 0 )
             return;
 
-        for ( Item item : ForgeRegistries.ITEMS ) {
+        for ( Item item : BuiltInRegistries.ITEM.stream().toList() ) {
             if( !(item instanceof net.minecraft.world.item.BlockItem) )
                 continue;
 

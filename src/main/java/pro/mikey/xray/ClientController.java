@@ -5,14 +5,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import pro.mikey.xray.keybinding.KeyBindings;
 import pro.mikey.xray.store.BlockStore;
 import pro.mikey.xray.store.DiscoveryStorage;
@@ -39,11 +39,11 @@ public class ClientController {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configuration.SPEC);
 
         // Keybindings
-        MinecraftForge.EVENT_BUS.register(KeyBindings.class);
-        MinecraftForge.EVENT_BUS.addListener(ClientController::onGameJoin);
+        NeoForge.EVENT_BUS.register(KeyBindings.class);
+        NeoForge.EVENT_BUS.addListener(ClientController::onGameJoin);
 
-        MinecraftForge.EVENT_BUS.addListener(Events::tickEnd);
-        MinecraftForge.EVENT_BUS.addListener(Events::onWorldRenderLast);
+        NeoForge.EVENT_BUS.addListener(Events::tickEnd);
+        NeoForge.EVENT_BUS.addListener(Events::onWorldRenderLast);
 
     }
 

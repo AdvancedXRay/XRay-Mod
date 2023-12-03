@@ -3,9 +3,9 @@ package pro.mikey.xray.keybinding;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import org.lwjgl.glfw.GLFW;
 import pro.mikey.xray.gui.GuiSelectionScreen;
 import pro.mikey.xray.xray.Controller;
@@ -27,7 +27,7 @@ public class KeyBindings {
     }
 
     @SubscribeEvent
-    public static void eventInput(InputEvent event) {
+    public static void eventInput(InputEvent.Key event) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || Minecraft.getInstance().screen != null || Minecraft.getInstance().level == null)
             return;

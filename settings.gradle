@@ -7,4 +7,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'advanced-xray-forge'
+rootProject.name = 'advanced-xray-neoforge'

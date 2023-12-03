@@ -1,13 +1,11 @@
 package pro.mikey.xray.gui.manage;
 
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.client.gui.widget.ForgeSlider;
+import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 import org.apache.commons.lang3.tuple.Pair;
 import pro.mikey.xray.ClientController;
 import pro.mikey.xray.gui.GuiSelectionScreen;
@@ -20,9 +18,9 @@ import java.util.UUID;
 
 public class GuiEdit extends GuiBase {
     private EditBox oreName;
-    private ForgeSlider redSlider;
-    private ForgeSlider greenSlider;
-    private ForgeSlider blueSlider;
+    private ExtendedSlider redSlider;
+    private ExtendedSlider greenSlider;
+    private ExtendedSlider blueSlider;
     private final BlockData block;
 
     public GuiEdit(BlockData block) {
@@ -75,9 +73,9 @@ public class GuiEdit extends GuiBase {
                 .size(202, 20)
                 .build());
 
-        addRenderableWidget(redSlider = new ForgeSlider(getWidth() / 2 - 138, getHeight() / 2 + 7, 202, 20, Component.translatable("xray.color.red"), Component.empty(), 0, 255, (block.getColor() >> 16 & 0xff), true));
-        addRenderableWidget(greenSlider = new ForgeSlider(getWidth() / 2 - 138, getHeight() / 2 + 30, 202, 20, Component.translatable("xray.color.green"), Component.empty(), 0, 255, (block.getColor() >> 8 & 0xff), true));
-        addRenderableWidget(blueSlider = new ForgeSlider(getWidth() / 2 - 138, getHeight() / 2 + 53,202, 20,  Component.translatable("xray.color.blue"), Component.empty(), 0, 255, (block.getColor() & 0xff), true));
+        addRenderableWidget(redSlider = new ExtendedSlider(getWidth() / 2 - 138, getHeight() / 2 + 7, 202, 20, Component.translatable("xray.color.red"), Component.empty(), 0, 255, (block.getColor() >> 16 & 0xff), true));
+        addRenderableWidget(greenSlider = new ExtendedSlider(getWidth() / 2 - 138, getHeight() / 2 + 30, 202, 20, Component.translatable("xray.color.green"), Component.empty(), 0, 255, (block.getColor() >> 8 & 0xff), true));
+        addRenderableWidget(blueSlider = new ExtendedSlider(getWidth() / 2 - 138, getHeight() / 2 + 53,202, 20,  Component.translatable("xray.color.blue"), Component.empty(), 0, 255, (block.getColor() & 0xff), true));
 
         oreName = new EditBox(getMinecraft().font, getWidth() / 2 - 138, getHeight() / 2 - 63, 202, 20, Component.literal(""));
         oreName.setValue(this.block.getEntryName());
