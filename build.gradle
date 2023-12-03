@@ -1,30 +1,68 @@
 plugins {
-    id "dev.architectury.loom" version "1.2-SNAPSHOT"
+    id 'idea'
     id 'maven-publish'
-    id "com.matthewprenger.cursegradle" version "1.4.0"
+    id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
+    id "me.modmuss50.mod-publish-plugin" version "0.4.5"
+    id 'org.spongepowered.mixin' version '0.7.+'
 }
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = 17
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-def ENV = System.getenv()
-version = "${minecraft_version}-${mod_version}-build.${ENV.GITHUB_RUN_NUMBER ?: 9999}"
-group= "pro.mikey"
-archivesBaseName = "advanced-xray-forge"
+version = mod_version
+group = 'pro.mikey'
 
-loom {
-    silentMojangMappingsLicense()
+base {
+    archivesName = "advanced-xray-forge"
+}
 
-    forge {
-        mixinConfigs = [
-                "xray.mixins.json"
-        ]
+mixin {
+    add sourceSets.main, 'xray.mixins.refmap.json'
+    config 'xray.mixins.json'
+}
+
+minecraft {
+    mappings channel: "official", version: minecraft_version
+
+    copyIdeResources = true
+    // See https://docs.minecraftforge.net/en/latest/advanced/accesstransformers/ for more information.
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+    runs {
+        // applies to all the run configs below
+        configureEach {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+            property 'forge.enabledGameTestNamespaces', mod_id
+        }
+
+        server {
+            property 'forge.enabledGameTestNamespaces', mod_id
+            args '--nogui'
+        }
+
+        gameTestServer {
+            property 'forge.enabledGameTestNamespaces', mod_id
+        }
+
+        data {
+            workingDirectory project.file('run-data')
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+        }
     }
-
-    accessWidenerPath = file("src/main/resources/xray.accesswidener")
 }
 
-repositories {
-}
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 def replaceProperties = [
     minecraft_version: minecraft_version,
@@ -43,10 +81,8 @@ processResources {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.officialMojangMappings()
-
-    forge "net.neoforged:forge:${project.minecraft_version}-${project.forge_version}"
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 repositories {
@@ -63,56 +99,63 @@ java {
     withSourcesJar()
 }
 
-jar {
-    from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
-    }
-
+tasks.named('jar', Jar).configure {
     manifest {
         attributes([
-                "Specification-Title"     : "Advanced XRay",
-                "Specification-Vendor"    : "Advanced XRay",
-                "Specification-Version"   : "1",
-                "Implementation-Title"    : "Advanced XRay",
-                "Implementation-Version"  : version,
-                "Implementation-Vendor"   : "Advanced XRay",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                'Specification-Title'     : "Advanced XRay",
+                'Specification-Vendor'    : "Advanced XRay Team",
+                'Specification-Version'   : '1', // We are version 1 of ourselves
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : "Advanced XRay Team",
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
+
+    finalizedBy 'reobfJar'
 }
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
             artifactId = rootProject.archivesBaseName
-            from components.java
+            artifact jar
         }
     }
 
     repositories {
-        if (ENV.SAPS_TOKEN) {
+        def token = providers.environmentVariable("SAPS_TOKEN");
+        if (token.isPresent()) {
             maven {
                 url "https://maven.saps.dev/releases"
                 credentials {
                     username = "mikeymods"
-                    password = "${ENV.SAPS_TOKEN}"
+                    password = token.get()
                 }
             }
         }
     }
 }
 
-if (ENV.CURSE_DEPLOY_TOKEN) {
+publishMods {
+    dryRun = providers.environmentVariable("CURSE_DEPLOY_TOKEN").getOrNull() == null
+    changelog = file("./CHANGELOG.md").text
+    version = "${mod_version}"
+    type = STABLE
+
     curseforge {
-        apiKey = ENV.CURSE_DEPLOY_TOKEN
-        project {
-            id = project.curse_id
-            releaseType = "release"
-            addGameVersion "Forge"
-            addGameVersion "$minecraft_version"
-            changelog = file("./CHANGELOG.md")
-            changelogType = 'markdown'
-            mainArtifact(remapJar)
-        }
+        accessToken = providers.environmentVariable("CURSE_DEPLOY_TOKEN")
+        projectId = "${curse_id}"
+        minecraftVersions.add("${minecraft_version}")
+        modLoaders.add("forge")
+        displayName = "[FORGE] [${minecraft_version}] ${project.name} ${mod_version}"
+        file = project.tasks.jar.archiveFile
+    }
+
+    github {
+        accessToken = providers.environmentVariable("GITHUB_TOKEN")
+        repository = "AdvancedXRay/XRay-Mod"
+        commitish = providers.environmentVariable("GITHUB_SHA").orElse("dryRun")
+        tagName = providers.environmentVariable("GITHUB_REF_NAME").orElse("dryRun")
     }
 }

@@ -92,7 +92,6 @@ public class GuiAddBlock extends GuiBase {
     @Override
     public void tick() {
         super.tick();
-        oreName.tick();
     }
 
     @Override

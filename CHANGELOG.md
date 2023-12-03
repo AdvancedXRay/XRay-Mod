@@ -1,11 +1,6 @@
-## [2.18.1]
+## [82.0.0]
 
-### Added
+### Changed
 
-- `:on` and `:off` special search cases to show only on or off items
-
-### Fixed
-
-- GUI color leak
-- GUI render issues
-- Mixin crash
+- Updated to 1.20.2
+- Shifted versioning to be inline with Minecraft release numbers for the major game version (1.20.2 being 82 for example)

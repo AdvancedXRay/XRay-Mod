@@ -205,10 +205,6 @@ public class GuiSelectionScreen extends GuiBase {
     public void tick() {
         super.tick();
 
-        if (search != null) {
-            search.tick();
-        }
-
         updateSearch();
     }
 

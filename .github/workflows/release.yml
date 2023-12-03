@@ -3,7 +3,7 @@ name: CI Build & Release
 on:
   push:
     tags:
-      - v*
+      - mc/*/*
 
 jobs:
   build:
@@ -22,4 +22,4 @@ jobs:
           CURSE_DEPLOY_TOKEN: ${{ secrets.CURSE_DEPLOY_TOKEN }}
         run: |
           chmod +x ./gradlew
-          ./gradlew build publish curseforge --stacktrace --no-daemon
+          ./gradlew build publish publishMods --stacktrace --no-daemon

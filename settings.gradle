@@ -1,8 +1,9 @@
 pluginManagement {
     repositories {
-        maven { url "https://maven.creeperhost.net/" }
-        maven { url "https://maven.shedaniel.me/" }
         gradlePluginPortal()
+        maven {
+            url "https://maven.saps.dev/mirror"
+        }
     }
 }
 

@@ -2,7 +2,7 @@
   "required": true,
   "package": "pro.mikey.xray.mixins",
   "compatibilityLevel": "JAVA_17",
-  "refmap": "advanced-xray-forge-refmap.json",
+  "refmap": "xray.mixins.refmap.json",
   "client": [
     "ClientDestroyBlockEvent"
   ],

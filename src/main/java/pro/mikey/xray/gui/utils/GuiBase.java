@@ -1,9 +1,8 @@
 package pro.mikey.xray.gui.utils;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.locale.Language;
@@ -39,7 +38,7 @@ public abstract class GuiBase extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int x, int y, float partialTicks) {
-        renderBackground(guiGraphics);
+        renderBackground(guiGraphics, x, y, partialTicks);
 
         int width = this.width;
         int height = this.height;
@@ -54,7 +53,6 @@ public abstract class GuiBase extends Screen {
         if (!this.hasSide)
             guiGraphics.blit(getBackground(), width / 2 - this.backgroundWidth / 2 + 1, height / 2 - this.backgroundHeight / 2, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
 
-//        RenderSystem.enableTexture();
         if (hasTitle()) {
             if (this.hasSide)
                 guiGraphics.drawString(getFontRender(), title(), width / 2 - 138, height / 2 - 105, 0xffff00);
@@ -62,11 +60,14 @@ public abstract class GuiBase extends Screen {
                 guiGraphics.drawString(getFontRender(), title(), width / 2 - (this.backgroundWidth / 2) + 14, height / 2 - (this.backgroundHeight / 2) + 13, 0xffff00);
         }
 
-        super.render(guiGraphics, x, y, partialTicks);
+        for(Renderable renderable : this.renderables) {
+            renderable.render(guiGraphics, x, y, partialTicks);
+        }
+
         renderExtra(guiGraphics, x, y, partialTicks);
 
         for (GuiEventListener button : this.children()) {
-            if (button instanceof SupportButton && ((SupportButton) button).isHoveredOrFocused())
+            if (button instanceof SupportButton && ((SupportButton) button).isHovered())
                 guiGraphics.renderTooltip(getFontRender(), Language.getInstance().getVisualOrder(((SupportButton) button).getSupport()), x, y);
         }
     }
