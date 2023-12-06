@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSelectionList;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.locale.Language;
@@ -275,7 +276,7 @@ public class GuiSelectionScreen extends GuiBase {
             blocks.forEach(block -> this.addEntry(new BlockSlot(block, this))); // @mcp: addEntry = addEntry
         }
 
-        public static class BlockSlot extends AbstractSelectionList.Entry<ScrollingBlockList.BlockSlot> {
+        public static class BlockSlot extends ObjectSelectionList.Entry<ScrollingBlockList.BlockSlot> {
             BlockData block;
             ScrollingBlockList parent;
 
@@ -305,7 +306,7 @@ public class GuiSelectionScreen extends GuiBase {
 //                Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, blockData.getItemStack(), left + 8, top + 7);
 //                Lighting.setupForFlatItems();
 
-                if (mouseX > left && mouseX < (left + entryWidth) && mouseY > top && mouseY < (top + entryHeight) && mouseY < (this.parent.getTop() + this.parent.getHeight()) && mouseY > this.parent.getTop()) {
+                if (mouseX > left && mouseX < (left + entryWidth) && mouseY > top && mouseY < (top + entryHeight) && mouseY < (this.parent.getY() + this.parent.getHeight()) && mouseY > this.parent.getY()) {
                     guiGraphics.renderTooltip(
                             font,
                             Language.getInstance().getVisualOrder(Arrays.asList(Component.translatable("xray.tooltips.edit1"), Component.translatable("xray.tooltips.edit2"))),
@@ -334,6 +335,11 @@ public class GuiSelectionScreen extends GuiBase {
             public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int mouse) {
                 this.parent.setSelected(this, mouse);
                 return false;
+            }
+
+            @Override
+            public Component getNarration() {
+                return Component.empty();
             }
         }
     }
