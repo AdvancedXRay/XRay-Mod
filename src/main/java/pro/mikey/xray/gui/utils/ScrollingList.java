@@ -17,33 +17,33 @@ import java.util.AbstractList;
  */
 public class ScrollingList<E extends AbstractSelectionList.Entry<E>> extends AbstractSelectionList<E> {
     public ScrollingList(int x, int y, int width, int height, int slotHeightIn) {
-        super(Minecraft.getInstance(), width, height, y - (height / 2), (y - (height / 2)) + height, slotHeightIn);
-        this.setLeftPos(x - (width / 2));
+        super(Minecraft.getInstance(), width, height, y - (height / 2), slotHeightIn);
+        this.setX(x - (width / 2));
         this.setRenderBackground(false);
 
 //        this.setRenderTopAndBottom(false); // removes background
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         double scale = Minecraft.getInstance().getWindow().getGuiScale();
 
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor((int)(this.x0  * scale), (int)(Minecraft.getInstance().getWindow().getHeight() - ((this.y0 + this.height) * scale)),
+        GL11.glScissor((int)(this.getX()  * scale), (int)(Minecraft.getInstance().getWindow().getHeight() - ((this.getY() + this.height) * scale)),
                 (int)(this.width * scale), (int)(this.height * scale));
 
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        super.renderWidget(guiGraphics, mouseX, mouseY, partialTicks);
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
 
     @Override // @mcp: getScrollbarPosition = getScrollbarPosition
     protected int getScrollbarPosition() {
-        return (this.x0 + this.width) - 6;
+        return (this.getX() + this.width) - 6;
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput p_169152_) {
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
 
     }
 }

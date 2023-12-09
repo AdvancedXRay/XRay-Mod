@@ -305,7 +305,7 @@ public class GuiSelectionScreen extends GuiBase {
 //                Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, blockData.getItemStack(), left + 8, top + 7);
 //                Lighting.setupForFlatItems();
 
-                if (mouseX > left && mouseX < (left + entryWidth) && mouseY > top && mouseY < (top + entryHeight) && mouseY < (this.parent.getTop() + this.parent.getHeight()) && mouseY > this.parent.getTop()) {
+                if (mouseX > left && mouseX < (left + entryWidth) && mouseY > top && mouseY < (top + entryHeight) && mouseY < (this.parent.getY() + this.parent.getHeight()) && mouseY > this.parent.getY()) {
                     guiGraphics.renderTooltip(
                             font,
                             Language.getInstance().getVisualOrder(Arrays.asList(Component.translatable("xray.tooltips.edit1"), Component.translatable("xray.tooltips.edit2"))),
