@@ -1,9 +1,8 @@
 package pro.mikey.xray.gui.utils;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.locale.Language;
@@ -20,19 +19,18 @@ public abstract class GuiBase extends Screen {
     private int backgroundWidth = 229;
     private int backgroundHeight = 235;
 
-    public abstract void renderExtra(GuiGraphics guiGraphics, int x, int y, float partialTicks);
-
-    public GuiBase(boolean hasSide ) {
+    public GuiBase(boolean hasSide) {
         super(Component.literal(""));
         this.hasSide = hasSide;
-
     }
+
+    public abstract void renderExtra(GuiGraphics guiGraphics, int x, int y, float partialTicks);
 
     @Override
     public boolean charTyped(char keyTyped, int __unknown) {
         super.charTyped(keyTyped, __unknown);
 
-        if( keyTyped == 1 && getMinecraft().player != null )
+        if (keyTyped == 1 && getMinecraft().player != null)
             getMinecraft().player.closeContainer();
 
         return false;
@@ -40,41 +38,38 @@ public abstract class GuiBase extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int x, int y, float partialTicks) {
-        renderBackground(guiGraphics);
+        renderBackground(guiGraphics, x, y, partialTicks);
 
         int width = this.width;
         int height = this.height;
-        if( this.hasSide ) {
+        if (this.hasSide) {
             guiGraphics.blit(getBackground(), width / 2 + 60, height / 2 - 180 / 2, 0, 0, 150, 180, 150, 180);
             guiGraphics.blit(getBackground(), width / 2 - 150, height / 2 - 118, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
 
-            if( hasSideTitle() )
+            if (hasSideTitle())
                 guiGraphics.drawString(getFontRender(), this.sideTitle, width / 2 + 80, height / 2 - 77, 0xffff00);
         }
 
-        if( !this.hasSide )
+        if (!this.hasSide)
             guiGraphics.blit(getBackground(), width / 2 - this.backgroundWidth / 2 + 1, height / 2 - this.backgroundHeight / 2, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
 
-//        RenderSystem.enableTexture();
-        if( hasTitle() ) {
-            if( this.hasSide )
+        if (hasTitle()) {
+            if (this.hasSide)
                 guiGraphics.drawString(getFontRender(), title(), width / 2 - 138, height / 2 - 105, 0xffff00);
             else
-                guiGraphics.drawString(getFontRender(), title(), width / 2 - (this.backgroundWidth / 2 ) + 14, height / 2 - (this.backgroundHeight / 2) + 13, 0xffff00);
+                guiGraphics.drawString(getFontRender(), title(), width / 2 - (this.backgroundWidth / 2) + 14, height / 2 - (this.backgroundHeight / 2) + 13, 0xffff00);
+        }
+
+        for(Renderable renderable : this.renderables) {
+            renderable.render(guiGraphics, x, y, partialTicks);
         }
 
         renderExtra(guiGraphics, x, y, partialTicks);
-//
-//        for (GuiEventListener button : this.children()) {
-//            button.render(stack, x, y, partialTicks);
-//        }
 
-        for(GuiEventListener button : this.children()) {
-            if (button instanceof SupportButton && ((SupportButton) button).isHoveredOrFocused())
+        for (GuiEventListener button : this.children()) {
+            if (button instanceof SupportButton && ((SupportButton) button).isHovered())
                 guiGraphics.renderTooltip(getFontRender(), Language.getInstance().getVisualOrder(((SupportButton) button).getSupport()), x, y);
         }
-
-        super.render(guiGraphics, x, y, partialTicks);
     }
 
     public ResourceLocation getBackground() {
@@ -89,10 +84,15 @@ public abstract class GuiBase extends Screen {
         return "";
     }
 
-    private boolean hasSideTitle() { return !this.sideTitle.isEmpty(); }
-    protected void setSideTitle(String title) { this.sideTitle = title; }
+    private boolean hasSideTitle() {
+        return !this.sideTitle.isEmpty();
+    }
 
-    public void setSize( int width, int height ) {
+    protected void setSideTitle(String title) {
+        this.sideTitle = title;
+    }
+
+    public void setSize(int width, int height) {
         this.backgroundWidth = width;
         this.backgroundHeight = height;
     }
@@ -101,8 +101,13 @@ public abstract class GuiBase extends Screen {
         return getMinecraft().font;
     }
 
-    public int getWidth() { return this.width; }
-    public int getHeight() { return this.height; }
+    public int getWidth() {
+        return this.width;
+    }
+
+    public int getHeight() {
+        return this.height;
+    }
 
     @Override
     public boolean isPauseScreen() {

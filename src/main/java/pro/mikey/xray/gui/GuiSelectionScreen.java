@@ -92,15 +92,13 @@ public class GuiSelectionScreen extends GuiBase {
 
         // side bar buttons
         addRenderableWidget(new SupportButtonInner((getWidth() / 2) + 79, getHeight() / 2 - 60, 120, 20, I18n.get("xray.input.add"), "xray.tooltips.add_block", button -> {
-            getMinecraft().player.closeContainer();
             getMinecraft().setScreen(new GuiBlockList());
         }));
         addRenderableWidget(new SupportButtonInner(getWidth() / 2 + 79, getHeight() / 2 - 38, 120, 20, I18n.get("xray.input.add_hand"), "xray.tooltips.add_block_in_hand", button -> {
-            getMinecraft().player.closeContainer();
             ItemStack handItem = getMinecraft().player.getItemInHand(InteractionHand.MAIN_HAND);
 
             // Check if the hand item is a block or not
-            if (!(handItem.getItem() instanceof net.minecraft.world.item.BlockItem)) {
+            if (!(handItem.getItem() instanceof BlockItem)) {
                 getMinecraft().player.displayClientMessage(Component.literal("[XRay] " + I18n.get("xray.message.invalid_hand", handItem.getHoverName().getString())), false);
                 return;
             }
@@ -144,7 +142,6 @@ public class GuiSelectionScreen extends GuiBase {
         }));
         addRenderableWidget(
             Button.builder(Component.translatable("xray.single.help"), button -> {
-                getMinecraft().player.closeContainer();
                 getMinecraft().setScreen(new GuiHelp());
             })
                     .pos(getWidth() / 2 + 79, getHeight() / 2 + 58)
@@ -174,10 +171,23 @@ public class GuiSelectionScreen extends GuiBase {
         if (lastSearch.equals(search.getValue()))
             return;
 
-        if (search.getValue().equals("")) {
+        if (search.getValue().isEmpty()) {
             this.itemList = this.originalList;
             this.scrollList.updateEntries(this.itemList);
             lastSearch = "";
+            return;
+        }
+
+        // Special cases
+        if (search.getValue().equals(":on") || search.getValue().equals(":off")) {
+            var state = search.getValue().equals(":on");
+            this.itemList = this.originalList.stream()
+                    .filter(e -> e.isDrawing() == state)
+                    .collect(Collectors.toCollection(ArrayList::new));
+
+            this.itemList.sort(Comparator.comparingInt(BlockData::getOrder));
+            this.scrollList.updateEntries(this.itemList);
+            lastSearch = search.getValue();
             return;
         }
 
@@ -194,10 +204,6 @@ public class GuiSelectionScreen extends GuiBase {
     @Override
     public void tick() {
         super.tick();
-
-        if (search != null) {
-            search.tick();
-        }
 
         updateSearch();
     }
@@ -299,7 +305,7 @@ public class GuiSelectionScreen extends GuiBase {
 //                Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, blockData.getItemStack(), left + 8, top + 7);
 //                Lighting.setupForFlatItems();
 
-                if (mouseX > left && mouseX < (left + entryWidth) && mouseY > top && mouseY < (top + entryHeight) && mouseY < (this.parent.getTop() + this.parent.getHeight()) && mouseY > this.parent.getTop()) {
+                if (mouseX > left && mouseX < (left + entryWidth) && mouseY > top && mouseY < (top + entryHeight) && mouseY < (this.parent.getY() + this.parent.getHeight()) && mouseY > this.parent.getY()) {
                     guiGraphics.renderTooltip(
                             font,
                             Language.getInstance().getVisualOrder(Arrays.asList(Component.translatable("xray.tooltips.edit1"), Component.translatable("xray.tooltips.edit2"))),

@@ -5,10 +5,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
@@ -21,6 +19,7 @@ import pro.mikey.xray.store.DiscoveryStorage;
 import pro.mikey.xray.store.GameBlockStore;
 import pro.mikey.xray.utils.BlockData;
 import pro.mikey.xray.xray.Controller;
+import pro.mikey.xray.xray.Events;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +41,10 @@ public class ClientController {
         // Keybindings
         MinecraftForge.EVENT_BUS.register(KeyBindings.class);
         MinecraftForge.EVENT_BUS.addListener(ClientController::onGameJoin);
+
+        MinecraftForge.EVENT_BUS.addListener(Events::tickEnd);
+        MinecraftForge.EVENT_BUS.addListener(Events::onWorldRenderLast);
+
     }
 
     private static void onSetup(final FMLCommonSetupEvent event) {

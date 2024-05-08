@@ -32,5 +32,8 @@ public class GuiOverlay {
         guiGraphics.blit(CIRCLE, 5, 5, 0f, 0f, 5, 5, 5, 5);
 
         guiGraphics.drawString(Minecraft.getInstance().font, I18n.get("xray.overlay"), 15, 4, 0xffffffff);
+
+        // Reset color
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
     }
 }

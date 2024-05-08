@@ -27,7 +27,7 @@ public class Controller {
         add(Blocks.AIR);
         add(Blocks.BEDROCK);
         add(Blocks.STONE);
-        add(Blocks.GRASS);
+        add(Blocks.GRASS_BLOCK);
         add(Blocks.DIRT);
     }};
 

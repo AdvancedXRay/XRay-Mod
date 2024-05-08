@@ -1,7 +1,5 @@
 package pro.mikey.xray.gui.manage;
 
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -54,7 +52,6 @@ public class GuiBlockList extends GuiBase {
 
     @Override
     public void tick() {
-        search.tick();
         if (!search.getValue().equals(this.lastSearched))
             reloadBlocks();
 
@@ -92,9 +89,9 @@ public class GuiBlockList extends GuiBase {
     }
 
     @Override
-    public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
-        blockList.mouseScrolled(p_mouseScrolled_1_, p_mouseScrolled_3_, p_mouseScrolled_5_);
-        return super.mouseScrolled(p_mouseScrolled_1_, p_mouseScrolled_3_, p_mouseScrolled_5_);
+    public boolean mouseScrolled(double mouseX, double mouseY, double mouseXDelta, double mouseYDelta) {
+        blockList.mouseScrolled(mouseX, mouseY, mouseXDelta, mouseYDelta);
+        return super.mouseScrolled(mouseX, mouseY, mouseXDelta, mouseYDelta);
     }
 
     static class ScrollingBlockList extends ScrollingList<ScrollingBlockList.BlockSlot> {
