@@ -1,5 +1,5 @@
-## [84.0.0]
+## [84.0.1]
 
-### Changed
+### Fixed
 
-- Updated to 1.20.4 for NeoForge
+- Updated Neoforge and resolved [#263](https://github.com/AdvancedXRay/XRay-Mod/issues/263) 

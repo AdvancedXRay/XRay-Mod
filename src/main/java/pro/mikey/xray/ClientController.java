@@ -30,16 +30,14 @@ public class ClientController {
     public static GameBlockStore gameBlockStore = new GameBlockStore();
     public static DiscoveryStorage blockStore = new DiscoveryStorage();
 
-    public static void setup() {
-        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
+    public static void setup(IEventBus eventBus) {
         eventBus.addListener(ClientController::onSetup);
         eventBus.addListener(ClientController::onLoadComplete);
         eventBus.addListener(KeyBindings::registerKeyBinding);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configuration.SPEC);
 
         // Keybindings
-        NeoForge.EVENT_BUS.register(KeyBindings.class);
+        NeoForge.EVENT_BUS.addListener(KeyBindings::eventInput);
         NeoForge.EVENT_BUS.addListener(ClientController::onGameJoin);
 
         NeoForge.EVENT_BUS.addListener(Events::tickEnd);
