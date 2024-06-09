@@ -2,22 +2,17 @@ plugins {
     id 'idea'
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.61'
-    id 'net.neoforged.gradle.mixin' version '7.0.61'
+    id 'net.neoforged.gradle.userdev' version '7.0.142'
     id "me.modmuss50.mod-publish-plugin" version "0.4.5"
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 version = mod_version
 group = 'pro.mikey'
 
 base {
     archivesName = "advanced-xray-neoforge"
-}
-
-mixin {
-    config 'xray.mixins.json'
 }
 
 minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -62,7 +57,7 @@ processResources {
     inputs.properties replaceProperties
     replaceProperties.put 'project', project
 
-    filesMatching("META-INF/mods.toml") {
+    filesMatching("META-INF/neoforge.mods.toml") {
         expand replaceProperties
     }
 }
@@ -74,7 +69,7 @@ dependencies {
 
 repositories {
     maven {
-        url "https://maven.saps.dev/mirror"
+        url "https://maven.neoforged.net/releases"
     }
 }
 

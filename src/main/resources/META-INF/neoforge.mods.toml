@@ -1,8 +1,10 @@
-modLoader="javafml" #mandatory
-loaderVersion="[1,)" #mandatory
+modLoader="javafml" #required
+loaderVersion="[1,)" #required
 credits="ErrorMikey" #optional
 authors="AdvancedXRay Team" #optional
 license="GNU GPL v3.0 (https://github.com/MichaelHillcox/XRay-Mod/blob/master/LICENSE)"
+displayTest="IGNORE_ALL_VERSION"
+
 [[mods]]
     modId="xray"
     version="${version}"
@@ -11,14 +13,17 @@ license="GNU GPL v3.0 (https://github.com/MichaelHillcox/XRay-Mod/blob/master/LI
 
 [[dependencies.xray]]
     modId="neoforge"
-    mandatory=true
+    required=true
     versionRange="[${forge_version_range},)"
     ordering="NONE"
     side="CLIENT"
 
 [[dependencies.xray]]
     modId="minecraft"
-    mandatory=true
+    required=true
     versionRange="[${minecraft_version_range})"
     ordering="NONE"
     side="CLIENT"
+
+[[mixins]]
+config = 'xray.mixins.json'

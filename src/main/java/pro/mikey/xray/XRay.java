@@ -1,10 +1,8 @@
 package pro.mikey.xray;
 
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.DistExecutor;
-import net.neoforged.fml.IExtensionPoint;
-import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.FMLEnvironment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,8 +13,9 @@ public class XRay {
 
 	public static Logger logger = LogManager.getLogger();
 
-	public XRay() {
-		ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> "", (c, b) -> true));
-		DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientController::setup);
+	public XRay(IEventBus eventBus) {
+		if (FMLEnvironment.dist.isClient()) {
+			ClientController.setup(eventBus);
+		}
 	}
 }

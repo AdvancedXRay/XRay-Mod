@@ -9,19 +9,19 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import pro.mikey.xray.Configuration;
 import pro.mikey.xray.XRay;
 import pro.mikey.xray.xray.Controller;
 
-@Mod.EventBusSubscriber(modid = XRay.MOD_ID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = XRay.MOD_ID, value = Dist.CLIENT)
 public class GuiOverlay {
     private static final ResourceLocation CIRCLE = new ResourceLocation(XRay.PREFIX_GUI + "circle.png");
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void RenderGameOverlayEvent(RenderGuiOverlayEvent.Post event) {
+    public static void RenderGameOverlayEvent(RenderGuiEvent.Post event) {
         // Draw Indicator
         if(!Controller.isXRayActive() || !Configuration.general.showOverlay.get())
             return;

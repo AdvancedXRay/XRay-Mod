@@ -2,12 +2,18 @@ package pro.mikey.xray.xray;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.lwjgl.opengl.GL11;
+
+import static net.minecraft.util.Mth.cos;
+import static net.minecraft.util.Mth.sin;
 
 public class Render {
     private static VertexBuffer vertexBuffer;
@@ -79,27 +85,29 @@ public class Render {
         }
 
         if (vertexBuffer != null) {
-            Vec3 view = Minecraft.getInstance().getEntityRenderDispatcher().camera.getPosition();
+            Vec3 playerPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
 
-            GL11.glEnable(GL11.GL_BLEND);
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            GL11.glEnable(GL11.GL_LINE_SMOOTH);
-            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            RenderSystem.depthMask(false);
+            RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
+
+            PoseStack poseStack = event.getPoseStack();
+            poseStack.pushPose();
 
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
+            RenderSystem.applyModelViewMatrix();
+            RenderSystem.depthFunc(GL11.GL_ALWAYS);
 
-            PoseStack matrix = event.getPoseStack();
-            matrix.pushPose();
-            matrix.translate(-view.x, -view.y, -view.z);
+            poseStack.mulPose(event.getModelViewMatrix());
+            poseStack.translate(-playerPos.x(), -playerPos.y(), -playerPos.z());
 
             vertexBuffer.bind();
-            vertexBuffer.drawWithShader(matrix.last().pose(), new Matrix4f(event.getProjectionMatrix()), RenderSystem.getShader());
+            vertexBuffer.drawWithShader(poseStack.last().pose(), event.getProjectionMatrix(), RenderSystem.getShader());
             VertexBuffer.unbind();
-            matrix.popPose();
+            RenderSystem.depthFunc(GL11.GL_LEQUAL);
 
-            GL11.glEnable(GL11.GL_DEPTH_TEST);
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glDisable(GL11.GL_LINE_SMOOTH);
+            poseStack.popPose();
+            RenderSystem.applyModelViewMatrix();
         }
 	}
 }

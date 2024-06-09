@@ -19,9 +19,6 @@ public class ScrollingList<E extends AbstractSelectionList.Entry<E>> extends Abs
     public ScrollingList(int x, int y, int width, int height, int slotHeightIn) {
         super(Minecraft.getInstance(), width, height, y - (height / 2), slotHeightIn);
         this.setX(x - (width / 2));
-        this.setRenderBackground(false);
-
-//        this.setRenderTopAndBottom(false); // removes background
     }
 
     @Override

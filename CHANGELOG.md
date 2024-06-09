@@ -1,5 +1,5 @@
-## [84.0.0]
+## [86.0.0]
 
 ### Changed
 
-- Updated to 1.20.4 for NeoForge
+- Updated to 1.20.6 for NeoForge
