@@ -2,9 +2,9 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         maven {
-            url "https://maven.saps.dev/mirror"
+            url "https://maven.neoforged.net/releases"
         }
     }
 }
 
-rootProject.name = 'advanced-xray-forge'
+rootProject.name = 'advanced-xray-neoforge'

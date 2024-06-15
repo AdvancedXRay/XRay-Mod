@@ -1,10 +1,11 @@
 package pro.mikey.xray.store;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import pro.mikey.xray.Utils;
 import pro.mikey.xray.utils.BlockData;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -79,12 +80,12 @@ public class BlockStore {
 
             ResourceLocation location = null;
             try {
-                location = new ResourceLocation(e.getBlockName());
+                location = Utils.rlFull(e.getBlockName());
             } catch (Exception ignored) {};
             if( location == null )
                 continue;
 
-            Block block = ForgeRegistries.BLOCKS.getValue(location);
+            Block block = BuiltInRegistries.BLOCK.get(location);
             if( block == null )
                 continue;
 

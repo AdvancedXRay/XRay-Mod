@@ -2,12 +2,18 @@ package pro.mikey.xray.xray;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.lwjgl.opengl.GL11;
+
+import static net.minecraft.util.Mth.cos;
+import static net.minecraft.util.Mth.sin;
 
 public class Render {
     private static VertexBuffer vertexBuffer;
@@ -19,11 +25,9 @@ public class Render {
             vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
 
             Tesselator tessellator = Tesselator.getInstance();
-            BufferBuilder buffer = tessellator.getBuilder();
+            BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
 
             var opacity = 1F;
-
-            buffer.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
 
             Controller.syncRenderList.forEach(blockProps -> {
                 if (blockProps == null) {
@@ -31,75 +35,83 @@ public class Render {
                 }
 
                 final float size = 1.0f;
-                final double x = blockProps.getPos().getX(), y = blockProps.getPos().getY(), z = blockProps.getPos().getZ();
+                final int x = blockProps.getPos().getX(), y = blockProps.getPos().getY(), z = blockProps.getPos().getZ();
 
                 final float red = (blockProps.getColor() >> 16 & 0xff) / 255f;
                 final float green = (blockProps.getColor() >> 8 & 0xff) / 255f;
                 final float blue = (blockProps.getColor() & 0xff) / 255f;
 
-                buffer.vertex(x, y + size, z).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x, y + size, z).color(red, green, blue, opacity).endVertex();
+                buffer.addVertex(x, y + size, z).setColor(red, green, blue, opacity);
+                buffer.addVertex(x + size, y + size, z).setColor(red, green, blue, opacity);
+                buffer.addVertex(x + size, y + size, z).setColor(red, green, blue, opacity);
+                buffer.addVertex(x + size, y + size, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x + size, y + size, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x, y + size, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x, y + size, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x, y + size, z).setColor(red, green, blue, opacity);
 
                 // BOTTOM
-                buffer.vertex(x + size, y, z).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x, y, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x, y, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x, y, z).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x, y, z).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x + size, y, z).color(red, green, blue, opacity).endVertex();
+                buffer.addVertex(x + size, y, z).setColor(red, green, blue, opacity);
+                buffer.addVertex(x + size, y, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x + size, y, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x, y, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x, y, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x, y, z).setColor(red, green, blue, opacity);
+                buffer.addVertex(x, y, z).setColor(red, green, blue, opacity);
+                buffer.addVertex(x + size, y, z).setColor(red, green, blue, opacity);
 
                 // Edge 1
-                buffer.vertex(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
+                buffer.addVertex(x + size, y, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x + size, y + size, z + size).setColor(red, green, blue, opacity);
 
                 // Edge 2
-                buffer.vertex(x + size, y, z).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
+                buffer.addVertex(x + size, y, z).setColor(red, green, blue, opacity);
+                buffer.addVertex(x + size, y + size, z).setColor(red, green, blue, opacity);
 
                 // Edge 3
-                buffer.vertex(x, y, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
+                buffer.addVertex(x, y, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x, y + size, z + size).setColor(red, green, blue, opacity);
 
                 // Edge 4
-                buffer.vertex(x, y, z).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x, y + size, z).color(red, green, blue, opacity).endVertex();
+                buffer.addVertex(x, y, z).setColor(red, green, blue, opacity);
+                buffer.addVertex(x, y + size, z).setColor(red, green, blue, opacity);
             });
 
-            vertexBuffer.bind();
-            vertexBuffer.upload(buffer.end());
-            VertexBuffer.unbind();
+            MeshData build = buffer.build();
+            if (build == null) {
+                vertexBuffer = null;
+                return;
+            } else {
+                vertexBuffer.bind();
+                vertexBuffer.upload(build);
+                VertexBuffer.unbind();
+            }
         }
 
         if (vertexBuffer != null) {
-            Vec3 view = Minecraft.getInstance().getEntityRenderDispatcher().camera.getPosition();
+            Vec3 playerPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
 
-            GL11.glEnable(GL11.GL_BLEND);
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            GL11.glEnable(GL11.GL_LINE_SMOOTH);
-            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            RenderSystem.depthMask(false);
+            RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
+
+            PoseStack poseStack = event.getPoseStack();
+            poseStack.pushPose();
 
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
+            RenderSystem.applyModelViewMatrix();
+            RenderSystem.depthFunc(GL11.GL_ALWAYS);
 
-            PoseStack matrix = event.getPoseStack();
-            matrix.pushPose();
-            matrix.translate(-view.x, -view.y, -view.z);
+            poseStack.mulPose(event.getModelViewMatrix());
+            poseStack.translate(-playerPos.x(), -playerPos.y(), -playerPos.z());
 
             vertexBuffer.bind();
-            vertexBuffer.drawWithShader(matrix.last().pose(), new Matrix4f(event.getProjectionMatrix()), RenderSystem.getShader());
+            vertexBuffer.drawWithShader(poseStack.last().pose(), event.getProjectionMatrix(), RenderSystem.getShader());
             VertexBuffer.unbind();
-            matrix.popPose();
+            RenderSystem.depthFunc(GL11.GL_LEQUAL);
 
-            GL11.glEnable(GL11.GL_DEPTH_TEST);
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glDisable(GL11.GL_LINE_SMOOTH);
+            poseStack.popPose();
+            RenderSystem.applyModelViewMatrix();
         }
 	}
 }

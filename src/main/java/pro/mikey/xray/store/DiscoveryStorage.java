@@ -5,11 +5,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.tags.ITagManager;
+import net.neoforged.neoforge.common.Tags;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -96,20 +95,21 @@ public class DiscoveryStorage {
     public List<BlockData.SerializableBlockData> populateDefault() {
         List<BlockData.SerializableBlockData> oresData = new ArrayList<>();
 
-        // No registry, not defaults
-        ITagManager<Block> blockTags = ForgeRegistries.BLOCKS.tags();
-        if (blockTags == null) {
+        var blocks = BuiltInRegistries.BLOCK.stream().toList();
+        if (blocks.isEmpty()) {
             return List.of();
         }
 
         int orderTrack = 0;
-        for (Block block : blockTags.getTag(Tags.Blocks.ORES)) {
-            oresData.add(new BlockData.SerializableBlockData(Component.translatable(block.getDescriptionId()).getString(),
-                    Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)).toString(),
-                    (RANDOM.nextInt(255) << 16) + (RANDOM.nextInt(255) << 8) + RANDOM.nextInt(255),
-                    false,
-                    orderTrack++)
-            );
+        for (Block block : blocks) {
+            if (block.defaultBlockState().is(Tags.Blocks.ORES)) {
+                oresData.add(new BlockData.SerializableBlockData(Component.translatable(block.getDescriptionId()).getString(),
+                        Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block)).toString(),
+                        (RANDOM.nextInt(255) << 16) + (RANDOM.nextInt(255) << 8) + RANDOM.nextInt(255),
+                        false,
+                        orderTrack++)
+                );
+            }
         }
 
         LOGGER.info("Setting up default ores to the render list");

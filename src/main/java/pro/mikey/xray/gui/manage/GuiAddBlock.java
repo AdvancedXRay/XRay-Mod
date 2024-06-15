@@ -1,18 +1,16 @@
 package pro.mikey.xray.gui.manage;
 
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.gui.widget.ForgeSlider;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 import pro.mikey.xray.ClientController;
 import pro.mikey.xray.gui.GuiSelectionScreen;
 import pro.mikey.xray.gui.utils.GuiBase;
@@ -25,9 +23,9 @@ import java.util.function.Supplier;
 
 public class GuiAddBlock extends GuiBase {
     private EditBox oreName;
-    private ForgeSlider redSlider;
-    private ForgeSlider greenSlider;
-    private ForgeSlider blueSlider;
+    private ExtendedSlider redSlider;
+    private ExtendedSlider greenSlider;
+    private ExtendedSlider blueSlider;
 
     private final Block selectBlock;
     private final ItemStack itemStack;
@@ -49,7 +47,7 @@ public class GuiAddBlock extends GuiBase {
         addRenderableWidget(Button.builder(Component.translatable("xray.single.add"), b -> {
             this.onClose();
 
-            ResourceLocation key = ForgeRegistries.BLOCKS.getKey(selectBlock);
+            ResourceLocation key = BuiltInRegistries.BLOCK.getKey(selectBlock);
             if (key == null)
                 return;
 
@@ -80,9 +78,9 @@ public class GuiAddBlock extends GuiBase {
                 .size(72, 20)
                 .build());
 
-        addRenderableWidget(redSlider = new ForgeSlider(getWidth() / 2 - 100, getHeight() / 2 + 7, 202, 20, Component.translatable("xray.color.red"), Component.empty(), 0, 255, 0, true));
-        addRenderableWidget(greenSlider = new ForgeSlider(getWidth() / 2 - 100, getHeight() / 2 + 30, 202, 20, Component.translatable("xray.color.green"), Component.empty(), 0, 255, 165, true));
-        addRenderableWidget(blueSlider = new ForgeSlider(getWidth() / 2 - 100, getHeight() / 2 + 53,202, 20,  Component.translatable("xray.color.blue"), Component.empty(), 0, 255, 255, true));
+        addRenderableWidget(redSlider = new ExtendedSlider(getWidth() / 2 - 100, getHeight() / 2 + 7, 202, 20, Component.translatable("xray.color.red"), Component.empty(), 0, 255, 0, true));
+        addRenderableWidget(greenSlider = new ExtendedSlider(getWidth() / 2 - 100, getHeight() / 2 + 30, 202, 20, Component.translatable("xray.color.green"), Component.empty(), 0, 255, 165, true));
+        addRenderableWidget(blueSlider = new ExtendedSlider(getWidth() / 2 - 100, getHeight() / 2 + 53,202, 20,  Component.translatable("xray.color.blue"), Component.empty(), 0, 255, 255, true));
 
         oreName = new EditBox(getMinecraft().font, getWidth() / 2 - 100, getHeight() / 2 - 70, 202, 20, Component.empty());
         oreName.setValue(this.selectBlock.getName().getString());

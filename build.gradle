@@ -1,64 +1,46 @@
 plugins {
     id 'idea'
+    id 'java-library'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
-    id "me.modmuss50.mod-publish-plugin" version "0.4.5"
-    id 'org.spongepowered.mixin' version '0.7.+'
+    id 'net.neoforged.gradle.userdev' version '7.0.142'
+    id "me.modmuss50.mod-publish-plugin" version "0.5.1"
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 version = mod_version
 group = 'pro.mikey'
 
 base {
-    archivesName = "advanced-xray-forge"
+    archivesName = "advanced-xray-neoforge"
 }
 
-mixin {
-    add sourceSets.main, 'xray.mixins.refmap.json'
-    config 'xray.mixins.json'
-}
+minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
 
-minecraft {
-    mappings channel: "official", version: minecraft_version
+runs {
+    // applies to all the run configs below
+    configureEach {
+        systemProperty 'forge.logging.markers', 'REGISTRIES'
+        systemProperty 'forge.logging.console.level', 'debug'
 
-    copyIdeResources = true
-    // See https://docs.minecraftforge.net/en/latest/advanced/accesstransformers/ for more information.
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+        modSource project.sourceSets.main
+    }
 
-    runs {
-        // applies to all the run configs below
-        configureEach {
-            workingDirectory project.file('run')
+    client {
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+    }
 
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
+    server {
+        systemProperty 'forge.enabledGameTestNamespaces', mod_id
+        programArgument '--nogui'
+    }
 
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
-        }
+    gameTestServer {
+        systemProperty 'forge.enabledGameTestNamespaces', mod_id
+    }
 
-        client {
-            property 'forge.enabledGameTestNamespaces', mod_id
-        }
-
-        server {
-            property 'forge.enabledGameTestNamespaces', mod_id
-            args '--nogui'
-        }
-
-        gameTestServer {
-            property 'forge.enabledGameTestNamespaces', mod_id
-        }
-
-        data {
-            workingDirectory project.file('run-data')
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-        }
+    data {
+        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
     }
 }
 
@@ -67,7 +49,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 def replaceProperties = [
     minecraft_version: minecraft_version,
     minecraft_version_range: minecraft_version_range.replace("[%base]", minecraft_version),
-    forge_version_range: forge_version.split("\\.").first(),
+    forge_version_range: forge_version_range,
     version: version,
 ]
 
@@ -75,19 +57,19 @@ processResources {
     inputs.properties replaceProperties
     replaceProperties.put 'project', project
 
-    filesMatching("META-INF/mods.toml") {
+    filesMatching("META-INF/neoforge.mods.toml") {
         expand replaceProperties
     }
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    implementation "net.neoforged:neoforge:${forge_version}"
+
 }
 
 repositories {
     maven {
-        url "https://maven.saps.dev/mirror"
+        url "https://maven.neoforged.net/releases"
     }
 }
 
@@ -99,27 +81,11 @@ java {
     withSourcesJar()
 }
 
-tasks.named('jar', Jar).configure {
-    manifest {
-        attributes([
-                'Specification-Title'     : "Advanced XRay",
-                'Specification-Vendor'    : "Advanced XRay Team",
-                'Specification-Version'   : '1', // We are version 1 of ourselves
-                'Implementation-Title'    : project.name,
-                'Implementation-Version'  : project.jar.archiveVersion,
-                'Implementation-Vendor'   : "Advanced XRay Team",
-                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-
-    finalizedBy 'reobfJar'
-}
-
 publishing {
     publications {
         mavenJava(MavenPublication) {
             artifactId = rootProject.archivesBaseName
-            artifact jar
+            from components.java
         }
     }
 
@@ -147,8 +113,8 @@ publishMods {
         accessToken = providers.environmentVariable("CURSE_DEPLOY_TOKEN")
         projectId = "${curse_id}"
         minecraftVersions.add("${minecraft_version}")
-        modLoaders.add("forge")
-        displayName = "[FORGE] [${minecraft_version}] ${project.name} ${mod_version}"
+        modLoaders.add("neoforge")
+        displayName = "[NEOFORGE] [${minecraft_version}] ${project.name} ${mod_version}"
         file = project.tasks.jar.archiveFile
     }
 

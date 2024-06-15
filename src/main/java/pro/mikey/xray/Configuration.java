@@ -1,21 +1,22 @@
 package pro.mikey.xray;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class Configuration
 {
-    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
     public static final General general = new General();
     public static final Store store = new Store();
 
-    public static final ForgeConfigSpec.BooleanValue firstRun = BUILDER
+    public static final ModConfigSpec.BooleanValue firstRun = BUILDER
             .comment("DO NOT TOUCH!", "This is not for you.", "This is used to check if it's the first time the mod has been run")
             .define("firstRun", true);
 
     public static class General {
-        public final ForgeConfigSpec.BooleanValue showOverlay;
-        public final ForgeConfigSpec.DoubleValue outlineThickness;
+        public final ModConfigSpec.BooleanValue showOverlay;
+        public final ModConfigSpec.DoubleValue outlineThickness;
 
         General() {
             BUILDER.push("general");
@@ -34,8 +35,8 @@ public class Configuration
     }
 
     public static class Store {
-        public final ForgeConfigSpec.IntValue radius;
-        public final ForgeConfigSpec.BooleanValue lavaActive;
+        public final ModConfigSpec.IntValue radius;
+        public final ModConfigSpec.BooleanValue lavaActive;
 
         Store() {
             BUILDER.comment("DO NOT TOUCH!").push("store");
@@ -52,5 +53,5 @@ public class Configuration
         }
     }
 
-    public static final ForgeConfigSpec SPEC = BUILDER.build();
+    public static final ModConfigSpec SPEC = BUILDER.build();
 }

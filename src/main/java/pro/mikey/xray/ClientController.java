@@ -5,14 +5,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import pro.mikey.xray.keybinding.KeyBindings;
 import pro.mikey.xray.store.BlockStore;
 import pro.mikey.xray.store.DiscoveryStorage;
@@ -30,20 +29,21 @@ public class ClientController {
     public static GameBlockStore gameBlockStore = new GameBlockStore();
     public static DiscoveryStorage blockStore = new DiscoveryStorage();
 
-    public static void setup() {
-        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    public static void setup(IEventBus eventBus) {
 
         eventBus.addListener(ClientController::onSetup);
         eventBus.addListener(ClientController::onLoadComplete);
         eventBus.addListener(KeyBindings::registerKeyBinding);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configuration.SPEC);
+
+        ModLoadingContext.get().getActiveContainer()
+                .registerConfig(ModConfig.Type.CLIENT, Configuration.SPEC);
 
         // Keybindings
-        MinecraftForge.EVENT_BUS.register(KeyBindings.class);
-        MinecraftForge.EVENT_BUS.addListener(ClientController::onGameJoin);
+        NeoForge.EVENT_BUS.addListener(KeyBindings::eventInput);
+        NeoForge.EVENT_BUS.addListener(ClientController::onGameJoin);
 
-        MinecraftForge.EVENT_BUS.addListener(Events::tickEnd);
-        MinecraftForge.EVENT_BUS.addListener(Events::onWorldRenderLast);
+        NeoForge.EVENT_BUS.addListener(Events::tickEnd);
+        NeoForge.EVENT_BUS.addListener(Events::onWorldRenderLast);
 
     }
 

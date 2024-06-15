@@ -2,14 +2,13 @@ package pro.mikey.xray.xray;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 import pro.mikey.xray.utils.BlockData;
 import pro.mikey.xray.utils.RenderBlockProps;
@@ -69,7 +68,7 @@ public class RenderEnqueue {
 							if( Controller.blackList.contains(currentState.getBlock()) )
 								continue;
 
-							block = ForgeRegistries.BLOCKS.getKey(currentState.getBlock());
+							block = BuiltInRegistries.BLOCK.getKey(currentState.getBlock());
 							if( block == null )
 								continue;
 
@@ -112,7 +111,7 @@ public class RenderEnqueue {
 			return;
 		}
 
-		ResourceLocation block = ForgeRegistries.BLOCKS.getKey(state.getBlock());
+		ResourceLocation block = BuiltInRegistries.BLOCK.getKey(state.getBlock());
 		if( block == null )
 			return;
 
