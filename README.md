@@ -1,26 +1,14 @@
-![XRay Logo](.github/assets/xray-forge-logo.svg)
-# Advanced XRay (Forge Edition)
+![XRay Logo](.github/assets/advanced-xray-neoforge-logo.svg)
 
+# Advanced XRay (NeoForge Edition)
 Minecraft Forge based XRay mod designed to aid players who don't like the ore searching process.
 
 [![Forge Downloads](http://cf.way2muchnoise.eu/256256.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-xray) [![Forge Available For](http://cf.way2muchnoise.eu/versions/256256.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-xray)
-
-[![GitHub license](https://img.shields.io/github/license/AdvancedXRay/XRay-Mod)](https://github.com/AdvancedXRay/XRay-Mod/blob/main/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/AdvancedXRay/XRay-Mod)](https://github.com/AdvancedXRay/XRay-Mod/stargazers)
-[![GitHub issues](https://img.shields.io/github/issues/AdvancedXRay/XRay-Mod)](https://github.com/AdvancedXRay/XRay-Mod/issues)
-![GitHub all releases](https://img.shields.io/github/downloads/AdvancedXRay/xray-mod/total)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/AdvancedXRay/xray-mod)
-![GitHub Release Date](https://img.shields.io/github/release-date/AdvancedXRay/xray-mod)
-![GitHub last commit](https://img.shields.io/github/last-commit/AdvancedXRay/xray-mod)
 
 ##### Looking for the Fabric version? Click the button below :tada:
 
 <a href="https://github.com/AdvancedXRay/xray-fabric"><img src=".github/assets/xray-fabric-badge.svg" alt="drawing" width="250"/>
 </a>
-
-## Notice
-
-> I'm currently looking for a new developer to take on Advanced XRay for forge and fabric, if you're intrested, please reach out to me on discord at `MiKeY#2628`
 
 ## Feature
 
@@ -80,6 +68,12 @@ Join my Discord and ask about how to change the mod to use it on a server, if yo
 ## A note on Optifine
 Currently, the mod does not and has not work with Optifine since MC `1.7.x`. I am not sure why the two mods do not work 
 together and due to Optfine being closed source I don't have the ability to investigate it properly. For now, I just recommend not using the two mods together. I hope to have it fixed soon. 
+
+## A note on Minecraft Forge
+
+As of Minecraft `1.20.5+` I am no longer supporting Minecraft Forge. I have moved to NeoForge as it a maintained, feature-rich, and more stable fork of Minecraft Forge. This will mean going forwards, this mod will no longer be usable on Minecraft Forge.
+
+Sorry for any inconvenience this may cause.
 
 ## Game support system
 
