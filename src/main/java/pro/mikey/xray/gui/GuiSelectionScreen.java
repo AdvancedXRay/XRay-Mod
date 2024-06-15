@@ -1,13 +1,10 @@
 package pro.mikey.xray.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractSelectionList;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -27,12 +24,12 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import pro.mikey.xray.ClientController;
 import pro.mikey.xray.Configuration;
+import pro.mikey.xray.Utils;
 import pro.mikey.xray.XRay;
+import pro.mikey.xray.gui.manage.BlockListScreen;
 import pro.mikey.xray.gui.manage.GuiAddBlock;
-import pro.mikey.xray.gui.manage.GuiBlockList;
 import pro.mikey.xray.gui.manage.GuiEdit;
 import pro.mikey.xray.gui.utils.GuiBase;
-import pro.mikey.xray.gui.utils.ScrollingList;
 import pro.mikey.xray.gui.utils.SupportButton;
 import pro.mikey.xray.keybinding.KeyBindings;
 import pro.mikey.xray.store.BlockStore;
@@ -48,7 +45,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GuiSelectionScreen extends GuiBase {
-    private static final ResourceLocation CIRCLE = new ResourceLocation(XRay.PREFIX_GUI + "circle.png");
+    private static final ResourceLocation CIRCLE = Utils.rlFull(XRay.PREFIX_GUI + "circle.png");
 
     private Button distButtons;
     private EditBox search;
@@ -85,7 +82,7 @@ public class GuiSelectionScreen extends GuiBase {
         this.render = Minecraft.getInstance().getItemRenderer();
         this.children().clear();
 
-        this.scrollList = new ScrollingBlockList((getWidth() / 2) - 37, getHeight() / 2 + 10, 203, 185, this.itemList, this);
+        this.scrollList = new ScrollingBlockList(((getWidth() / 2) - (203 / 2)) - 37, getHeight() / 2 + 10, 203, 185, this.itemList, this);
         addRenderableWidget(this.scrollList);
 
         this.search = new EditBox(getFontRender(), getWidth() / 2 - 137, getHeight() / 2 - 105, 202, 18, Component.empty());
@@ -93,7 +90,7 @@ public class GuiSelectionScreen extends GuiBase {
 
         // side bar buttons
         addRenderableWidget(new SupportButtonInner((getWidth() / 2) + 79, getHeight() / 2 - 60, 120, 20, I18n.get("xray.input.add"), "xray.tooltips.add_block", button -> {
-            getMinecraft().setScreen(new GuiBlockList());
+            getMinecraft().setScreen(new BlockListScreen());
         }));
         addRenderableWidget(new SupportButtonInner(getWidth() / 2 + 79, getHeight() / 2 - 38, 120, 20, I18n.get("xray.input.add_hand"), "xray.tooltips.add_block_in_hand", button -> {
             ItemStack handItem = getMinecraft().player.getItemInHand(InteractionHand.MAIN_HAND);
@@ -247,14 +244,26 @@ public class GuiSelectionScreen extends GuiBase {
         }
     }
 
-    static class ScrollingBlockList extends ScrollingList<ScrollingBlockList.BlockSlot> {
+    class ScrollingBlockList extends ObjectSelectionList<ScrollingBlockList.BlockSlot> {
         static final int SLOT_HEIGHT = 35;
         public GuiSelectionScreen parent;
 
         ScrollingBlockList(int x, int y, int width, int height, List<BlockData> blocks, GuiSelectionScreen parent) {
-            super(x, y, width, height, SLOT_HEIGHT);
+            super(GuiSelectionScreen.this.minecraft, width - 2, height, (GuiSelectionScreen.this.height / 2) - (height / 2) + 10, SLOT_HEIGHT);
             this.updateEntries(blocks);
             this.parent = parent;
+
+            this.setX(x + 2);
+        }
+
+        @Override
+        public int getRowWidth() {
+            return 188;
+        }
+
+        @Override
+        protected int getScrollbarPosition() {
+            return this.getX() + this.getRowWidth() + 6;
         }
 
         public void setSelected(@Nullable BlockSlot entry, int mouse) {
@@ -295,16 +304,11 @@ public class GuiSelectionScreen extends GuiBase {
 
                 Font font = Minecraft.getInstance().font;
 
-                guiGraphics.drawString(font, blockData.getEntryName(), left + 35, top + 7, 0xFFFFFF);
-                guiGraphics.drawString(font, blockData.isDrawing() ? "Enabled" : "Disabled", left + 35, top + 17, blockData.isDrawing() ? Color.GREEN.getRGB() : Color.RED.getRGB());
+                guiGraphics.drawString(font, blockData.getEntryName(), left + 25, top + 7, 0xFFFFFF);
+                guiGraphics.drawString(font, blockData.isDrawing() ? "Enabled" : "Disabled", left + 25, top + 17, blockData.isDrawing() ? Color.GREEN.getRGB() : Color.RED.getRGB());
 
-                guiGraphics.renderItem(blockData.getItemStack(), left + 8, top + 7);
-                guiGraphics.renderItemDecorations(font, blockData.getItemStack(), left + 8, top + 7); // TODO: verify
-
-                // old from < 1.20
-//                Lighting.setupFor3DItems();
-//                Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, blockData.getItemStack(), left + 8, top + 7);
-//                Lighting.setupForFlatItems();
+                guiGraphics.renderItem(blockData.getItemStack(), left, top + 7);
+                guiGraphics.renderItemDecorations(font, blockData.getItemStack(), left, top + 7); // TODO: verify
 
                 if (mouseX > left && mouseX < (left + entryWidth) && mouseY > top && mouseY < (top + entryHeight) && mouseY < (this.parent.getY() + this.parent.getHeight()) && mouseY > this.parent.getY()) {
                     guiGraphics.renderTooltip(
@@ -323,9 +327,9 @@ public class GuiSelectionScreen extends GuiBase {
                 RenderSystem.blendFunc(
                         GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
                 RenderSystem.setShaderColor(0, 0, 0, .5f);
-                guiGraphics.blit(GuiSelectionScreen.CIRCLE, (left + entryWidth) - 35, (int) (top + (entryHeight / 2f) - 9), 0, 0, 14, 14, 14, 14);
+                guiGraphics.blit(GuiSelectionScreen.CIRCLE, (left + entryWidth) - 23, (int) (top + (entryHeight / 2f) - 9), 0, 0, 14, 14, 14, 14);
                 RenderSystem.setShaderColor(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, 1);
-                guiGraphics.blit(GuiSelectionScreen.CIRCLE, (left + entryWidth) - 33, (int) (top + (entryHeight / 2f) - 7), 0, 0, 10, 10, 10, 10);
+                guiGraphics.blit(GuiSelectionScreen.CIRCLE, (left + entryWidth) - 21, (int) (top + (entryHeight / 2f) - 7), 0, 0, 10, 10, 10, 10);
                 RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
                 RenderSystem.disableBlend();
                 stack.popPose();

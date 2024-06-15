@@ -12,12 +12,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import pro.mikey.xray.Configuration;
+import pro.mikey.xray.Utils;
 import pro.mikey.xray.XRay;
 import pro.mikey.xray.xray.Controller;
 
 @EventBusSubscriber(modid = XRay.MOD_ID, value = Dist.CLIENT)
 public class GuiOverlay {
-    private static final ResourceLocation CIRCLE = new ResourceLocation(XRay.PREFIX_GUI + "circle.png");
+    private static final ResourceLocation CIRCLE = Utils.rlFull(XRay.PREFIX_GUI + "circle.png");
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent(priority = EventPriority.LOWEST)

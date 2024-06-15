@@ -3,16 +3,15 @@ package pro.mikey.xray.gui.manage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractSelectionList;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import pro.mikey.xray.ClientController;
 import pro.mikey.xray.gui.GuiSelectionScreen;
 import pro.mikey.xray.gui.utils.GuiBase;
-import pro.mikey.xray.gui.utils.ScrollingList;
 import pro.mikey.xray.store.GameBlockStore;
 
 import javax.annotation.Nullable;
@@ -21,20 +20,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GuiBlockList extends GuiBase {
+public class BlockListScreen extends GuiBase {
     private ScrollingBlockList blockList;
     private ArrayList<GameBlockStore.BlockWithItemStack> blocks;
     private EditBox search;
     private String lastSearched = "";
 
-    public GuiBlockList() {
+    public BlockListScreen() {
         super(false);
         this.blocks = ClientController.gameBlockStore.getStore();
     }
 
     @Override
     public void init() {
-        this.blockList = new ScrollingBlockList((getWidth() / 2) + 1, getHeight() / 2 - 12, 202, 185, this.blocks);
+        this.blockList = new ScrollingBlockList((getWidth() / 2) + 1, getHeight() / 2 - 12, 202, 182, this.blocks);
         addRenderableWidget(this.blockList);
 
         search = new EditBox(getFontRender(), getWidth() / 2 - 100, getHeight() / 2 + 85, 140, 18, Component.literal(""));
@@ -42,9 +41,9 @@ public class GuiBlockList extends GuiBase {
         this.setFocused(search);
 
         addRenderableWidget(Button.builder(Component.translatable("xray.single.cancel"), b -> {
-            this.onClose();
-            Minecraft.getInstance().setScreen(new GuiSelectionScreen());
-        })
+                    this.onClose();
+                    Minecraft.getInstance().setScreen(new GuiSelectionScreen());
+                })
                 .pos(getWidth() / 2 + 43, getHeight() / 2 + 84)
                 .size(60, 20)
                 .build());
@@ -66,8 +65,8 @@ public class GuiBlockList extends GuiBase {
                 search.getValue().length() == 0
                         ? this.blocks
                         : this.blocks.stream()
-                            .filter(e -> e.getItemStack().getHoverName().getString().toLowerCase().contains(search.getValue().toLowerCase()))
-                            .collect(Collectors.toList())
+                        .filter(e -> e.getItemStack().getHoverName().getString().toLowerCase().contains(search.getValue().toLowerCase()))
+                        .collect(Collectors.toList())
         );
 
         lastSearched = search.getValue();
@@ -94,12 +93,24 @@ public class GuiBlockList extends GuiBase {
         return super.mouseScrolled(mouseX, mouseY, mouseXDelta, mouseYDelta);
     }
 
-    static class ScrollingBlockList extends ScrollingList<ScrollingBlockList.BlockSlot> {
+    public class ScrollingBlockList extends ObjectSelectionList<ScrollingBlockList.BlockSlot> {
         static final int SLOT_HEIGHT = 35;
 
         ScrollingBlockList(int x, int y, int width, int height, List<GameBlockStore.BlockWithItemStack> blocks) {
-            super(x, y, width, height, SLOT_HEIGHT);
+            super(BlockListScreen.this.minecraft, width, height, (BlockListScreen.this.height / 2) - (height / 2) - 10, SLOT_HEIGHT);
+//            super(x, y, width, height, SLOT_HEIGHT);
             this.updateEntries(blocks);
+            this.setX((BlockListScreen.this.getWidth() / 2) - (width / 2) + 1);
+        }
+
+        @Override
+        public int getRowWidth() {
+            return 188;
+        }
+
+        @Override
+        protected int getScrollbarPosition() {
+            return this.getX() + this.getRowWidth() + 7;
         }
 
         @Override
@@ -108,7 +119,7 @@ public class GuiBlockList extends GuiBase {
                 return;
 
             Minecraft.getInstance().player.closeContainer();
-            Minecraft.getInstance().setScreen(new GuiAddBlock(entry.getBlock().getBlock(), GuiBlockList::new));
+            Minecraft.getInstance().setScreen(new GuiAddBlock(entry.getBlock().getBlock(), BlockListScreen::new));
         }
 
         void updateEntries(List<GameBlockStore.BlockWithItemStack> blocks) {
@@ -116,11 +127,16 @@ public class GuiBlockList extends GuiBase {
             blocks.forEach(block -> this.addEntry(new BlockSlot(block, this)));
         }
 
-        public static class BlockSlot extends AbstractSelectionList.Entry<ScrollingBlockList.BlockSlot> {
-            GameBlockStore.BlockWithItemStack block;
-            ScrollingBlockList parent;
+        @Override
+        public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+            super.renderWidget(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        }
 
-            BlockSlot(GameBlockStore.BlockWithItemStack block, ScrollingBlockList parent) {
+        public class BlockSlot extends ObjectSelectionList.Entry<ScrollingBlockList.BlockSlot> {
+            GameBlockStore.BlockWithItemStack block;
+            private final ScrollingBlockList parent;
+
+            public BlockSlot(GameBlockStore.BlockWithItemStack block, ScrollingBlockList parent) {
                 this.block = block;
                 this.parent = parent;
             }
@@ -134,15 +150,16 @@ public class GuiBlockList extends GuiBase {
                 Font font = this.parent.minecraft.font;
 
                 ResourceLocation resource = BuiltInRegistries.ITEM.getKey(this.block.getItemStack().getItem());
-                graphics.drawString(font, this.block.getItemStack().getItem().getDescription().getString(), left + 35, top + 7, Color.WHITE.getRGB());
-                graphics.drawString(font, resource != null ? resource.getNamespace() : "", left + 35, top + 17, Color.WHITE.getRGB());
+                graphics.drawString(font, this.block.getItemStack().getItem().getDescription().getString(), left + 25, top + 7, Color.WHITE.getRGB());
+                graphics.drawString(font, resource != null ? resource.getNamespace() : "", left + 25, top + 17, Color.GRAY.getRGB());
 
-                graphics.renderItem(this.block.getItemStack(), left + 8, top + 7);
-                graphics.renderItemDecorations(font, this.block.getItemStack(), left + 8, top + 7);
+                graphics.renderItem(this.block.getItemStack(), left, top + 7);
+                graphics.renderItemDecorations(font, this.block.getItemStack(), left, top + 7);
+            }
 
-//                Lighting.setupFor3DItems();
-//                this.parent.minecraft.getItemRenderer().renderAndDecorateItem(graphics, this.block.getItemStack(), left + 8, top + 7);
-//                Lighting.setupForFlatItems();
+            @Override
+            public Component getNarration() {
+                return Component.empty();
             }
 
             @Override

@@ -1,6 +1,7 @@
 package pro.mikey.xray.store;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import pro.mikey.xray.Utils;
 import pro.mikey.xray.utils.BlockData;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.ItemStack;
@@ -79,7 +80,7 @@ public class BlockStore {
 
             ResourceLocation location = null;
             try {
-                location = new ResourceLocation(e.getBlockName());
+                location = Utils.rlFull(e.getBlockName());
             } catch (Exception ignored) {};
             if( location == null )
                 continue;

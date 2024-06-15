@@ -1,5 +1,5 @@
 modLoader="javafml" #required
-loaderVersion="[1,)" #required
+loaderVersion="[2,)" #required
 credits="ErrorMikey" #optional
 authors="AdvancedXRay Team" #optional
 license="GNU GPL v3.0 (https://github.com/MichaelHillcox/XRay-Mod/blob/master/LICENSE)"

@@ -25,11 +25,9 @@ public class Render {
             vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
 
             Tesselator tessellator = Tesselator.getInstance();
-            BufferBuilder buffer = tessellator.getBuilder();
+            BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
 
             var opacity = 1F;
-
-            buffer.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
 
             Controller.syncRenderList.forEach(blockProps -> {
                 if (blockProps == null) {
@@ -37,51 +35,57 @@ public class Render {
                 }
 
                 final float size = 1.0f;
-                final double x = blockProps.getPos().getX(), y = blockProps.getPos().getY(), z = blockProps.getPos().getZ();
+                final int x = blockProps.getPos().getX(), y = blockProps.getPos().getY(), z = blockProps.getPos().getZ();
 
                 final float red = (blockProps.getColor() >> 16 & 0xff) / 255f;
                 final float green = (blockProps.getColor() >> 8 & 0xff) / 255f;
                 final float blue = (blockProps.getColor() & 0xff) / 255f;
 
-                buffer.vertex(x, y + size, z).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x, y + size, z).color(red, green, blue, opacity).endVertex();
+                buffer.addVertex(x, y + size, z).setColor(red, green, blue, opacity);
+                buffer.addVertex(x + size, y + size, z).setColor(red, green, blue, opacity);
+                buffer.addVertex(x + size, y + size, z).setColor(red, green, blue, opacity);
+                buffer.addVertex(x + size, y + size, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x + size, y + size, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x, y + size, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x, y + size, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x, y + size, z).setColor(red, green, blue, opacity);
 
                 // BOTTOM
-                buffer.vertex(x + size, y, z).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x, y, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x, y, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x, y, z).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x, y, z).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x + size, y, z).color(red, green, blue, opacity).endVertex();
+                buffer.addVertex(x + size, y, z).setColor(red, green, blue, opacity);
+                buffer.addVertex(x + size, y, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x + size, y, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x, y, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x, y, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x, y, z).setColor(red, green, blue, opacity);
+                buffer.addVertex(x, y, z).setColor(red, green, blue, opacity);
+                buffer.addVertex(x + size, y, z).setColor(red, green, blue, opacity);
 
                 // Edge 1
-                buffer.vertex(x + size, y, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x + size, y + size, z + size).color(red, green, blue, opacity).endVertex();
+                buffer.addVertex(x + size, y, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x + size, y + size, z + size).setColor(red, green, blue, opacity);
 
                 // Edge 2
-                buffer.vertex(x + size, y, z).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x + size, y + size, z).color(red, green, blue, opacity).endVertex();
+                buffer.addVertex(x + size, y, z).setColor(red, green, blue, opacity);
+                buffer.addVertex(x + size, y + size, z).setColor(red, green, blue, opacity);
 
                 // Edge 3
-                buffer.vertex(x, y, z + size).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x, y + size, z + size).color(red, green, blue, opacity).endVertex();
+                buffer.addVertex(x, y, z + size).setColor(red, green, blue, opacity);
+                buffer.addVertex(x, y + size, z + size).setColor(red, green, blue, opacity);
 
                 // Edge 4
-                buffer.vertex(x, y, z).color(red, green, blue, opacity).endVertex();
-                buffer.vertex(x, y + size, z).color(red, green, blue, opacity).endVertex();
+                buffer.addVertex(x, y, z).setColor(red, green, blue, opacity);
+                buffer.addVertex(x, y + size, z).setColor(red, green, blue, opacity);
             });
 
-            vertexBuffer.bind();
-            vertexBuffer.upload(buffer.end());
-            VertexBuffer.unbind();
+            MeshData build = buffer.build();
+            if (build == null) {
+                vertexBuffer = null;
+                return;
+            } else {
+                vertexBuffer.bind();
+                vertexBuffer.upload(build);
+                VertexBuffer.unbind();
+            }
         }
 
         if (vertexBuffer != null) {

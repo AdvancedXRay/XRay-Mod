@@ -8,11 +8,12 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import pro.mikey.xray.Utils;
 import pro.mikey.xray.XRay;
 
 public abstract class GuiBase extends Screen {
-    public static final ResourceLocation BG_NORMAL = new ResourceLocation(XRay.PREFIX_GUI + "bg.png");
-    public static final ResourceLocation BG_LARGE = new ResourceLocation(XRay.PREFIX_GUI + "bg-help.png");
+    public static final ResourceLocation BG_NORMAL = Utils.rlFull(XRay.PREFIX_GUI + "bg.png");
+    public static final ResourceLocation BG_LARGE = Utils.rlFull(XRay.PREFIX_GUI + "bg-help.png");
 
     private boolean hasSide;
     private String sideTitle = "";

@@ -3,7 +3,7 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'net.neoforged.gradle.userdev' version '7.0.142'
-    id "me.modmuss50.mod-publish-plugin" version "0.4.5"
+    id "me.modmuss50.mod-publish-plugin" version "0.5.1"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
@@ -49,7 +49,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 def replaceProperties = [
     minecraft_version: minecraft_version,
     minecraft_version_range: minecraft_version_range.replace("[%base]", minecraft_version),
-    forge_version_range: forge_version.split("\\.").first(),
+    forge_version_range: forge_version_range,
     version: version,
 ]
 
