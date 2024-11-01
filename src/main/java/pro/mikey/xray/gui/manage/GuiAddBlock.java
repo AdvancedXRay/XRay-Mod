@@ -11,13 +11,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
-import pro.mikey.xray.ClientController;
 import pro.mikey.xray.gui.GuiSelectionScreen;
 import pro.mikey.xray.gui.utils.GuiBase;
 import pro.mikey.xray.utils.BlockData;
 import pro.mikey.xray.xray.Controller;
 
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -63,7 +61,7 @@ public class GuiAddBlock extends GuiBase {
                     )
             );
 
-            ClientController.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
+            Controller.getBlockStore().persistBlockStore();
             getMinecraft().setScreen(new GuiSelectionScreen());
         })
                 .pos(getWidth() / 2 - 100, getHeight() / 2 + 85)

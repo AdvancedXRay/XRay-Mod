@@ -6,15 +6,12 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
-import org.apache.commons.lang3.tuple.Pair;
-import pro.mikey.xray.ClientController;
 import pro.mikey.xray.gui.GuiSelectionScreen;
 import pro.mikey.xray.gui.utils.GuiBase;
 import pro.mikey.xray.utils.BlockData;
 import pro.mikey.xray.xray.Controller;
 
-import java.util.ArrayList;
-import java.util.UUID;
+import java.util.Optional;
 
 public class GuiEdit extends GuiBase {
     private EditBox oreName;
@@ -33,52 +30,54 @@ public class GuiEdit extends GuiBase {
     @Override
     public void init() {
         addRenderableWidget(Button.builder(Component.translatable("xray.single.delete"), b -> {
-            Controller.getBlockStore().remove(block.getBlockName());
-            ClientController.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
+                    Controller.getBlockStore().remove(block.getBlockName());
+                    Controller.getBlockStore().persistBlockStore();
 
-            this.onClose();
-            getMinecraft().setScreen(new GuiSelectionScreen());
-        })
+                    this.onClose();
+                    getMinecraft().setScreen(new GuiSelectionScreen());
+                })
                 .pos((getWidth() / 2) + 78, getHeight() / 2 - 60)
                 .size(120, 20)
                 .build());
 
         addRenderableWidget(Button.builder(Component.translatable("xray.single.cancel"), b -> {
-            this.onClose();
-            this.getMinecraft().setScreen(new GuiSelectionScreen());
-        })
+                    this.onClose();
+                    this.getMinecraft().setScreen(new GuiSelectionScreen());
+                })
                 .pos((getWidth() / 2) + 78, getHeight() / 2 + 58)
                 .size(120, 20)
                 .build());
 
         addRenderableWidget(Button.builder(Component.translatable("xray.single.save"), b -> {
-            BlockData block = new BlockData(
-                    this.oreName.getValue(),
-                    this.block.getBlockName(),
-                    (((int) (redSlider.getValue()) << 16) + ((int) (greenSlider.getValue()) << 8) + (int) (blueSlider.getValue())),
-                    this.block.getItemStack(),
-                    this.block.isDrawing(),
-                    this.block.getOrder()
-            );
+                    BlockData block = new BlockData(
+                            this.oreName.getValue(),
+                            this.block.getBlockName(),
+                            (((int) (redSlider.getValue()) << 16) + ((int) (greenSlider.getValue()) << 8) + (int) (blueSlider.getValue())),
+                            this.block.getItemStack(),
+                            this.block.getDrawing(),
+                            this.block.getOrder()
+                    );
 
-            Pair<BlockData, UUID> data = Controller.getBlockStore().getStoreByReference(block.getBlockName());
-            Controller.getBlockStore().getStore().remove(data.getValue());
-            Controller.getBlockStore().getStore().put(data.getValue(), block);
+                    Optional<BlockData> data = Controller.getBlockStore().get(block.getBlockName());
+                    data.ifPresent((bd) -> {
+                        Controller.getBlockStore().remove(bd.getBlockName());
+                        Controller.getBlockStore().put(block);
+                    });
 
-            ClientController.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
-            this.onClose();
-            getMinecraft().setScreen(new GuiSelectionScreen());
-        })
+                    Controller.getBlockStore().persistBlockStore();
+                    this.onClose();
+                    getMinecraft().setScreen(new GuiSelectionScreen());
+                })
                 .pos(getWidth() / 2 - 138, getHeight() / 2 + 83)
                 .size(202, 20)
                 .build());
 
         addRenderableWidget(redSlider = new ExtendedSlider(getWidth() / 2 - 138, getHeight() / 2 + 7, 202, 20, Component.translatable("xray.color.red"), Component.empty(), 0, 255, (block.getColor() >> 16 & 0xff), true));
         addRenderableWidget(greenSlider = new ExtendedSlider(getWidth() / 2 - 138, getHeight() / 2 + 30, 202, 20, Component.translatable("xray.color.green"), Component.empty(), 0, 255, (block.getColor() >> 8 & 0xff), true));
-        addRenderableWidget(blueSlider = new ExtendedSlider(getWidth() / 2 - 138, getHeight() / 2 + 53,202, 20,  Component.translatable("xray.color.blue"), Component.empty(), 0, 255, (block.getColor() & 0xff), true));
+        addRenderableWidget(blueSlider = new ExtendedSlider(getWidth() / 2 - 138, getHeight() / 2 + 53, 202, 20, Component.translatable("xray.color.blue"), Component.empty(), 0, 255, (block.getColor() & 0xff), true));
 
         oreName = new EditBox(getMinecraft().font, getWidth() / 2 - 138, getHeight() / 2 - 63, 202, 20, Component.literal(""));
-        oreName.setValue(this.block.getEntryName());
+        oreName.setValue(this.block.getName());
         addRenderableWidget(oreName);
     }
 
@@ -106,7 +105,7 @@ public class GuiEdit extends GuiBase {
 
     @Override
     public boolean mouseClicked(double x, double y, int mouse) {
-        if( oreName.mouseClicked(x, y, mouse) )
+        if (oreName.mouseClicked(x, y, mouse))
             this.setFocused(oreName);
 
         return super.mouseClicked(x, y, mouse);

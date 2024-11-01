@@ -1,106 +1,135 @@
 package pro.mikey.xray.store;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
-import pro.mikey.xray.Utils;
+import net.minecraft.network.chat.Component;
+import net.neoforged.neoforge.common.Tags;
+import pro.mikey.xray.XRay;
 import pro.mikey.xray.utils.BlockData;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+import pro.mikey.xray.utils.SerializableBlockData;
 
+import java.io.*;
+import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
+/**
+ * Class managing the list of available ores/blocks to choose from / configure.
+ */
 public class BlockStore {
 
-    private HashMap<UUID, BlockData> store = new HashMap<>();
-    private HashMap<String, UUID>    storeReference = new HashMap<>();
+    private final HashMap<String, BlockData> store = new HashMap<>();
 
-    public void put(BlockData data) {
-        if( this.storeReference.containsKey(data.getBlockName()) )
-            return;
-
-        UUID uniqueId = UUID.randomUUID();
-        this.store.put(uniqueId, data);
-        this.storeReference.put(data.getBlockName(), uniqueId);
-    }
-
-    public void remove(String blockRegistry) {
-        if( !this.storeReference.containsKey(blockRegistry) )
-            return;
-
-        UUID uuid = this.storeReference.get(blockRegistry);
-        this.storeReference.remove(blockRegistry);
-        this.store.remove(uuid);
-    }
-
-    public HashMap<UUID, BlockData> getStore() {
+    public HashMap<String, BlockData> getStore(){
         return store;
     }
 
-    public void setStore(ArrayList<BlockData> store) {
-        this.store.clear();
-        this.storeReference.clear();
-
-        store.forEach(this::put);
+    public void put(BlockData data) {
+        this.store.put(data.getBlockName(), data);
     }
 
-    public Pair<BlockData, UUID> getStoreByReference(String name) {
-        UUID uniqueId = storeReference.get(name);
-        if( uniqueId == null )
-            return null;
-
-        BlockData blockData = this.store.get(uniqueId);
-        if( blockData == null )
-            return null;
-
-        return new ImmutablePair<>(blockData, uniqueId);
+    public void remove(String blockName) {
+        this.store.remove(blockName);
     }
+
+    public Optional<BlockData> get(String blockName){
+        if(this.store.containsKey(blockName)) {
+            return Optional.of(this.store.get(blockName));
+        } else{
+            return Optional.empty();
+        }
+    }
+
 
     public void toggleDrawing(BlockData data) {
-        UUID uniqueId = storeReference.get(data.getBlockName());
-        if( uniqueId == null )
-            return;
-
-        // We'd hope this never happens...
-        BlockData blockData = this.store.get(uniqueId);
-        if( blockData == null )
-            return;
-
-        blockData.setDrawing(!blockData.isDrawing());
+        this.get(data.getBlockName())
+                .ifPresent(
+                        (blockData) -> blockData.setDrawing(!blockData.getDrawing())
+                );
     }
 
-    public static ArrayList<BlockData> getFromSimpleBlockList(List<BlockData.SerializableBlockData> simpleList)
-    {
-        ArrayList<BlockData> blockData = new ArrayList<>();
+    // -----------------------------------------------------------------
+    //                          PERSISTANCE
+    // -----------------------------------------------------------------
 
-        for (BlockData.SerializableBlockData e : simpleList) {
-            if( e == null )
-                continue;
+    private static final Path STORE_FILE = Minecraft.getInstance().gameDirectory.toPath().resolve(String.format("config/%s/block_store.json", XRay.MOD_ID));
 
-            ResourceLocation location = null;
-            try {
-                location = Utils.rlFull(e.getBlockName());
-            } catch (Exception ignored) {};
-            if( location == null )
-                continue;
+    private static final Random RANDOM = new Random();
+    private static final Gson PRETTY_JSON = new GsonBuilder().setPrettyPrinting().create();
 
-            Block block = BuiltInRegistries.BLOCK.get(location);
-            if( block == null )
-                continue;
 
-            blockData.add(
-                    new BlockData(
-                            e.getName(),
-                            e.getBlockName(),
-                            e.getColor(),
-                            new ItemStack( block, 1),
-                            e.isDrawing(),
-                            e.getOrder()
-                    )
-            );
+    /**
+     * Recover the last block store from the last use json file
+     */
+    public void recoverBlockStore(){
+        XRay.logger.debug("Trying to recover block store from file");
+
+        if (!Files.exists(STORE_FILE)) {
+            // if there is no file, populate with default ore blocks
+            populateWithDefaultOres();
+            return;
         }
 
-        return blockData;
+        try {
+            // read the data from the json file
+            Type type = new TypeToken<List<SerializableBlockData>>() {}.getType();
+            BufferedReader reader = new BufferedReader(new FileReader(STORE_FILE.toFile()));
+            List<SerializableBlockData> serializedData = PRETTY_JSON.fromJson(reader, type);
+
+
+            serializedData.forEach((sd) -> this.store.put(sd.getBlockName(), new BlockData(sd.getName(), sd.getBlockName(), sd.getColor(),sd.getDrawing(), sd.getOrder())));
+        } catch (IOException | JsonSyntaxException e) {
+            XRay.logger.error("Failed to read json data from {}", STORE_FILE);
+        }
+    }
+
+    /**
+     * Save current hashmap state in the json file as a list
+     */
+    public void persistBlockStore(){
+        XRay.logger.debug("Trying to persist block store to file");
+        boolean createdPath = STORE_FILE.getParent().toFile().mkdirs();
+        if (!createdPath) {
+            XRay.logger.error("Failed to create dirs for {}", STORE_FILE);
+            return;
+        }
+
+        // try to store hashmap values without keys
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(STORE_FILE.toFile()))) {
+            // get values and cast them as SerializableBlockData
+            List<SerializableBlockData> serializableList = new ArrayList<>(this.store.values());
+            PRETTY_JSON.toJson(serializableList, writer);
+        } catch (IOException e) {
+            XRay.logger.error("Failed to write json data to {}", STORE_FILE);
+        }
+    }
+
+    /**
+     * Populate the hashmap with blocks with the "ORES" tag
+     */
+    public void populateWithDefaultOres()
+    {
+        XRay.logger.info("Setting up default ores to the render list");
+        var blocks = BuiltInRegistries.BLOCK.stream().toList();
+
+        int orderTrack = 0;
+        for (Block block : blocks) {
+            if (block.defaultBlockState().is(Tags.Blocks.ORES)) {
+                String itemId = Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block)).toString();
+                this.store.put(itemId, new BlockData(Component.translatable(block.getDescriptionId()).getString(),
+                        itemId,
+                        (RANDOM.nextInt(255) << 16) + (RANDOM.nextInt(255) << 8) + RANDOM.nextInt(255),
+                        new ItemStack(block.asItem()),
+                        false,
+                        orderTrack++));
+            }
+        }
     }
 }

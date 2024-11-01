@@ -9,10 +9,10 @@ import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import pro.mikey.xray.ClientController;
 import pro.mikey.xray.gui.GuiSelectionScreen;
 import pro.mikey.xray.gui.utils.GuiBase;
-import pro.mikey.xray.store.GameBlockStore;
+import pro.mikey.xray.utils.BlockData;
+import pro.mikey.xray.xray.Controller;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -22,13 +22,13 @@ import java.util.stream.Collectors;
 
 public class BlockListScreen extends GuiBase {
     private ScrollingBlockList blockList;
-    private ArrayList<GameBlockStore.BlockWithItemStack> blocks;
+    private final List<BlockData> blocks;
     private EditBox search;
     private String lastSearched = "";
 
     public BlockListScreen() {
         super(false);
-        this.blocks = ClientController.gameBlockStore.getStore();
+        this.blocks = new ArrayList<>(Controller.getBlockStore().getStore().values());
     }
 
     @Override
@@ -62,7 +62,7 @@ public class BlockListScreen extends GuiBase {
             return;
 
         this.blockList.updateEntries(
-                search.getValue().length() == 0
+                search.getValue().isEmpty()
                         ? this.blocks
                         : this.blocks.stream()
                         .filter(e -> e.getItemStack().getHoverName().getString().toLowerCase().contains(search.getValue().toLowerCase()))
@@ -96,7 +96,7 @@ public class BlockListScreen extends GuiBase {
     public class ScrollingBlockList extends ObjectSelectionList<ScrollingBlockList.BlockSlot> {
         static final int SLOT_HEIGHT = 35;
 
-        ScrollingBlockList(int x, int y, int width, int height, List<GameBlockStore.BlockWithItemStack> blocks) {
+        ScrollingBlockList(int x, int y, int width, int height, List<BlockData> blocks) {
             super(BlockListScreen.this.minecraft, width, height, (BlockListScreen.this.height / 2) - (height / 2) - 10, SLOT_HEIGHT);
 //            super(x, y, width, height, SLOT_HEIGHT);
             this.updateEntries(blocks);
@@ -119,10 +119,11 @@ public class BlockListScreen extends GuiBase {
                 return;
 
             Minecraft.getInstance().player.closeContainer();
+
             Minecraft.getInstance().setScreen(new GuiAddBlock(entry.getBlock().getBlock(), BlockListScreen::new));
         }
 
-        void updateEntries(List<GameBlockStore.BlockWithItemStack> blocks) {
+        void updateEntries(List<BlockData> blocks) {
             this.clearEntries(); // @mcp: clearEntries = clearEntries
             blocks.forEach(block -> this.addEntry(new BlockSlot(block, this)));
         }
@@ -133,15 +134,15 @@ public class BlockListScreen extends GuiBase {
         }
 
         public class BlockSlot extends ObjectSelectionList.Entry<ScrollingBlockList.BlockSlot> {
-            GameBlockStore.BlockWithItemStack block;
+            BlockData block;
             private final ScrollingBlockList parent;
 
-            public BlockSlot(GameBlockStore.BlockWithItemStack block, ScrollingBlockList parent) {
+            public BlockSlot(BlockData block, ScrollingBlockList parent) {
                 this.block = block;
                 this.parent = parent;
             }
 
-            public GameBlockStore.BlockWithItemStack getBlock() {
+            public BlockData getBlock() {
                 return block;
             }
 

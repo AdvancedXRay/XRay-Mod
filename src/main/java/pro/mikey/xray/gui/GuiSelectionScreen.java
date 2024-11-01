@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import pro.mikey.xray.ClientController;
 import pro.mikey.xray.Configuration;
 import pro.mikey.xray.Utils;
 import pro.mikey.xray.XRay;
@@ -32,7 +31,6 @@ import pro.mikey.xray.gui.manage.GuiEdit;
 import pro.mikey.xray.gui.utils.GuiBase;
 import pro.mikey.xray.gui.utils.SupportButton;
 import pro.mikey.xray.keybinding.KeyBindings;
-import pro.mikey.xray.store.BlockStore;
 import pro.mikey.xray.utils.BlockData;
 import pro.mikey.xray.xray.Controller;
 
@@ -59,14 +57,6 @@ public class GuiSelectionScreen extends GuiBase {
     public GuiSelectionScreen() {
         super(true);
         this.setSideTitle(I18n.get("xray.single.tools"));
-
-        // Inject this hear as everything is loaded
-        if (ClientController.blockStore.created) {
-            List<BlockData.SerializableBlockData> blocks = ClientController.blockStore.populateDefault();
-            Controller.getBlockStore().setStore(BlockStore.getFromSimpleBlockList(blocks));
-
-            ClientController.blockStore.created = false;
-        }
 
         this.itemList = new ArrayList<>(Controller.getBlockStore().getStore().values());
         this.itemList.sort(Comparator.comparingInt(BlockData::getOrder));
@@ -180,7 +170,7 @@ public class GuiSelectionScreen extends GuiBase {
         if (search.getValue().equals(":on") || search.getValue().equals(":off")) {
             var state = search.getValue().equals(":on");
             this.itemList = this.originalList.stream()
-                    .filter(e -> e.isDrawing() == state)
+                    .filter(e -> e.getDrawing() == state)
                     .collect(Collectors.toCollection(ArrayList::new));
 
             this.itemList.sort(Comparator.comparingInt(BlockData::getOrder));
@@ -190,7 +180,7 @@ public class GuiSelectionScreen extends GuiBase {
         }
 
         this.itemList = this.originalList.stream()
-                .filter(b -> b.getEntryName().toLowerCase().contains(search.getValue().toLowerCase()))
+                .filter(b -> b.getName().toLowerCase().contains(search.getValue().toLowerCase()))
                 .collect(Collectors.toCollection(ArrayList::new));
 
         this.itemList.sort(Comparator.comparingInt(BlockData::getOrder));
@@ -225,14 +215,14 @@ public class GuiSelectionScreen extends GuiBase {
         this.search.render(graphics, x, y, partialTicks);
         this.scrollList.render(graphics, x, y, partialTicks);
 
-        if (!search.isFocused() && search.getValue().equals(""))
+        if (!search.isFocused() && search.getValue().isEmpty())
             graphics.drawString(getFontRender(), I18n.get("xray.single.search"), getWidth() / 2 - 130, getHeight() / 2 - 101, Color.GRAY.getRGB());
     }
 
     @Override
     public void removed() {
         Configuration.store.radius.save();
-        ClientController.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
+        Controller.getBlockStore().persistBlockStore();
 
         Controller.requestBlockFinder(true);
         super.removed();
@@ -277,10 +267,11 @@ public class GuiSelectionScreen extends GuiBase {
             }
 
             Controller.getBlockStore().toggleDrawing(entry.block);
-            ClientController.blockStore.write(new ArrayList<>(Controller.getBlockStore().getStore().values()));
+            Controller.getBlockStore().persistBlockStore();
         }
 
         void updateEntries(List<BlockData> blocks) {
+            XRay.logger.debug("Updating entries of {}", blocks.size());
             this.clearEntries();
             blocks.forEach(block -> this.addEntry(new BlockSlot(block, this))); // @mcp: addEntry = addEntry
         }
@@ -304,8 +295,8 @@ public class GuiSelectionScreen extends GuiBase {
 
                 Font font = Minecraft.getInstance().font;
 
-                guiGraphics.drawString(font, blockData.getEntryName(), left + 25, top + 7, 0xFFFFFF);
-                guiGraphics.drawString(font, blockData.isDrawing() ? "Enabled" : "Disabled", left + 25, top + 17, blockData.isDrawing() ? Color.GREEN.getRGB() : Color.RED.getRGB());
+                guiGraphics.drawString(font, blockData.getName(), left + 25, top + 7, 0xFFFFFF);
+                guiGraphics.drawString(font, blockData.getDrawing() ? "Enabled" : "Disabled", left + 25, top + 17, blockData.getDrawing() ? Color.GREEN.getRGB() : Color.RED.getRGB());
 
                 guiGraphics.renderItem(blockData.getItemStack(), left, top + 7);
                 guiGraphics.renderItemDecorations(font, blockData.getItemStack(), left, top + 7); // TODO: verify

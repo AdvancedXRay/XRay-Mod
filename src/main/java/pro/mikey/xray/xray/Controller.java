@@ -39,7 +39,7 @@ public class Controller {
      * Global blockStore used for:
      * [Rendering, GUI, Configuration Handling]
      */
-    private static BlockStore blockStore = new BlockStore();
+    private static final BlockStore blockStore = new BlockStore();
 
     // Thread management
 

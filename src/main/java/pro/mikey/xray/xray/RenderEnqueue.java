@@ -9,7 +9,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import org.apache.commons.lang3.tuple.Pair;
 import pro.mikey.xray.utils.BlockData;
 import pro.mikey.xray.utils.RenderBlockProps;
 
@@ -20,7 +19,7 @@ public class RenderEnqueue {
 	 * Use Controller.requestBlockFinder() to trigger a scan.
 	 */
 	public static Set<RenderBlockProps> blockFinder() {
-        HashMap<UUID, BlockData> blocks = Controller.getBlockStore().getStore();
+        HashMap<String, BlockData> blocks = Controller.getBlockStore().getStore();
         if ( blocks.isEmpty() ) {
             return new HashSet<>(); // no need to scan the region if there's nothing to find
         }
@@ -43,7 +42,6 @@ public class RenderEnqueue {
 		BlockState currentState;
 		FluidState currentFluid;
 
-		Pair<BlockData, UUID> dataWithUUID;
 		ResourceLocation block;
 
 		for (int i = cX - range; i <= cX + range; i++) {
@@ -72,15 +70,12 @@ public class RenderEnqueue {
 							if( block == null )
 								continue;
 
-							dataWithUUID = Controller.getBlockStore().getStoreByReference(block.toString());
-							if( dataWithUUID == null )
-								continue;
-
-							if( dataWithUUID.getKey() == null || !dataWithUUID.getKey().isDrawing() ) // fail safe
+							Optional<BlockData> data = Controller.getBlockStore().get(block.toString());
+							if(data.isEmpty() || !data.get().getDrawing())
 								continue;
 
 							// Push the block to the render queue
-							renderQueue.add(new RenderBlockProps(pos.getX(), pos.getY(), pos.getZ(), dataWithUUID.getKey().getColor()));
+							renderQueue.add(new RenderBlockProps(pos.getX(), pos.getY(), pos.getZ(), data.get().getColor()));
 						}
 					}
 				}
@@ -115,12 +110,12 @@ public class RenderEnqueue {
 		if( block == null )
 			return;
 
-		Pair<BlockData, UUID> dataWithUUID = Controller.getBlockStore().getStoreByReference(block.toString());
-		if( dataWithUUID == null || dataWithUUID.getKey() == null || !dataWithUUID.getKey().isDrawing() )
+		Optional<BlockData> data = Controller.getBlockStore().get(block.toString());
+		if( data.isEmpty() || !data.get().getDrawing() )
 			return;
 
 		// the block was added to the world, let's add it to the drawing buffer
-		Controller.syncRenderList.add(new RenderBlockProps(pos, dataWithUUID.getKey().getColor()) );
+		Controller.syncRenderList.add(new RenderBlockProps(pos, data.get().getColor()));
 		Render.requestedRefresh = true;
 	}
 }
