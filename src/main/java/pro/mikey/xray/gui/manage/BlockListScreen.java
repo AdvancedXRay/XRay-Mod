@@ -10,6 +10,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import pro.mikey.xray.ClientController;
+import pro.mikey.xray.Utils;
 import pro.mikey.xray.gui.GuiSelectionScreen;
 import pro.mikey.xray.gui.utils.GuiBase;
 import pro.mikey.xray.store.GameBlockStore;
@@ -62,10 +63,10 @@ public class BlockListScreen extends GuiBase {
             return;
 
         this.blockList.updateEntries(
-                search.getValue().length() == 0
+                search.getValue().isEmpty()
                         ? this.blocks
                         : this.blocks.stream()
-                        .filter(e -> e.getItemStack().getHoverName().getString().toLowerCase().contains(search.getValue().toLowerCase()))
+                        .filter(e -> Utils.safeItemStackName(e.getItemStack()).getString().toLowerCase().contains(search.getValue().toLowerCase()))
                         .collect(Collectors.toList())
         );
 

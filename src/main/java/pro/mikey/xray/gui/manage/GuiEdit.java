@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 import org.apache.commons.lang3.tuple.Pair;
 import pro.mikey.xray.ClientController;
+import pro.mikey.xray.Utils;
 import pro.mikey.xray.gui.GuiSelectionScreen;
 import pro.mikey.xray.gui.utils.GuiBase;
 import pro.mikey.xray.utils.BlockData;
@@ -89,7 +90,7 @@ public class GuiEdit extends GuiBase {
 
     @Override
     public void renderExtra(GuiGraphics graphics, int x, int y, float partialTicks) {
-        graphics.drawString(font, this.block.getItemStack().getHoverName().getString(), getWidth() / 2 - 138, getHeight() / 2 - 90, 0xffffff);
+        graphics.drawString(font, Utils.safeItemStackName(this.block.getItemStack()).getString(), getWidth() / 2 - 138, getHeight() / 2 - 90, 0xffffff);
 
         oreName.render(graphics, x, y, partialTicks);
 

@@ -1,5 +1,5 @@
-## [86.0.0]
+## [21.0.1]
 
-### Changed
+### Fixed
 
-- Updated to 1.20.6 for NeoForge
+- Crashing when certain mods cause block names to comeback as null

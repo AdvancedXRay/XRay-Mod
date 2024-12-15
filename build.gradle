@@ -133,7 +133,3 @@ sourceSets.each {
     it.output.resourcesDir = dir
     it.java.destinationDirectory = dir
 }
-
-tasks.register("idePostSync") {
-
-}

@@ -97,7 +97,7 @@ public class GuiSelectionScreen extends GuiBase {
 
             // Check if the hand item is a block or not
             if (!(handItem.getItem() instanceof BlockItem)) {
-                getMinecraft().player.displayClientMessage(Component.literal("[XRay] " + I18n.get("xray.message.invalid_hand", handItem.getHoverName().getString())), false);
+                getMinecraft().player.displayClientMessage(Component.literal("[XRay] " + I18n.get("xray.message.invalid_hand", Utils.safeItemStackName(handItem).getString())), false);
                 return;
             }
 
