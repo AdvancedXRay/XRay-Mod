@@ -271,7 +271,7 @@ public class GuiSelectionScreen extends GuiBase {
         }
 
         @Override
-        protected int getScrollbarPosition() {
+        protected int scrollBarX() {
             return this.getX() + this.getRowWidth() + 6;
         }
 

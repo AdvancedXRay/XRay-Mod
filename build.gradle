@@ -40,6 +40,7 @@ runs {
     }
 
     data {
+        runType "client"
         programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
     }
 }
@@ -113,7 +114,6 @@ publishMods {
         accessToken = providers.environmentVariable("CURSE_DEPLOY_TOKEN")
         projectId = "${curse_id}"
         minecraftVersions.add("${minecraft_version}")
-        minecraftVersions.add("1.21.3")
         modLoaders.add("neoforge")
         displayName = "[NEOFORGE] [${minecraft_version}] ${project.name} ${mod_version}"
         file = project.tasks.jar.archiveFile
