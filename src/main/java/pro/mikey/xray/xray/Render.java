@@ -1,9 +1,11 @@
 package pro.mikey.xray.xray;
 
+import com.mojang.blaze3d.buffers.BufferUsage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.CoreShaders;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -22,7 +24,7 @@ public class Render {
 	static void renderBlocks(RenderLevelStageEvent event) {
         if (vertexBuffer == null || requestedRefresh) {
             requestedRefresh = false;
-            vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
+            vertexBuffer = new VertexBuffer(BufferUsage.STATIC_WRITE);
 
             Tesselator tessellator = Tesselator.getInstance();
             BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
@@ -98,8 +100,7 @@ public class Render {
             PoseStack poseStack = event.getPoseStack();
             poseStack.pushPose();
 
-            RenderSystem.setShader(GameRenderer::getPositionColorShader);
-            RenderSystem.applyModelViewMatrix();
+            RenderSystem.setShader(CoreShaders.POSITION_COLOR);
             RenderSystem.depthFunc(GL11.GL_ALWAYS);
 
             poseStack.mulPose(event.getModelViewMatrix());
@@ -111,7 +112,6 @@ public class Render {
             RenderSystem.depthFunc(GL11.GL_LEQUAL);
 
             poseStack.popPose();
-            RenderSystem.applyModelViewMatrix();
         }
 	}
 }

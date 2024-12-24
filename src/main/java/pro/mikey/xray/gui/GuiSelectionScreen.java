@@ -2,12 +2,14 @@ package pro.mikey.xray.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.locale.Language;
@@ -87,6 +89,7 @@ public class GuiSelectionScreen extends GuiBase {
 
         this.search = new EditBox(getFontRender(), getWidth() / 2 - 137, getHeight() / 2 - 105, 202, 18, Component.empty());
         this.search.setCanLoseFocus(true);
+        addRenderableWidget(this.search);
 
         // side bar buttons
         addRenderableWidget(new SupportButtonInner((getWidth() / 2) + 79, getHeight() / 2 - 60, 120, 20, I18n.get("xray.input.add"), "xray.tooltips.add_block", button -> {
@@ -222,11 +225,17 @@ public class GuiSelectionScreen extends GuiBase {
 
     @Override
     public void renderExtra(GuiGraphics graphics, int x, int y, float partialTicks) {
-        this.search.render(graphics, x, y, partialTicks);
-        this.scrollList.render(graphics, x, y, partialTicks);
-
         if (!search.isFocused() && search.getValue().equals(""))
             graphics.drawString(getFontRender(), I18n.get("xray.single.search"), getWidth() / 2 - 130, getHeight() / 2 - 101, Color.GRAY.getRGB());
+
+        PoseStack pose = graphics.pose();
+        pose.pushPose();
+        pose.translate(this.getWidth() / 2f - 140, ((this.getHeight() / 2f) - 3) + 120, 0);
+        pose.scale(0.75f, 0.75f, 0.75f);
+        graphics.drawString(this.font, Component.translatable("xray.tooltips.edit1"), 0, 0, Color.GRAY.getRGB());
+        pose.translate(0, 12, 0);
+        graphics.drawString(this.font, Component.translatable("xray.tooltips.edit2"), 0, 0, Color.GRAY.getRGB());
+        pose.popPose();
     }
 
     @Override
@@ -310,27 +319,15 @@ public class GuiSelectionScreen extends GuiBase {
                 guiGraphics.renderItem(blockData.getItemStack(), left, top + 7);
                 guiGraphics.renderItemDecorations(font, blockData.getItemStack(), left, top + 7); // TODO: verify
 
-                if (mouseX > left && mouseX < (left + entryWidth) && mouseY > top && mouseY < (top + entryHeight) && mouseY < (this.parent.getY() + this.parent.getHeight()) && mouseY > this.parent.getY()) {
-                    guiGraphics.renderTooltip(
-                            font,
-                            Language.getInstance().getVisualOrder(Arrays.asList(Component.translatable("xray.tooltips.edit1"), Component.translatable("xray.tooltips.edit2"))),
-                            left + 15,
-                            (entryIdx == this.parent.children().size() - 1 ? (top - (entryHeight - 20)) : (top + (entryHeight + 15)))
-                    );
-                }
-
-                Color color = new Color(blockData.getColor());
-
                 var stack = guiGraphics.pose();
                 stack.pushPose();
                 RenderSystem.enableBlend();
                 RenderSystem.blendFunc(
                         GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-                RenderSystem.setShaderColor(0, 0, 0, .5f);
-                guiGraphics.blit(GuiSelectionScreen.CIRCLE, (left + entryWidth) - 23, (int) (top + (entryHeight / 2f) - 9), 0, 0, 14, 14, 14, 14);
-                RenderSystem.setShaderColor(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, 1);
-                guiGraphics.blit(GuiSelectionScreen.CIRCLE, (left + entryWidth) - 21, (int) (top + (entryHeight / 2f) - 7), 0, 0, 10, 10, 10, 10);
-                RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+
+                guiGraphics.blit(RenderType::guiTextured, GuiSelectionScreen.CIRCLE, (left + entryWidth) - 23, (int) (top + (entryHeight / 2f) - 9), 0, 0, 14, 14, 14, 14, 0x7F000000);
+                guiGraphics.blit(RenderType::guiTextured, GuiSelectionScreen.CIRCLE, (left + entryWidth) - 21, (int) (top + (entryHeight / 2f) - 7), 0, 0, 10, 10, 10, 10, 0xFF000000 | blockData.getColor());
+
                 RenderSystem.disableBlend();
                 stack.popPose();
             }

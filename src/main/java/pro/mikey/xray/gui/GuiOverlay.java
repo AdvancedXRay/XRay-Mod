@@ -1,8 +1,10 @@
 package pro.mikey.xray.gui;
 
+import com.mojang.blaze3d.platform.GlDebug;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
@@ -27,14 +29,19 @@ public class GuiOverlay {
         if(!Controller.isXRayActive() || !Configuration.general.showOverlay.get())
             return;
 
-        RenderSystem.setShaderColor(0, 1F, 0, 1F);
-        RenderSystem.setShaderTexture(0, CIRCLE);
         GuiGraphics guiGraphics = event.getGuiGraphics();
-        guiGraphics.blit(CIRCLE, 5, 5, 0f, 0f, 5, 5, 5, 5);
 
-        guiGraphics.drawString(Minecraft.getInstance().font, I18n.get("xray.overlay"), 15, 4, 0xffffffff);
+        boolean renderDebug = GlDebug.isDebugEnabled();
 
-        // Reset color
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        int x = 5, y = 5;
+        if (renderDebug) {
+            x = Minecraft.getInstance().getWindow().getGuiScaledWidth() - 10;
+            y = Minecraft.getInstance().getWindow().getGuiScaledHeight() - 10;
+        }
+
+        guiGraphics.blit(RenderType::guiTextured, CIRCLE, x, y, 0f, 0f, 5, 5, 5, 5, 0xFF00FF00);
+
+        int width = Minecraft.getInstance().font.width(I18n.get("xray.overlay"));
+        guiGraphics.drawString(Minecraft.getInstance().font, I18n.get("xray.overlay"), x + (!renderDebug ? 10 : -width - 5), y - (!renderDebug ? 1 : 2), 0xff00ff00);
     }
 }

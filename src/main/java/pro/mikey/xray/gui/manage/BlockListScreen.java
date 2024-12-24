@@ -151,7 +151,7 @@ public class BlockListScreen extends GuiBase {
                 Font font = this.parent.minecraft.font;
 
                 ResourceLocation resource = BuiltInRegistries.ITEM.getKey(this.block.getItemStack().getItem());
-                graphics.drawString(font, this.block.getItemStack().getItem().getDescription().getString(), left + 25, top + 7, Color.WHITE.getRGB());
+                graphics.drawString(font, this.block.getItemStack().getItem().getName().getString(), left + 25, top + 7, Color.WHITE.getRGB());
                 graphics.drawString(font, resource != null ? resource.getNamespace() : "", left + 25, top + 17, Color.GRAY.getRGB());
 
                 graphics.renderItem(this.block.getItemStack(), left, top + 7);

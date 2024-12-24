@@ -85,9 +85,7 @@ public class BlockStore {
             if( location == null )
                 continue;
 
-            Block block = BuiltInRegistries.BLOCK.get(location);
-            if( block == null )
-                continue;
+            Block block = BuiltInRegistries.BLOCK.getValue(location);
 
             blockData.add(
                     new BlockData(
