@@ -1,7 +1,5 @@
 package pro.mikey.xray.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -12,7 +10,6 @@ import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -321,14 +318,10 @@ public class GuiSelectionScreen extends GuiBase {
 
                 var stack = guiGraphics.pose();
                 stack.pushPose();
-                RenderSystem.enableBlend();
-                RenderSystem.blendFunc(
-                        GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
                 guiGraphics.blit(RenderType::guiTextured, GuiSelectionScreen.CIRCLE, (left + entryWidth) - 23, (int) (top + (entryHeight / 2f) - 9), 0, 0, 14, 14, 14, 14, 0x7F000000);
                 guiGraphics.blit(RenderType::guiTextured, GuiSelectionScreen.CIRCLE, (left + entryWidth) - 21, (int) (top + (entryHeight / 2f) - 7), 0, 0, 10, 10, 10, 10, 0xFF000000 | blockData.getColor());
 
-                RenderSystem.disableBlend();
                 stack.popPose();
             }
 

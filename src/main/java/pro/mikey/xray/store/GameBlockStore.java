@@ -1,6 +1,5 @@
 package pro.mikey.xray.store;
 
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import pro.mikey.xray.xray.Controller;
 import net.minecraft.world.level.block.Block;

@@ -45,7 +45,11 @@ public class Controller {
 
     // Draw states
     private static boolean xrayActive = false; // Off by default
-    private static boolean lavaActive = Configuration.store.lavaActive.get();
+    private static boolean lavaActive = false;
+
+    public static void init() {
+        lavaActive = Configuration.store.lavaActive.get();
+    }
 
     public static BlockStore getBlockStore() {
         return blockStore;

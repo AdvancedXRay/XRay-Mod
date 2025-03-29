@@ -3,7 +3,7 @@ name: CI Build & Release
 on:
   push:
     tags:
-      - mc/*/*
+      - v/*
 
 jobs:
   build:

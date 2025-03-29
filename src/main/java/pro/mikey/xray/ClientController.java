@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -27,28 +28,14 @@ public class ClientController {
     // This contains all the games blocks to allow us to reference them
     // when needed. This allows us to avoid continually rebuilding
     public static GameBlockStore gameBlockStore = new GameBlockStore();
-    public static DiscoveryStorage blockStore = new DiscoveryStorage();
+    public static DiscoveryStorage blockStore;
 
-    public static void setup(IEventBus eventBus) {
-
-        eventBus.addListener(ClientController::onSetup);
-        eventBus.addListener(ClientController::onLoadComplete);
-        eventBus.addListener(KeyBindings::registerKeyBinding);
-
-        ModLoadingContext.get().getActiveContainer()
-                .registerConfig(ModConfig.Type.CLIENT, Configuration.SPEC);
-
-        // Keybindings
-        NeoForge.EVENT_BUS.addListener(KeyBindings::eventInput);
-        NeoForge.EVENT_BUS.addListener(ClientController::onGameJoin);
-
-        NeoForge.EVENT_BUS.addListener(Events::tickEnd);
-        NeoForge.EVENT_BUS.addListener(Events::onWorldRenderLast);
-
-    }
-
-    private static void onSetup(final FMLCommonSetupEvent event) {
+    static void onSetup(final FMLClientSetupEvent event) {
         XRay.logger.debug(I18n.get("xray.debug.init"));
+
+        blockStore = new DiscoveryStorage();
+        ClientController.gameBlockStore.populate();
+        Controller.init();
 
         KeyBindings.setup();
         List<BlockData.SerializableBlockData> data = ClientController.blockStore.read();
@@ -59,7 +46,7 @@ public class ClientController {
         Controller.getBlockStore().setStore(map);
     }
 
-    private static void onGameJoin(final EntityJoinLevelEvent event) {
+    static void onGameJoin(final EntityJoinLevelEvent event) {
         if (!Configuration.firstRun.get()) {
             return;
         }
@@ -76,9 +63,5 @@ public class ClientController {
         player.displayClientMessage(Component.translatable("xray.chat.first-time-line-2"), false);
         Configuration.firstRun.set(false);
         Configuration.firstRun.save();
-    }
-
-    private static void onLoadComplete(FMLLoadCompleteEvent event) {
-        ClientController.gameBlockStore.populate();
     }
 }
