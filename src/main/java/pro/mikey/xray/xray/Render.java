@@ -14,9 +14,11 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.ShapeRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4fStack;
+import pro.mikey.xray.XRay;
 
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
@@ -30,7 +32,7 @@ public class Render {
 	public static RenderPipeline LINES_NO_DEPTH = RenderPipeline.builder(RenderPipelines.MATRICES_COLOR_SNIPPET)
 			.withLocation("pipeline/xray_lines")
 			.withVertexShader("core/rendertype_lines")
-			.withFragmentShader("core/rendertype_lines")
+			.withFragmentShader(ResourceLocation.fromNamespaceAndPath(XRay.MOD_ID, "frag/constant_color"))
 			.withUniform("LineWidth", UniformType.FLOAT)
 			.withUniform("ScreenSize", UniformType.VEC2)
 			.withBlend(BlendFunction.TRANSLUCENT)
