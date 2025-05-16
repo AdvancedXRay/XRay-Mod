@@ -1,5 +1,5 @@
-## [21.5.0]
+## [21.5.1]
 
-### Changes
+### Fixed
 
-- Ported to 1.21.5
+- Rendering issue causing water and other effects to mutate vertex colours (Thanks to [@cargocats](https://github.com/cargocats) [#303](https://github.com/AdvancedXRay/XRay-Mod/pull/303))
