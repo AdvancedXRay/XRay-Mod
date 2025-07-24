@@ -72,7 +72,7 @@ public abstract class GuiBase extends Screen {
 
         renderExtra(graphics, mouseX, mouseY, partialTick);
 
-        // Note sure what this does. Seems to work so far without it.
+        // Not sure what this does. Seems to work so far without it.
         // TODO investigate
         //for (GuiEventListener button : this.children()) {
         //    if (button instanceof SupportButton && ((SupportButton) button).isHovered()) {
