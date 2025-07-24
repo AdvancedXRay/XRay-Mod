@@ -1,7 +1,5 @@
 package pro.mikey.xray.xray;
 
-import com.mojang.blaze3d.buffers.BufferType;
-import com.mojang.blaze3d.buffers.BufferUsage;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
@@ -29,17 +27,18 @@ public class Render {
 	private static int indexCount = 0;
 	private static final RenderSystem.AutoStorageIndexBuffer indices = RenderSystem.getSequentialBuffer(VertexFormat.Mode.LINES);
 
-	public static RenderPipeline LINES_NO_DEPTH = RenderPipeline.builder(RenderPipelines.MATRICES_COLOR_SNIPPET)
+	public static RenderPipeline LINES_NO_DEPTH = RenderPipeline.builder(RenderPipelines.LINES_SNIPPET)//MATRICES_COLOR_SNIPPET)
 			.withLocation("pipeline/xray_lines")
 			.withVertexShader("core/rendertype_lines")
 			.withFragmentShader(ResourceLocation.fromNamespaceAndPath(XRay.MOD_ID, "frag/constant_color"))
-			.withUniform("LineWidth", UniformType.FLOAT)
-			.withUniform("ScreenSize", UniformType.VEC2)
+			//.withUniform("LineWidth", UniformType.UNIFORM_BUFFER)
+			//.withUniform("ScreenSize", UniformType.UNIFORM_BUFFER)
 			.withBlend(BlendFunction.TRANSLUCENT)
 			.withCull(false)
 			.withVertexFormat(DefaultVertexFormat.POSITION_COLOR_NORMAL, VertexFormat.Mode.LINES)
 			.withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
 			.build();
+
 
 	static void renderBlocks(RenderLevelStageEvent event) {
 		if (Controller.syncRenderList.isEmpty()) {
@@ -77,7 +76,7 @@ public class Render {
 
 			try (MeshData meshData = bufferBuilder.buildOrThrow()) {
 				vertexBuffer = RenderSystem.getDevice()
-						.createBuffer(() -> "Xray vertex buffer", BufferType.VERTICES, BufferUsage.STATIC_WRITE, meshData.vertexBuffer());
+						.createBuffer(() -> "Xray vertex buffer", GpuBuffer.USAGE_VERTEX, meshData.vertexBuffer());
 
 				indexCount = meshData.drawState().indexCount();
 			}
@@ -87,7 +86,7 @@ public class Render {
             Vec3 playerPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition().reverse();
 
 			RenderTarget renderTarget = Minecraft.getInstance().getMainRenderTarget();
-			if (renderTarget.getColorTexture() == null) {
+			if (renderTarget.getColorTextureView() == null) {
 				return;
 			}
 
@@ -95,7 +94,9 @@ public class Render {
 			GpuBuffer gpuBuffer = indices.getBuffer(indexCount);
 			try (RenderPass renderPass = RenderSystem.getDevice()
 					.createCommandEncoder()
-					.createRenderPass(renderTarget.getColorTexture(), OptionalInt.empty(), renderTarget.getDepthTexture(), OptionalDouble.empty())) {
+					.createRenderPass(() -> "Xray vertex buffer", renderTarget.getColorTextureView(), OptionalInt.empty(), renderTarget.getDepthTextureView(), OptionalDouble.empty())) {
+
+				//createRenderPass(label, colorTextureView, clearColor, depthTextureView, clearDepth);
 
 				Matrix4fStack matrix4fStack = RenderSystem.getModelViewStack();
 				matrix4fStack.pushMatrix();
@@ -104,7 +105,11 @@ public class Render {
 				renderPass.setPipeline(pipeline);
 				renderPass.setIndexBuffer(gpuBuffer, indices.type());
 				renderPass.setVertexBuffer(0, vertexBuffer);
-				renderPass.drawIndexed(0, indexCount);
+				// TODO: This is likely not correct, next step is how to repair this.
+				// This "just compiles and runs" but it does not "work".
+				//renderPass.drawIndexed(0, 0, indexCount,1); // og: 0, indexCount. Added 0, og, 1
+				renderPass.draw(0, indexCount);
+				// this.realRenderPass.drawIndexed(vertexOffset, firstIndex, indexCount, instanceCount);
 
 				matrix4fStack.popMatrix();
 			}
