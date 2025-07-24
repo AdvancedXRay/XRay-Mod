@@ -7,7 +7,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix3x2fStack;
 import pro.mikey.xray.ClientController;
 import pro.mikey.xray.Configuration;
 import pro.mikey.xray.Utils;
@@ -38,7 +39,6 @@ import pro.mikey.xray.xray.Controller;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -225,14 +225,14 @@ public class GuiSelectionScreen extends GuiBase {
         if (!search.isFocused() && search.getValue().equals(""))
             graphics.drawString(getFontRender(), I18n.get("xray.single.search"), getWidth() / 2 - 130, getHeight() / 2 - 101, Color.GRAY.getRGB());
 
-        PoseStack pose = graphics.pose();
-        pose.pushPose();
-        pose.translate(this.getWidth() / 2f - 140, ((this.getHeight() / 2f) - 3) + 120, 0);
-        pose.scale(0.75f, 0.75f, 0.75f);
+        Matrix3x2fStack pose = graphics.pose();
+        pose.pushMatrix();
+        pose.translate(this.getWidth() / 2f - 140, ((this.getHeight() / 2f) - 3) + 120);
+        pose.scale(0.75f);
         graphics.drawString(this.font, Component.translatable("xray.tooltips.edit1"), 0, 0, Color.GRAY.getRGB());
-        pose.translate(0, 12, 0);
+        pose.translate(0, 12);
         graphics.drawString(this.font, Component.translatable("xray.tooltips.edit2"), 0, 0, Color.GRAY.getRGB());
-        pose.popPose();
+        pose.popMatrix();
     }
 
     @Override
@@ -316,13 +316,13 @@ public class GuiSelectionScreen extends GuiBase {
                 guiGraphics.renderItem(blockData.getItemStack(), left, top + 7);
                 guiGraphics.renderItemDecorations(font, blockData.getItemStack(), left, top + 7); // TODO: verify
 
-                var stack = guiGraphics.pose();
-                stack.pushPose();
+                Matrix3x2fStack stack = guiGraphics.pose();
+                stack.pushMatrix();
 
-                guiGraphics.blit(RenderType::guiTextured, GuiSelectionScreen.CIRCLE, (left + entryWidth) - 23, (int) (top + (entryHeight / 2f) - 9), 0, 0, 14, 14, 14, 14, 0x7F000000);
-                guiGraphics.blit(RenderType::guiTextured, GuiSelectionScreen.CIRCLE, (left + entryWidth) - 21, (int) (top + (entryHeight / 2f) - 7), 0, 0, 10, 10, 10, 10, 0xFF000000 | blockData.getColor());
+                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GuiSelectionScreen.CIRCLE, (left + entryWidth) - 23, (int) (top + (entryHeight / 2f) - 9), 0, 0, 14, 14, 14, 14, 0x7F000000);
+                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GuiSelectionScreen.CIRCLE, (left + entryWidth) - 21, (int) (top + (entryHeight / 2f) - 7), 0, 0, 10, 10, 10, 10, 0xFF000000 | blockData.getColor());
 
-                stack.popPose();
+                stack.popMatrix();
             }
 
             @Override

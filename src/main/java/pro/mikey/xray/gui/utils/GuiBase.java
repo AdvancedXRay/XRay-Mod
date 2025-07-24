@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -38,40 +38,47 @@ public abstract class GuiBase extends Screen {
         return false;
     }
 
+    // mouseX and mouseY indicate the scaled coordinates of where the cursor is in on the screen
     @Override
-    public void render(GuiGraphics guiGraphics, int x, int y, float partialTicks) {
-        renderBackground(guiGraphics, x, y, partialTicks);
+    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        // Submit things on the background stratum
+        this.renderTransparentBackground(graphics);
+
 
         int width = this.width;
         int height = this.height;
         if (this.hasSide) {
-            guiGraphics.blit(RenderType::guiTextured, getBackground(), width / 2 + 60, height / 2 - 180 / 2, 0, 0, 150, 180, 150, 180);
-            guiGraphics.blit(RenderType::guiTextured, getBackground(), width / 2 - 150, height / 2 - 118, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, getBackground(), width / 2 + 60, height / 2 - 180 / 2, 0, 0, 150, 180, 150, 180);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, getBackground(), width / 2 - 150, height / 2 - 118, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
 
             if (hasSideTitle())
-                guiGraphics.drawString(getFontRender(), this.sideTitle, width / 2 + 80, height / 2 - 77, 0xffff00);
+                graphics.drawString(getFontRender(), this.sideTitle, width / 2 + 80, height / 2 - 77, 0xffff00);
         }
 
         if (!this.hasSide)
-            guiGraphics.blit(RenderType::guiTextured, getBackground(), width / 2 - this.backgroundWidth / 2 + 1, height / 2 - this.backgroundHeight / 2, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, getBackground(), width / 2 - this.backgroundWidth / 2 + 1, height / 2 - this.backgroundHeight / 2, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
 
         if (hasTitle()) {
             if (this.hasSide)
-                guiGraphics.drawString(getFontRender(), title(), width / 2 - 138, height / 2 - 105, 0xffff00);
+                graphics.drawString(getFontRender(), title(), width / 2 - 138, height / 2 - 105, 0xffff00);
             else
-                guiGraphics.drawString(getFontRender(), title(), width / 2 - (this.backgroundWidth / 2) + 14, height / 2 - (this.backgroundHeight / 2) + 13, 0xffff00);
+                graphics.drawString(getFontRender(), title(), width / 2 - (this.backgroundWidth / 2) + 14, height / 2 - (this.backgroundHeight / 2) + 13, 0xffff00);
         }
+    }
 
-        for(Renderable renderable : this.renderables) {
-            renderable.render(guiGraphics, x, y, partialTicks);
-        }
+    @Override
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        super.render(graphics, mouseX, mouseY, partialTick);
 
-        renderExtra(guiGraphics, x, y, partialTicks);
+        renderExtra(graphics, mouseX, mouseY, partialTick);
 
-        for (GuiEventListener button : this.children()) {
-            if (button instanceof SupportButton && ((SupportButton) button).isHovered())
-                guiGraphics.renderTooltip(getFontRender(), Language.getInstance().getVisualOrder(((SupportButton) button).getSupport()), x, y);
-        }
+        // Note sure what this does. Seems to work so far without it.
+        // TODO investigate
+        //for (GuiEventListener button : this.children()) {
+        //    if (button instanceof SupportButton && ((SupportButton) button).isHovered()) {
+        //        graphics.renderTooltip(getFontRender(), Language.getInstance().getVisualOrder(((SupportButton) button).getSupport()), mouseX, mouseY);
+        //    }
+        //}
     }
 
     public ResourceLocation getBackground() {
