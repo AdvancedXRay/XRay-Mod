@@ -18,12 +18,8 @@ public class Events {
         }
     }
 
-    public static void onWorldRenderLast(RenderLevelStageEvent event) {
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_WEATHER) {
-            return;
-        }
-
-        if (Controller.isXRayActive() && Minecraft.getInstance().player != null) {
+    public static void onWorldRenderLast(RenderLevelStageEvent.AfterOpaqueBlocks event) {
+        if (Controller.isXRayActive()) {
             // this is a world pos of the player
             Render.renderBlocks(event);
         }
