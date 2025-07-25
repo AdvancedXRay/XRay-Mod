@@ -1,0 +1,49 @@
+plugins {
+    id 'fabric-loom'
+}
+
+loom {
+    accessWidenerPath = project(":common").file("src/main/resources/xray.accesswidener")
+
+    runs {
+        client {
+            source = sourceSets.main
+            ideConfigGenerated = true
+            client()
+        }
+    }
+
+    mods {
+        "xray" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    compileOnly project(":common")
+}
+
+repositories {
+}
+
+java {
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
+        }
+    }
+}

@@ -1,8 +1,7 @@
 plugins {
-    id 'idea'
     id 'java-library'
-    id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.78'
+    id 'fabric-loom' version '1.10-SNAPSHOT' apply(false)
+    id 'net.neoforged.moddev' version '2.0.78' apply(false)
     id "me.modmuss50.mod-publish-plugin" version "0.8.4"
 }
 
@@ -10,87 +9,92 @@ tasks.named('wrapper', Wrapper).configure {
     distributionType = Wrapper.DistributionType.BIN
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
-
 version = mod_version
 group = 'pro.mikey'
 
-base {
-    archivesName = "advanced-xray-neoforge"
-}
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-neoForge {
-    version = project.forge_version
-    accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
+allprojects {
+    apply plugin: 'idea'
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
 
-    runs {
-        // applies to all the run configs below
-        configureEach {
-            systemProperty 'forge.logging.markers', 'REGISTRIES'
-            logLevel = org.slf4j.event.Level.DEBUG
-        }
+    version = mod_version
+    java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-        client {
-            client()
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
-        }
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
     }
 
-    mods {
-        "${mod_id}" {
-            sourceSet(sourceSets.main)
+    idea {
+        module {
+            downloadSources = true
+            downloadJavadoc = true
         }
     }
+
+//    jar {
+//        from(rootProject.file("LICENSE").toString()) {
+//            rename { "${it}_${project.archivesBaseName}" }
+//        }
+//    }
 }
 
-def replaceProperties = [
-    minecraft_version: minecraft_version,
-    minecraft_version_range: minecraft_version_range.replace("[%base]", minecraft_version),
-    forge_version_range: forge_version_range,
-    version: version,
-]
-
-processResources {
-    inputs.properties replaceProperties
-
-    filesMatching("META-INF/neoforge.mods.toml") {
-        expand replaceProperties
-    }
-}
-
-configurations {
-    runtimeClasspath.extendsFrom localRuntime
-}
-
-dependencies {
-}
-
-repositories {
-    maven {
-        url "https://maven.neoforged.net/releases"
-    }
-}
-
-java {
-    withSourcesJar()
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId = rootProject.archivesBaseName
-            from components.java
-        }
+subprojects {
+    base {
+        archivesName = "advanced-xray-$project.name"
     }
 
     repositories {
-        def token = providers.environmentVariable("SAPS_TOKEN");
-        if (token.isPresent()) {
-            maven {
-                url "https://maven.saps.dev/releases"
-                credentials {
-                    username = "mikeymods"
-                    password = token.get()
+        maven {
+            url "https://libraries.minecraft.net"
+            content {
+                includeModule("org.lwjgl", "lwjgl-freetype")
+            }
+        }
+    }
+
+    if (project.name != "common") {
+        tasks.withType(JavaCompile).configureEach {
+            if (!it.name.toLowerCase().contains("test")) {
+                source(project(":common").sourceSets.main.allSource)
+            }
+        }
+
+        tasks.withType(Javadoc).configureEach {
+            source(project(":common").sourceSets.main.allJava)
+        }
+
+        processResources {
+            from project(":common").sourceSets.main.resources
+        }
+    }
+
+    def replaceProperties = [
+            minecraft_version: minecraft_version,
+            minecraft_version_range: minecraft_version_range.replace("[%base]", minecraft_version),
+            forge_version_range: forge_version_range,
+            version: version,
+    ]
+
+    processResources {
+        inputs.properties replaceProperties
+
+        filesMatching(["META-INF/neoforge.mods.toml", "fabric.mod.json", "META-INF/mods.toml"]) {
+            expand replaceProperties
+        }
+    }
+
+    publishing {
+        repositories {
+            def token = providers.environmentVariable("SAPS_TOKEN");
+            if (token.isPresent()) {
+                maven {
+                    url "https://maven.saps.dev/releases"
+                    credentials {
+                        username = "mikeymods"
+                        password = token.get()
+                    }
                 }
             }
         }
@@ -103,13 +107,28 @@ publishMods {
     version = "${mod_version}"
     type = STABLE
 
-    curseforge {
+    def createOptions = (String platform, String taskName) -> {
+        publishOptions {
+            file = project.provider { project(":$platform").tasks[taskName] }.flatMap { it.archiveFile }
+            displayName = "[${platform.toUpperCase()}] Advanced XRay ${mod_version}"
+            modLoaders.add(platform.toLowerCase())
+        }
+    }
+
+    def curseForgeOptions = curseforgeOptions {
         accessToken = providers.environmentVariable("CURSE_DEPLOY_TOKEN")
-        projectId = "${curse_id}"
         minecraftVersions.add("${minecraft_version}")
-        modLoaders.add("neoforge")
-        displayName = "[NEOFORGE] [${minecraft_version}] ${project.name} ${mod_version}"
-        file = project.tasks.jar.archiveFile
+        javaVersions.add(JavaVersion.VERSION_21)
+    }
+
+    curseforge("curseforgeNeoforge") {
+        from(curseForgeOptions, createOptions("neoforge", "jar"))
+        projectId = "256256"
+    }
+
+    curseforge("curseforgeFabric") {
+        from(curseForgeOptions, createOptions("fabric", "remapJar"))
+        projectId = "444663"
     }
 
     github {
@@ -118,17 +137,7 @@ publishMods {
         commitish = providers.environmentVariable("GITHUB_SHA").orElse("dryRun")
         tagName = providers.environmentVariable("GITHUB_REF_NAME").orElse("dryRun")
 
-        file = project.tasks.jar.archiveFile
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
-}
-
-idea {
-    module {
-        downloadSources = true
-        downloadJavadoc = true
+        file = project.provider { project(":neoforge").tasks.jar }.flatMap { it.archiveFile }
+        additionalFiles.from project.provider { project(":fabric").tasks.remapJar }.flatMap { it.archiveFile }
     }
 }

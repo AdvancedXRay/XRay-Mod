@@ -1,0 +1,54 @@
+plugins {
+    id 'net.neoforged.moddev'
+}
+
+neoForge {
+    version = project.forge_version
+    accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
+
+    runs {
+        // applies to all the run configs below
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            logLevel = org.slf4j.event.Level.DEBUG
+        }
+
+        client {
+            client()
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
+
+dependencies {
+    compileOnly project(":common")
+}
+
+repositories {
+    maven {
+        url "https://maven.neoforged.net/releases"
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = rootProject.archivesBaseName
+            from components.java
+        }
+    }
+}
+
+java {
+    withSourcesJar()
+}

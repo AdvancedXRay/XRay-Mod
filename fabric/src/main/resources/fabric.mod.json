@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "xray",
+  "version": "${version}",
+  "name": "Advanced XRay (Fabric)",
+  "description": "An Advanced XRay mod for Fabric with all your block finding needs baked right in!",
+  "authors": [
+    "ErrorMikey"
+  ],
+  "contact": {
+    "homepage": "https://github.com/AdvancedXRay/xray-fabric",
+    "sources": "https://github.com/AdvancedXRay/xray-fabric"
+  },
+  "license": "MIT",
+  "icon": "assets/xray/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "pro.mikey.xray.fabric.XRayFabric"
+    ]
+  },
+  "mixins": [
+    {
+      "config": "xray.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.9",
+    "fabric-api": "*",
+    "minecraft": ">=1.21.6"
+  },
+  "accessWidener": "xray.accesswidener"
+}

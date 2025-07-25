@@ -1,0 +1,30 @@
+plugins {
+    id 'fabric-loom'
+}
+
+loom {
+    accessWidenerPath = project(":common").file("src/main/resources/xray.accesswidener")
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+
+    testImplementation platform('org.junit:junit-bom:5.10.3')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+repositories {
+    maven {
+        url = "https://repo.spongepowered.org/repository/maven-public/"
+        content {
+            includeGroup "org.spongepowered"
+        }
+    }
+}

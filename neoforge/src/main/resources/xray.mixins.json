@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "pro.mikey.xray.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "LevelMixin"
+  ],
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
