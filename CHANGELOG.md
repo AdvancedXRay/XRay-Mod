@@ -1,3 +1,14 @@
+## [21.8.1]
+
+### Fixed
+
+- Small issue with state checking. If a block now changes state in-world, whilst the block is enabled, and it no longer matches, it will be removed from the outline render.
+  - This is specifically tailored to blocks like `Suspicious Sand` and `Suspicious Gravel` which change state when brushed.
+
+### Changed
+
+- Lowered NeoForge minimum version to `1.21.7` to allow for `1.21.7` & `1.21.8` support
+
 ## [21.8.0]
 
 ### Changed

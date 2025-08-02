@@ -200,7 +200,6 @@ public enum ScanController {
             return;
         }
 
-
         // We're now air baby!
         if (state.isAir()) {
             // Remove the block from the render list
@@ -222,6 +221,8 @@ public enum ScanController {
         }
 
         // Otherwise, do we have scantarget in the active list of things to find?
+        var noMatchesFound = true;
+
         Set<ActiveScanTarget> activeScanTargets = ScanController.INSTANCE.scanStore.activeScanTargets();
         for (var scanType : activeScanTargets) {
             if (scanType.type().matches(level, pos, state, state.getFluidState())) {
@@ -231,9 +232,26 @@ public enum ScanController {
 
                 // Tell the VBO to refresh for this chunk
                 OutlineRender.refreshVBOForChunk(chunkPos);
-
+                noMatchesFound = false; // We found a match, so we can stop checking
                 break; // We found a match, so we can stop checking
             }
+        }
+
+        // If no matches are found AND the block pos is currently in the render list, we need to remove it and ask the chunk to refresh
+        var blockFromRenderList = outlineRenderTargets.stream()
+                .filter(target -> target.x() == pos.getX() && target.y() == pos.getY() && target.z() == pos.getZ())
+                .findFirst();
+
+        if (blockFromRenderList.isEmpty()) {
+            return;
+        }
+
+        if (noMatchesFound) {
+            // We didn't find any matches, so we need to remove the block from the render list
+            outlineRenderTargets.remove(blockFromRenderList.get());
+
+            // Tell the VBO to refresh for this chunk
+            OutlineRender.refreshVBOForChunk(chunkPos);
         }
     }
 }
