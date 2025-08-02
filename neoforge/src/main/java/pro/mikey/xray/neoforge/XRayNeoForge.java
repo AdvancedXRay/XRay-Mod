@@ -43,11 +43,7 @@ public class XRayNeoForge {
 		event.registerAboveAll(GUI_LAYER_ID, (guiGraphics, tickCounter) -> HudOverlay.renderGameOverlayEvent(guiGraphics));
 	}
 
-	private void onWorldRenderLast(RenderLevelStageEvent event) {
-		if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_WEATHER) {
-			return;
-		}
-
+	private void onWorldRenderLast(RenderLevelStageEvent.AfterWeather event) {
 		OutlineRender.renderBlocks(event.getPoseStack());
 	}
 

@@ -1,3 +1,9 @@
+## [21.6.1]
+
+### Fixed
+
+- Crash on startup on newer versions of NeoForge
+
 ## [21.6.0]
 
 ### Changed
