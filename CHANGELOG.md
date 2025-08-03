@@ -1,3 +1,9 @@
+## [21.6.2]
+
+### Fixed
+
+- Remove button no longer showing on the edit block screen.
+
 ## [21.6.1]
 
 ### Fixed
