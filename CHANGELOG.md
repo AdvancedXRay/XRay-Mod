@@ -1,3 +1,9 @@
+## [21.8.2]
+
+### Fixed
+
+- Remove block button no longer showing on the edit block screen.
+
 ## [21.8.1]
 
 ### Fixed
