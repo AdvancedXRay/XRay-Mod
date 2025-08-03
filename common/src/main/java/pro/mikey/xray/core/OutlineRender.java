@@ -36,7 +36,7 @@ public class OutlineRender {
 	private static final Set<ChunkPos> chunksToRefresh = Collections.synchronizedSet(new HashSet<>());
 
 	public static RenderPipeline LINES_NO_DEPTH = RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET, RenderPipelines.GLOBALS_SNIPPET)
-			.withLocation("pipeline/xray_lines")
+			.withLocation(XRay.id("pipeline/xray_lines"))
 			.withVertexShader("core/rendertype_lines")
 			.withFragmentShader(ResourceLocation.fromNamespaceAndPath(XRay.MOD_ID, "frag/constant_color"))
 			.withBlend(BlendFunction.TRANSLUCENT)

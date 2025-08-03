@@ -102,6 +102,18 @@ public class ScanStore {
         this.save();
     }
 
+    // TODO: Support categories once the GUI can support it.
+    public void removeEntry(ScanType type) {
+        for (Category category : this.categories) {
+            if (category.entries.remove(type)) {
+                this.save();
+                return; // Exit after removing the entry
+            }
+        }
+
+        LOGGER.warn("Scan type not found in any category: {}", type);
+    }
+
     public int getNextOrder() {
         var firstCategory = this.categories.stream().findFirst();
         if (firstCategory.isEmpty()) {
