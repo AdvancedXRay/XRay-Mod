@@ -1,3 +1,9 @@
+## [21.8.3]
+
+### Fixed
+
+- Potential crash when rendering blocks that are broken.
+
 ## [21.8.2]
 
 ### Fixed

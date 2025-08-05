@@ -84,7 +84,10 @@ public class OutlineRender {
 
 				var opacity = 1F;
 
-				for (var blockProps : blocksWithProps) {
+				// More concurrent modification exceptions can happen here, so we clone the list
+				var blockPropsClone = new ArrayList<>(blocksWithProps);
+
+				for (var blockProps : blockPropsClone) {
 					if (blockProps == null) {
 						continue;
 					}
