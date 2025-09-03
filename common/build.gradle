@@ -4,6 +4,10 @@ plugins {
 
 loom {
     accessWidenerPath = project(":common").file("src/main/resources/xray.accesswidener")
+
+    mixin {
+        useLegacyMixinAp = false
+    }
 }
 
 dependencies {

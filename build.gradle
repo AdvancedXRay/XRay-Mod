@@ -55,18 +55,12 @@ subprojects {
     }
 
     if (project.name != "common") {
-        tasks.withType(JavaCompile).configureEach {
-            if (!it.name.toLowerCase().contains("test")) {
-                source(project(":common").sourceSets.main.allSource)
-            }
+        dependencies {
+            api project(":common")
         }
 
-        tasks.withType(Javadoc).configureEach {
-            source(project(":common").sourceSets.main.allJava)
-        }
-
-        processResources {
-            from project(":common").sourceSets.main.resources
+        jar {
+            from project(":common").sourceSets.main.output
         }
     }
 

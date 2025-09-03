@@ -30,10 +30,6 @@ configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
 
-dependencies {
-    compileOnly project(":common")
-}
-
 repositories {
     maven {
         url "https://maven.neoforged.net/releases"
