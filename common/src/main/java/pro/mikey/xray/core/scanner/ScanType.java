@@ -90,17 +90,29 @@ public abstract class ScanType {
     public void updateColor(int newColorInt) {
         this.colorInt = newColorInt;
 
-        // Convert RGB int to rgb(r, g, b) format
+        // Extract ARGB components
+        int a = (newColorInt >> 24) & 0xFF;
         int r = (newColorInt >> 16) & 0xFF;
         int g = (newColorInt >> 8) & 0xFF;
         int b = newColorInt & 0xFF;
 
         // What type are we?
-        if (this.color.startsWith("rgb(")) {
-            this.color = String.format("rgb(%d, %d, %d)", r, g, b);
+        if (this.color.startsWith("rgba(")) {
+            this.color = String.format("rgba(%d, %d, %d, %d)", r, g, b, a);
+        } else if (this.color.startsWith("rgb(")) {
+            // If alpha is not 255, convert to rgba format
+            if (a != 255) {
+                this.color = String.format("rgba(%d, %d, %d, %d)", r, g, b, a);
+            } else {
+                this.color = String.format("rgb(%d, %d, %d)", r, g, b);
+            }
         } else if (this.color.startsWith("#")) {
-            // Convert to hex format
-            this.color = String.format("#%02X%02X%02X", r, g, b);
+            // Convert to hex format (with alpha if not fully opaque)
+            if (a != 255) {
+                this.color = String.format("#%02X%02X%02X%02X", a, r, g, b);
+            } else {
+                this.color = String.format("#%02X%02X%02X", r, g, b);
+            }
         } else if (this.color.startsWith("hsl(")) {
             // Convert to HSL format
             var hsl = Color.RGBtoHSB(r, g, b, null);
@@ -109,30 +121,47 @@ public abstract class ScanType {
         } else if (this.color.startsWith("0x")) {
             this.color = String.format("#%06X", newColorInt & 0xFFFFFF);
         } else {
-            throw new IllegalArgumentException("Unsupported color format: " + this.color);
+            // Default to rgba format for unknown formats
+            this.color = String.format("rgba(%d, %d, %d, %d)", r, g, b, a);
         }
     }
 
     /**
-     * Custom method for reading hex, rgb, hsl, and other color formats
+     * Custom method for reading hex, rgb, rgba, hsl, and other color formats
      * @param color String representation of the color
-     *              rgb(255, 0, 0), hsl(120, 100%, 50%), #FF0000, 0xFF0000
+     *              rgb(255, 0, 0), rgba(255, 0, 0, 128), hsl(120, 100%, 50%), #FF0000, #FF0000FF, 0xFF0000
      *              are the supported formats at the moment
-     * @return int representation of the color
+     * @return int representation of the color (ARGB format)
      */
     public static int parseColor(String color) {
         if (color.startsWith("#")) {
-            // Only support RRGGBB format, no alpha channel
-            if (color.length() != 7) {
+            // Support both RRGGBB and AARRGGBB formats
+            if (color.length() == 7) {
+                // RRGGBB format - add full alpha
+                return 0xFF000000 | Integer.parseInt(color.substring(1), 16);
+            } else if (color.length() == 9) {
+                // AARRGGBB format
+                return (int)Long.parseLong(color.substring(1), 16);
+            } else {
                 throw new IllegalArgumentException("Invalid hex color format: " + color);
             }
+        }
 
-            // Hex color
-            return Integer.parseInt(color.substring(1), 16);
+        if (color.startsWith("rgba(") && color.endsWith(")")) {
+            // rgba(255, 0, 0, 128)
+            String[] parts = color.substring(5, color.length() - 1).split(",");
+            if (parts.length != 4) {
+                throw new IllegalArgumentException("Invalid RGBA color format: " + color);
+            }
+            int r = Integer.parseInt(parts[0].trim());
+            int g = Integer.parseInt(parts[1].trim());
+            int b = Integer.parseInt(parts[2].trim());
+            int a = Integer.parseInt(parts[3].trim());
+            return (a << 24) | (r << 16) | (g << 8) | b;
         }
 
         if (color.startsWith("rgb(") && color.endsWith(")")) {
-            // rgb(255, 0, 0)
+            // rgb(255, 0, 0) - default to full alpha
             String[] parts = color.substring(4, color.length() - 1).split(",");
             if (parts.length != 3) {
                 throw new IllegalArgumentException("Invalid RGB color format: " + color);
@@ -140,7 +169,7 @@ public abstract class ScanType {
             int r = Integer.parseInt(parts[0].trim());
             int g = Integer.parseInt(parts[1].trim());
             int b = Integer.parseInt(parts[2].trim());
-            return (r << 16) | (g << 8) | b;
+            return 0xFF000000 | (r << 16) | (g << 8) | b;
         }
 
         if (color.startsWith("hsl(") && color.endsWith(")")) {
@@ -177,12 +206,12 @@ public abstract class ScanType {
             int gi = Math.round((g + m) * 255);
             int bi = Math.round((b + m) * 255);
 
-            return (ri << 16) | (gi << 8) | bi;
+            return 0xFF000000 | (ri << 16) | (gi << 8) | bi;
         }
 
         if (color.startsWith("0x")) {
-            // 0xFF0000 format
-            return Integer.parseInt(color.substring(2), 16);
+            // 0xFF0000 format - add full alpha
+            return 0xFF000000 | Integer.parseInt(color.substring(2), 16);
         }
 
         throw new IllegalArgumentException("Unsupported color format: " + color);

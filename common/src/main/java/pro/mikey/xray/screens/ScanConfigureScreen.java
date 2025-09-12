@@ -33,6 +33,7 @@ public class ScanConfigureScreen extends GuiBase {
     private SliderWidget redSlider;
     private SliderWidget greenSlider;
     private SliderWidget blueSlider;
+    private SliderWidget alphaSlider;
 
     private final Block selectBlock;
     private final ItemStack icon;
@@ -97,18 +98,25 @@ public class ScanConfigureScreen extends GuiBase {
         layout.arrangeElements();
         layout.visitWidgets(this::addRenderableWidget);
 
-        int defaultColor = 0x00A8FF; // Default color (Blue)
+        int defaultColor = 0xFF00A8FF; // Default color (Blue with full alpha)
         if (editingType != null) {
+            // Use the existing color with its alpha value
             defaultColor = editingType.colorInt;
+            // Only add alpha if the color doesn't have it (checking if top byte is 0)
+            if ((defaultColor & 0xFF000000) == 0) {
+                defaultColor = defaultColor | 0xFF000000;
+            }
         }
 
+        double alpha = ((defaultColor >> 24) & 0xFF) / 255.0;
         double red = (defaultColor >> 16 & 0xFF) / 255.0;
         double green = (defaultColor >> 8 & 0xFF) / 255.0;
         double blue = (defaultColor & 0xFF) / 255.0;
 
-        addRenderableWidget(redSlider = new SliderWidget(getWidth() / 2 - 100, getHeight() / 2 + 7, 202, 20, "xray.color.red", red));
-        addRenderableWidget(greenSlider = new SliderWidget(getWidth() / 2 - 100, getHeight() / 2 + 30, 202, 20, "xray.color.green", green));
-        addRenderableWidget(blueSlider = new SliderWidget(getWidth() / 2 - 100, getHeight() / 2 + 53,202, 20,  "xray.color.blue", blue));
+        addRenderableWidget(redSlider = new SliderWidget(getWidth() / 2 - 100, getHeight() / 2 - 16, 202, 20, "xray.color.red", red));
+        addRenderableWidget(greenSlider = new SliderWidget(getWidth() / 2 - 100, getHeight() / 2 + 7, 202, 20, "xray.color.green", green));
+        addRenderableWidget(blueSlider = new SliderWidget(getWidth() / 2 - 100, getHeight() / 2 + 30, 202, 20,  "xray.color.blue", blue));
+        addRenderableWidget(alphaSlider = new SliderWidget(getWidth() / 2 - 100, getHeight() / 2 + 53, 202, 20, "xray.color.alpha", alpha));
 
         oreName = new EditBox(minecraft.font, getWidth() / 2 - 100, getHeight() / 2 - 70, 202, 20, Component.empty());
         if (editingType != null) {
@@ -125,7 +133,8 @@ public class ScanConfigureScreen extends GuiBase {
             throw new IllegalStateException("Editing type is not set");
         }
 
-        int color = (int) (redSlider.getValue() * 255) << 16
+        int color = (int) (alphaSlider.getValue() * 255) << 24
+                | (int) (redSlider.getValue() * 255) << 16
                 | (int) (greenSlider.getValue() * 255) << 8
                 | (int) (blueSlider.getValue() * 255);
 
@@ -156,8 +165,8 @@ public class ScanConfigureScreen extends GuiBase {
         scanStore.addEntry(new BlockScanType(
                 selectBlock,
                 oreName.getValue(),
-                // Save as RGB by default
-                "rgb(" + (int) (redSlider.getValue() * 255) + ", " + (int) (greenSlider.getValue() * 255) + ", " + (int) (blueSlider.getValue() * 255) + ")",
+                // Save as RGBA by default
+                "rgba(" + (int) (redSlider.getValue() * 255) + ", " + (int) (greenSlider.getValue() * 255) + ", " + (int) (blueSlider.getValue() * 255) + ", " + (int) (alphaSlider.getValue() * 255) + ")",
                 scanStore.getNextOrder()
         ));
 
@@ -174,8 +183,8 @@ public class ScanConfigureScreen extends GuiBase {
     public void renderExtra(GuiGraphics graphics, int x, int y, float partialTicks) {
         graphics.drawString(font, selectBlock.getName().getString(), getWidth() / 2 - 100, getHeight() / 2 - 90, 0xffffffff);
 
-        int color = (255 << 24) | ((int) (this.redSlider.getValue() * 255) << 16) | ((int) (this.greenSlider.getValue() * 255) << 8) | (int) (this.blueSlider.getValue() * 255);
-        graphics.fill(this.getWidth() / 2 - 100, this.getHeight() / 2 - 45, (this.getWidth() / 2 + 2) + 100, (this.getHeight() / 2 - 45) + 45, color);
+        int color = ((int) (this.alphaSlider.getValue() * 255) << 24) | ((int) (this.redSlider.getValue() * 255) << 16) | ((int) (this.greenSlider.getValue() * 255) << 8) | (int) (this.blueSlider.getValue() * 255);
+        graphics.fill(this.getWidth() / 2 - 100, this.getHeight() / 2 - 45, (this.getWidth() / 2 + 2) + 100, (this.getHeight() / 2 - 45) + 25, color);
 
         oreName.render(graphics, x, y, partialTicks);
 
