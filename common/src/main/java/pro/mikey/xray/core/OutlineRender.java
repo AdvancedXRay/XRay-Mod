@@ -82,8 +82,6 @@ public class OutlineRender {
 			if (holder == null) {
 				BufferBuilder bufferBuilder = Tesselator.getInstance().begin(LINES_NO_DEPTH.getVertexFormatMode(), LINES_NO_DEPTH.getVertexFormat());
 
-				var opacity = 1F;
-
 				// More concurrent modification exceptions can happen here, so we clone the list
 				var blockPropsClone = new ArrayList<>(blocksWithProps);
 
@@ -95,9 +93,13 @@ public class OutlineRender {
 					final float size = 1.0f;
 					final int x = blockProps.x(), y = blockProps.y(), z = blockProps.z();
 
+					final float alpha = ((blockProps.color() >> 24) & 0xff) / 255f;
 					final float red = (blockProps.color() >> 16 & 0xff) / 255f;
 					final float green = (blockProps.color() >> 8 & 0xff) / 255f;
 					final float blue = (blockProps.color() & 0xff) / 255f;
+					
+					// Use the alpha from the color, or default to 1.0 if alpha is 0
+					final float opacity = alpha > 0 ? alpha : 1.0f;
 
 					ShapeRenderer.renderLineBox(poseStack, bufferBuilder, x, y, z, x + size, y + size, z + size, red, green, blue, opacity);
 				}

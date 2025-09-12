@@ -32,7 +32,7 @@ public class ScanTypeTest {
     @Test
     void correctlyParsesValidHex() {
         var color = "#FF5733";
-        var expectedColor = 0xFF5733;
+        var expectedColor = 0xFFFF5733; // Now includes alpha channel (FF)
 
         int parsedColor = ScanType.parseColor(color);
         assertEquals(expectedColor, parsedColor);
@@ -41,7 +41,7 @@ public class ScanTypeTest {
     @Test
     void correctlyParsesRGB() {
         var color = "rgb(255, 87, 51)";
-        var expectedColor = 0xFF5733;
+        var expectedColor = 0xFFFF5733; // Now includes alpha channel (FF)
 
         int parsedColor = ScanType.parseColor(color);
         assertEquals(expectedColor, parsedColor);
@@ -50,7 +50,25 @@ public class ScanTypeTest {
     @Test
     void correctlyParsesHSL() {
         var color = "hsl(44, 50%, 50%)";
-        var expectedColor = 0xBF9D40;
+        var expectedColor = 0xFFBF9D40; // Now includes alpha channel (FF)
+
+        int parsedColor = ScanType.parseColor(color);
+        assertEquals(expectedColor, parsedColor);
+    }
+    
+    @Test
+    void correctlyParsesRGBA() {
+        var color = "rgba(255, 87, 51, 128)";
+        var expectedColor = 0x80FF5733; // Alpha is 128 (0x80)
+
+        int parsedColor = ScanType.parseColor(color);
+        assertEquals(expectedColor, parsedColor);
+    }
+    
+    @Test
+    void correctlyParsesHexWithAlpha() {
+        var color = "#80FF5733";
+        var expectedColor = 0x80FF5733;
 
         int parsedColor = ScanType.parseColor(color);
         assertEquals(expectedColor, parsedColor);

@@ -16,6 +16,7 @@
   "xray.color.red": "Red: %s",
   "xray.color.green": "Green: %s",
   "xray.color.blue": "Blue: %s",
+  "xray.color.alpha": "Alpha: %s",
 
   "xray.input.gui": "GUI Name",
   "xray.input.add": "Add Block",

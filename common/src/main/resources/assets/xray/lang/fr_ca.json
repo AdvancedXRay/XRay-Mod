@@ -6,9 +6,10 @@
   "xray.single.delete": "Supprimer",
   "xray.single.save": "Sauvegarder",
 
-  "xray.color.red": "Rouge",
-  "xray.color.green": "Vert",
-  "xray.color.blue": "Bleu",
+  "xray.color.red": "Rouge: %s",
+  "xray.color.green": "Vert: %s",
+  "xray.color.blue": "Bleu: %s",
+  "xray.color.alpha": "Alpha: %s",
 
   "xray.input.gui": "Nom GUI",
   "xray.input.add": "Ajouter un minerai",
