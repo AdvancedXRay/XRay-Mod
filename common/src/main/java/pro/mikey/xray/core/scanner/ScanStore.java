@@ -54,7 +54,7 @@ public class ScanStore {
     private final List<Category> categories = new ArrayList<>();
 
     // In memory holder of only the enabled scan targets
-    private final Set<ActiveScanTarget> activeScanTargets = new HashSet<>();
+    private final Set<ScanType> activeScanTargets = new HashSet<>();
 
     public ScanStore() {}
 
@@ -183,8 +183,7 @@ public class ScanStore {
                     continue; // Skip disabled scan types
                 }
 
-                var target = new ActiveScanTarget(scanType, scanType.colorInt);
-                this.activeScanTargets.add(target);
+                this.activeScanTargets.add(scanType);
             }
         }
     }
@@ -193,7 +192,7 @@ public class ScanStore {
         return Collections.unmodifiableList(categories);
     }
 
-    public Set<ActiveScanTarget> activeScanTargets() {
+    public Set<ScanType> activeScanTargets() {
         return activeScanTargets;
     }
 
