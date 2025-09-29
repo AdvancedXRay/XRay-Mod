@@ -11,8 +11,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import pro.mikey.xray.XRay;
-import pro.mikey.xray.core.scanner.ActiveScanTarget;
 import pro.mikey.xray.core.scanner.ScanStore;
+import pro.mikey.xray.core.scanner.ScanType;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -223,12 +223,12 @@ public enum ScanController {
         // Otherwise, do we have scantarget in the active list of things to find?
         var noMatchesFound = true;
 
-        Set<ActiveScanTarget> activeScanTargets = ScanController.INSTANCE.scanStore.activeScanTargets();
+        Set<ScanType> activeScanTargets = ScanController.INSTANCE.scanStore.activeScanTargets();
         for (var scanType : activeScanTargets) {
-            if (scanType.type().matches(level, pos, state, state.getFluidState())) {
+            if (scanType.matches(level, pos, state, state.getFluidState())) {
                 // We need to tell the render system to refresh. We should manually add this black to the renderlist
                 // We're actively looking at this chunk so let's inject this block
-                outlineRenderTargets.add(new OutlineRenderTarget(pos.getX(), pos.getY(), pos.getZ(), scanType.color()));
+                outlineRenderTargets.add(new OutlineRenderTarget(pos.getX(), pos.getY(), pos.getZ(), scanType.colorInt()));
 
                 // Tell the VBO to refresh for this chunk
                 OutlineRender.refreshVBOForChunk(chunkPos);

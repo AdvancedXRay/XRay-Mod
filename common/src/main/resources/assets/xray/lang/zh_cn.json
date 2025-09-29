@@ -16,6 +16,7 @@
   "xray.color.red": "红: %s",
   "xray.color.green": "绿: %s",
   "xray.color.blue": "蓝: %s",
+  "xray.color.alpha": "透明度: %s",
 
   "xray.input.gui": "界面名称",
   "xray.input.add": "添加方块",

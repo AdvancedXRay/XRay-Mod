@@ -49,8 +49,8 @@ public class ChunkScanTask implements Runnable {
                         continue;
 
                     for (var target : ScanController.INSTANCE.scanStore.activeScanTargets()) {
-                        if (target.type().matches(level, pos, state, fluidState)) {
-                            renderQueue.add(new OutlineRenderTarget(pos.getX(), pos.getY(), pos.getZ(), target.color()));
+                        if (target.matches(level, pos, state, fluidState)) {
+                            renderQueue.add(new OutlineRenderTarget(pos.getX(), pos.getY(), pos.getZ(), target.colorInt()));
                         }
                     }
                 }
