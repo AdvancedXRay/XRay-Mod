@@ -1,3 +1,9 @@
+## [21.8.4]
+
+### Added
+
+- Added alpha channel to the color picker for blocks to allow for transparency. Thanks to [#329](https://github.com/AdvancedXRay/xray-mod/pull/329) by [@Groovin-Dev](https://github.com/Groovin-Dev)
+
 ## [21.8.3]
 
 ### Fixed
