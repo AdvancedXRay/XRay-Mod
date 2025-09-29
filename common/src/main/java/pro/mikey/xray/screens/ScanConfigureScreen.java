@@ -7,6 +7,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.Layout;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -27,6 +28,7 @@ import java.util.function.Supplier;
 
 public class ScanConfigureScreen extends GuiBase {
     private static final ResourceLocation TRASH_ICON = XRay.assetLocation("gui/trash.png");
+    private static final ResourceLocation TRANSPARENT_BACKGROUND = XRay.assetLocation("gui/transparent_background.png");
 
     private EditBox oreName;
 
@@ -183,8 +185,11 @@ public class ScanConfigureScreen extends GuiBase {
     public void renderExtra(GuiGraphics graphics, int x, int y, float partialTicks) {
         graphics.drawString(font, selectBlock.getName().getString(), getWidth() / 2 - 100, getHeight() / 2 - 90, 0xffffffff);
 
+        // blit render the TRANSPARENT_BACKGROUND texture, a 16x16 checkerboard pattern that should tile to fit the fill area
+        graphics.blit(RenderPipelines.GUI_TEXTURED, TRANSPARENT_BACKGROUND, this.getWidth() / 2 - 100, this.getHeight() / 2 - 45, 0, 0, 202, 24, 16, 16, 0x80FFFFFF);
+
         int color = ((int) (this.alphaSlider.getValue() * 255) << 24) | ((int) (this.redSlider.getValue() * 255) << 16) | ((int) (this.greenSlider.getValue() * 255) << 8) | (int) (this.blueSlider.getValue() * 255);
-        graphics.fill(this.getWidth() / 2 - 100, this.getHeight() / 2 - 45, (this.getWidth() / 2 + 2) + 100, (this.getHeight() / 2 - 45) + 25, color);
+        graphics.fill(this.getWidth() / 2 - 100, this.getHeight() / 2 - 45, (this.getWidth() / 2 + 2) + 100, (this.getHeight() / 2 - 45) + 24, color);
 
         oreName.render(graphics, x, y, partialTicks);
 
