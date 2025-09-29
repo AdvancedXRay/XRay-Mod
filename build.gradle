@@ -79,13 +79,13 @@ subprojects {
         }
 
         // This is less than ideal, we'll need to look into this.
-        if (project.name == "fabric" || project.name == "neoforge") {
-            tasks.named('processResources') {
-                from(project(":common").file("src/main/resources")) {
-                    into "."
-                }
-            }
-        }
+//        if (project.name == "fabric" || project.name == "neoforge") {
+//            tasks.named('processResources') {
+//                from(project(":common").file("src/main/resources")) {
+//                    into "."
+//                }
+//            }
+//        }
     }
 
     publishing {
