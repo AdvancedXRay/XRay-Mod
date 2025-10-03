@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'fabric-loom' version '1.11-SNAPSHOT' apply(false)
-    id 'net.neoforged.moddev' version '2.0.105' apply(false)
+    id 'net.neoforged.moddev' version '2.0.112' apply(false)
     id "me.modmuss50.mod-publish-plugin" version "0.8.4"
 }
 
@@ -77,15 +77,6 @@ subprojects {
         filesMatching(["META-INF/neoforge.mods.toml", "fabric.mod.json", "META-INF/mods.toml"]) {
             expand replaceProperties
         }
-
-        // This is less than ideal, we'll need to look into this.
-//        if (project.name == "fabric" || project.name == "neoforge") {
-//            tasks.named('processResources') {
-//                from(project(":common").file("src/main/resources")) {
-//                    into "."
-//                }
-//            }
-//        }
     }
 
     publishing {
@@ -121,7 +112,6 @@ publishMods {
     def curseForgeOptions = curseforgeOptions {
         accessToken = providers.environmentVariable("CURSE_DEPLOY_TOKEN")
         minecraftVersions.add("${minecraft_version}")
-        minecraftVersions.add("1.21.7")
         javaVersions.add(JavaVersion.VERSION_21)
     }
 

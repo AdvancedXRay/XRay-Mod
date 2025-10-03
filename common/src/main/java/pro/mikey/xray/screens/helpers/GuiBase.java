@@ -6,6 +6,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
+import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
@@ -33,10 +34,10 @@ public abstract class GuiBase extends Screen {
     public abstract void renderExtra(GuiGraphics guiGraphics, int x, int y, float partialTicks);
 
     @Override
-    public boolean charTyped(char keyTyped, int __unknown) {
-        super.charTyped(keyTyped, __unknown);
+    public boolean charTyped(CharacterEvent characterEvent) {
+        super.charTyped(characterEvent);
 
-        if (keyTyped == 1 && minecraft.player != null) {
+        if (characterEvent.codepoint() == 1 && minecraft.player != null) {
             minecraft.player.closeContainer();
         }
 

@@ -1,3 +1,9 @@
+## [21.9.0]
+
+### Changed
+
+- Updated to Minecraft 1.21.9
+
 ## [21.8.4]
 
 ### Added

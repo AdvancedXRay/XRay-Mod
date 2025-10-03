@@ -4,7 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+//import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -26,7 +26,8 @@ public class XRayFabric implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(this::clientTickEvent);
         ClientLifecycleEvents.CLIENT_STARTED.register((mc) -> ClientController.onSetup());
-        WorldRenderEvents.LAST.register((context) -> OutlineRender.renderBlocks(context.matrixStack()));
+        // TODO: Fixme
+//        WorldRenderEvents.LAST.register((context) -> OutlineRender.renderBlocks(context.matrixStack()));
 
         HudElementRegistry.addLast(HUD_ELEMENT_ID, (guiGraphics, tickCounter) -> HudOverlay.renderGameOverlayEvent(guiGraphics));
     }

@@ -23,6 +23,10 @@
     {
       "config": "xray.mixins.json",
       "environment": "client"
+    },
+    {
+      "config": "xray.fabric.mixins.json",
+      "environment": "client"
     }
   ],
   "depends": {

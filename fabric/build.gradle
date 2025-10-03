@@ -16,6 +16,7 @@ loom {
     mods {
         "xray" {
             sourceSet sourceSets.main
+            sourceSet("main", project(":common"))
         }
     }
 

@@ -101,7 +101,7 @@ public class OutlineRender {
 					// Use the alpha from the color, or default to 1.0 if alpha is 0
 					final float opacity = alpha > 0 ? alpha : 1.0f;
 
-					ShapeRenderer.renderLineBox(poseStack, bufferBuilder, x, y, z, x + size, y + size, z + size, red, green, blue, opacity);
+					ShapeRenderer.renderLineBox(poseStack.last(), bufferBuilder, x, y, z, x + size, y + size, z + size, red, green, blue, opacity);
 				}
 
 				try (MeshData meshData = bufferBuilder.buildOrThrow()) {

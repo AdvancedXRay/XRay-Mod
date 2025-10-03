@@ -6,6 +6,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.language.I18n;
@@ -152,13 +154,13 @@ public class ScanManageScreen extends GuiBase {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (!search.isFocused() && keyCode == XRay.OPEN_GUI_KEY.key.getValue()) {
+    public boolean keyPressed(KeyEvent keyEvent) {
+        if (!search.isFocused() && keyEvent.key() == XRay.OPEN_GUI_KEY.key.getValue()) {
             this.onClose();
             return true;
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(keyEvent);
     }
 
     private void updateSearch() {
@@ -178,17 +180,17 @@ public class ScanManageScreen extends GuiBase {
     }
 
     @Override
-    public boolean mouseClicked(double x, double y, int mouse) {
-        if (search.mouseClicked(x, y, mouse))
+    public boolean mouseClicked(MouseButtonEvent event, boolean bl) {
+        if (search.mouseClicked(event, bl))
             this.setFocused(search);
 
-        if (mouse == 1 && distButtons.isMouseOver(x, y)) {
+        if (event.button() == 1 && distButtons.isMouseOver(event.x(), event.y())) {
             ScanController.INSTANCE.decrementCurrentDist();
             distButtons.setMessage(Component.translatable("xray.input.distance", ScanController.INSTANCE.getVisualRadius()));
             distButtons.playDownSound(Minecraft.getInstance().getSoundManager());
         }
 
-        return super.mouseClicked(x, y, mouse);
+        return super.mouseClicked(event, bl);
     }
 
     @Override
@@ -226,8 +228,8 @@ public class ScanManageScreen extends GuiBase {
         ScanEntryScroller(int x, int y, int width, int height, ScanManageScreen parent) {
             super(ScanManageScreen.this.minecraft, width - 2, height, (ScanManageScreen.this.height / 2) - (height / 2) + 10, SLOT_HEIGHT);
             this.parent = parent;
+            this.setX((parent.getWidth() / 2) - (width / 2) - 36);
             this.updateEntries();
-            this.setX(x + 2);
         }
 
         @Override
@@ -240,11 +242,11 @@ public class ScanManageScreen extends GuiBase {
             return this.getX() + this.getRowWidth() + 6;
         }
 
-        public void setSelected(@Nullable ScanManageScreen.ScanEntryScroller.ScanSlot entry, int mouse) {
+        public void setSelected(@Nullable ScanManageScreen.ScanEntryScroller.ScanSlot entry, MouseButtonEvent mouse) {
             if (entry == null)
                 return;
 
-            if (ScanManageScreen.hasShiftDown()) {
+            if (mouse.hasShiftDown()) {
                 Minecraft.getInstance().setScreen(new ScanConfigureScreen(entry.entry, ScanManageScreen::new));
                 return;
             }
@@ -293,25 +295,25 @@ public class ScanManageScreen extends GuiBase {
             }
 
             @Override
-            public void render(GuiGraphics guiGraphics, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean p_194999_5_, float partialTicks) {
+            public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovering, float partialTicks) {
                 Font font = Minecraft.getInstance().font;
 
-                guiGraphics.drawString(font, this.entry.name(), left + 25, top + 7, 0xFFFFFFFF);
-                guiGraphics.drawString(font, this.entry.enabled() ? "Enabled" : "Disabled", left + 25, top + 17, this.entry.enabled() ? Color.GREEN.getRGB() : Color.RED.getRGB());
+                guiGraphics.drawString(font, this.entry.name(), this.getContentX() + 25, this.getContentY() + 7, 0xFFFFFFFF);
+                guiGraphics.drawString(font, this.entry.enabled() ? "Enabled" : "Disabled", this.getContentX() + 25, this.getContentY() + 17, this.entry.enabled() ? Color.GREEN.getRGB() : Color.RED.getRGB());
 
-                guiGraphics.renderItem(this.icon, left, top + 7);
+                guiGraphics.renderItem(this.icon, this.getContentX(), this.getContentY() + 7);
 
                 var stack = guiGraphics.pose();
                 stack.pushMatrix();
 
-                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ScanManageScreen.CIRCLE, (left + entryWidth) - 23, (int) (top + (entryHeight / 2f) - 9), 0, 0, 14, 14, 14, 14, 0x7F000000);
-                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ScanManageScreen.CIRCLE, (left + entryWidth) - 21, (int) (top + (entryHeight / 2f) - 7), 0, 0, 10, 10, 10, 10, 0xFF000000 | this.entry.colorInt());
+                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ScanManageScreen.CIRCLE, (this.getContentX() + this.getWidth()) - 23, (int) (this.getContentY() + (this.getHeight() / 2f) - 9), 0, 0, 14, 14, 14, 14, 0x7F000000);
+                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ScanManageScreen.CIRCLE, (this.getContentX() + this.getWidth()) - 21, (int) (this.getContentY() + (this.getHeight() / 2f) - 7), 0, 0, 10, 10, 10, 10, 0xFF000000 | this.entry.colorInt());
 
                 stack.popMatrix();
             }
 
             @Override
-            public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int mouse) {
+            public boolean mouseClicked(MouseButtonEvent mouse, boolean bl) {
                 this.parent.setSelected(this, mouse);
                 return false;
             }

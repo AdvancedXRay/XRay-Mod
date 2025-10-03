@@ -23,7 +23,7 @@ public class XRayNeoForge {
 	public static final Logger LOGGER = LogManager.getLogger();
 
 	public XRayNeoForge(IEventBus eventBus) {
-		if (!FMLEnvironment.dist.isClient()) {
+		if (!FMLEnvironment.getDist().isClient()) {
 			return;
 		}
 

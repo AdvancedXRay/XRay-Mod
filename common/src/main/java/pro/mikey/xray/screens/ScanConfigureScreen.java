@@ -7,6 +7,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.Layout;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -197,8 +198,8 @@ public class ScanConfigureScreen extends GuiBase {
     }
 
     @Override
-    public boolean mouseClicked(double x, double y, int mouse) {
-        if (oreName.mouseClicked(x, y, mouse))
+    public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean bl) {
+        if (oreName.mouseClicked(mouseButtonEvent, bl))
             this.setFocused(oreName);
 
         if (oreName.isFocused() && !oreNameCleared) {
@@ -211,7 +212,7 @@ public class ScanConfigureScreen extends GuiBase {
             oreName.setValue(this.selectBlock.getName().getString());
         }
 
-        return super.mouseClicked(x, y, mouse);
+        return super.mouseClicked(mouseButtonEvent, bl);
     }
 
     @Override

@@ -21,8 +21,9 @@ public enum XRay {
 
 	public static final XPlatShim XPLAT = ServiceLoader.load(XPlatShim.class).findFirst().orElseThrow();
 
-	public static final KeyMapping TOGGLE_KEY = new KeyMapping(I18n.get("xray.config.toggle"), GLFW.GLFW_KEY_BACKSLASH, "xray.mod_name");
-	public static final KeyMapping OPEN_GUI_KEY = new KeyMapping(I18n.get("xray.config.open"), GLFW.GLFW_KEY_G, "xray.mod_name");
+    private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(XRay.id("category"));
+	public static final KeyMapping TOGGLE_KEY = new KeyMapping(I18n.get("xray.config.toggle"), GLFW.GLFW_KEY_BACKSLASH, CATEGORY);
+	public static final KeyMapping OPEN_GUI_KEY = new KeyMapping(I18n.get("xray.config.open"), GLFW.GLFW_KEY_G, CATEGORY);
 
 	public void init() {
 	}

@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -80,11 +81,11 @@ public class FindBlockScreen extends GuiBase {
     }
 
     @Override
-    public boolean mouseClicked(double x, double y, int button) {
-        if( this.search.mouseClicked (x, y, button) )
+    public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean bl) {
+        if( this.search.mouseClicked(mouseButtonEvent, bl) )
             this.setFocused(this.search);
 
-        return super.mouseClicked(x, y, button);
+        return super.mouseClicked(mouseButtonEvent, bl);
     }
 
     @Override
@@ -146,15 +147,15 @@ public class FindBlockScreen extends GuiBase {
             }
 
             @Override
-            public void render(GuiGraphics graphics, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean p_194999_5_, float partialTicks) {
+            public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovering, float partialTicks) {
                 Font font = this.parent.minecraft.font;
 
                 var registryName = BuiltInRegistries.BLOCK.getKey(this.block);
 
-                graphics.drawString(font, this.block.getName().getString(), left + 25, top + 7, Color.WHITE.getRGB());
-                graphics.drawString(font, registryName.getNamespace(), left + 25, top + 17, Color.GRAY.getRGB());
+                guiGraphics.drawString(font, this.block.getName().getString(), this.getContentX() + 25, this.getContentY() + 7, Color.WHITE.getRGB());
+                guiGraphics.drawString(font, registryName.getNamespace(), this.getContentX() + 25, this.getContentY() + 17, Color.GRAY.getRGB());
 
-                graphics.renderItem(this.stack, left, top + 7);
+                guiGraphics.renderItem(this.stack, this.getContentX(), this.getContentY() + 7);
             }
 
             @Override
@@ -163,7 +164,7 @@ public class FindBlockScreen extends GuiBase {
             }
 
             @Override
-            public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
+            public boolean mouseClicked(MouseButtonEvent event, boolean bl) {
                 this.parent.setSelected(this);
                 return false;
             }
