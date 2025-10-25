@@ -40,7 +40,7 @@ repositories {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = rootProject.archivesBaseName
+            artifactId = rootProject.base.archivesName.get()
             from components.java
         }
     }
