@@ -1,3 +1,13 @@
+## [21.10.0]
+
+### Changed
+
+- Updated to Minecraft 1.21.10
+- Updated Fabric Loader to 0.17.3
+- Updated Fabric API to 0.136.0+1.21.10
+- Updated NeoForge to 21.10.35-beta
+- Fixed KeyMapping.Category registration to use `create()` instead of deprecated `register()` method
+
 ## [21.9.0]
 
 ### Changed
