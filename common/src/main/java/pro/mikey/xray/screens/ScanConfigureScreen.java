@@ -77,12 +77,15 @@ public class ScanConfigureScreen extends GuiBase {
         layout.setPosition(getWidth() / 2 - 100, getHeight() / 2 + 85);
         GridLayout.RowHelper rowHelper = layout.createRowHelper(3);
 
-        rowHelper.addChild(ImageButton.builder(b -> {
-            removeBlock();
-        })
-                .image(XRay.assetLocation("gui/trash.png"), 16, 16)
-                .size(20, 20)
-                .build());
+        // Only show trash button when editing an existing block
+        if (editingType != null) {
+            rowHelper.addChild(ImageButton.builder(b -> {
+                removeBlock();
+            })
+                    .image(XRay.assetLocation("gui/trash.png"), 16, 16)
+                    .size(20, 20)
+                    .build());
+        }
 
         rowHelper.addChild(Button.builder(Component.translatable("xray.single.cancel"), b -> Minecraft.getInstance().setScreen(this.previousScreenCallback.get()))
                 .size(60, 20)
