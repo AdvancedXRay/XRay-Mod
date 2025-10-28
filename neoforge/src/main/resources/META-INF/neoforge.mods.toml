@@ -27,3 +27,6 @@ displayTest="IGNORE_ALL_VERSION"
 
 [[mixins]]
 config = 'xray.mixins.json'
+
+[[mixins]]
+config = 'xray.neoforge.mixins.json'

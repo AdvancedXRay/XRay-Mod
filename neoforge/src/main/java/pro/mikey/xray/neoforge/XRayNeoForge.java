@@ -35,16 +35,11 @@ public class XRayNeoForge {
 		NeoForge.EVENT_BUS.addListener(this::tickEnd);
 		eventBus.addListener(this::onClientSetup);
 
-		NeoForge.EVENT_BUS.addListener(this::onWorldRenderLast);
 		eventBus.addListener(this::registerGuiLayer);
 	}
 
 	private void registerGuiLayer(RegisterGuiLayersEvent event) {
 		event.registerAboveAll(GUI_LAYER_ID, (guiGraphics, tickCounter) -> HudOverlay.renderGameOverlayEvent(guiGraphics));
-	}
-
-	private void onWorldRenderLast(RenderLevelStageEvent.AfterWeather event) {
-		OutlineRender.renderBlocks(event.getPoseStack());
 	}
 
 	public void onClientSetup(FMLClientSetupEvent event) {
