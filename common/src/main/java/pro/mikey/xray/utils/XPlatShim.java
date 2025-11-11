@@ -10,4 +10,6 @@ public interface XPlatShim {
     TagKey<Block> oreTag();
 
     Supplier<Path> configPath();
+
+    boolean isModLoaded(String modId);
 }

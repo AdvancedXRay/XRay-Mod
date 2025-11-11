@@ -2,6 +2,7 @@ package pro.mikey.xray.neoforge;
 
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.Tags;
 import pro.mikey.xray.utils.XPlatShim;
@@ -20,5 +21,10 @@ public class XPlatShimImpl implements XPlatShim {
     @Override
     public Supplier<Path> configPath() {
         return configPath;
+    }
+
+    @Override
+    public boolean isModLoaded(String modId) {
+        return ModList.get().isLoaded(modId);
     }
 }

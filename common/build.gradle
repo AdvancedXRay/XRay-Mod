@@ -10,6 +10,12 @@ loom {
     }
 }
 
+repositories {
+    maven {
+        url = "https://cursemaven.com/"
+    }
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.officialMojangMappings()
@@ -19,6 +25,8 @@ dependencies {
     testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 
     compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
+
+    modCompileOnly "curse.maven:irisshaders-455508:${iris_version}"
 }
 
 test {

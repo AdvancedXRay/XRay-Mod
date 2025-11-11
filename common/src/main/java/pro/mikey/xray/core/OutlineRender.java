@@ -5,12 +5,12 @@ import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.platform.DepthTestFunction;
-import com.mojang.blaze3d.platform.LogicOp;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.vertex.*;
+import net.irisshaders.iris.api.v0.IrisApi;
+import net.irisshaders.iris.api.v0.IrisProgram;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.DynamicUniforms;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -22,29 +22,27 @@ import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.lwjgl.opengl.GL11;
 import pro.mikey.xray.XRay;
 
 import java.io.Closeable;
 import java.util.*;
 
 public class OutlineRender {
-    public static boolean requestedRefresh = false;
 
 	private static final RenderSystem.AutoStorageIndexBuffer indices = RenderSystem.getSequentialBuffer(VertexFormat.Mode.LINES);
 	private static final Map<ChunkPos, VBOHolder> vertexBuffers = new HashMap<>();
 
 	private static final Set<ChunkPos> chunksToRefresh = Collections.synchronizedSet(new HashSet<>());
 
-	public static RenderPipeline LINES_NO_DEPTH = RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET, RenderPipelines.GLOBALS_SNIPPET)
-			.withLocation(XRay.id("pipeline/xray_lines"))
-			.withVertexShader("core/rendertype_lines")
-			.withFragmentShader(ResourceLocation.fromNamespaceAndPath(XRay.MOD_ID, "frag/constant_color"))
-			.withBlend(BlendFunction.TRANSLUCENT)
-			.withCull(false)
-			.withVertexFormat(DefaultVertexFormat.POSITION_COLOR_NORMAL, VertexFormat.Mode.LINES)
-			.withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
-			.withColorLogic(LogicOp.NONE)
-			.build();
+    public static RenderPipeline LINES_NO_DEPTH = RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET, RenderPipelines.GLOBALS_SNIPPET)
+            .withLocation(ResourceLocation.fromNamespaceAndPath(XRay.MOD_ID, "pipeline/lines_2"))
+            .withVertexShader("core/rendertype_lines")
+            .withFragmentShader(ResourceLocation.fromNamespaceAndPath(XRay.MOD_ID, "frag/constant_color"))
+            .withBlend(BlendFunction.TRANSLUCENT)
+            .withCull(false)
+            .withVertexFormat(DefaultVertexFormat.POSITION_COLOR_NORMAL, VertexFormat.Mode.LINES)
+            .build();
 
 	public static void renderBlocks(PoseStack poseStack) {
 		if (!ScanController.INSTANCE.isXRayActive() || Minecraft.getInstance().player == null) {
@@ -139,6 +137,8 @@ public class OutlineRender {
 					.createCommandEncoder()
 					.createRenderPass(() -> "xray", colorTextureView, OptionalInt.empty(), depthTextureView, OptionalDouble.empty())) {
 
+                GL11.glDisable(GL11.GL_DEPTH_TEST);
+
 				renderPass.setPipeline(LINES_NO_DEPTH);
 				RenderSystem.bindDefaultUniforms(renderPass);
 				renderPass.setVertexBuffer(0, holder.vertexBuffer);
@@ -146,6 +146,9 @@ public class OutlineRender {
 				renderPass.setUniform("DynamicTransforms", gpubufferslice[0]);
 				renderPass.setPipeline(LINES_NO_DEPTH);
 				renderPass.drawIndexed(0, 0, holder.indexCount, 1);
+
+                // Re-enable depth test after drawing
+                GL11.glEnable(GL11.GL_DEPTH_TEST);
 			}
 		}
 	}

@@ -21,4 +21,9 @@ public class XPlatShimImpl implements XPlatShim {
     public Supplier<Path> configPath() {
         return configPath;
     }
+
+    @Override
+    public boolean isModLoaded(String modId) {
+        return FabricLoader.getInstance().isModLoaded(modId);
+    }
 }

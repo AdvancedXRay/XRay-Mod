@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
+import pro.mikey.xray.compatability.IrisCompat;
 import pro.mikey.xray.screens.ScanManageScreen;
 import pro.mikey.xray.utils.XPlatShim;
 import pro.mikey.xray.core.ScanController;
@@ -26,6 +27,10 @@ public enum XRay {
 	public static final KeyMapping OPEN_GUI_KEY = new KeyMapping(I18n.get("xray.config.open"), GLFW.GLFW_KEY_G, CATEGORY);
 
 	public void init() {
+        if (XPLAT.isModLoaded("iris")) {
+            LOGGER.info("Iris detected, enabling compatibility features.");
+            IrisCompat.init();
+        }
 	}
 
 	public void onToggleKeyPressed() {
