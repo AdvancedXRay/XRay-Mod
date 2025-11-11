@@ -1,3 +1,15 @@
+## [21.9.2]
+
+### Fixed 
+
+- Hopefully address various shader issues with Iris specifically. Big thanks to all the users that helped as part of [#317](https://github.com/AdvancedXRay/XRay-Mod/issues/317)
+
+## [21.9.1]
+
+### Fixed
+
+- Minecraft version range to allow for `1.21.9` alongside `1.21.10` versions.
+
 ## [21.9.0]
 
 ### Changed
