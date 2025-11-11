@@ -1,18 +1,15 @@
-![XRay Logo](.github/assets/advanced-xray-neoforge-logo.svg)
+![XRay Logo](.github/assets/advanced-xray.png)
 
-# Advanced XRay (NeoForge Edition)
-Minecraft Forge based XRay mod designed to aid players who don't like the ore searching process.
+# Advanced XRay
+NeoForge & Fabric based XRay mod designed to aid players who don't like the ore searching process.
 
-[![Forge Downloads](http://cf.way2muchnoise.eu/256256.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-xray) [![Forge Available For](http://cf.way2muchnoise.eu/versions/256256.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-xray)
-
-##### Looking for the Fabric version? Click the button below :tada:
-
-<a href="https://github.com/AdvancedXRay/xray-fabric"><img src=".github/assets/xray-fabric-badge.svg" alt="drawing" width="250"/>
-</a>
+[![Available For](http://cf.way2muchnoise.eu/versions/256256.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-xray)
+- [![NeoForge Downloads](http://cf.way2muchnoise.eu/256256.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-xray) for NeoForge
+- [![Fabric Downloads](http://cf.way2muchnoise.eu/444663.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-xray-fabric-edition) for Fabric
 
 ## Feature
 
-- Built using Forge ⚒
+- Built for NeoForge & Fabric
 - Clean UI For Adding, Deleting and Editing the blocks you want to X-Ray
 - Full RGB Colour selector
 - Searchable List to find Blocks
@@ -20,11 +17,6 @@ Minecraft Forge based XRay mod designed to aid players who don't like the ore se
 - Add Blocks you're looking at! 
 - Searchable list of blocks you've added
 - Json store for the blocks you've added. Easy to edit and share!
-
-## Todo (TBA)
-
-- Mob support
-- Support for all fluids now it's a new system in 1.14.
 
 ## How to use
 
@@ -50,30 +42,17 @@ Minecraft Forge based XRay mod designed to aid players who don't like the ore se
 - Right click on any item in the Gui and edit as needed
 - Click save and the changed will be applied instantly
 
-[![Discord invite link](.github/assets/discord-join-badge.svg)](https://discord.gg/KV7yDTfEkm)
-
-## Previews
-
-The [Imgur Album](http://imgur.com/a/23dX5)
-![XRAY](http://i.imgur.com/N3KOEaE.png)
-
 ## Use on public servers
 
-I **DO NOT** support the use of this mod on any public servers which do not allow this kind of mod. The mod **does** work on servers but I do not approve of, and will not, support anyone that attempts to use this mod on servers. I **do not** have the time to review each issue; I will simply close any issue with server connections in the crash log. 
+Don't be a dick. If the server you're playing on allows the mod, use the mod. If it doesn't, don't. Simple as. 
 
-If you wish to use this mod on private servers then that's on you. If you use this on public servers and are banned then that's on you and I will **not** support your use of this mod in that way. 
+If you get banned from a server for using the mod, good. Don't. It's not hard to follow rules. I hold no responsibility for the way you use my mod.
 
-Join my Discord and ask about how to change the mod to use it on a server, if you can use it on servers or anything related, you will be banned without warning.
+Issues showing you've used the mod in a server will be closed without warning.
 
-## A note on Optifine
-Currently, the mod does not and has not work with Optifine since MC `1.7.x`. I am not sure why the two mods do not work 
-together and due to Optfine being closed source I don't have the ability to investigate it properly. For now, I just recommend not using the two mods together. I hope to have it fixed soon. 
+## A note on Shaders
 
-## A note on Minecraft Forge
-
-As of Minecraft `1.20.5+` I am no longer supporting Minecraft Forge. I have moved to NeoForge as it a maintained, feature-rich, and more stable fork of Minecraft Forge. This will mean going forwards, this mod will no longer be usable on Minecraft Forge.
-
-Sorry for any inconvenience this may cause.
+Shader compatability sometimes works, and sometimes doesn't. It's very Minecraft version specific. I'm looking for help to better support shaders in general. Please create an issue or a PR if you'd like to help out.
 
 ## Game support system
 
