@@ -1,3 +1,15 @@
+## [21.11.0]
+
+### Changed
+
+- Ported to Minecraft `1.21.11`
+
+### Fixed
+
+- Rendering lava blocks would not show correctly as they were rendering transparent
+- Lava toggle button not working correctly
+- Shaders should "just work"...
+
 ## [21.9.2]
 
 ### Fixed 
