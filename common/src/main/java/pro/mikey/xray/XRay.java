@@ -3,7 +3,7 @@ package pro.mikey.xray;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -57,12 +57,12 @@ public enum XRay {
 		return mc.player == null || Minecraft.getInstance().screen != null || Minecraft.getInstance().level == null;
 	}
 
-	public static ResourceLocation id(String path) {
-		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+	public static Identifier id(String path) {
+		return Identifier.fromNamespaceAndPath(MOD_ID, path);
 	}
 
-	public static ResourceLocation assetLocation(String path) {
-		return ResourceLocation.fromNamespaceAndPath(MOD_ID, "textures/" + path);
+	public static Identifier assetLocation(String path) {
+		return Identifier.fromNamespaceAndPath(MOD_ID, "textures/" + path);
 	}
 
 	public static Configuration config() {

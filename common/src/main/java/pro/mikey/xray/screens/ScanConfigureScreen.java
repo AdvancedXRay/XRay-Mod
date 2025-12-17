@@ -4,14 +4,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.layouts.GridLayout;
-import net.minecraft.client.gui.layouts.Layout;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
@@ -28,8 +26,8 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 public class ScanConfigureScreen extends GuiBase {
-    private static final ResourceLocation TRASH_ICON = XRay.assetLocation("gui/trash.png");
-    private static final ResourceLocation TRANSPARENT_BACKGROUND = XRay.assetLocation("gui/transparent_background.png");
+    private static final Identifier TRASH_ICON = XRay.assetLocation("gui/trash.png");
+    private static final Identifier TRANSPARENT_BACKGROUND = XRay.assetLocation("gui/transparent_background.png");
 
     private EditBox oreName;
 

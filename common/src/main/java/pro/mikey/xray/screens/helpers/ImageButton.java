@@ -4,22 +4,21 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class ImageButton extends Button {
-    protected final ResourceLocation image;
+    protected final Identifier image;
     protected final int imageWidth;
     protected final int imageHeight;
 
-    ImageButton(int width, int height, int imageWidth, int imageHeight, ResourceLocation resourceLocation, Button.OnPress onPress) {
+    ImageButton(int width, int height, int imageWidth, int imageHeight, Identifier resourceLocation, Button.OnPress onPress) {
         super(0, 0, width, height, Component.empty(), onPress, DEFAULT_NARRATION);
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
         this.image = resourceLocation;
     }
 
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTicks);
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         int k = this.getX() + this.getWidth() / 2 - this.imageWidth / 2;
         int l = this.getY() + this.getHeight() / 2 - this.imageHeight / 2;
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, this.image, k, l, 0f, 0f, this.imageWidth, this.imageHeight, this.imageWidth, this.imageHeight, 0xFFFFFFFF);
@@ -33,7 +32,7 @@ public class ImageButton extends Button {
         private final Button.OnPress onPress;
         private int width = 20;
         private int height = 20;
-        private ResourceLocation image;
+        private Identifier image;
         private int imageWidth;
         private int imageHeight;
 
@@ -52,7 +51,7 @@ public class ImageButton extends Button {
             return this;
         }
 
-        public ImageButton.Builder image(ResourceLocation resourceLocation, int i, int j) {
+        public ImageButton.Builder image(Identifier resourceLocation, int i, int j) {
             this.image = resourceLocation;
             this.imageWidth = i;
             this.imageHeight = j;

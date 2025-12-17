@@ -4,18 +4,16 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-//import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import pro.mikey.xray.ClientController;
 import pro.mikey.xray.XRay;
 import pro.mikey.xray.screens.HudOverlay;
 import pro.mikey.xray.core.ScanController;
-import pro.mikey.xray.core.OutlineRender;
 
 public class XRayFabric implements ClientModInitializer {
-    private static final ResourceLocation HUD_ELEMENT_ID = XRay.id("xray_overlay");
+    private static final Identifier HUD_ELEMENT_ID = XRay.id("xray_overlay");
 
     @Override
     public void onInitializeClient() {

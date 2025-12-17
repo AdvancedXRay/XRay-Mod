@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import pro.mikey.xray.screens.helpers.GuiBase;
 
 import java.awt.*;
@@ -53,7 +53,7 @@ public class HelpScreen extends GuiBase {
     }
 
     @Override
-    public ResourceLocation getBackground() {
+    public Identifier getBackground() {
         return BG_LARGE;
     }
 

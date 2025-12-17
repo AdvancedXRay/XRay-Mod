@@ -1,5 +1,6 @@
 package pro.mikey.xray.screens.helpers;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -22,5 +23,10 @@ public class SupportButton extends Button {
 
     public List<FormattedText> getSupport() {
         return support;
+    }
+
+    @Override
+    protected void renderContents(GuiGraphics guiGraphics, int i, int j, float f) {
+
     }
 }

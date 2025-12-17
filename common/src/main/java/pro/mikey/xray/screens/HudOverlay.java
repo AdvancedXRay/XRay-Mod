@@ -6,12 +6,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import pro.mikey.xray.XRay;
 import pro.mikey.xray.core.ScanController;
 
 public class HudOverlay {
-    private static final ResourceLocation CIRCLE = XRay.assetLocation("gui/circle.png");
+    private static final Identifier CIRCLE = XRay.assetLocation("gui/circle.png");
 
     public static void renderGameOverlayEvent(GuiGraphics graphics) {
         // Draw Indicator

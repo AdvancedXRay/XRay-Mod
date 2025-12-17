@@ -3,7 +3,7 @@ package pro.mikey.xray.core.scanner;
 import com.google.gson.JsonObject;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,7 +25,7 @@ public class BlockScanType extends ScanType {
     public BlockScanType(Type type, JsonObject obj) {
         super(type, obj);
         this.blockName = obj.get("block_name").getAsString();
-        this.block = BuiltInRegistries.BLOCK.getValue(ResourceLocation.tryParse(this.blockName));
+        this.block = BuiltInRegistries.BLOCK.getValue(Identifier.tryParse(this.blockName));
     }
 
     @Override

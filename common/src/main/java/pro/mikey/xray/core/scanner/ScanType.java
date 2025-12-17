@@ -2,7 +2,7 @@ package pro.mikey.xray.core.scanner;
 
 import com.google.gson.JsonObject;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
@@ -229,13 +229,13 @@ public abstract class ScanType {
 
         private static final Set<Type> values = Set.of(values());
 
-        private final ResourceLocation id;
+        private final Identifier id;
 
-        Type(ResourceLocation id) {
+        Type(Identifier id) {
             this.id = id;
         }
 
-        public static Type fromId(ResourceLocation id) {
+        public static Type fromId(Identifier id) {
             for (Type type : values) {
                 if (type.id.equals(id)) {
                     return type;
@@ -244,7 +244,7 @@ public abstract class ScanType {
             throw new IllegalArgumentException("Unknown ScanType ID: " + id);
         }
 
-        public ResourceLocation getId() {
+        public Identifier getId() {
             return id;
         }
     }

@@ -6,7 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -25,8 +25,8 @@ public class ScanStore {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScanStore.class);
     private static final String STORE_FILE = "scan-store.json";
 
-    private static final LazyValue<Map<ResourceLocation, String>> BLOCK_TO_COLOR_DEFAULTS = LazyValue.of(() -> {
-        Map<ResourceLocation, String> defaults = new HashMap<>();
+    private static final LazyValue<Map<Identifier, String>> BLOCK_TO_COLOR_DEFAULTS = LazyValue.of(() -> {
+        Map<Identifier, String> defaults = new HashMap<>();
         defaults.put(fromBlock(Blocks.DIAMOND_ORE), "rgb(0, 255, 0)"); // Green
         defaults.put(fromBlock(Blocks.DEEPSLATE_DIAMOND_ORE), "rgb(0, 255, 0)"); // Green (Deepslate Diamond)
         defaults.put(fromBlock(Blocks.GOLD_ORE), "rgb(255, 215, 0)"); // Gold
@@ -67,7 +67,7 @@ public class ScanStore {
         BuiltInRegistries.BLOCK
                 .stream()
                 .filter(e -> e.defaultBlockState().is(oresTag))
-                .map(e -> new BlockScanType(e, e.getName().getString(), blockColorDefaults.getOrDefault(e.builtInRegistryHolder().key().location(), ScanType.randomRgbColor()), 0))
+                .map(e -> new BlockScanType(e, e.getName().getString(), blockColorDefaults.getOrDefault(e.builtInRegistryHolder().key().identifier(), ScanType.randomRgbColor()), 0))
                 .forEach(entries::add);
 
         this.categories.add(createDefaultCategory(entries));
@@ -236,7 +236,7 @@ public class ScanStore {
             for (var entry : entriesArray) {
                 var entryObj = entry.getAsJsonObject();
                 try {
-                    var type = ScanType.Type.fromId(ResourceLocation.tryParse(entryObj.get("type").getAsString()));
+                    var type = ScanType.Type.fromId(Identifier.tryParse(entryObj.get("type").getAsString()));
                     var creator = SCAN_TYPE_CREATORS.get(type);
                     if (creator == null) {
                         LOGGER.warn("No creator found for scan type: {}", type);
@@ -268,7 +268,7 @@ public class ScanStore {
         }
     }
 
-    private static ResourceLocation fromBlock(Block block) {
+    private static Identifier fromBlock(Block block) {
         if (block == null) {
             return null;
         }

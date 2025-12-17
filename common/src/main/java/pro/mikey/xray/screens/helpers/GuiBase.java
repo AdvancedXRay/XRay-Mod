@@ -10,7 +10,7 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import pro.mikey.xray.XRay;
 
@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class GuiBase extends Screen {
-    public static final ResourceLocation BG_NORMAL = XRay.assetLocation("gui/bg.png");
-    public static final ResourceLocation BG_LARGE = XRay.assetLocation("gui/bg-help.png");
+    public static final Identifier BG_NORMAL = XRay.assetLocation("gui/bg.png");
+    public static final Identifier BG_LARGE = XRay.assetLocation("gui/bg-help.png");
 
     private boolean hasSide;
     private String sideTitle = "";
@@ -88,7 +88,7 @@ public abstract class GuiBase extends Screen {
         }
     }
 
-    public ResourceLocation getBackground() {
+    public Identifier getBackground() {
         return BG_NORMAL;
     }
 
