@@ -1,7 +1,7 @@
 package pro.mikey.xray.neoforge;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -18,7 +18,7 @@ import pro.mikey.xray.core.OutlineRender;
 
 @Mod(XRay.MOD_ID)
 public class XRayNeoForge {
-	private static final ResourceLocation GUI_LAYER_ID = XRay.id("xray_overlay");
+	private static final Identifier GUI_LAYER_ID = XRay.id("xray_overlay");
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
@@ -48,7 +48,6 @@ public class XRayNeoForge {
 	}
 
 	public void onClientSetup(FMLClientSetupEvent event) {
-
 		ClientController.onSetup();
 	}
 
@@ -58,7 +57,6 @@ public class XRayNeoForge {
 	}
 
 	public void registerPipeline(RegisterRenderPipelinesEvent event) {
-		event.registerPipeline(OutlineRender.LINES_NO_DEPTH);
 	}
 
 	public void eventInput(InputEvent.Key event) {

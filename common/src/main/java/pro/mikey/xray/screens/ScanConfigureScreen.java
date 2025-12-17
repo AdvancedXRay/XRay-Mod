@@ -75,26 +75,28 @@ public class ScanConfigureScreen extends GuiBase {
         layout.setPosition(getWidth() / 2 - 100, getHeight() / 2 + 85);
         GridLayout.RowHelper rowHelper = layout.createRowHelper(3);
 
-        rowHelper.addChild(ImageButton.builder(b -> {
-            removeBlock();
-        })
-                .image(XRay.assetLocation("gui/trash.png"), 16, 16)
-                .size(20, 20)
-                .build());
+        if (editingType != null) {
+            rowHelper.addChild(ImageButton.builder(b -> {
+                        removeBlock();
+                    })
+                    .image(XRay.assetLocation("gui/trash.png"), 16, 16)
+                    .size(20, 20)
+                    .build());
+        }
 
         rowHelper.addChild(Button.builder(Component.translatable("xray.single.cancel"), b -> Minecraft.getInstance().setScreen(this.previousScreenCallback.get()))
                 .size(60, 20)
                 .build());
 
         rowHelper.addChild(Button.builder(Component.translatable(editingType != null ? "xray.title.edit" : "xray.single.add"), b -> {
-                            if (editingType != null) {
-                                editBlock();
-                            } else {
-                                addBlock();
-                            }
-                        })
-                        .size(117, 20)
-                        .build());
+                    if (editingType != null) {
+                        editBlock();
+                    } else {
+                        addBlock();
+                    }
+                })
+                .size(editingType != null ? 117 : 138, 20)
+                .build());
 
         layout.arrangeElements();
         layout.visitWidgets(this::addRenderableWidget);
@@ -116,7 +118,7 @@ public class ScanConfigureScreen extends GuiBase {
 
         addRenderableWidget(redSlider = new SliderWidget(getWidth() / 2 - 100, getHeight() / 2 - 16, 202, 20, "xray.color.red", red));
         addRenderableWidget(greenSlider = new SliderWidget(getWidth() / 2 - 100, getHeight() / 2 + 7, 202, 20, "xray.color.green", green));
-        addRenderableWidget(blueSlider = new SliderWidget(getWidth() / 2 - 100, getHeight() / 2 + 30, 202, 20,  "xray.color.blue", blue));
+        addRenderableWidget(blueSlider = new SliderWidget(getWidth() / 2 - 100, getHeight() / 2 + 30, 202, 20, "xray.color.blue", blue));
         addRenderableWidget(alphaSlider = new SliderWidget(getWidth() / 2 - 100, getHeight() / 2 + 53, 202, 20, "xray.color.alpha", alpha));
 
         oreName = new EditBox(minecraft.font, getWidth() / 2 - 100, getHeight() / 2 - 70, 202, 20, Component.empty());

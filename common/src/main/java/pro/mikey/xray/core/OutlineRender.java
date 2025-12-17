@@ -4,45 +4,32 @@ import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.vertex.*;
-import net.irisshaders.iris.api.v0.IrisApi;
-import net.irisshaders.iris.api.v0.IrisProgram;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.DynamicUniforms;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.ShapeRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
-import pro.mikey.xray.XRay;
 
 import java.io.Closeable;
 import java.util.*;
 
 public class OutlineRender {
-
 	private static final RenderSystem.AutoStorageIndexBuffer indices = RenderSystem.getSequentialBuffer(VertexFormat.Mode.LINES);
 	private static final Map<ChunkPos, VBOHolder> vertexBuffers = new HashMap<>();
 
 	private static final Set<ChunkPos> chunksToRefresh = Collections.synchronizedSet(new HashSet<>());
-
-    public static RenderPipeline LINES_NO_DEPTH = RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET, RenderPipelines.GLOBALS_SNIPPET)
-            .withLocation(ResourceLocation.fromNamespaceAndPath(XRay.MOD_ID, "pipeline/lines_2"))
-            .withVertexShader("core/rendertype_lines")
-            .withFragmentShader(ResourceLocation.fromNamespaceAndPath(XRay.MOD_ID, "frag/constant_color"))
-            .withBlend(BlendFunction.TRANSLUCENT)
-            .withCull(false)
-            .withVertexFormat(DefaultVertexFormat.POSITION_COLOR_NORMAL, VertexFormat.Mode.LINES)
-            .build();
 
 	public static void renderBlocks(PoseStack poseStack) {
 		if (!ScanController.INSTANCE.isXRayActive() || Minecraft.getInstance().player == null) {
@@ -78,7 +65,7 @@ public class OutlineRender {
 
 			VBOHolder holder = vertexBuffers.get(chunkPos);
 			if (holder == null) {
-				BufferBuilder bufferBuilder = Tesselator.getInstance().begin(LINES_NO_DEPTH.getVertexFormatMode(), LINES_NO_DEPTH.getVertexFormat());
+				BufferBuilder bufferBuilder = Tesselator.getInstance().begin(RenderPipelines.LINES.getVertexFormatMode(), RenderPipelines.LINES.getVertexFormat());
 
 				// More concurrent modification exceptions can happen here, so we clone the list
 				var blockPropsClone = new ArrayList<>(blocksWithProps);
@@ -88,18 +75,9 @@ public class OutlineRender {
 						continue;
 					}
 
-					final float size = 1.0f;
-					final int x = blockProps.x(), y = blockProps.y(), z = blockProps.z();
+                    final int x = blockProps.x(), y = blockProps.y(), z = blockProps.z();
 
-					final float alpha = ((blockProps.color() >> 24) & 0xff) / 255f;
-					final float red = (blockProps.color() >> 16 & 0xff) / 255f;
-					final float green = (blockProps.color() >> 8 & 0xff) / 255f;
-					final float blue = (blockProps.color() & 0xff) / 255f;
-					
-					// Use the alpha from the color, or default to 1.0 if alpha is 0
-					final float opacity = alpha > 0 ? alpha : 1.0f;
-
-					ShapeRenderer.renderLineBox(poseStack.last(), bufferBuilder, x, y, z, x + size, y + size, z + size, red, green, blue, opacity);
+					ShapeRenderer.renderShape(poseStack, bufferBuilder, Shapes.block(), x, y, z, blockProps.color(), 1f);
 				}
 
 				try (MeshData meshData = bufferBuilder.buildOrThrow()) {
@@ -116,12 +94,7 @@ public class OutlineRender {
 				continue;
 			}
 
-			Vec3 playerPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition().reverse();
-
-			RenderTarget renderTarget = Minecraft.getInstance().getMainRenderTarget();
-			if (renderTarget.getColorTexture() == null) {
-				return;
-			}
+			Vec3 playerPos = Minecraft.getInstance().gameRenderer.getMainCamera().position().reverse();
 
 			Matrix4fStack matrix4fStack = RenderSystem.getModelViewStack();
 			GpuTextureView colorTextureView = Minecraft.getInstance().getMainRenderTarget().getColorTextureView();
@@ -129,27 +102,26 @@ public class OutlineRender {
 
 			matrix4fStack.pushMatrix();
 			matrix4fStack.translate((float) playerPos.x(), (float) playerPos.y(), (float) playerPos.z());
-			GpuBufferSlice[] gpubufferslice = RenderSystem.getDynamicUniforms().writeTransforms(new DynamicUniforms.Transform(RenderSystem.getModelViewMatrix(), new Vector4f(1.0F, 1.0F, 1.0F, 1.0F), new Vector3f(), new Matrix4f(), 2.0F));
-			matrix4fStack.popMatrix();
+			GpuBufferSlice[] gpubufferslice = RenderSystem.getDynamicUniforms().writeTransforms(new DynamicUniforms.Transform(new Matrix4f(matrix4fStack), new Vector4f(1.0F, 1.0F, 1.0F, 1.0F), new Vector3f(), new Matrix4f()));
+
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            RenderSystem.setShaderFog(gpubufferslice[0]);
 
 			GpuBuffer gpuBuffer = indices.getBuffer(holder.indexCount);
 			try (RenderPass renderPass = RenderSystem.getDevice()
 					.createCommandEncoder()
 					.createRenderPass(() -> "xray", colorTextureView, OptionalInt.empty(), depthTextureView, OptionalDouble.empty())) {
 
-                GL11.glDisable(GL11.GL_DEPTH_TEST);
-
-				renderPass.setPipeline(LINES_NO_DEPTH);
 				RenderSystem.bindDefaultUniforms(renderPass);
 				renderPass.setVertexBuffer(0, holder.vertexBuffer);
 				renderPass.setIndexBuffer(gpuBuffer, indices.type());
 				renderPass.setUniform("DynamicTransforms", gpubufferslice[0]);
-				renderPass.setPipeline(LINES_NO_DEPTH);
+				renderPass.setPipeline(RenderPipelines.LINES);
 				renderPass.drawIndexed(0, 0, holder.indexCount, 1);
-
-                // Re-enable depth test after drawing
-                GL11.glEnable(GL11.GL_DEPTH_TEST);
 			}
+
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
+            matrix4fStack.popMatrix();
 		}
 	}
 

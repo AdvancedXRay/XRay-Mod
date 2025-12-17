@@ -150,7 +150,7 @@ public enum ScanController {
                 OutlineRender.clearVBOs(); // Clear the VBOs as well
             }
 
-            if (this.scanStore.activeScanTargets().isEmpty()) {
+            if (this.scanStore.activeScanTargets().isEmpty() && !isLavaActive()) {
                 return;
             }
 

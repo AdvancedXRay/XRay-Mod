@@ -40,7 +40,7 @@ public class ChunkScanTask implements Runnable {
                     fluidState = state.getFluidState();
 
                     if ((fluidState.getType() == Fluids.LAVA || fluidState.getType() == Fluids.FLOWING_LAVA) && ScanController.INSTANCE.isLavaActive()) {
-                        renderQueue.add(new OutlineRenderTarget(pos.getX(), pos.getY(), pos.getZ(), 0xff0000));
+                        renderQueue.add(new OutlineRenderTarget(pos.getX(), pos.getY(), pos.getZ(), 0xffff0000));
                         continue;
                     }
 

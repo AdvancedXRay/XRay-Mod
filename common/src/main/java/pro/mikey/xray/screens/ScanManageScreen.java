@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -78,12 +79,17 @@ public class ScanManageScreen extends GuiBase {
         this.search.setCanLoseFocus(true);
         addRenderableWidget(this.search);
 
-        // side bar buttons
-        addRenderableWidget(new SupportButtonInner((getWidth() / 2) + 79, getHeight() / 2 - 60, 120, 20, Component.translatable("xray.input.add"), "xray.tooltips.add_block", button -> {
-            minecraft.setScreen(new FindBlockScreen());
-        }));
+        addRenderableWidget(
+                Button.builder(Component.translatable("xray.input.add"), (btn) -> {
+                    minecraft.setScreen(new FindBlockScreen());
+                })
+                        .pos((getWidth() / 2) + 79, getHeight() / 2 - 60)
+                        .size(120, 20)
+                        .tooltip(Tooltip.create(Component.translatable("xray.tooltips.add_block")))
+                        .build()
+        );
 
-        addRenderableWidget(new SupportButtonInner(getWidth() / 2 + 79, getHeight() / 2 - 38, 120, 20, Component.translatable("xray.input.add_hand"), "xray.tooltips.add_block_in_hand", button -> {
+        addRenderableWidget(Button.builder(Component.translatable("xray.input.add_hand"), btn -> {
             ItemStack handItem = minecraft.player.getItemInHand(InteractionHand.MAIN_HAND);
 
             // Check if the hand item is a block or not
@@ -94,9 +100,14 @@ public class ScanManageScreen extends GuiBase {
             }
 
             minecraft.setScreen(new ScanConfigureScreen(((BlockItem) handItem.getItem()).getBlock(), ScanManageScreen::new));
-        }));
+        })
+            .pos(getWidth() / 2 + 79, getHeight() / 2 - 38)
+            .size(120, 20)
+            .tooltip(Tooltip.create(Component.translatable("xray.tooltips.add_block_in_hand")))
+            .build()
+        );
 
-        addRenderableWidget(new SupportButtonInner(getWidth() / 2 + 79, getHeight() / 2 - 16, 120, 20, Component.translatable("xray.input.add_look"), "xray.tooltips.add_block_looking_at", button -> {
+        addRenderableWidget(Button.builder(Component.translatable("xray.input.add_look"), btn -> {
             Player player = minecraft.player;
             if (minecraft.level == null || player == null) {
                 return;
@@ -122,17 +133,33 @@ public class ScanManageScreen extends GuiBase {
                 player.displayClientMessage(Component.literal("[XRay] " + I18n.get("xray.message.thats_odd")), false);
                 this.onClose();
             }
-        }));
+        })
+            .pos(getWidth() / 2 + 79, getHeight() / 2 - 16)
+            .size(120, 20)
+            .tooltip(Tooltip.create(Component.translatable("xray.tooltips.add_block_looking_at"))
+        ).build());
 
-        addRenderableWidget(distButtons = new SupportButtonInner((getWidth() / 2) + 79, getHeight() / 2 + 6, 120, 20, Component.translatable("xray.input.show-lava", ScanController.INSTANCE.isLavaActive()), "xray.tooltips.show_lava", button -> {
+
+
+        addRenderableWidget(Button.builder(Component.translatable("xray.input.show-lava", ScanController.INSTANCE.isLavaActive()), btn -> {
             ScanController.INSTANCE.toggleLava();
-            button.setMessage(Component.translatable("xray.input.show-lava", ScanController.INSTANCE.isLavaActive()));
-        }));
+            btn.setMessage(Component.translatable("xray.input.show-lava", ScanController.INSTANCE.isLavaActive()));
+        })
+                .pos(getWidth() / 2 + 79, getHeight() / 2 + 6)
+                .size(120, 20)
+                .tooltip(Tooltip.create(Component.translatable("xray.tooltips.show_lava")))
+                .build());
 
-        addRenderableWidget(distButtons = new SupportButtonInner((getWidth() / 2) + 79, getHeight() / 2 + 36, 120, 20, Component.translatable("xray.input.distance", ScanController.INSTANCE.getVisualRadius()), "xray.tooltips.distance", button -> {
+        
+        addRenderableWidget(distButtons = Button.builder(Component.translatable("xray.input.distance", ScanController.INSTANCE.getVisualRadius()), btn -> {
             ScanController.INSTANCE.incrementCurrentDist();
-            button.setMessage(Component.translatable("xray.input.distance", ScanController.INSTANCE.getVisualRadius()));
-        }));
+            btn.setMessage(Component.translatable("xray.input.distance", ScanController.INSTANCE.getVisualRadius()));
+        })
+                .pos(getWidth() / 2 + 79, getHeight() / 2 + 36)
+                .size(120, 20)
+                .tooltip(Tooltip.create(Component.translatable("xray.tooltips.distance")))
+                .build()
+        );
 
         addRenderableWidget(
             Button.builder(Component.translatable("xray.single.help"), button -> {
@@ -184,6 +211,7 @@ public class ScanManageScreen extends GuiBase {
         if (search.mouseClicked(event, bl))
             this.setFocused(search);
 
+        // Shift action!
         if (event.button() == 1 && distButtons.isMouseOver(event.x(), event.y())) {
             ScanController.INSTANCE.decrementCurrentDist();
             distButtons.setMessage(Component.translatable("xray.input.distance", ScanController.INSTANCE.getVisualRadius()));

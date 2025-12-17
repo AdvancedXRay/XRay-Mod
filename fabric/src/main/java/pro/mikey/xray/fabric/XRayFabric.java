@@ -5,10 +5,13 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import pro.mikey.xray.ClientController;
 import pro.mikey.xray.XRay;
+import pro.mikey.xray.core.OutlineRender;
 import pro.mikey.xray.screens.HudOverlay;
 import pro.mikey.xray.core.ScanController;
 
@@ -24,10 +27,13 @@ public class XRayFabric implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(this::clientTickEvent);
         ClientLifecycleEvents.CLIENT_STARTED.register((mc) -> ClientController.onSetup());
-        // TODO: Fixme
-//        WorldRenderEvents.LAST.register((context) -> OutlineRender.renderBlocks(context.matrixStack()));
+        WorldRenderEvents.END_MAIN.register(this::renderOverlay);
 
         HudElementRegistry.addLast(HUD_ELEMENT_ID, (guiGraphics, tickCounter) -> HudOverlay.renderGameOverlayEvent(guiGraphics));
+    }
+
+    private void renderOverlay(WorldRenderContext worldRenderContext) {
+        OutlineRender.renderBlocks(worldRenderContext.matrices());
     }
 
     private void clientTickEvent(Minecraft mc) {
