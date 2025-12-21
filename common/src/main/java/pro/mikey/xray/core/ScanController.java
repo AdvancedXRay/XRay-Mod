@@ -15,6 +15,7 @@ import pro.mikey.xray.core.scanner.ScanStore;
 import pro.mikey.xray.core.scanner.ScanType;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -32,7 +33,7 @@ public enum ScanController {
         }
     });
 
-    private final int maxStepsToScan = 5;
+    private final int maxStepsToScan = 21;
 
     // Block blackList
     // Todo: move this to a configurable thing
@@ -45,7 +46,7 @@ public enum ScanController {
     }};
 
 
-    public final Map<ChunkPos, Set<OutlineRenderTarget>> syncRenderList = Collections.synchronizedMap(new HashMap<>()); // this is accessed by threads
+    public final Map<ChunkPos, Set<OutlineRenderTarget>> syncRenderList = Collections.synchronizedMap(new ConcurrentHashMap<>()); // this is accessed by threads
     private ChunkPos lastChunkPos = null;
 
     public final ScanStore scanStore = new ScanStore();
@@ -108,11 +109,8 @@ public enum ScanController {
         return Math.max(1, getRadius());
     }
 
-    public void incrementCurrentDist() {
-        if (XRay.config().radius.get() < maxStepsToScan)
-            XRay.config().radius.set(XRay.config().radius.get() + 1);
-        else
-            XRay.config().radius.set(0);
+    public void incrementCurrentDist(int value) {
+            XRay.config().radius.set(value);
     }
 
     public void decrementCurrentDist() {
