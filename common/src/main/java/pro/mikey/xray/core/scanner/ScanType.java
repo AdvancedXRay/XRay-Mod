@@ -7,6 +7,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import pro.mikey.xray.XRay;
+import net.minecraft.world.level.block.Block;
 
 import java.awt.*;
 import java.util.Set;
@@ -247,5 +248,9 @@ public abstract class ScanType {
         public Identifier getId() {
             return id;
         }
+    }
+    
+    public Block getBlock() {
+        return null;
     }
 }
