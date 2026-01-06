@@ -41,4 +41,9 @@ public class BlockScanType extends ScanType {
     void writeData(JsonObject obj) {
         obj.addProperty("block_name", this.blockName);
     }
+    
+    @Override
+    public Block getBlock() {
+        return this.block;
+    }
 }
