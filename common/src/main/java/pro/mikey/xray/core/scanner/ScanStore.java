@@ -182,7 +182,25 @@ public class ScanStore {
                 if (!scanType.enabled) {
                     continue; // Skip disabled scan types
                 }
-
+                
+                if (scanType.getBlock()==Blocks.WHITE_BED){
+                    this.activeScanTargets.add(new BlockScanType(Blocks.WHITE_BED, "", scanType.color(), 0));
+                    this.activeScanTargets.add(new BlockScanType(Blocks.ORANGE_BED, "", scanType.color(), 0));
+                    this.activeScanTargets.add(new BlockScanType(Blocks.MAGENTA_BED, "", scanType.color(), 0));
+                    this.activeScanTargets.add(new BlockScanType(Blocks.LIGHT_BLUE_BED, "", scanType.color(), 0));
+                    this.activeScanTargets.add(new BlockScanType(Blocks.YELLOW_BED, "", scanType.color(), 0));
+                    this.activeScanTargets.add(new BlockScanType(Blocks.LIME_BED, "", scanType.color(), 0));
+                    this.activeScanTargets.add(new BlockScanType(Blocks.PINK_BED, "", scanType.color(), 0));
+                    this.activeScanTargets.add(new BlockScanType(Blocks.GRAY_BED, "", scanType.color(), 0));
+                    this.activeScanTargets.add(new BlockScanType(Blocks.LIGHT_GRAY_BED, "", scanType.color(), 0));
+                    this.activeScanTargets.add(new BlockScanType(Blocks.CYAN_BED, "", scanType.color(), 0));
+                    this.activeScanTargets.add(new BlockScanType(Blocks.PURPLE_BED, "", scanType.color(), 0));
+                    this.activeScanTargets.add(new BlockScanType(Blocks.BLUE_BED, "", scanType.color(), 0));
+                    this.activeScanTargets.add(new BlockScanType(Blocks.BROWN_BED, "", scanType.color(), 0));
+                    this.activeScanTargets.add(new BlockScanType(Blocks.GREEN_BED, "", scanType.color(), 0));
+                    this.activeScanTargets.add(new BlockScanType(Blocks.RED_BED, "", scanType.color(), 0));
+                    this.activeScanTargets.add(new BlockScanType(Blocks.BLACK_BED, "", scanType.color(), 0));
+                }
                 this.activeScanTargets.add(scanType);
             }
         }

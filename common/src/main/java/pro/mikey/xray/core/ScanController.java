@@ -18,6 +18,8 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public enum ScanController {
     INSTANCE;
@@ -45,8 +47,14 @@ public enum ScanController {
     }};
 
 
-    public final Map<ChunkPos, Set<OutlineRenderTarget>> syncRenderList = Collections.synchronizedMap(new HashMap<>()); // this is accessed by threads
+    public final Map<ChunkPos, Set<OutlineRenderTarget>> syncRenderList = new ConcurrentHashMap<>(); // this is accessed by threads
+    public final Map<ChunkPos, Set<OutlineRenderTarget>> syncRenderLista = new ConcurrentHashMap<>(); // this is accessed by threads
     private ChunkPos lastChunkPos = null;
+    private BlockPos lastPos = null;
+    private Set<ChunkPos> last3x3 = ConcurrentHashMap.newKeySet();
+    private Set<ChunkPos> lastxxx = ConcurrentHashMap.newKeySet();
+    private List<BlockPos> lastshi = new ArrayList<>();
+    private static final Object RENDER_SET_LOCK = new Object();
 
     public final ScanStore scanStore = new ScanStore();
 
@@ -74,6 +82,9 @@ public enum ScanController {
         if (!xrayActive) // enable drawing
         {
             syncRenderList.clear(); // first, clear the buffer
+            syncRenderLista.clear(); // first, clear the buffer
+            last3x3.clear();
+            lastxxx.clear();
             xrayActive = true; // then, enable drawing
             requestBlockFinder(true); // finally, force a refresh
 
@@ -108,11 +119,8 @@ public enum ScanController {
         return Math.max(1, getRadius());
     }
 
-    public void incrementCurrentDist() {
-        if (XRay.config().radius.get() < maxStepsToScan)
-            XRay.config().radius.set(XRay.config().radius.get() + 1);
-        else
-            XRay.config().radius.set(0);
+    public void incrementCurrentDist(int value) {
+            XRay.config().radius.set(value);
     }
 
     public void decrementCurrentDist() {
@@ -131,8 +139,39 @@ public enum ScanController {
         return lastChunkPos == null || !lastChunkPos.equals(plyChunkPos);
     }
 
+    private boolean playerHasMoveda() {
+        if (Minecraft.getInstance().player == null)
+            return false;
+        BlockPos plyChunkPos = Minecraft.getInstance().player.blockPosition();
+        return lastPos == null || !lastPos.equals(plyChunkPos);
+    }
+
     private void updatePlayerPosition() {
         lastChunkPos = Minecraft.getInstance().player.chunkPosition();
+    }
+
+    private void updatePlayerPositiona() {
+        lastPos = Minecraft.getInstance().player.blockPosition();
+    }
+
+    private List<ChunkPos> getCore3x3Chunks(ChunkPos playerChunk,int range) {
+    List<ChunkPos> coreChunks = new ArrayList<>();
+    if (range==0){
+        coreChunks.add(new ChunkPos(playerChunk.x, playerChunk.z));
+    } else {
+        for (int x = playerChunk.x - 1; x <= playerChunk.x + 1; x++) {
+            for (int z = playerChunk.z - 1; z <= playerChunk.z + 1; z++) {
+                coreChunks.add(new ChunkPos(x, z));
+            }
+        }
+    }
+        return coreChunks;
+    }
+
+    private List<ChunkPos> getOuterChunks(List<ChunkPos> allChunks, List<ChunkPos> core3x3Chunks) {
+        return allChunks.stream()
+            .filter(chunk -> !core3x3Chunks.contains(chunk))
+            .collect(Collectors.toList());
     }
 
     public synchronized void requestBlockFinder(boolean force) {
@@ -147,6 +186,9 @@ public enum ScanController {
             if (force) {
                 // Clear the render list if we are forcing a scan
                 syncRenderList.clear();
+                syncRenderLista.clear();
+                last3x3.clear();
+                lastxxx.clear();
                 OutlineRender.clearVBOs(); // Clear the VBOs as well
             }
 
@@ -167,11 +209,32 @@ public enum ScanController {
             // Sort the chunks by distance to the player
             chunksToScan.sort(Comparator.comparingDouble(chunk -> chunk.distanceSquared(playerChunkPos)));
 
-            var knownChunks = syncRenderList.keySet();
+            List<ChunkPos> core3x3Chunks = getCore3x3Chunks(playerChunkPos,range);
+            List<ChunkPos> outerChunks = getOuterChunks(chunksToScan, core3x3Chunks);
+
+            var knownChunksa = last3x3;
+
+            var newChunksa = core3x3Chunks.stream().filter(chunk -> !knownChunksa.contains(chunk)).toList();
+            var removedChunksa = knownChunksa.stream().filter(chunk -> !core3x3Chunks.contains(chunk)).toList();
+
+            if (!removedChunksa.isEmpty()) {
+                OutlineRender.clearVBOsFor(removedChunksa);
+            }
+            for (ChunkPos chunk : removedChunksa) {
+                last3x3.remove(chunk);
+                syncRenderList.remove(chunk);
+            }
+
+            for (ChunkPos chunk : newChunksa) {
+                last3x3.add(chunk);
+                SCANNER.submit(new ChunkScanTask(player.level(), chunk, true));
+            }
+
+            var knownChunks = lastxxx;
 
             // New chunks
-            var newChunks = chunksToScan.stream().filter(chunk -> !knownChunks.contains(chunk)).toList();
-            var removedChunks = knownChunks.stream().filter(chunk -> !chunksToScan.contains(chunk)).toList();
+            var newChunks = outerChunks.stream().filter(chunk -> !knownChunks.contains(chunk)).toList();
+            var removedChunks = knownChunks.stream().filter(chunk -> !outerChunks.contains(chunk)).toList();
 
             if (!removedChunks.isEmpty()) {
                 OutlineRender.clearVBOsFor(removedChunks);
@@ -179,13 +242,75 @@ public enum ScanController {
 
             // Push the new chunks to the scanner, remove the old ones from the render list
             for (ChunkPos chunk : removedChunks) {
+                lastxxx.remove(chunk);
                 syncRenderList.remove(chunk);
             }
 
             for (ChunkPos chunk : newChunks) {
-                SCANNER.submit(new ChunkScanTask(player.level(), chunk));
+                lastxxx.add(chunk);
+                SCANNER.submit(new ChunkScanTask(player.level(), chunk, false));
             }
         }
+
+        if (isXRayActive() && (force || playerHasMoveda())) {
+            updatePlayerPositiona();
+            clean();
+            add();
+        }
+    }
+
+    public synchronized void clean(){
+        if (lastshi != null && !lastshi.isEmpty()) {
+            Set<OutlineRenderTarget> renderQueuea = new HashSet<>();
+            for (BlockPos chunk : lastshi){
+                renderQueuea.add(new OutlineRenderTarget(chunk.getX(), chunk.getY(), chunk.getZ(), 0xffff00ff));
+            }
+            var re=ScanController.INSTANCE.syncRenderLista.get(new ChunkPos(1, 1));
+            if (re != null){
+                re.removeAll(renderQueuea);
+            }
+            OutlineRender.refreshVBOForChunka(new ChunkPos(1, 1));
+        }
+    }
+
+    public synchronized void add(){
+        BlockPos playerChunkPos = Minecraft.getInstance().player.blockPosition();
+        List<BlockPos> chunksToScan = new ArrayList<>();
+        for (int z = playerChunkPos.getZ() - 5; z <= playerChunkPos.getZ() + 5; z++) {
+            if (z != playerChunkPos.getZ()) {
+                chunksToScan.add(new BlockPos(playerChunkPos.getX(),playerChunkPos.getY()-1, z));
+            } else {
+                chunksToScan.add(new BlockPos(playerChunkPos.getX(),playerChunkPos.getY()+7, z));
+                chunksToScan.add(new BlockPos(playerChunkPos.getX(),playerChunkPos.getY()+6, z));
+                chunksToScan.add(new BlockPos(playerChunkPos.getX(),playerChunkPos.getY()+5, z));
+                chunksToScan.add(new BlockPos(playerChunkPos.getX(),playerChunkPos.getY()+4, z));
+                chunksToScan.add(new BlockPos(playerChunkPos.getX(),playerChunkPos.getY()+3, z));
+                chunksToScan.add(new BlockPos(playerChunkPos.getX(),playerChunkPos.getY()-2, z));
+                chunksToScan.add(new BlockPos(playerChunkPos.getX(),playerChunkPos.getY()-3, z));
+                chunksToScan.add(new BlockPos(playerChunkPos.getX(),playerChunkPos.getY()-4, z));
+            }
+        };
+        for (int x = playerChunkPos.getX() - 5; x <= playerChunkPos.getX() + 5; x++) {
+            if (x != playerChunkPos.getX()) {
+                chunksToScan.add(new BlockPos(x,playerChunkPos.getY()-1 ,playerChunkPos.getZ()));
+            }
+        };
+        Set<OutlineRenderTarget> renderQueue = ConcurrentHashMap.newKeySet();
+        for (BlockPos chunk : chunksToScan){
+            BlockState state = Minecraft.getInstance().player.level().getBlockState(chunk);
+            if (chunk.getY()>=playerChunkPos.getY()+3) {
+                if ((state.getBlock() ==  Blocks.SAND || state.getBlock() ==  Blocks.GRAVEL) && ScanController.INSTANCE.isLavaActive()) {
+                    renderQueue.add(new OutlineRenderTarget(chunk.getX(), chunk.getY(), chunk.getZ(), 0xffff00ff));
+                    ScanController.INSTANCE.syncRenderLista.put(new ChunkPos(1, 1), renderQueue);
+                }
+            } else {
+                if ((state.getBlock() ==  Blocks.AIR || state.getBlock() ==  Blocks.CAVE_AIR|| state.getBlock() ==  Blocks.POWDER_SNOW) && ScanController.INSTANCE.isLavaActive()) {
+                    renderQueue.add(new OutlineRenderTarget(chunk.getX(), chunk.getY(), chunk.getZ(), 0xffff00ff));
+                    ScanController.INSTANCE.syncRenderLista.put(new ChunkPos(1, 1), renderQueue);
+                }
+            }
+        }
+        lastshi=new ArrayList<>(chunksToScan);
     }
 
     public static void onBlockChange(Level level, BlockPos pos, BlockState state) {
@@ -203,21 +328,30 @@ public enum ScanController {
         // We're now air baby!
         if (state.isAir()) {
             // Remove the block from the render list
-            var removed = outlineRenderTargets.removeIf(target -> target.x() == pos.getX() && target.y() == pos.getY() && target.z() == pos.getZ());
-            if (removed) {
-                // We need to tell the outline render to refresh the VBO for this chunk
-                OutlineRender.refreshVBOForChunk(chunkPos);
+            synchronized (RENDER_SET_LOCK) {
+                var removed = outlineRenderTargets.removeIf(target -> target.x() == pos.getX() && target.y() == pos.getY() && target.z() == pos.getZ());
+                if (removed) {
+                    // We need to tell the outline render to refresh the VBO for this chunk
+                    OutlineRender.refreshVBOForChunk(chunkPos);
+                }
             }
-
+            INSTANCE.clean();
+            INSTANCE.add();
             return;
         }
 
         if (ScanController.INSTANCE.isLavaActive() && state.is(Blocks.LAVA)) {
-            // We're actively looking at this chunk so let's inject this block
-            outlineRenderTargets.add(new OutlineRenderTarget(pos.getX(), pos.getY(), pos.getZ(), 0xff0000));
-
+            synchronized (RENDER_SET_LOCK) {
+                // We're actively looking at this chunk so let's inject this block
+                outlineRenderTargets.add(new OutlineRenderTarget(pos.getX(), pos.getY(), pos.getZ(), 0xffff0000));
+            }
+            
             // Tell the VBO to refresh for this chunk
             OutlineRender.refreshVBOForChunk(chunkPos);
+            
+            INSTANCE.clean();
+            INSTANCE.add();
+            return;
         }
 
         // Otherwise, do we have scantarget in the active list of things to find?
@@ -228,11 +362,16 @@ public enum ScanController {
             if (scanType.matches(level, pos, state, state.getFluidState())) {
                 // We need to tell the render system to refresh. We should manually add this black to the renderlist
                 // We're actively looking at this chunk so let's inject this block
-                outlineRenderTargets.add(new OutlineRenderTarget(pos.getX(), pos.getY(), pos.getZ(), scanType.colorInt()));
+                synchronized (RENDER_SET_LOCK) {
+                    outlineRenderTargets.add(new OutlineRenderTarget(pos.getX(), pos.getY(), pos.getZ(), scanType.colorInt()));
+                }
 
                 // Tell the VBO to refresh for this chunk
                 OutlineRender.refreshVBOForChunk(chunkPos);
                 noMatchesFound = false; // We found a match, so we can stop checking
+                
+                INSTANCE.clean();
+                INSTANCE.add();
                 break; // We found a match, so we can stop checking
             }
         }
@@ -243,6 +382,8 @@ public enum ScanController {
                 .findFirst();
 
         if (blockFromRenderList.isEmpty()) {
+            INSTANCE.clean();
+            INSTANCE.add();
             return;
         }
 
