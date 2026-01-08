@@ -51,6 +51,7 @@ public enum ScanController {
     public final Map<ChunkPos, Set<OutlineRenderTarget>> syncRenderLista = new ConcurrentHashMap<>(); // this is accessed by threads
     private ChunkPos lastChunkPos = null;
     private BlockPos lastPos = null;
+    private List<ChunkPos> core3x3Chunks;
     private Set<ChunkPos> last3x3 = ConcurrentHashMap.newKeySet();
     private Set<ChunkPos> lastxxx = ConcurrentHashMap.newKeySet();
     private List<BlockPos> lastshi = new ArrayList<>();
@@ -173,6 +174,10 @@ public enum ScanController {
             .filter(chunk -> !core3x3Chunks.contains(chunk))
             .collect(Collectors.toList());
     }
+    
+    private List<ChunkPos> getcore3x3Chunks() {
+        return core3x3Chunks;
+    }
 
     public synchronized void requestBlockFinder(boolean force) {
         var player = Minecraft.getInstance().player;
@@ -209,7 +214,7 @@ public enum ScanController {
             // Sort the chunks by distance to the player
             chunksToScan.sort(Comparator.comparingDouble(chunk -> chunk.distanceSquared(playerChunkPos)));
 
-            List<ChunkPos> core3x3Chunks = getCore3x3Chunks(playerChunkPos,range);
+            core3x3Chunks = getCore3x3Chunks(playerChunkPos,range);
             List<ChunkPos> outerChunks = getOuterChunks(chunksToScan, core3x3Chunks);
 
             var knownChunksa = last3x3;
@@ -341,17 +346,19 @@ public enum ScanController {
         }
 
         if (ScanController.INSTANCE.isLavaActive() && state.is(Blocks.LAVA)) {
-            synchronized (RENDER_SET_LOCK) {
-                // We're actively looking at this chunk so let's inject this block
-                outlineRenderTargets.add(new OutlineRenderTarget(pos.getX(), pos.getY(), pos.getZ(), 0xffff0000));
+            if (INSTANCE.getcore3x3Chunks().contains(chunkPos)) {
+                synchronized (RENDER_SET_LOCK) {
+                    // We're actively looking at this chunk so let's inject this block
+                    outlineRenderTargets.add(new OutlineRenderTarget(pos.getX(), pos.getY(), pos.getZ(), 0xffff0000));
+                }
+                
+                // Tell the VBO to refresh for this chunk
+                OutlineRender.refreshVBOForChunk(chunkPos);
+                
+                INSTANCE.clean();
+                INSTANCE.add();
+                return;
             }
-            
-            // Tell the VBO to refresh for this chunk
-            OutlineRender.refreshVBOForChunk(chunkPos);
-            
-            INSTANCE.clean();
-            INSTANCE.add();
-            return;
         }
 
         // Otherwise, do we have scantarget in the active list of things to find?

@@ -47,8 +47,8 @@ public class ChunkScanTask implements Runnable {
                     state = level.getBlockState(pos);
                     fluidState = state.getFluidState();
 
-                    if (iscore){
-                        if (( fluidState.getType() == Fluids.LAVA || fluidState.getType() == Fluids.FLOWING_LAVA) && ScanController.INSTANCE.isLavaActive()) {
+                    if (( fluidState.getType() == Fluids.LAVA || fluidState.getType() == Fluids.FLOWING_LAVA) && ScanController.INSTANCE.isLavaActive()) {
+                        if (iscore){
                             if (isNetherDimension()) {
                                 if (pos.getY() > 31){
                                     renderQueue.add(new OutlineRenderTarget(pos.getX(), pos.getY(), pos.getZ(), 0xffff0000));
@@ -56,9 +56,8 @@ public class ChunkScanTask implements Runnable {
                             } else {
                                 renderQueue.add(new OutlineRenderTarget(pos.getX(), pos.getY(), pos.getZ(), 0xffff0000));
                             }
-                            continue;
                         }
-    
+                        continue;
                     }
 
                     // Reject blacklisted blocks
