@@ -15,7 +15,9 @@ import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.block.Block;
+
 import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
@@ -34,6 +36,7 @@ public class OutlineRender {
 	private static final Set<ChunkPos> chunksToRefresha = Collections.synchronizedSet(new HashSet<>());
     private static final Object CHUNKS_TO_REFRESH_LOCK = new Object();
     private static final Object CHUNKS_TO_REFRESH_LOCKA = new Object();
+	private static final VoxelShape BLOCK = Block.box(0.1D, 0.1D, 0.1D, 15.9D, 15.9D, 15.9D);
 
 	public static void renderBlocks(PoseStack poseStack) {
 		if (!ScanController.INSTANCE.isXRayActive() || Minecraft.getInstance().player == null) {
@@ -82,7 +85,7 @@ public class OutlineRender {
 	
 						final int x = blockProps.x(), y = blockProps.y(), z = blockProps.z();
 	
-						ShapeRenderer.renderShape(poseStack, bufferBuilder, Shapes.block(), x, y, z, blockProps.color(), 1f);
+						ShapeRenderer.renderShape(poseStack, bufferBuilder, BLOCK, x, y, z, blockProps.color(), 1f);
 					}
 	
 					try (MeshData meshData = bufferBuilder.buildOrThrow()) {
@@ -173,7 +176,7 @@ public class OutlineRender {
 	
 						final int x = blockProps.x(), y = blockProps.y(), z = blockProps.z();
 	
-						ShapeRenderer.renderShape(poseStack, bufferBuilder, Shapes.block(), x, y, z, blockProps.color(), 1f);
+						ShapeRenderer.renderShape(poseStack, bufferBuilder, BLOCK, x, y, z, blockProps.color(), 1f);
 					}
 	
 					try (MeshData meshData = bufferBuilder.buildOrThrow()) {
