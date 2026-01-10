@@ -117,8 +117,8 @@ public class ScanManageScreen extends GuiBase {
 
             try {
                 Vec3 look = player.getLookAngle();
-                Vec3 start = new Vec3(player.blockPosition().getX(), player.blockPosition().getY() + player.getEyeHeight(), player.blockPosition().getZ());
-                Vec3 end = new Vec3(player.blockPosition().getX() + look.x * 100, player.blockPosition().getY() + player.getEyeHeight() + look.y * 100, player.blockPosition().getZ() + look.z * 100);
+                Vec3 start = new Vec3(player.position().x(), player.position().y() + player.getEyeHeight(), player.position().z());
+                Vec3 end = new Vec3(player.position().x() + look.x * 100, player.position().y() + player.getEyeHeight() + look.y * 100, player.position().z() + look.z * 100);
 
                 ClipContext context = new ClipContext(start, end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player);
                 BlockHitResult result = minecraft.level.clip(context);
