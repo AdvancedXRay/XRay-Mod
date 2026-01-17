@@ -73,7 +73,13 @@ public class ChunkScanTask implements Runnable {
                 }
             }
         }
-
-        ScanController.INSTANCE.syncRenderList.put(new ChunkPos(startX >> 4, startZ >> 4), renderQueue);
+        if (renderQueue.isEmpty()) {
+            System.out.printf("a %d b %d%n",startX >> 4, startZ >> 4);
+        } else {
+            if (!iscore) {
+                ScanController.INSTANCE.addlastxxx(new ChunkPos(startX >> 4, startZ >> 4));
+            }
+            ScanController.INSTANCE.syncRenderList.put(new ChunkPos(startX >> 4, startZ >> 4), renderQueue);
+        }
     }
 }

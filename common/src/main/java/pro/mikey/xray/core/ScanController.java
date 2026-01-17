@@ -179,6 +179,10 @@ public enum ScanController {
         return core3x3Chunks;
     }
 
+    public void addlastxxx(ChunkPos pos){
+        lastxxx.add(pos);
+    }
+
     public synchronized void requestBlockFinder(boolean force) {
         var player = Minecraft.getInstance().player;
         if (player == null) {
@@ -252,7 +256,6 @@ public enum ScanController {
             }
 
             for (ChunkPos chunk : newChunks) {
-                lastxxx.add(chunk);
                 SCANNER.submit(new ChunkScanTask(player.level(), chunk, false));
             }
         }
@@ -306,12 +309,16 @@ public enum ScanController {
             if (chunk.getY()>=playerChunkPos.getY()+3) {
                 if ((state.getBlock() ==  Blocks.SAND || state.getBlock() ==  Blocks.GRAVEL) && ScanController.INSTANCE.isLavaActive()) {
                     renderQueue.add(new OutlineRenderTarget(chunk.getX(), chunk.getY(), chunk.getZ(), 0xffff00ff));
-                    ScanController.INSTANCE.syncRenderLista.put(new ChunkPos(1, 1), renderQueue);
+                    synchronized (ScanController.INSTANCE.syncRenderLista){
+                        ScanController.INSTANCE.syncRenderLista.put(new ChunkPos(1, 1), renderQueue);
+                    }
                 }
             } else {
                 if ((state.getBlock() ==  Blocks.AIR || state.getBlock() ==  Blocks.CAVE_AIR|| state.getBlock() ==  Blocks.POWDER_SNOW) && ScanController.INSTANCE.isLavaActive()) {
                     renderQueue.add(new OutlineRenderTarget(chunk.getX(), chunk.getY(), chunk.getZ(), 0xffff00ff));
-                    ScanController.INSTANCE.syncRenderLista.put(new ChunkPos(1, 1), renderQueue);
+                    synchronized (ScanController.INSTANCE.syncRenderLista){
+                        ScanController.INSTANCE.syncRenderLista.put(new ChunkPos(1, 1), renderQueue);
+                    }
                 }
             }
         }

@@ -167,7 +167,10 @@ public class OutlineRender {
 					BufferBuilder bufferBuilder = Tesselator.getInstance().begin(RenderPipelines.LINES.getVertexFormatMode(), RenderPipelines.LINES.getVertexFormat());
 	
 					// More concurrent modification exceptions can happen here, so we clone the list
-					var blockPropsClone = new ArrayList<>(blocksWithProps);
+					var blockPropsClone = new ArrayList<OutlineRenderTarget>();
+					synchronized (ScanController.INSTANCE.syncRenderLista){
+						blockPropsClone = new ArrayList<>(blocksWithProps);
+					}
 	
 					for (var blockProps : blockPropsClone) {
 						if (blockProps == null) {
