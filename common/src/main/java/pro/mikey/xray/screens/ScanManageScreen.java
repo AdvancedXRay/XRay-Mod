@@ -3,6 +3,7 @@ package pro.mikey.xray.screens;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -14,6 +15,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -115,8 +117,8 @@ public class ScanManageScreen extends GuiBase {
 
             try {
                 Vec3 look = player.getLookAngle();
-                Vec3 start = new Vec3(player.blockPosition().getX(), player.blockPosition().getY() + player.getEyeHeight(), player.blockPosition().getZ());
-                Vec3 end = new Vec3(player.blockPosition().getX() + look.x * 100, player.blockPosition().getY() + player.getEyeHeight() + look.y * 100, player.blockPosition().getZ() + look.z * 100);
+                Vec3 start = new Vec3(player.position().x(), player.position().y() + player.getEyeHeight(), player.position().z());
+                Vec3 end = new Vec3(player.position().x() + look.x * 100, player.position().y() + player.getEyeHeight() + look.y * 100, player.position().z() + look.z * 100);
 
                 ClipContext context = new ClipContext(start, end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player);
                 BlockHitResult result = minecraft.level.clip(context);
@@ -151,15 +153,26 @@ public class ScanManageScreen extends GuiBase {
                 .build());
 
         
-        addRenderableWidget(distButtons = Button.builder(Component.translatable("xray.input.distance", ScanController.INSTANCE.getVisualRadius()), btn -> {
-            ScanController.INSTANCE.incrementCurrentDist();
-            btn.setMessage(Component.translatable("xray.input.distance", ScanController.INSTANCE.getVisualRadius()));
-        })
-                .pos(getWidth() / 2 + 79, getHeight() / 2 + 36)
-                .size(120, 20)
-                .tooltip(Tooltip.create(Component.translatable("xray.tooltips.distance")))
-                .build()
-        );
+        AbstractSliderButton radiusSlider = new AbstractSliderButton(
+            getWidth() / 2 + 79, getHeight() / 2 + 36, 120, 20,
+            Component.translatable("xray.input.distance", ScanController.INSTANCE.getVisualRadius()),
+            Mth.map(XRay.config().radius.get(), 0, 8, 0.0, 1.0)
+        ) {
+            @Override
+            protected void updateMessage() {
+                int currentRadiusp = Mth.floor(Mth.map(this.value, 0.0, 1.0, 0, 8))    ;
+                int currentRadius = Math.max(1, currentRadiusp * 3);
+                    this.setMessage(Component.translatable("xray.input.distance", currentRadius));
+            }
+
+            @Override
+            protected void applyValue() {
+                int currentRadius = Mth.floor(Mth.map(this.value, 0.0, 1.0, 0, 8));
+                ScanController.INSTANCE.incrementCurrentDist(currentRadius);
+            }
+        };
+        radiusSlider.setTooltip(Tooltip.create(Component.translatable("xray.tooltips.distance")));
+        addRenderableWidget(radiusSlider);
 
         addRenderableWidget(
             Button.builder(Component.translatable("xray.single.help"), button -> {
