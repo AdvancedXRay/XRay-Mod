@@ -1,7 +1,7 @@
 package pro.mikey.xray.screens.helpers;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -31,7 +31,7 @@ public abstract class GuiBase extends Screen {
         this.hasSide = hasSide;
     }
 
-    public abstract void renderExtra(GuiGraphics guiGraphics, int x, int y, float partialTicks);
+    public abstract void renderExtra(GuiGraphicsExtractor guiGraphics, int x, int y, float partialTicks);
 
     @Override
     public boolean charTyped(CharacterEvent characterEvent) {
@@ -45,8 +45,8 @@ public abstract class GuiBase extends Screen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int x, int y, float partialTicks) {
-        super.renderBackground(guiGraphics, x, y, partialTicks);
+    public void extractBackground(GuiGraphicsExtractor guiGraphics, int x, int y, float partialTicks) {
+        super.extractBackground(guiGraphics, x, y, partialTicks);
 
         int width = this.width;
         int height = this.height;
@@ -55,7 +55,7 @@ public abstract class GuiBase extends Screen {
             guiGraphics.blit(RenderPipelines.GUI_TEXTURED, getBackground(), width / 2 - 150, height / 2 - 118, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
 
             if (hasSideTitle())
-                guiGraphics.drawString(getFontRender(), this.sideTitle, width / 2 + 80, height / 2 - 77, 0xFFFFFF00);
+                guiGraphics.text(getFontRender(), this.sideTitle, width / 2 + 80, height / 2 - 77, 0xFFFFFF00);
         }
 
         if (!this.hasSide)
@@ -63,15 +63,15 @@ public abstract class GuiBase extends Screen {
 
         if (hasTitle()) {
             if (this.hasSide)
-                guiGraphics.drawString(getFontRender(), title(), width / 2 - 138, height / 2 - 105, 0xFFFFFF00);
+                guiGraphics.text(getFontRender(), title(), width / 2 - 138, height / 2 - 105, 0xFFFFFF00);
             else
-                guiGraphics.drawString(getFontRender(), title(), width / 2 - (this.backgroundWidth / 2) + 14, height / 2 - (this.backgroundHeight / 2) + 13, 0xFFFFFF00);
+                guiGraphics.text(getFontRender(), title(), width / 2 - (this.backgroundWidth / 2) + 14, height / 2 - (this.backgroundHeight / 2) + 13, 0xFFFFFF00);
         }
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int x, int y, float partialTicks) {
-        super.render(guiGraphics, x, y, partialTicks);
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int x, int y, float partialTicks) {
+        super.extractRenderState(guiGraphics, x, y, partialTicks);
 
         renderExtra(guiGraphics, x, y, partialTicks);
 
@@ -83,7 +83,7 @@ public abstract class GuiBase extends Screen {
                     tooltipComponents.add(ClientTooltipComponent.create(component));
                 }
 
-                guiGraphics.renderTooltip(getFontRender(), tooltipComponents, x, y, DefaultTooltipPositioner.INSTANCE, null);
+                guiGraphics.tooltip(getFontRender(), tooltipComponents, x, y, DefaultTooltipPositioner.INSTANCE, null);
             }
         }
     }

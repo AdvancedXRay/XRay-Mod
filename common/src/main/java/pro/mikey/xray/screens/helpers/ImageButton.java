@@ -1,6 +1,6 @@
 package pro.mikey.xray.screens.helpers;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -18,7 +18,8 @@ public class ImageButton extends Button {
         this.image = resourceLocation;
     }
 
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    @Override
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         int k = this.getX() + this.getWidth() / 2 - this.imageWidth / 2;
         int l = this.getY() + this.getHeight() / 2 - this.imageHeight / 2;
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, this.image, k, l, 0f, 0f, this.imageWidth, this.imageHeight, this.imageWidth, this.imageHeight, 0xFFFFFFFF);

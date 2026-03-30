@@ -2,7 +2,7 @@ package pro.mikey.xray.screens;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -75,9 +75,9 @@ public class FindBlockScreen extends GuiBase {
     }
 
     @Override
-    public void renderExtra(GuiGraphics graphics, int x, int y, float partialTicks) {
-        search.render(graphics, x, y, partialTicks);
-        blockList.render(graphics, x, y, partialTicks);
+    public void renderExtra(GuiGraphicsExtractor graphics, int x, int y, float partialTicks) {
+        search.extractRenderState(graphics, x, y, partialTicks);
+        blockList.extractRenderState(graphics, x, y, partialTicks);
     }
 
     @Override
@@ -126,11 +126,6 @@ public class FindBlockScreen extends GuiBase {
             blocks.forEach(block -> this.addEntry(new BlockSlot(block, this)));
         }
 
-        @Override
-        public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-            super.renderWidget(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        }
-
         public class BlockSlot extends ObjectSelectionList.Entry<ScrollingBlockList.BlockSlot> {
             Block block;
             ItemStack stack;
@@ -147,15 +142,15 @@ public class FindBlockScreen extends GuiBase {
             }
 
             @Override
-            public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovering, float partialTicks) {
+            public void extractContent(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovering, float partialTicks) {
                 Font font = this.parent.minecraft.font;
 
                 var registryName = BuiltInRegistries.BLOCK.getKey(this.block);
 
-                guiGraphics.drawString(font, this.block.getName().getString(), this.getContentX() + 25, this.getContentY() + 7, Color.WHITE.getRGB());
-                guiGraphics.drawString(font, registryName.getNamespace(), this.getContentX() + 25, this.getContentY() + 17, Color.GRAY.getRGB());
+                guiGraphics.text(font, this.block.getName().getString(), this.getContentX() + 25, this.getContentY() + 7, Color.WHITE.getRGB());
+                guiGraphics.text(font, registryName.getNamespace(), this.getContentX() + 25, this.getContentY() + 17, Color.GRAY.getRGB());
 
-                guiGraphics.renderItem(this.stack, this.getContentX(), this.getContentY() + 7);
+                guiGraphics.item(this.stack, this.getContentX(), this.getContentY() + 7);
             }
 
             @Override

@@ -1,3 +1,9 @@
+## [26.1.0.1]
+
+### Changed
+
+- Updated to `26.1`
+
 ## [21.11.0]
 
 ### Changed
@@ -12,7 +18,7 @@
 
 ## [21.9.2]
 
-### Fixed 
+### Fixed
 
 - Hopefully address various shader issues with Iris specifically. Big thanks to all the users that helped as part of [#317](https://github.com/AdvancedXRay/XRay-Mod/issues/317)
 

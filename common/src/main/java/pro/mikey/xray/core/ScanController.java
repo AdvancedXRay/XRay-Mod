@@ -78,11 +78,11 @@ public enum ScanController {
             requestBlockFinder(true); // finally, force a refresh
 
             if (!XRay.config().showOverlay.get() && Minecraft.getInstance().player != null)
-                Minecraft.getInstance().player.displayClientMessage(Component.translatable("xray.toggle.activated"), false);
+                Minecraft.getInstance().player.sendSystemMessage(Component.translatable("xray.toggle.activated"));
         } else // disable drawing
         {
             if (!XRay.config().showOverlay.get() && Minecraft.getInstance().player != null)
-                Minecraft.getInstance().player.displayClientMessage(Component.translatable("xray.toggle.deactivated"), false);
+                Minecraft.getInstance().player.sendSystemMessage(Component.translatable("xray.toggle.deactivated"));
 
             xrayActive = false;
         }
@@ -158,8 +158,8 @@ public enum ScanController {
 
             List<ChunkPos> chunksToScan = new ArrayList<>();
             var playerChunkPos = player.chunkPosition();
-            for (int i = playerChunkPos.x - range; i <= playerChunkPos.x + range; i++) {
-                for (int j = playerChunkPos.z - range; j <= playerChunkPos.z + range; j++) {
+            for (int i = playerChunkPos.x() - range; i <= playerChunkPos.x() + range; i++) {
+                for (int j = playerChunkPos.z() - range; j <= playerChunkPos.z() + range; j++) {
                     chunksToScan.add(new ChunkPos(i, j));
                 }
             }
@@ -193,7 +193,7 @@ public enum ScanController {
             return;
         }
 
-        var chunkPos = new ChunkPos(pos);
+        var chunkPos = new ChunkPos(pos.getX(), pos.getZ());
         Set<OutlineRenderTarget> outlineRenderTargets = ScanController.INSTANCE.syncRenderList.get(chunkPos);
         if (outlineRenderTargets == null) {
             // It's not being rendered, so we don't care

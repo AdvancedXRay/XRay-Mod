@@ -18,8 +18,8 @@ public class ChunkScanTask implements Runnable {
 
     public ChunkScanTask(Level level, ChunkPos pos) {
         // Move the chunk pos to block pos by multiplying by 16
-        this.startX = pos.x << 4;
-        this.startZ = pos.z << 4;
+        this.startX = pos.x() << 4;
+        this.startZ = pos.z() << 4;
 
         this.level = level;
     }

@@ -1,7 +1,7 @@
 package pro.mikey.xray.screens;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.layouts.GridLayout;
@@ -183,8 +183,8 @@ public class ScanConfigureScreen extends GuiBase {
     }
 
     @Override
-    public void renderExtra(GuiGraphics graphics, int x, int y, float partialTicks) {
-        graphics.drawString(font, selectBlock.getName().getString(), getWidth() / 2 - 100, getHeight() / 2 - 90, 0xffffffff);
+    public void renderExtra(GuiGraphicsExtractor graphics, int x, int y, float partialTicks) {
+        graphics.text(font, selectBlock.getName().getString(), getWidth() / 2 - 100, getHeight() / 2 - 90, 0xffffffff);
 
         // blit render the TRANSPARENT_BACKGROUND texture, a 16x16 checkerboard pattern that should tile to fit the fill area
         graphics.blit(RenderPipelines.GUI_TEXTURED, TRANSPARENT_BACKGROUND, this.getWidth() / 2 - 100, this.getHeight() / 2 - 45, 0, 0, 202, 24, 16, 16, 0x80FFFFFF);
@@ -192,9 +192,9 @@ public class ScanConfigureScreen extends GuiBase {
         int color = ((int) (this.alphaSlider.getValue() * 255) << 24) | ((int) (this.redSlider.getValue() * 255) << 16) | ((int) (this.greenSlider.getValue() * 255) << 8) | (int) (this.blueSlider.getValue() * 255);
         graphics.fill(this.getWidth() / 2 - 100, this.getHeight() / 2 - 45, (this.getWidth() / 2 + 2) + 100, (this.getHeight() / 2 - 45) + 24, color);
 
-        oreName.render(graphics, x, y, partialTicks);
+        oreName.extractWidgetRenderState(graphics, x, y, partialTicks);
 
-        graphics.renderItem(this.icon, this.getWidth() / 2 + 85, this.getHeight() / 2 - 105);
+        graphics.item(this.icon, this.getWidth() / 2 + 85, this.getHeight() / 2 - 105);
     }
 
     @Override

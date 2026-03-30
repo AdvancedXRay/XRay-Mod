@@ -2,7 +2,7 @@ package pro.mikey.xray.screens;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -10,7 +10,6 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -45,7 +44,6 @@ public class ScanManageScreen extends GuiBase {
 
     private Button distButtons;
     private EditBox search;
-    public ItemRenderer render;
 
     private String lastSearch = "";
 
@@ -69,7 +67,6 @@ public class ScanManageScreen extends GuiBase {
             return;
         }
 
-        this.render = Minecraft.getInstance().getItemRenderer();
         this.children().clear();
 
         this.scrollList = new ScanEntryScroller(((getWidth() / 2) - (203 / 2)) - 37, getHeight() / 2 + 10, 203, 185, this);
@@ -94,7 +91,7 @@ public class ScanManageScreen extends GuiBase {
 
             // Check if the hand item is a block or not
             if (!(handItem.getItem() instanceof BlockItem)) {
-                minecraft.player.displayClientMessage(Component.literal("[XRay] " + Component.translatable("xray.message.invalid_hand", Utils.safeItemStackName(handItem).getString())), false);
+                minecraft.player.sendSystemMessage(Component.literal("[XRay] " + Component.translatable("xray.message.invalid_hand", Utils.safeItemStackName(handItem).getString())));
                 this.onClose();
                 return;
             }
@@ -126,11 +123,11 @@ public class ScanManageScreen extends GuiBase {
 
                     minecraft.setScreen(new ScanConfigureScreen(lookingAt, ScanManageScreen::new));
                 } else {
-                    player.displayClientMessage(Component.literal("[XRay] " + I18n.get("xray.message.nothing_infront")), false);
+                    player.sendSystemMessage(Component.literal("[XRay] " + I18n.get("xray.message.nothing_infront")));
                     this.onClose();
                 }
             } catch (NullPointerException ex) {
-                player.displayClientMessage(Component.literal("[XRay] " + I18n.get("xray.message.thats_odd")), false);
+                player.sendSystemMessage(Component.literal("[XRay] " + I18n.get("xray.message.thats_odd")));
                 this.onClose();
             }
         })
@@ -222,18 +219,18 @@ public class ScanManageScreen extends GuiBase {
     }
 
     @Override
-    public void renderExtra(GuiGraphics graphics, int x, int y, float partialTicks) {
+    public void renderExtra(GuiGraphicsExtractor graphics, int x, int y, float partialTicks) {
         if (!search.isFocused() && search.getValue().isEmpty()) {
-            graphics.drawString(getFontRender(), I18n.get("xray.single.search"), getWidth() / 2 - 130, getHeight() / 2 - 101, Color.GRAY.getRGB());
+            graphics.text(getFontRender(), I18n.get("xray.single.search"), getWidth() / 2 - 130, getHeight() / 2 - 101, Color.GRAY.getRGB());
         }
 
         Matrix3x2fStack pose = graphics.pose();
         pose.pushMatrix();
         pose.translate(this.getWidth() / 2f - 140, ((this.getHeight() / 2f) - 3) + 120);
         pose.scale(0.75f, 0.75f);
-        graphics.drawString(this.font, Component.translatable("xray.tooltips.edit1"), 0, 0, Color.GRAY.getRGB());
+        graphics.text(this.font, Component.translatable("xray.tooltips.edit1"), 0, 0, Color.GRAY.getRGB());
         pose.translate(0, 12);
-        graphics.drawString(this.font, Component.translatable("xray.tooltips.edit2"), 0, 0, Color.GRAY.getRGB());
+        graphics.text(this.font, Component.translatable("xray.tooltips.edit2"), 0, 0, Color.GRAY.getRGB());
         pose.popMatrix();
     }
 
@@ -323,13 +320,13 @@ public class ScanManageScreen extends GuiBase {
             }
 
             @Override
-            public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovering, float partialTicks) {
+            public void extractContent(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovering, float partialTicks) {
                 Font font = Minecraft.getInstance().font;
 
-                guiGraphics.drawString(font, this.entry.name(), this.getContentX() + 25, this.getContentY() + 7, 0xFFFFFFFF);
-                guiGraphics.drawString(font, this.entry.enabled() ? "Enabled" : "Disabled", this.getContentX() + 25, this.getContentY() + 17, this.entry.enabled() ? Color.GREEN.getRGB() : Color.RED.getRGB());
+                guiGraphics.text(font, this.entry.name(), this.getContentX() + 25, this.getContentY() + 7, 0xFFFFFFFF);
+                guiGraphics.text(font, this.entry.enabled() ? "Enabled" : "Disabled", this.getContentX() + 25, this.getContentY() + 17, this.entry.enabled() ? Color.GREEN.getRGB() : Color.RED.getRGB());
 
-                guiGraphics.renderItem(this.icon, this.getContentX(), this.getContentY() + 7);
+                guiGraphics.item(this.icon, this.getContentX(), this.getContentY() + 7);
 
                 var stack = guiGraphics.pose();
                 stack.pushMatrix();

@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
-    id 'fabric-loom' version '1.13.3' apply(false)
-    id 'net.neoforged.moddev' version '2.0.112' apply(false)
+    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT' apply(false)
+    id 'net.neoforged.moddev' version '2.0.141' apply(false)
     id "me.modmuss50.mod-publish-plugin" version "1.1.0"
 }
 
@@ -21,7 +21,7 @@ allprojects {
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = 'UTF-8'
-        options.release = 21
+        options.release = 25
     }
 
     idea {
@@ -43,15 +43,6 @@ subprojects {
         archivesName = "advanced-xray-$project.name"
     }
 
-    repositories {
-        maven {
-            url "https://libraries.minecraft.net"
-            content {
-                includeModule("org.lwjgl", "lwjgl-freetype")
-            }
-        }
-    }
-
     if (project.name != "common") {
         dependencies {
             api project(":common")
@@ -65,7 +56,7 @@ subprojects {
     def replaceProperties = [
             minecraft_version: minecraft_version,
             minecraft_version_range: minecraft_version_range.replace("[%base]", minecraft_version),
-            forge_version_range: forge_version_range,
+            forge_version_range: neoforge_version_range,
             version: version,
     ]
 
@@ -110,7 +101,7 @@ publishMods {
     def curseForgeOptions = curseforgeOptions {
         accessToken = providers.environmentVariable("CURSE_DEPLOY_TOKEN")
         minecraftVersions.add("${minecraft_version}")
-        javaVersions.add(JavaVersion.VERSION_21)
+        javaVersions.add(JavaVersion.VERSION_25)
     }
 
     curseforge("curseforgeNeoforge") {

@@ -3,7 +3,7 @@ plugins {
 }
 
 neoForge {
-    version = project.forge_version
+    version = project.neoforge_version
     accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {

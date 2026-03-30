@@ -1,7 +1,7 @@
 package pro.mikey.xray.screens;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -36,12 +36,12 @@ public class HelpScreen extends GuiBase {
     }
 
     @Override
-    public void renderExtra(GuiGraphics guiGraphics, int x, int y, float partialTicks) {
+    public void renderExtra(GuiGraphicsExtractor guiGraphics, int x, int y, float partialTicks) {
         int lineY = (getHeight() / 2) - 85;
         for (LinedText linedText : areas) {
             for (String line : linedText.getLines()) {
                 lineY += 12;
-                guiGraphics.drawString(getFontRender(), line, (getWidth() / 2) - 176, lineY, Color.WHITE.getRGB());
+                guiGraphics.text(getFontRender(), line, (getWidth() / 2) - 176, lineY, Color.WHITE.getRGB());
             }
             lineY += 10;
         }
