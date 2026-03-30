@@ -110,7 +110,7 @@ publishMods {
     }
 
     curseforge("curseforgeFabric") {
-        from(curseForgeOptions, createOptions("fabric", "remapJar"))
+        from(curseForgeOptions, createOptions("fabric", "jar"))
         projectId = "444663"
     }
 
@@ -121,6 +121,6 @@ publishMods {
         tagName = providers.environmentVariable("GITHUB_REF_NAME").orElse("dryRun")
 
         file = project.provider { project(":neoforge").tasks.jar }.flatMap { it.archiveFile }
-        additionalFiles.from project.provider { project(":fabric").tasks.remapJar }.flatMap { it.archiveFile }
+        additionalFiles.from project.provider { project(":fabric").tasks.jar }.flatMap { it.archiveFile }
     }
 }
