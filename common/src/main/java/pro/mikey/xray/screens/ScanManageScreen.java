@@ -78,7 +78,7 @@ public class ScanManageScreen extends GuiBase {
 
         addRenderableWidget(
                 Button.builder(Component.translatable("xray.input.add"), (btn) -> {
-                    minecraft.setScreen(new FindBlockScreen());
+                    minecraft.gui.setScreen(new FindBlockScreen());
                 })
                         .pos((getWidth() / 2) + 79, getHeight() / 2 - 60)
                         .size(120, 20)
@@ -96,7 +96,7 @@ public class ScanManageScreen extends GuiBase {
                 return;
             }
 
-            minecraft.setScreen(new ScanConfigureScreen(((BlockItem) handItem.getItem()).getBlock(), ScanManageScreen::new));
+            minecraft.gui.setScreen(new ScanConfigureScreen(((BlockItem) handItem.getItem()).getBlock(), ScanManageScreen::new));
         })
             .pos(getWidth() / 2 + 79, getHeight() / 2 - 38)
             .size(120, 20)
@@ -121,7 +121,7 @@ public class ScanManageScreen extends GuiBase {
                 if (result.getType() == HitResult.Type.BLOCK) {
                     Block lookingAt = minecraft.level.getBlockState(result.getBlockPos()).getBlock();
 
-                    minecraft.setScreen(new ScanConfigureScreen(lookingAt, ScanManageScreen::new));
+                    minecraft.gui.setScreen(new ScanConfigureScreen(lookingAt, ScanManageScreen::new));
                 } else {
                     player.sendSystemMessage(Component.literal("[XRay] " + I18n.get("xray.message.nothing_infront")));
                     this.onClose();
@@ -160,7 +160,7 @@ public class ScanManageScreen extends GuiBase {
 
         addRenderableWidget(
             Button.builder(Component.translatable("xray.single.help"), button -> {
-                minecraft.setScreen(new HelpScreen());
+                minecraft.gui.setScreen(new HelpScreen());
             })
                     .pos(getWidth() / 2 + 79, getHeight() / 2 + 58)
                     .size(60, 20)
@@ -272,7 +272,7 @@ public class ScanManageScreen extends GuiBase {
                 return;
 
             if (mouse.hasShiftDown()) {
-                Minecraft.getInstance().setScreen(new ScanConfigureScreen(entry.entry, ScanManageScreen::new));
+                Minecraft.getInstance().gui.setScreen(new ScanConfigureScreen(entry.entry, ScanManageScreen::new));
                 return;
             }
 

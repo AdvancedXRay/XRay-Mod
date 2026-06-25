@@ -28,7 +28,7 @@ public class HelpScreen extends GuiBase {
         areas.add(new LinedText("xray.message.help.gui"));
         areas.add(new LinedText("xray.message.help.warning"));
 
-        this.addRenderableWidget(Button.builder(Component.translatable("xray.single.close"), btn -> Minecraft.getInstance().setScreen(new ScanManageScreen()))
+        this.addRenderableWidget(Button.builder(Component.translatable("xray.single.close"), btn -> Minecraft.getInstance().gui.setScreen(new ScanManageScreen()))
             .pos((getWidth() / 2) - 100, (getHeight() / 2) + 80)
             .size(200, 20)
             .build()

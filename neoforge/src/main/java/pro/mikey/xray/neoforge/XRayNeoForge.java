@@ -44,7 +44,7 @@ public class XRayNeoForge {
 	}
 
 	private void onWorldRenderLast(RenderLevelStageEvent.AfterWeather event) {
-		OutlineRender.renderBlocks(event.getPoseStack());
+		OutlineRender.renderBlocks(Minecraft.getInstance().gameRenderer.mainCamera().position());
 	}
 
 	public void onClientSetup(FMLClientSetupEvent event) {
@@ -61,7 +61,7 @@ public class XRayNeoForge {
 
 	public void eventInput(InputEvent.Key event) {
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.player == null || Minecraft.getInstance().screen != null || Minecraft.getInstance().level == null)
+		if (mc.player == null || mc.gui.screen != null || mc.level == null)
 			return;
 
 		if (XRay.TOGGLE_KEY.consumeClick()) {

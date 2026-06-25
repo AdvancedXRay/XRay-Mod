@@ -43,13 +43,13 @@ public enum XRay {
 			return;
 		}
 
-		Minecraft.getInstance().setScreen(new ScanManageScreen());
+		Minecraft.getInstance().gui.setScreen(new ScanManageScreen());
 	}
 
 	private boolean minecraftNotReady() {
 		Minecraft mc = Minecraft.getInstance();
 
-		return mc.player == null || Minecraft.getInstance().screen != null || Minecraft.getInstance().level == null;
+		return mc.player == null || mc.gui.screen != null || mc.level == null;
 	}
 
 	public static Identifier id(String path) {

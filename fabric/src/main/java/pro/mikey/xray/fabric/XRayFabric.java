@@ -33,12 +33,12 @@ public class XRayFabric implements ClientModInitializer {
     }
 
     private void renderOverlay(LevelRenderContext levelRenderContext) {
-        OutlineRender.renderBlocks(levelRenderContext.poseStack());
+        OutlineRender.renderBlocks(levelRenderContext.levelState().cameraRenderState.pos);
     }
 
 
     private void clientTickEvent(Minecraft mc) {
-        if (mc.player == null || mc.level == null || mc.screen != null) {
+        if (mc.player == null || mc.level == null || mc.gui.screen != null) {
             return;
         }
 
