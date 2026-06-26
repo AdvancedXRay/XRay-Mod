@@ -9,15 +9,13 @@ tasks.named('wrapper', Wrapper).configure {
     distributionType = Wrapper.DistributionType.BIN
 }
 
-version = mod_version
-group = 'pro.mikey'
-
 allprojects {
     apply plugin: 'idea'
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
 
     version = mod_version
+    group = 'pro.mikey.mods'
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = 'UTF-8'
@@ -69,6 +67,13 @@ subprojects {
     }
 
     publishing {
+        publications {
+            register("mavenJava" + project.name, MavenPublication) {
+                artifactId = "advanced-xray" + (project.name !== "common" ? "-" + project.name : "")
+                from components.java
+            }
+        }
+
         repositories {
             def token = providers.environmentVariable("SAPS_TOKEN");
             if (token.isPresent()) {

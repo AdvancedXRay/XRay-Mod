@@ -37,15 +37,6 @@ repositories {
     }
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId = rootProject.base.archivesName.get()
-            from components.java
-        }
-    }
-}
-
 java {
     withSourcesJar()
 }
