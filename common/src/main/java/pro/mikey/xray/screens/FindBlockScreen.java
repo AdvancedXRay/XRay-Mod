@@ -37,7 +37,7 @@ public class FindBlockScreen extends GuiBase {
         search.setFocused(true);
         this.setFocused(search);
 
-        addRenderableWidget(Button.builder(Component.translatable("xray.single.cancel"), b -> Minecraft.getInstance().setScreen(new ScanManageScreen()))
+        addRenderableWidget(Button.builder(Component.translatable("xray.single.cancel"), b -> Minecraft.getInstance().gui.setScreen(new ScanManageScreen()))
                 .pos(getWidth() / 2 + 43, getHeight() / 2 + 84)
                 .size(60, 20)
                 .build());
@@ -118,7 +118,7 @@ public class FindBlockScreen extends GuiBase {
                 return;
             }
 
-            Minecraft.getInstance().setScreen(new ScanConfigureScreen(entry.getBlock(), FindBlockScreen::new));
+            Minecraft.getInstance().gui.setScreen(new ScanConfigureScreen(entry.getBlock(), FindBlockScreen::new));
         }
 
         void updateEntries(List<Block> blocks) {

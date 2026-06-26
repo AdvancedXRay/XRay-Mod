@@ -84,7 +84,7 @@ public class ScanConfigureScreen extends GuiBase {
                     .build());
         }
 
-        rowHelper.addChild(Button.builder(Component.translatable("xray.single.cancel"), b -> Minecraft.getInstance().setScreen(this.previousScreenCallback.get()))
+        rowHelper.addChild(Button.builder(Component.translatable("xray.single.cancel"), b -> Minecraft.getInstance().gui.setScreen(this.previousScreenCallback.get()))
                 .size(60, 20)
                 .build());
 
@@ -145,7 +145,7 @@ public class ScanConfigureScreen extends GuiBase {
         editingType.name = oreName.getValue();
         ScanController.INSTANCE.scanStore.save();
         ScanController.INSTANCE.requestBlockFinder(true);
-        minecraft.setScreen(this.previousScreenCallback.get());
+        minecraft.gui.setScreen(this.previousScreenCallback.get());
     }
 
     private void removeBlock() {
@@ -156,7 +156,7 @@ public class ScanConfigureScreen extends GuiBase {
         ScanStore scanStore = ScanController.INSTANCE.scanStore;
         scanStore.removeEntry(editingType);
         ScanController.INSTANCE.requestBlockFinder(true);
-        minecraft.setScreen(this.previousScreenCallback.get());
+        minecraft.gui.setScreen(this.previousScreenCallback.get());
     }
 
     private void addBlock() {
@@ -174,7 +174,7 @@ public class ScanConfigureScreen extends GuiBase {
         ));
 
         ScanController.INSTANCE.requestBlockFinder(true);
-        minecraft.setScreen(new ScanManageScreen());
+        minecraft.gui.setScreen(new ScanManageScreen());
     }
 
     @Override

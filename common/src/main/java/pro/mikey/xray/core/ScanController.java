@@ -9,7 +9,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 import pro.mikey.xray.XRay;
 import pro.mikey.xray.core.scanner.ScanStore;
 import pro.mikey.xray.core.scanner.ScanType;
@@ -17,19 +16,15 @@ import pro.mikey.xray.core.scanner.ScanType;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 public enum ScanController {
     INSTANCE;
 
     // Ensure this thread is shutdown when the game exists.
-    private final ExecutorService SCANNER = Executors.newFixedThreadPool(4, new ThreadFactory() {
-        @Override
-        public Thread newThread(@NotNull Runnable r) {
-            Thread thread = new Thread(r, "XRay-Scanner");
-            thread.setDaemon(true); // Daemon threads do not prevent the JVM from exiting
-            return thread;
-        }
+    private final ExecutorService SCANNER = Executors.newFixedThreadPool(4, r -> {
+        Thread thread = new Thread(r, "XRay-Scanner");
+        thread.setDaemon(true); // Daemon threads do not prevent the JVM from exiting
+        return thread;
     });
 
     private final int maxStepsToScan = 5;
@@ -193,7 +188,8 @@ public enum ScanController {
             return;
         }
 
-        var chunkPos = new ChunkPos(pos.getX(), pos.getZ());
+        var chunkPos = new ChunkPos(pos.getX() >> 4, pos.getZ() >> 4);
+
         Set<OutlineRenderTarget> outlineRenderTargets = ScanController.INSTANCE.syncRenderList.get(chunkPos);
         if (outlineRenderTargets == null) {
             // It's not being rendered, so we don't care

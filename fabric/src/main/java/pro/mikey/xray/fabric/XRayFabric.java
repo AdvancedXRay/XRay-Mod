@@ -5,13 +5,10 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import pro.mikey.xray.ClientController;
 import pro.mikey.xray.XRay;
-import pro.mikey.xray.core.OutlineRender;
 import pro.mikey.xray.screens.HudOverlay;
 import pro.mikey.xray.core.ScanController;
 
@@ -27,18 +24,12 @@ public class XRayFabric implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(this::clientTickEvent);
         ClientLifecycleEvents.CLIENT_STARTED.register((mc) -> ClientController.onSetup());
-        LevelRenderEvents.AFTER_TRANSLUCENT_FEATURES.register(this::renderOverlay);
 
         HudElementRegistry.addLast(HUD_ELEMENT_ID, (guiGraphics, tickCounter) -> HudOverlay.renderGameOverlayEvent(guiGraphics));
     }
 
-    private void renderOverlay(LevelRenderContext levelRenderContext) {
-        OutlineRender.renderBlocks(levelRenderContext.poseStack());
-    }
-
-
     private void clientTickEvent(Minecraft mc) {
-        if (mc.player == null || mc.level == null || mc.screen != null) {
+        if (mc.player == null || mc.level == null || mc.gui.screen() != null) {
             return;
         }
 

@@ -12,9 +12,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pro.mikey.xray.ClientController;
 import pro.mikey.xray.XRay;
+import pro.mikey.xray.core.OutlineRender;
 import pro.mikey.xray.screens.HudOverlay;
 import pro.mikey.xray.core.ScanController;
-import pro.mikey.xray.core.OutlineRender;
 
 @Mod(XRay.MOD_ID)
 public class XRayNeoForge {
@@ -36,6 +36,7 @@ public class XRayNeoForge {
 		eventBus.addListener(this::onClientSetup);
 
 		NeoForge.EVENT_BUS.addListener(this::onWorldRenderLast);
+		eventBus.addListener(this::registerRenderPipeline);
 		eventBus.addListener(this::registerGuiLayer);
 	}
 
@@ -44,7 +45,11 @@ public class XRayNeoForge {
 	}
 
 	private void onWorldRenderLast(RenderLevelStageEvent.AfterWeather event) {
-		OutlineRender.renderBlocks(event.getPoseStack());
+		OutlineRender.renderBlocks();
+	}
+
+	private void registerRenderPipeline(RegisterRenderPipelinesEvent event) {
+		event.registerPipeline(OutlineRender.NO_DEPTH_LINES_PIPELINE);
 	}
 
 	public void onClientSetup(FMLClientSetupEvent event) {
@@ -61,7 +66,7 @@ public class XRayNeoForge {
 
 	public void eventInput(InputEvent.Key event) {
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.player == null || Minecraft.getInstance().screen != null || Minecraft.getInstance().level == null)
+		if (mc.player == null || Minecraft.getInstance().gui.screen() != null || Minecraft.getInstance().level == null)
 			return;
 
 		if (XRay.TOGGLE_KEY.consumeClick()) {
