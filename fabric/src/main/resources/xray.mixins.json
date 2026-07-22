@@ -3,7 +3,9 @@
   "package": "pro.mikey.xray.mixins",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "LevelMixin"
+	"LevelMixin",
+	"ClientPacketListenerMixin",
+	"ClientCommonPacketListenerMixin"
   ],
   "mixins": [
   ],

@@ -51,6 +51,7 @@ public enum ScanController {
 
     // Draw states
     private boolean xrayActive = false; // Off by default
+    private boolean serverDisabled = false;
 
     public void init() {
         this.scanStore.load();
@@ -62,12 +63,15 @@ public enum ScanController {
 
     // Public accessors
     public boolean isXRayActive() {
-        return this.xrayActive && Minecraft.getInstance().level != null && Minecraft.getInstance().player != null;
+        return this.xrayActive && !this.serverDisabled && Minecraft.getInstance().level != null && Minecraft.getInstance().player != null;
     }
 
     public void toggleXRay() {
         if (!xrayActive) // enable drawing
         {
+            if (serverDisabled) {
+                return;
+            }
             syncRenderList.clear(); // first, clear the buffer
             xrayActive = true; // then, enable drawing
             requestBlockFinder(true); // finally, force a refresh
@@ -81,6 +85,17 @@ public enum ScanController {
 
             xrayActive = false;
         }
+    }
+
+    public void disableOnServer() {
+        serverDisabled = true;
+        xrayActive = false;
+        syncRenderList.clear();
+        OutlineRender.clearVBOs();
+    }
+
+    public void onDisconnect() {
+        serverDisabled = false;
     }
 
     public boolean isLavaActive() {
