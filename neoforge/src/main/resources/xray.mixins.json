@@ -10,7 +10,7 @@
   "mixins": [
   ],
   "injectors": {
-     "defaultRequire": 1
+    "defaultRequire": 1
   },
   "minVersion": "0.8"
 }
