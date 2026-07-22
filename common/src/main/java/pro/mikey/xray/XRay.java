@@ -17,6 +17,7 @@ public enum XRay {
 	INSTANCE;
 
 	public static final String MOD_ID = "xray";
+	public static final Identifier SERVER_DISABLE_CHANNEL = id("disable");
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static final XPlatShim XPLAT = ServiceLoader.load(XPlatShim.class).findFirst().orElseThrow();
