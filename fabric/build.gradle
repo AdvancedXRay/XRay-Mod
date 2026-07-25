@@ -30,9 +30,19 @@ dependencies {
 
     implementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+    // Optional/soft dependency - only used to register our outline pipeline with Iris's shader
+    // compatibility layer when Iris is present. Never required at runtime.
+    compileOnly "maven.modrinth:iris:${project.iris_version}+${project.minecraft_version}-fabric"
 }
 
 repositories {
+    maven {
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 java {

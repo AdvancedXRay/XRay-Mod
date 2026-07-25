@@ -24,8 +24,6 @@ dependencies {
     testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 
     compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
-
-//    modCompileOnly "curse.maven:irisshaders-455508:${iris_version}"
 }
 
 test {

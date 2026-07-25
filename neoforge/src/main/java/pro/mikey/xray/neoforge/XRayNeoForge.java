@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.event.*;
@@ -54,6 +55,15 @@ public class XRayNeoForge {
 
 	public void onClientSetup(FMLClientSetupEvent event) {
 		ClientController.onSetup();
+
+		if (ModList.get().isLoaded("iris")) {
+			try {
+				IrisCompat.register();
+				LOGGER.info("Registered X-Ray outline pipeline with Iris's shader compatibility layer");
+			} catch (Throwable t) {
+				LOGGER.warn("Failed to register Iris shader compatibility - outlines may not render correctly with a shader pack active", t);
+			}
+		}
 	}
 
 	public void registerKeyBinding(RegisterKeyMappingsEvent event) {
