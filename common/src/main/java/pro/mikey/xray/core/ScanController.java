@@ -9,6 +9,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pro.mikey.xray.XRay;
 import pro.mikey.xray.core.scanner.ScanStore;
 import pro.mikey.xray.core.scanner.ScanType;
@@ -19,6 +21,8 @@ import java.util.concurrent.Executors;
 
 public enum ScanController {
     INSTANCE;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ScanController.class);
 
     // Ensure this thread is shutdown when the game exists.
     private final ExecutorService SCANNER = Executors.newFixedThreadPool(4, r -> {
@@ -70,6 +74,7 @@ public enum ScanController {
         {
             syncRenderList.clear(); // first, clear the buffer
             xrayActive = true; // then, enable drawing
+            LOGGER.info("X-Ray toggled ON - active scan targets: {}, lava active: {}", scanStore.activeScanTargets().size(), isLavaActive());
             requestBlockFinder(true); // finally, force a refresh
 
             if (!XRay.config().showOverlay.get() && Minecraft.getInstance().player != null)
@@ -79,6 +84,7 @@ public enum ScanController {
             if (!XRay.config().showOverlay.get() && Minecraft.getInstance().player != null)
                 Minecraft.getInstance().player.sendSystemMessage(Component.translatable("xray.toggle.deactivated"));
 
+            LOGGER.info("X-Ray toggled OFF");
             xrayActive = false;
         }
     }
@@ -146,6 +152,7 @@ public enum ScanController {
             }
 
             if (this.scanStore.activeScanTargets().isEmpty() && !isLavaActive()) {
+                LOGGER.warn("Not scanning for blocks - no active scan targets configured and lava scanning is disabled.");
                 return;
             }
 
@@ -175,6 +182,10 @@ public enum ScanController {
             // Push the new chunks to the scanner, remove the old ones from the render list
             for (ChunkPos chunk : removedChunks) {
                 syncRenderList.remove(chunk);
+            }
+
+            if (!newChunks.isEmpty()) {
+                LOGGER.debug("Submitting {} chunk(s) to the scanner (radius={})", newChunks.size(), range);
             }
 
             for (ChunkPos chunk : newChunks) {

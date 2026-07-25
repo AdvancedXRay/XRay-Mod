@@ -22,12 +22,26 @@ import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pro.mikey.xray.XRay;
 
 import java.io.Closeable;
 import java.util.*;
 
 public class OutlineRender {
+    private static final Logger LOGGER = LoggerFactory.getLogger(OutlineRender.class);
+
+    // One-time confirmation that the world-render hook (Fabric's LevelRenderEvents.AFTER_TRANSLUCENT_FEATURES /
+    // NeoForge's RenderLevelStageEvent.AfterWeather) is actually invoking this method. If this line never appears
+    // in the log after loading into a world, the hook itself isn't firing - look at XRayFabric/XRayNeoForge.
+    private static boolean hasLoggedHookFired = false;
+
+    // Edge-triggered state tracking so we log transitions instead of spamming every frame.
+    private static Boolean lastActiveState = null;
+    private static Boolean lastEmptyListState = null;
+    private static final Set<ChunkPos> warnedEmptyHolderChunks = Collections.synchronizedSet(new HashSet<>());
+
     public static final RenderPipeline NO_DEPTH_LINES_PIPELINE = RenderPipeline.builder(
         RenderPipelines.MATRICES_FOG_SNIPPET)
             .withVertexShader("core/rendertype_lines")
@@ -48,11 +62,35 @@ public class OutlineRender {
 	private static final Set<ChunkPos> chunksToRefresh = Collections.synchronizedSet(new HashSet<>());
 
 	public static void renderBlocks() {
-		if (!ScanController.INSTANCE.isXRayActive() || Minecraft.getInstance().player == null) {
+		if (!hasLoggedHookFired) {
+			hasLoggedHookFired = true;
+			LOGGER.info("OutlineRender.renderBlocks() reached for the first time - the world render hook is wired up and firing.");
+		}
+
+		boolean active = ScanController.INSTANCE.isXRayActive() && Minecraft.getInstance().player != null;
+		if (!Objects.equals(lastActiveState, active)) {
+			lastActiveState = active;
+			LOGGER.info("X-Ray outline rendering is now {}", active ? "ACTIVE" : "INACTIVE");
+		}
+
+		if (!active) {
 			return;
 		}
 
-		if (ScanController.INSTANCE.syncRenderList.isEmpty()) {
+		boolean emptyList = ScanController.INSTANCE.syncRenderList.isEmpty();
+		if (!Objects.equals(lastEmptyListState, emptyList)) {
+			lastEmptyListState = emptyList;
+			if (emptyList) {
+				LOGGER.info("X-Ray is active but syncRenderList is empty - no blocks queued to draw yet.");
+			} else {
+				int totalBlocks = ScanController.INSTANCE.syncRenderList.values().stream().mapToInt(Set::size).sum();
+				LOGGER.info("X-Ray syncRenderList now has {} chunk(s) queued containing {} total matching block(s) - {}",
+						ScanController.INSTANCE.syncRenderList.size(), totalBlocks,
+						totalBlocks > 0 ? "outlines should start drawing." : "but 0 blocks matched, so nothing will draw (check your scan target/color config or move closer to a match).");
+			}
+		}
+
+		if (emptyList) {
 			return;
 		}
 
@@ -108,14 +146,23 @@ public class OutlineRender {
 						GpuBuffer vertexBuffer = RenderSystem.getDevice()
 								.createBuffer(() -> "Xray vertex buffer", GpuBuffer.USAGE_VERTEX, meshData.vertexBuffer());
 						vertexBuffers.put(chunkPos, new VBOHolder(vertexBuffer, indexCount));
+						LOGGER.debug("Built X-Ray vertex buffer for chunk {} - {} block(s), {} indices", chunkPos, blockPropsClone.size(), indexCount);
 					}
+				} catch (Exception e) {
+					LOGGER.error("Failed to build X-Ray vertex buffer for chunk {} - outlines for this chunk will not render", chunkPos, e);
+					continue;
 				}
 			}
 
 			holder = vertexBuffers.get(chunkPos);
 			if (holder == null || holder.vertexBuffer == null || holder.indexCount == 0) {
+				if (warnedEmptyHolderChunks.add(chunkPos)) {
+					LOGGER.warn("Skipping chunk {} - no valid vertex buffer available (holder={}, vertexBuffer={}, indexCount={})",
+							chunkPos, holder != null, holder != null ? holder.vertexBuffer != null : "n/a", holder != null ? holder.indexCount : "n/a");
+				}
 				continue;
 			}
+			warnedEmptyHolderChunks.remove(chunkPos);
 
 			Vec3 playerPos = Minecraft.getInstance().gameRenderer.mainCamera().position().reverse();
 
@@ -130,19 +177,23 @@ public class OutlineRender {
             RenderSystem.setShaderFog(gpubufferslice[0]);
 
 			GpuBuffer gpuBuffer = indices.getBuffer(holder.indexCount);
-			try (RenderPass renderPass = RenderSystem.getDevice()
-					.createCommandEncoder()
-					.createRenderPass(() -> "xray", colorTextureView, Optional.empty(), depthTextureView, OptionalDouble.empty())) {
+			try {
+				try (RenderPass renderPass = RenderSystem.getDevice()
+						.createCommandEncoder()
+						.createRenderPass(() -> "xray", colorTextureView, Optional.empty(), depthTextureView, OptionalDouble.empty())) {
 
-				RenderSystem.bindDefaultUniforms(renderPass);
-				renderPass.setVertexBuffer(0, holder.vertexBuffer.slice());
-				renderPass.setIndexBuffer(gpuBuffer, indices.type());
-				renderPass.setUniform("DynamicTransforms", gpubufferslice[0]);
-				renderPass.setPipeline(NO_DEPTH_LINES_PIPELINE);
-				renderPass.drawIndexed(holder.indexCount, 1, 0, 0, 0);
+					RenderSystem.bindDefaultUniforms(renderPass);
+					renderPass.setVertexBuffer(0, holder.vertexBuffer.slice());
+					renderPass.setIndexBuffer(gpuBuffer, indices.type());
+					renderPass.setUniform("DynamicTransforms", gpubufferslice[0]);
+					renderPass.setPipeline(NO_DEPTH_LINES_PIPELINE);
+					renderPass.drawIndexed(holder.indexCount, 1, 0, 0, 0);
+				}
+			} catch (Exception e) {
+				LOGGER.error("Failed to draw X-Ray outline render pass for chunk {}", chunkPos, e);
+			} finally {
+				matrix4fStack.popMatrix();
 			}
-
-            matrix4fStack.popMatrix();
 		}
 	}
 
@@ -153,6 +204,7 @@ public class OutlineRender {
 			}
 		}
 		vertexBuffers.clear();
+		warnedEmptyHolderChunks.clear();
 	}
 
 	public static void clearVBOsFor(List<ChunkPos> removedChunks) {

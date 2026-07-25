@@ -31,9 +31,21 @@ configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
 
+dependencies {
+    // Optional/soft dependency - only used to register our outline pipeline with Iris's shader
+    // compatibility layer when Iris is present. Never required at runtime.
+    compileOnly "maven.modrinth:iris:${project.iris_version}+${project.minecraft_version}-neoforge"
+}
+
 repositories {
     maven {
         url "https://maven.neoforged.net/releases"
+    }
+    maven {
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
     }
 }
 
