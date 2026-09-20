@@ -28,3 +28,4 @@ classes/
 .DS_Store
 /logs/
 runs/
+tmp/
