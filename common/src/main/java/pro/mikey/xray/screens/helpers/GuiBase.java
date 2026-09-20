@@ -83,7 +83,7 @@ public abstract class GuiBase extends Screen {
                     tooltipComponents.add(ClientTooltipComponent.create(component));
                 }
 
-                guiGraphics.tooltip(getFontRender(), tooltipComponents, x, y, DefaultTooltipPositioner.INSTANCE, null);
+                guiGraphics.tooltip(getFontRender(), tooltipComponents, x, y, DefaultTooltipPositioner.INSTANCE, null, false);
             }
         }
     }

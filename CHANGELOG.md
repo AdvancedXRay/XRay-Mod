@@ -1,3 +1,8 @@
+## [26.3.0.1]
+
+### Changed
+* Ported to Minecraft 26.3
+
 ## [26.2.0.1]
 
 ### Changed

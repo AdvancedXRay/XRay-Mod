@@ -1,19 +1,16 @@
 package pro.mikey.xray.core;
 
-import com.mojang.blaze3d.PrimitiveTopology;
-import com.mojang.blaze3d.buffers.GpuBuffer;
-import com.mojang.blaze3d.buffers.GpuBufferSlice;
-import com.mojang.blaze3d.pipeline.BlendFunction;
-import com.mojang.blaze3d.pipeline.ColorTargetState;
-import com.mojang.blaze3d.pipeline.DepthStencilState;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.CompareOp;
-import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.GpuTextureView;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.MeshData;
+import com.mojang.renderpearl.api.buffers.GpuBuffer;
+import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
+import com.mojang.renderpearl.api.commands.RenderPass;
+import com.mojang.renderpearl.api.pipeline.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.DynamicUniforms;
+import net.minecraft.client.renderer.DynamicGpuData;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.Vec3;
@@ -23,13 +20,14 @@ import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import pro.mikey.xray.XRay;
+import pro.mikey.xray.mixins.RenderPipelinesMixin;
 
 import java.io.Closeable;
 import java.util.*;
 
 public class OutlineRender {
     public static final RenderPipeline NO_DEPTH_LINES_PIPELINE = RenderPipeline.builder(
-        RenderPipelines.MATRICES_FOG_SNIPPET)
+        RenderPipelinesMixin.getMatricesFogSnippet())
             .withVertexShader("core/rendertype_lines")
             .withFragmentShader("core/rendertype_lines")
             .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
@@ -47,7 +45,7 @@ public class OutlineRender {
 
 	private static final Set<ChunkPos> chunksToRefresh = Collections.synchronizedSet(new HashSet<>());
 
-	public static void renderBlocks() {
+	public static void renderBlocks(RenderPass renderPass) {
 		if (!ScanController.INSTANCE.isXRayActive() || Minecraft.getInstance().player == null) {
 			return;
 		}
@@ -120,27 +118,21 @@ public class OutlineRender {
 			Vec3 playerPos = Minecraft.getInstance().gameRenderer.mainCamera().position().reverse();
 
 			Matrix4fStack matrix4fStack = RenderSystem.getModelViewStack();
-			GpuTextureView colorTextureView = Minecraft.getInstance().gameRenderer.mainRenderTarget().getColorTextureView();
-			GpuTextureView depthTextureView = Minecraft.getInstance().gameRenderer.mainRenderTarget().getDepthTextureView();
 
 			matrix4fStack.pushMatrix();
 			matrix4fStack.translate((float) playerPos.x(), (float) playerPos.y(), (float) playerPos.z());
-			GpuBufferSlice[] gpubufferslice = RenderSystem.getDynamicUniforms().writeTransforms(new DynamicUniforms.Transform(new Matrix4f(matrix4fStack), new Vector4f(1.0F, 1.0F, 1.0F, 1.0F), new Vector3f(), new Matrix4f()));
+			GpuBufferSlice[] gpubufferslice = RenderSystem.getDynamicUniforms().writeTransforms(new DynamicGpuData.Transform(new Matrix4f(matrix4fStack), new Vector4f(1.0F, 1.0F, 1.0F, 1.0F), new Vector3f(), new Matrix4f()));
 
             RenderSystem.setShaderFog(gpubufferslice[0]);
 
 			GpuBuffer gpuBuffer = indices.getBuffer(holder.indexCount);
-			try (RenderPass renderPass = RenderSystem.getDevice()
-					.createCommandEncoder()
-					.createRenderPass(() -> "xray", colorTextureView, Optional.empty(), depthTextureView, OptionalDouble.empty())) {
 
-				RenderSystem.bindDefaultUniforms(renderPass);
-				renderPass.setVertexBuffer(0, holder.vertexBuffer.slice());
-				renderPass.setIndexBuffer(gpuBuffer, indices.type());
-				renderPass.setUniform("DynamicTransforms", gpubufferslice[0]);
-				renderPass.setPipeline(NO_DEPTH_LINES_PIPELINE);
-				renderPass.drawIndexed(holder.indexCount, 1, 0, 0, 0);
-			}
+			RenderSystem.bindDefaultUniforms(renderPass);
+			renderPass.setVertexBuffer(0, holder.vertexBuffer.slice());
+			renderPass.setIndexBuffer(gpuBuffer, indices.type());
+			renderPass.setUniform("DynamicTransforms", gpubufferslice[0]);
+			renderPass.setPipeline(RenderSystem.getCompiledPipeline(NO_DEPTH_LINES_PIPELINE));
+			renderPass.drawIndexed(holder.indexCount, 1, 0, 0, 0);
 
             matrix4fStack.popMatrix();
 		}

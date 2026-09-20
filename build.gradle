@@ -1,8 +1,15 @@
 plugins {
     id 'java-library'
-    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT' apply(false)
-    id 'net.neoforged.moddev' version '2.0.141' apply(false)
-    id "me.modmuss50.mod-publish-plugin" version "1.1.0"
+    id 'net.fabricmc.fabric-loom' version '1.17-SNAPSHOT' apply(false)
+    id 'net.neoforged.moddev' version '2.0.147' apply(false)
+    id "me.modmuss50.mod-publish-plugin" version "2.2.0"
+    id "dev.nanite.nanite-plugin" version "0.1.0-SNAPSHOT"
+}
+
+nanite {
+    changelog {
+        file = file("./CHANGELOG.md")
+    }
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -14,7 +21,7 @@ allprojects {
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
 
-    version = mod_version
+    version = naniteUtils.createModVersion()
     group = 'pro.mikey.mods'
 
     tasks.withType(JavaCompile).configureEach {
@@ -91,14 +98,14 @@ subprojects {
 
 publishMods {
     dryRun = providers.environmentVariable("CURSE_DEPLOY_TOKEN").getOrNull() == null
-    changelog = file("./CHANGELOG.md").text
+    changelog = tasks.named("createChangelog").flatMap { it.outputFile }.map { it.asFile.text }
     version = "${mod_version}"
     type = STABLE
 
     def createOptions = (String platform, String taskName) -> {
         publishOptions {
             file = project.provider { project(":$platform").tasks[taskName] }.flatMap { it.archiveFile }
-            displayName = "[${platform.toUpperCase()}] Advanced XRay ${mod_version}"
+            displayName = "Advanced XRay for ${platform.toUpperCase()} ${mod_version}"
             modLoaders.add(platform.toLowerCase())
         }
     }
@@ -107,6 +114,8 @@ publishMods {
         accessToken = providers.environmentVariable("CURSE_DEPLOY_TOKEN")
         minecraftVersions.add("${minecraft_version}")
         javaVersions.add(JavaVersion.VERSION_25)
+        client = true
+        server = false
     }
 
     curseforge("curseforgeNeoforge") {

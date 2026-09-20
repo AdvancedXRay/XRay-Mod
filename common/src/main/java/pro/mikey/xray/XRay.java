@@ -6,7 +6,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLKeycode;
 import pro.mikey.xray.screens.ScanManageScreen;
 import pro.mikey.xray.utils.XPlatShim;
 import pro.mikey.xray.core.ScanController;
@@ -22,8 +22,8 @@ public enum XRay {
 	public static final XPlatShim XPLAT = ServiceLoader.load(XPlatShim.class).findFirst().orElseThrow();
 
     private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(XRay.id("category"));
-	public static final KeyMapping TOGGLE_KEY = new KeyMapping(I18n.get("xray.config.toggle"), GLFW.GLFW_KEY_BACKSLASH, CATEGORY);
-	public static final KeyMapping OPEN_GUI_KEY = new KeyMapping(I18n.get("xray.config.open"), GLFW.GLFW_KEY_G, CATEGORY);
+	public static final KeyMapping TOGGLE_KEY = new KeyMapping(I18n.get("xray.config.toggle"), SDLKeycode.SDLK_BACKSLASH, CATEGORY);
+	public static final KeyMapping OPEN_GUI_KEY = new KeyMapping(I18n.get("xray.config.open"), SDLKeycode.SDLK_G, CATEGORY);
 
 	public void init() {
 	}

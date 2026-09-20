@@ -45,7 +45,7 @@ public class XRayNeoForge {
 	}
 
 	private void onWorldRenderLast(RenderLevelStageEvent.AfterWeather event) {
-		OutlineRender.renderBlocks();
+		OutlineRender.renderBlocks(event.getRenderPass());
 	}
 
 	private void registerRenderPipeline(RegisterRenderPipelinesEvent event) {
