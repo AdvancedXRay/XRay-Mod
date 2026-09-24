@@ -48,7 +48,8 @@ public class ScanStore {
     });
 
     private static final Map<ScanType.Type, BiFunction<ScanType.Type, JsonObject, ScanType>> SCAN_TYPE_CREATORS = Map.of(
-        ScanType.Type.BLOCK, BlockScanType::new
+        ScanType.Type.BLOCK, BlockScanType::new,
+        ScanType.Type.BLOCK_TAG, BlockTagScanType::new
     );
 
     private final List<Category> categories = new ArrayList<>();

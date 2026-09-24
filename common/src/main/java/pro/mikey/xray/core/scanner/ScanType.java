@@ -225,7 +225,8 @@ public abstract class ScanType {
     }
 
     public enum Type {
-        BLOCK(XRay.id("block"));
+        BLOCK(XRay.id("block")),
+        BLOCK_TAG(XRay.id("block_tag")),;
 
         private static final Set<Type> values = Set.of(values());
 
