@@ -115,6 +115,19 @@ public class ScanStore {
         LOGGER.warn("Scan type not found in any category: {}", type);
     }
 
+    public void clearEntries() {
+        for (Category category : this.categories) {
+            category.entries.clear();
+        }
+
+        this.save();
+    }
+
+    public void resetToDefaults() {
+        this.categories.clear();
+        this.createDefaultCategories(); // saves
+    }
+
     public int getNextOrder() {
         var firstCategory = this.categories.stream().findFirst();
         if (firstCategory.isEmpty()) {

@@ -7,11 +7,14 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
@@ -52,7 +55,6 @@ public class ScanManageScreen extends GuiBase {
 
     public ScanManageScreen() {
         super(true);
-        this.setSideTitle(I18n.get("xray.single.tools"));
 
         ScanStore scanStore = ScanController.INSTANCE.scanStore;
         if (scanStore.categories().isEmpty()) {
@@ -81,7 +83,7 @@ public class ScanManageScreen extends GuiBase {
                 Button.builder(Component.translatable("xray.input.add"), (btn) -> {
                     minecraft.gui.setScreen(new FindBlockScreen());
                 })
-                        .pos((getWidth() / 2) + 79, getHeight() / 2 - 60)
+                        .pos((getWidth() / 2) + 79, getHeight() / 2 - 38)
                         .size(120, 20)
                         .tooltip(Tooltip.create(Component.translatable("xray.tooltips.add_block")))
                         .build()
@@ -99,7 +101,7 @@ public class ScanManageScreen extends GuiBase {
 
             minecraft.gui.setScreen(new ScanConfigureScreen(((BlockItem) handItem.getItem()).getBlock(), ScanManageScreen::new));
         })
-            .pos(getWidth() / 2 + 79, getHeight() / 2 - 38)
+            .pos(getWidth() / 2 + 79, getHeight() / 2 - 16)
             .size(120, 20)
             .tooltip(Tooltip.create(Component.translatable("xray.tooltips.add_block_in_hand")))
             .build()
@@ -132,7 +134,7 @@ public class ScanManageScreen extends GuiBase {
                 this.onClose();
             }
         })
-            .pos(getWidth() / 2 + 79, getHeight() / 2 - 16)
+            .pos(getWidth() / 2 + 79, getHeight() / 2 + 6)
             .size(120, 20)
             .tooltip(Tooltip.create(Component.translatable("xray.tooltips.add_block_looking_at"))
         ).build());
@@ -143,7 +145,7 @@ public class ScanManageScreen extends GuiBase {
             ScanController.INSTANCE.toggleLava();
             btn.setMessage(Component.translatable("xray.input.show-lava", ScanController.INSTANCE.isLavaActive()));
         })
-                .pos(getWidth() / 2 + 79, getHeight() / 2 + 6)
+                .pos(getWidth() / 2 + 79, getHeight() / 2 + 28)
                 .size(120, 20)
                 .tooltip(Tooltip.create(Component.translatable("xray.tooltips.show_lava")))
                 .build());
@@ -153,29 +155,61 @@ public class ScanManageScreen extends GuiBase {
             ScanController.INSTANCE.incrementCurrentDist();
             btn.setMessage(Component.translatable("xray.input.distance", ScanController.INSTANCE.getVisualRadius()));
         })
-                .pos(getWidth() / 2 + 79, getHeight() / 2 + 36)
+                .pos(getWidth() / 2 + 79, getHeight() / 2 + 58)
                 .size(120, 20)
                 .tooltip(Tooltip.create(Component.translatable("xray.tooltips.distance")))
                 .build()
         );
 
-        addRenderableWidget(
-            Button.builder(Component.translatable("xray.single.help"), button -> {
-                minecraft.gui.setScreen(new HelpScreen());
-            })
-                    .pos(getWidth() / 2 + 79, getHeight() / 2 + 58)
-                    .size(60, 20)
-                    .build()
-        );
+        int iconRowX = getWidth() / 2 + 79;
+        int iconRowY = getHeight() / 2 - 80;
+        addRenderableWidget(iconButton("help", "xray.single.help", "xray.single.help", iconRowX, iconRowY, btn -> minecraft.gui.setScreen(new HelpScreen())));
+        addRenderableWidget(iconButton("reset", "xray.single.reset", "xray.tooltips.reset_defaults", iconRowX + 31, iconRowY, btn -> this.confirmResetToDefaults()));
+        addRenderableWidget(iconButton("clear", "xray.single.clear_all", "xray.tooltips.clear_all", iconRowX + 62, iconRowY, btn -> this.confirmClearAll()));
+        addRenderableWidget(iconButton("close", "xray.single.close", "xray.single.close", iconRowX + 93, iconRowY, btn -> this.onClose()));
+    }
 
-        addRenderableWidget(
-                Button.builder(Component.translatable("xray.single.close"), button -> {
-                    this.onClose();
-                })
-                        .pos((getWidth() / 2 + 79) + 62, getHeight() / 2 + 58)
-                        .size(59, 20)
-                        .build()
-        );
+    private static SpriteIconButton iconButton(String icon, String labelKey, String tooltipKey, int x, int y, Button.OnPress onPress) {
+        SpriteIconButton button = SpriteIconButton.builder(Component.translatable(labelKey), onPress, true)
+                .sprite(XRay.id("icon/" + icon), 12, 12)
+                .size(27, 20)
+                .build();
+
+        button.setPosition(x, y);
+        button.setTooltip(Tooltip.create(Component.translatable(tooltipKey)));
+        return button;
+    }
+
+    private void confirmResetToDefaults() {
+        minecraft.gui.setScreen(new ConfirmScreen(confirmed -> {
+            if (confirmed) {
+                ScanController.INSTANCE.scanStore.resetToDefaults();
+                ScanController.INSTANCE.requestBlockFinder(true);
+            }
+
+            minecraft.gui.setScreen(new ScanManageScreen());
+        },
+                Component.translatable("xray.confirm.reset_defaults.title"),
+                Component.translatable("xray.confirm.reset_defaults.body"),
+                Component.translatable("xray.confirm.reset_defaults.confirm"),
+                CommonComponents.GUI_CANCEL
+        ));
+    }
+
+    private void confirmClearAll() {
+        minecraft.gui.setScreen(new ConfirmScreen(confirmed -> {
+            if (confirmed) {
+                ScanController.INSTANCE.scanStore.clearEntries();
+                ScanController.INSTANCE.requestBlockFinder(true);
+            }
+
+            minecraft.gui.setScreen(new ScanManageScreen());
+        },
+                Component.translatable("xray.confirm.clear_all.title"),
+                Component.translatable("xray.confirm.clear_all.body"),
+                Component.translatable("xray.confirm.clear_all.confirm"),
+                CommonComponents.GUI_CANCEL
+        ));
     }
 
     @Override

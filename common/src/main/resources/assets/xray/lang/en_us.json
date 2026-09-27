@@ -10,6 +10,8 @@
   "xray.single.close": "Close",
   "xray.single.search": "Search",
   "xray.single.help": "Help",
+  "xray.single.reset": "Reset to defaults",
+  "xray.single.clear_all": "Delete all",
 
   "xray.overlay": "XRay Active",
 
@@ -54,6 +56,8 @@
   "xray.tooltips.add_block_looking_at": "Automatically selects the block you're\nlooking at to add to the list.",
   "xray.tooltips.show_lava": "Displays lava in RED like a normal block.\nWatch out! It's hot.",
   "xray.tooltips.distance": "Warning: Larger radius will lag for a second whilst updating.",
+  "xray.tooltips.reset_defaults": "Reset the XRay list back to the default ores.",
+  "xray.tooltips.clear_all": "Delete all blocks from the XRay list.",
   "xray.tooltips.edit1": "Click to enable / disable",
   "xray.tooltips.edit2": "Hold shift and click to edit.",
 
@@ -63,6 +67,12 @@
   "xray.config.toggle": "Toggle XRay",
   "xray.config.open": "Open XRay Menu",
 
+  "xray.confirm.reset_defaults.title": "Reset to defaults?",
+  "xray.confirm.reset_defaults.body": "This will replace your XRay list with the default ores. Any blocks you've added or edited will be lost.",
+  "xray.confirm.reset_defaults.confirm": "Reset",
+  "xray.confirm.clear_all.title": "Delete all blocks?",
+  "xray.confirm.clear_all.body": "This will remove every block from your XRay list. This can't be undone.",
+  "xray.confirm.clear_all.confirm": "Delete all",
   "xray.toggle.activated": "XRay activated",
   "xray.toggle.deactivated": "XRay deactivated"
 }

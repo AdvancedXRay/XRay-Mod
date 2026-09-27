@@ -57,3 +57,7 @@ Shader compatability sometimes works, and sometimes doesn't. It's very Minecraft
 ## Game support system
 
 I only support the last two major versions of Minecraft. For example `1.18` is the current (as of 02/2022) version of Minecraft, thus this is the First major version I support. The last long-lived versions of Minecraft was `1.16` and thus I will continue to support that until `1.18` is replaced by another long-lived version. At that point, I'll switch to `1.XX` & `1.18` for example.
+
+## Credits
+
+GUI icons (`assets/xray/textures/gui/sprites/icon`) are from the [Pixel Icon Library](https://github.com/hackernoon/pixel-icon-library) by HackerNoon, used under the MIT License. See `LICENSE-pixel-icon-library.txt` alongside the icons.
