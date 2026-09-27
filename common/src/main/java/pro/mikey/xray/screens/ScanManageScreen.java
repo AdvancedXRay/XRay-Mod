@@ -1,5 +1,6 @@
 package pro.mikey.xray.screens;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -209,7 +210,7 @@ public class ScanManageScreen extends GuiBase {
             this.setFocused(search);
 
         // Shift action!
-        if (event.button() == 1 && distButtons.isMouseOver(event.x(), event.y())) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && distButtons.isMouseOver(event.x(), event.y())) {
             ScanController.INSTANCE.decrementCurrentDist();
             distButtons.setMessage(Component.translatable("xray.input.distance", ScanController.INSTANCE.getVisualRadius()));
             distButtons.playDownSound(Minecraft.getInstance().getSoundManager());
