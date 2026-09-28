@@ -1,3 +1,23 @@
+## [26.3.0.2]
+
+### Added
+
+- "Delete all" button to remove every block from the list. You'll be asked to confirm first
+- "Reset to defaults" button to restore the default ore list, also with a confirmation
+
+### Changed
+
+- Reworked the block list. The highlight colour is now a square behind the block, and each entry has a checkbox to enable / disable it and an edit button. Clicking anywhere else on an entry still toggles it and shift-click still edits
+- List entries are now smaller and long block names scroll instead of overflowing
+- Reset, delete all and close are now icon buttons at the top of the sidebar.
+- The delete button on the edit screen now uses the new trash icon
+- Removed the help screen and the hint text under the block list, the new list makes them redundant
+
+### Fixed
+
+- Distance button being stuck at `6` on `26.3` [#394](https://github.com/AdvancedXRay/XRay-Mod/issues/394)
+- The colour preview on the edit screen showing a missing texture instead of the transparency background
+
 ## [26.3.0.1]
 
 ### Changed
