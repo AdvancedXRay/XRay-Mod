@@ -32,7 +32,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix3x2fStack;
 import pro.mikey.xray.core.scanner.BlockScanType;
 import pro.mikey.xray.core.scanner.ScanStore;
 import pro.mikey.xray.core.scanner.ScanType;
@@ -255,15 +254,6 @@ public class ScanManageScreen extends GuiBase {
         if (!search.isFocused() && search.getValue().isEmpty()) {
             graphics.text(getFontRender(), I18n.get("xray.single.search"), getWidth() / 2 - 130, getHeight() / 2 - 101, Color.GRAY.getRGB());
         }
-
-        Matrix3x2fStack pose = graphics.pose();
-        pose.pushMatrix();
-        pose.translate(this.getWidth() / 2f - 140, ((this.getHeight() / 2f) - 3) + 120);
-        pose.scale(0.75f, 0.75f);
-        graphics.text(this.font, Component.translatable("xray.tooltips.edit1"), 0, 0, Color.GRAY.getRGB());
-        pose.translate(0, 12);
-        graphics.text(this.font, Component.translatable("xray.tooltips.edit2"), 0, 0, Color.GRAY.getRGB());
-        pose.popMatrix();
     }
 
     @Override

@@ -53,8 +53,6 @@
   "xray.tooltips.add_block_looking_at": "自动选择你正在看的方块添加到列表。",
   "xray.tooltips.show_lava": "像普通方块一样用红色显示岩浆。\n小心！很烫。",
   "xray.tooltips.distance": "警告：半径越大，更新时会卡顿一会。",
-  "xray.tooltips.edit1": "点击启用/禁用",
-  "xray.tooltips.edit2": "按住 Shift 并点击进行编辑。",
 
 
   "xray.config.toggle": "切换透视",

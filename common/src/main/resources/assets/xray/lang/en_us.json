@@ -59,8 +59,6 @@
   "xray.tooltips.clear_all": "Delete all blocks from the XRay list.",
   "xray.tooltips.edit_entry": "Edit",
   "xray.narration.edit_entry": "Edit %s",
-  "xray.tooltips.edit1": "Click to enable / disable",
-  "xray.tooltips.edit2": "Hold shift and click to edit.",
 
 
   "xray.config.toggle": "Toggle XRay",
