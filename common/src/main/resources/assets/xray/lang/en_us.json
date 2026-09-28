@@ -9,7 +9,6 @@
   "xray.single.tools": "Tools",
   "xray.single.close": "Close",
   "xray.single.search": "Search",
-  "xray.single.help": "Help",
   "xray.single.reset": "Reset to defaults",
   "xray.single.clear_all": "Delete all",
 
@@ -63,8 +62,6 @@
   "xray.tooltips.edit1": "Click to enable / disable",
   "xray.tooltips.edit2": "Hold shift and click to edit.",
 
-  "xray.message.help.gui": "To edit a block simply shift click on the block you wish to edit.\nIf you want to enable / disable a block then click on a block\n and it'll toggle on and off.",
-  "xray.message.help.warning": "As a warning, using any distance over 64 will cause FPS drops due\nto the vast amount of blocks that we have to scan. (It's like 256^3)",
 
   "xray.config.toggle": "Toggle XRay",
   "xray.config.open": "Open XRay Menu",

@@ -86,7 +86,6 @@ public class ScanManageScreen extends GuiBase {
         LinearLayout panel = LinearLayout.vertical().spacing(2);
 
         EqualSpacingLayout icons = panel.addChild(new EqualSpacingLayout(120, 20, EqualSpacingLayout.Orientation.HORIZONTAL));
-        icons.addChild(iconButton("help", "xray.single.help", "xray.single.help", btn -> minecraft.gui.setScreen(new HelpScreen())));
         icons.addChild(iconButton("reset", "xray.single.reset", "xray.tooltips.reset_defaults", btn -> this.confirmResetToDefaults()));
         icons.addChild(iconButton("clear", "xray.single.clear_all", "xray.tooltips.clear_all", btn -> this.confirmClearAll()));
         icons.addChild(iconButton("close", "xray.single.close", "xray.single.close", btn -> this.onClose()));
@@ -171,7 +170,7 @@ public class ScanManageScreen extends GuiBase {
     private static SpriteIconButton iconButton(String icon, String labelKey, String tooltipKey, Button.OnPress onPress) {
         SpriteIconButton button = SpriteIconButton.builder(Component.translatable(labelKey), onPress, true)
                 .sprite(XRay.id("icon/" + icon), 12, 12)
-                .size(27, 20)
+                .size(38, 20)
                 .build();
 
         button.setTooltip(Tooltip.create(Component.translatable(tooltipKey)));
