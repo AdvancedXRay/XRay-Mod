@@ -1,3 +1,9 @@
+## [26.3.0.4]
+
+### Fixed
+
+- XRay outlines breaking apart and jumping around when very far from 0,0, such as near the world border [#295](https://github.com/AdvancedXRay/XRay-Mod/issues/295)
+
 ## [26.3.0.3]
 
 ### Fixed

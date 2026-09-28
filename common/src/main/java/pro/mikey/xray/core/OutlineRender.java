@@ -86,11 +86,15 @@ public class OutlineRender {
 							NO_DEPTH_LINES_PIPELINE.getVertexFormatBinding(0)
 					);
 
+					// Edgecase: Vertices are now stored relative to the chunk's corner, when using the absolute world positions
+					// 			 the outlines would flicker around the edges of chunks due to floating point precision issues.
+					final int originX = chunkPos.getMinBlockX(), originZ = chunkPos.getMinBlockZ();
+
 					var blockPropsClone = new ArrayList<>(blocksWithProps);
 					for (var blockProps : blockPropsClone) {
                         Vector3f normal = new Vector3f();
                         if (blockProps == null) continue;
-                        final int x = blockProps.x(), y = blockProps.y(), z = blockProps.z();
+                        final int x = blockProps.x() - originX, y = blockProps.y(), z = blockProps.z() - originZ;
                         int color = blockProps.color();
                         float width = 2.0f;
 
@@ -115,12 +119,17 @@ public class OutlineRender {
 				continue;
 			}
 
-			Vec3 playerPos = Minecraft.getInstance().gameRenderer.mainCamera().position().reverse();
+			Vec3 cameraPos = Minecraft.getInstance().gameRenderer.mainCamera().position();
 
 			Matrix4fStack matrix4fStack = RenderSystem.getModelViewStack();
 
+			// Now that we offset, we have to translate to the chunk's offset from the camera in double precision
 			matrix4fStack.pushMatrix();
-			matrix4fStack.translate((float) playerPos.x(), (float) playerPos.y(), (float) playerPos.z());
+			matrix4fStack.translate(
+					(float) (chunkPos.getMinBlockX() - cameraPos.x()),
+					(float) -cameraPos.y(),
+					(float) (chunkPos.getMinBlockZ() - cameraPos.z())
+			);
 			GpuBufferSlice[] gpubufferslice = RenderSystem.getDynamicUniforms().writeTransforms(new DynamicGpuData.Transform(new Matrix4f(matrix4fStack), new Vector4f(1.0F, 1.0F, 1.0F, 1.0F), new Vector3f(), new Matrix4f()));
 
             RenderSystem.setShaderFog(gpubufferslice[0]);
