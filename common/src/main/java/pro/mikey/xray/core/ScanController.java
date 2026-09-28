@@ -162,7 +162,11 @@ public enum ScanController {
             // Sort the chunks by distance to the player
             chunksToScan.sort(Comparator.comparingDouble(chunk -> chunk.distanceSquared(playerChunkPos)));
 
-            var knownChunks = syncRenderList.keySet();
+            // Snapshot the known chunks to avoid concurrent modification exceptions
+            Set<ChunkPos> knownChunks;
+            synchronized (syncRenderList) {
+                knownChunks = new HashSet<>(syncRenderList.keySet());
+            }
 
             // New chunks
             var newChunks = chunksToScan.stream().filter(chunk -> !knownChunks.contains(chunk)).toList();
