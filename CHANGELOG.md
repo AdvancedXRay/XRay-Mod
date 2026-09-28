@@ -1,3 +1,9 @@
+## [26.3.0.3]
+
+### Fixed
+
+- Random crash (`ConcurrentModificationException`) whilst moving around with XRay enabled (https://github.com/AdvancedXRay/XRay-Mod/issues/374)
+
 ## [26.3.0.2]
 
 ### Added
