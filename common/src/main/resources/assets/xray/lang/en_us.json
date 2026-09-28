@@ -58,6 +58,8 @@
   "xray.tooltips.distance": "Warning: Larger radius will lag for a second whilst updating.",
   "xray.tooltips.reset_defaults": "Reset the XRay list back to the default ores.",
   "xray.tooltips.clear_all": "Delete all blocks from the XRay list.",
+  "xray.tooltips.edit_entry": "Edit",
+  "xray.narration.edit_entry": "Edit %s",
   "xray.tooltips.edit1": "Click to enable / disable",
   "xray.tooltips.edit2": "Hold shift and click to edit.",
 

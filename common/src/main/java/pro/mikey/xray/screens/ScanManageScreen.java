@@ -1,18 +1,24 @@
 package pro.mikey.xray.screens;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.layouts.EqualSpacingLayout;
+import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.gui.layouts.SpacerElement;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -26,8 +32,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2fStack;
 import pro.mikey.xray.core.scanner.BlockScanType;
 import pro.mikey.xray.core.scanner.ScanStore;
@@ -44,7 +48,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ScanManageScreen extends GuiBase {
-    private static final Identifier CIRCLE = XRay.assetLocation("gui/circle.png");
+    private static final Identifier EDIT_ICON = XRay.id("icon/edit");
 
     private Button distButtons;
     private EditBox search;
@@ -72,24 +76,31 @@ public class ScanManageScreen extends GuiBase {
 
         this.children().clear();
 
-        this.scrollList = new ScanEntryScroller(((getWidth() / 2) - (203 / 2)) - 37, getHeight() / 2 + 10, 203, 185, this);
+        this.scrollList = new ScanEntryScroller(getWidth() / 2 - 137, getHeight() / 2 - 82, 201, 185);
         addRenderableWidget(this.scrollList);
 
         this.search = new EditBox(getFontRender(), getWidth() / 2 - 137, getHeight() / 2 - 105, 202, 18, Component.empty());
         this.search.setCanLoseFocus(true);
         addRenderableWidget(this.search);
 
-        addRenderableWidget(
-                Button.builder(Component.translatable("xray.input.add"), (btn) -> {
+        LinearLayout panel = LinearLayout.vertical().spacing(2);
+
+        EqualSpacingLayout icons = panel.addChild(new EqualSpacingLayout(120, 20, EqualSpacingLayout.Orientation.HORIZONTAL));
+        icons.addChild(iconButton("help", "xray.single.help", "xray.single.help", btn -> minecraft.gui.setScreen(new HelpScreen())));
+        icons.addChild(iconButton("reset", "xray.single.reset", "xray.tooltips.reset_defaults", btn -> this.confirmResetToDefaults()));
+        icons.addChild(iconButton("clear", "xray.single.clear_all", "xray.tooltips.clear_all", btn -> this.confirmClearAll()));
+        icons.addChild(iconButton("close", "xray.single.close", "xray.single.close", btn -> this.onClose()));
+
+        panel.addChild(SpacerElement.height(18));
+
+        panel.addChild(Button.builder(Component.translatable("xray.input.add"), (btn) -> {
                     minecraft.gui.setScreen(new FindBlockScreen());
                 })
-                        .pos((getWidth() / 2) + 79, getHeight() / 2 - 38)
-                        .size(120, 20)
-                        .tooltip(Tooltip.create(Component.translatable("xray.tooltips.add_block")))
-                        .build()
-        );
+                .size(120, 20)
+                .tooltip(Tooltip.create(Component.translatable("xray.tooltips.add_block")))
+                .build());
 
-        addRenderableWidget(Button.builder(Component.translatable("xray.input.add_hand"), btn -> {
+        panel.addChild(Button.builder(Component.translatable("xray.input.add_hand"), btn -> {
             ItemStack handItem = minecraft.player.getItemInHand(InteractionHand.MAIN_HAND);
 
             // Check if the hand item is a block or not
@@ -101,13 +112,11 @@ public class ScanManageScreen extends GuiBase {
 
             minecraft.gui.setScreen(new ScanConfigureScreen(((BlockItem) handItem.getItem()).getBlock(), ScanManageScreen::new));
         })
-            .pos(getWidth() / 2 + 79, getHeight() / 2 - 16)
-            .size(120, 20)
-            .tooltip(Tooltip.create(Component.translatable("xray.tooltips.add_block_in_hand")))
-            .build()
-        );
+                .size(120, 20)
+                .tooltip(Tooltip.create(Component.translatable("xray.tooltips.add_block_in_hand")))
+                .build());
 
-        addRenderableWidget(Button.builder(Component.translatable("xray.input.add_look"), btn -> {
+        panel.addChild(Button.builder(Component.translatable("xray.input.add_look"), btn -> {
             Player player = minecraft.player;
             if (minecraft.level == null || player == null) {
                 return;
@@ -134,48 +143,37 @@ public class ScanManageScreen extends GuiBase {
                 this.onClose();
             }
         })
-            .pos(getWidth() / 2 + 79, getHeight() / 2 + 6)
-            .size(120, 20)
-            .tooltip(Tooltip.create(Component.translatable("xray.tooltips.add_block_looking_at"))
-        ).build());
+                .size(120, 20)
+                .tooltip(Tooltip.create(Component.translatable("xray.tooltips.add_block_looking_at")))
+                .build());
 
-
-
-        addRenderableWidget(Button.builder(Component.translatable("xray.input.show-lava", ScanController.INSTANCE.isLavaActive()), btn -> {
-            ScanController.INSTANCE.toggleLava();
-            btn.setMessage(Component.translatable("xray.input.show-lava", ScanController.INSTANCE.isLavaActive()));
-        })
-                .pos(getWidth() / 2 + 79, getHeight() / 2 + 28)
+        panel.addChild(Button.builder(Component.translatable("xray.input.show-lava", ScanController.INSTANCE.isLavaActive()), btn -> {
+                    ScanController.INSTANCE.toggleLava();
+                    btn.setMessage(Component.translatable("xray.input.show-lava", ScanController.INSTANCE.isLavaActive()));
+                })
                 .size(120, 20)
                 .tooltip(Tooltip.create(Component.translatable("xray.tooltips.show_lava")))
                 .build());
 
-        
-        addRenderableWidget(distButtons = Button.builder(Component.translatable("xray.input.distance", ScanController.INSTANCE.getVisualRadius()), btn -> {
-            ScanController.INSTANCE.incrementCurrentDist();
-            btn.setMessage(Component.translatable("xray.input.distance", ScanController.INSTANCE.getVisualRadius()));
-        })
-                .pos(getWidth() / 2 + 79, getHeight() / 2 + 58)
+        this.distButtons = panel.addChild(Button.builder(Component.translatable("xray.input.distance", ScanController.INSTANCE.getVisualRadius()), btn -> {
+                    ScanController.INSTANCE.incrementCurrentDist();
+                    btn.setMessage(Component.translatable("xray.input.distance", ScanController.INSTANCE.getVisualRadius()));
+                })
                 .size(120, 20)
                 .tooltip(Tooltip.create(Component.translatable("xray.tooltips.distance")))
-                .build()
-        );
+                .build(), s -> s.paddingTop(8));
 
-        int iconRowX = getWidth() / 2 + 79;
-        int iconRowY = getHeight() / 2 - 80;
-        addRenderableWidget(iconButton("help", "xray.single.help", "xray.single.help", iconRowX, iconRowY, btn -> minecraft.gui.setScreen(new HelpScreen())));
-        addRenderableWidget(iconButton("reset", "xray.single.reset", "xray.tooltips.reset_defaults", iconRowX + 31, iconRowY, btn -> this.confirmResetToDefaults()));
-        addRenderableWidget(iconButton("clear", "xray.single.clear_all", "xray.tooltips.clear_all", iconRowX + 62, iconRowY, btn -> this.confirmClearAll()));
-        addRenderableWidget(iconButton("close", "xray.single.close", "xray.single.close", iconRowX + 93, iconRowY, btn -> this.onClose()));
+        panel.setPosition(getWidth() / 2 + 79, getHeight() / 2 - 80);
+        panel.arrangeElements();
+        panel.visitWidgets(this::addRenderableWidget);
     }
 
-    private static SpriteIconButton iconButton(String icon, String labelKey, String tooltipKey, int x, int y, Button.OnPress onPress) {
+    private static SpriteIconButton iconButton(String icon, String labelKey, String tooltipKey, Button.OnPress onPress) {
         SpriteIconButton button = SpriteIconButton.builder(Component.translatable(labelKey), onPress, true)
                 .sprite(XRay.id("icon/" + icon), 12, 12)
                 .size(27, 20)
                 .build();
 
-        button.setPosition(x, y);
         button.setTooltip(Tooltip.create(Component.translatable(tooltipKey)));
         return button;
     }
@@ -281,38 +279,36 @@ public class ScanManageScreen extends GuiBase {
         }
     }
 
-    class ScanEntryScroller extends ObjectSelectionList<ScanEntryScroller.ScanSlot> {
-        static final int SLOT_HEIGHT = 35;
-        public ScanManageScreen parent;
+    class ScanEntryScroller extends ContainerObjectSelectionList<ScanEntryScroller.ScanSlot> {
+        static final int SLOT_HEIGHT = 24;
 
-        ScanEntryScroller(int x, int y, int width, int height, ScanManageScreen parent) {
-            super(ScanManageScreen.this.minecraft, width - 2, height, (ScanManageScreen.this.height / 2) - (height / 2) + 10, SLOT_HEIGHT);
-            this.parent = parent;
-            this.setX((parent.getWidth() / 2) - (width / 2) - 36);
+        ScanEntryScroller(int x, int y, int width, int height) {
+            super(ScanManageScreen.this.minecraft, width, height, y, SLOT_HEIGHT);
+            this.setX(x);
             this.updateEntries();
         }
 
         @Override
+        public int getRowLeft() {
+            return this.getX();
+        }
+
+        @Override
         public int getRowWidth() {
-            return 188;
+            return this.getWidth() - this.scrollbarWidth() - 2;
         }
 
         @Override
         protected int scrollBarX() {
-            return this.getX() + this.getRowWidth() + 6;
+            return this.getRowRight() + 2;
         }
 
-        public void setSelected(@Nullable ScanManageScreen.ScanEntryScroller.ScanSlot entry, MouseButtonEvent mouse) {
-            if (entry == null)
-                return;
+        @Override
+        protected void extractListBackground(GuiGraphicsExtractor graphics) {
+        }
 
-            if (mouse.hasShiftDown()) {
-                Minecraft.getInstance().gui.setScreen(new ScanConfigureScreen(entry.entry, ScanManageScreen::new));
-                return;
-            }
-
-            entry.entry.enabled = !entry.entry.enabled();
-            ScanController.INSTANCE.scanStore.save();
+        @Override
+        protected void extractListSeparators(GuiGraphicsExtractor graphics) {
         }
 
         void updateEntries() {
@@ -334,53 +330,104 @@ public class ScanManageScreen extends GuiBase {
                     continue;
                 }
 
-                this.addEntry(new ScanSlot(category, this));
+                this.addEntry(new ScanSlot(category));
             }
         }
 
-        public static class ScanSlot extends ObjectSelectionList.Entry<ScanSlot> {
+        class ScanSlot extends ContainerObjectSelectionList.Entry<ScanSlot> {
+            // Layout, left to right: [colour square + block] name ... [edit] [checkbox]
+            private static final int INSET = 3;
+            private static final int SWATCH_SIZE = 20;
+
             private final ScanType entry;
-            private final ScanEntryScroller parent;
             private final ItemStack icon;
+            private final Checkbox enabledBox;
+            private final SpriteIconButton editButton;
 
-            ScanSlot(ScanType entry, ScanEntryScroller parent) {
+            ScanSlot(ScanType entry) {
                 this.entry = entry;
-                this.parent = parent;
+                this.icon = entry instanceof BlockScanType blockScanType ? new ItemStack(blockScanType.block) : ItemStack.EMPTY;
 
-                if (entry instanceof BlockScanType blockScanType) {
-                    this.icon = new ItemStack(blockScanType.block);
-                } else {
-                    this.icon = ItemStack.EMPTY;
-                }
+                // Built with an empty label so only the box renders; the checkbox copies its label at
+                // construction, so setting the message afterwards only changes what the narrator reads.
+                this.enabledBox = Checkbox.builder(Component.empty(), minecraft.font)
+                        .maxWidth(Checkbox.getBoxSize(minecraft.font))
+                        .selected(entry.enabled())
+                        .onValueChange((box, enabled) -> {
+                            this.entry.enabled = enabled;
+                            ScanController.INSTANCE.scanStore.save();
+                        })
+                        .build();
+                this.enabledBox.setMessage(Component.literal(entry.name()));
+
+                this.editButton = SpriteIconButton.builder(Component.translatable("xray.tooltips.edit_entry"), btn -> this.edit(), true)
+                        .sprite(EDIT_ICON, 12, 12)
+                        .size(18, 18)
+                        .narration(narration -> Component.translatable("xray.narration.edit_entry", entry.name()))
+                        .build();
+                this.editButton.setTooltip(Tooltip.create(Component.translatable("xray.tooltips.edit_entry")));
+            }
+
+            private void edit() {
+                minecraft.gui.setScreen(new ScanConfigureScreen(this.entry, ScanManageScreen::new));
             }
 
             @Override
             public void extractContent(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovering, float partialTicks) {
-                Font font = Minecraft.getInstance().font;
+                int left = this.getContentX();
+                int right = this.getContentRight() - INSET;
+                int middle = this.getContentYMiddle();
 
-                guiGraphics.text(font, this.entry.name(), this.getContentX() + 25, this.getContentY() + 7, 0xFFFFFFFF);
-                guiGraphics.text(font, this.entry.enabled() ? "Enabled" : "Disabled", this.getContentX() + 25, this.getContentY() + 17, this.entry.enabled() ? Color.GREEN.getRGB() : Color.RED.getRGB());
+                // Highlight colour as a square behind the block
+                int swatchY = middle - SWATCH_SIZE / 2;
+                guiGraphics.fill(left, swatchY, left + SWATCH_SIZE, swatchY + SWATCH_SIZE, 0xFF000000);
+                guiGraphics.fill(left + 1, swatchY + 1, left + SWATCH_SIZE - 1, swatchY + SWATCH_SIZE - 1, 0xFF000000 | this.entry.colorInt());
+                guiGraphics.item(this.icon, left + 2, swatchY + 2);
 
-                guiGraphics.item(this.icon, this.getContentX(), this.getContentY() + 7);
+                // Widgets live in the row, so they're repositioned every frame as the list scrolls
+                this.enabledBox.setPosition(right - this.enabledBox.getWidth(), middle - this.enabledBox.getHeight() / 2);
+                this.editButton.setPosition(this.enabledBox.getX() - 3 - this.editButton.getWidth(), middle - this.editButton.getHeight() / 2);
 
-                var stack = guiGraphics.pose();
-                stack.pushMatrix();
+                // Name, scrolling like vanilla button labels when it's too long to fit
+                int nameLeft = left + SWATCH_SIZE + 5;
+                int nameRight = this.editButton.getX() - 4;
+                Component name = Component.literal(this.entry.name()).withStyle(this.entry.enabled() ? ChatFormatting.WHITE : ChatFormatting.GRAY);
+                guiGraphics.textRenderer().acceptScrolling(name, nameLeft, nameLeft, nameRight, this.getContentY(), this.getContentBottom());
 
-                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ScanManageScreen.CIRCLE, (this.getContentX() + this.getWidth()) - 23, (int) (this.getContentY() + (this.getHeight() / 2f) - 9), 0, 0, 14, 14, 14, 14, 0x7F000000);
-                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ScanManageScreen.CIRCLE, (this.getContentX() + this.getWidth()) - 21, (int) (this.getContentY() + (this.getHeight() / 2f) - 7), 0, 0, 10, 10, 10, 10, 0xFF000000 | this.entry.colorInt());
-
-                stack.popMatrix();
+                this.editButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
+                this.enabledBox.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
             }
 
             @Override
-            public boolean mouseClicked(MouseButtonEvent mouse, boolean bl) {
-                this.parent.setSelected(this, mouse);
-                return false;
+            public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+                // The checkbox and edit button get first go
+                if (super.mouseClicked(event, doubleClick)) {
+                    return true;
+                }
+
+                if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) {
+                    return false;
+                }
+
+                AbstractWidget.playButtonClickSound(minecraft.getSoundManager());
+
+                if (event.hasShiftDown()) {
+                    this.edit();
+                } else {
+                    this.enabledBox.onPress(event);
+                }
+
+                return true;
             }
 
             @Override
-            public @NotNull Component getNarration() {
-                return Component.empty();
+            public List<? extends GuiEventListener> children() {
+                return List.of(this.editButton, this.enabledBox);
+            }
+
+            @Override
+            public List<? extends NarratableEntry> narratables() {
+                return List.of(this.editButton, this.enabledBox);
             }
         }
     }
