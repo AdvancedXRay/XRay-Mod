@@ -4,6 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.SpriteIconButton;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -19,15 +21,13 @@ import pro.mikey.xray.core.scanner.BlockScanType;
 import pro.mikey.xray.core.scanner.ScanStore;
 import pro.mikey.xray.core.scanner.ScanType;
 import pro.mikey.xray.screens.helpers.GuiBase;
-import pro.mikey.xray.screens.helpers.ImageButton;
 import pro.mikey.xray.screens.helpers.SliderWidget;
 
 import java.util.Objects;
 import java.util.function.Supplier;
 
 public class ScanConfigureScreen extends GuiBase {
-    private static final Identifier TRASH_ICON = XRay.assetLocation("gui/trash.png");
-    private static final Identifier TRANSPARENT_BACKGROUND = XRay.assetLocation("gui/transparent_background.png");
+    private static final Identifier TRANSPARENT_BACKGROUND = XRay.assetLocation("gui/transparent-background.png");
 
     private EditBox oreName;
 
@@ -76,12 +76,12 @@ public class ScanConfigureScreen extends GuiBase {
         GridLayout.RowHelper rowHelper = layout.createRowHelper(3);
 
         if (editingType != null) {
-            rowHelper.addChild(ImageButton.builder(b -> {
-                        removeBlock();
-                    })
-                    .image(XRay.assetLocation("gui/trash.png"), 16, 16)
+            SpriteIconButton deleteButton = SpriteIconButton.builder(Component.translatable("xray.single.delete"), b -> removeBlock(), true)
+                    .sprite(XRay.id("icon/clear"), 12, 12)
                     .size(20, 20)
-                    .build());
+                    .build();
+            deleteButton.setTooltip(Tooltip.create(Component.translatable("xray.single.delete")));
+            rowHelper.addChild(deleteButton);
         }
 
         rowHelper.addChild(Button.builder(Component.translatable("xray.single.cancel"), b -> Minecraft.getInstance().gui.setScreen(this.previousScreenCallback.get()))
