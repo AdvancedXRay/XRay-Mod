@@ -67,6 +67,10 @@ public class OutlineRender {
 			if (holder == null) {
 				BufferBuilder bufferBuilder = Tesselator.getInstance().begin(RenderPipelines.LINES.getVertexFormatMode(), RenderPipelines.LINES.getVertexFormat());
 
+				// Edgecase: Vertices are now stored relative to the chunk's corner, when using the absolute world positions
+				// 			 the outlines would flicker around the edges of chunks due to floating point precision issues.
+				final int originX = chunkPos.getMinBlockX(), originZ = chunkPos.getMinBlockZ();
+
 				// More concurrent modification exceptions can happen here, so we clone the list
 				var blockPropsClone = new ArrayList<>(blocksWithProps);
 
@@ -75,7 +79,7 @@ public class OutlineRender {
 						continue;
 					}
 
-                    final int x = blockProps.x(), y = blockProps.y(), z = blockProps.z();
+                    final int x = blockProps.x() - originX, y = blockProps.y(), z = blockProps.z() - originZ;
 
 					ShapeRenderer.renderShape(poseStack, bufferBuilder, Shapes.block(), x, y, z, blockProps.color(), 1f);
 				}
@@ -94,14 +98,19 @@ public class OutlineRender {
 				continue;
 			}
 
-			Vec3 playerPos = Minecraft.getInstance().gameRenderer.getMainCamera().position().reverse();
+			Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().position();
 
 			Matrix4fStack matrix4fStack = RenderSystem.getModelViewStack();
 			GpuTextureView colorTextureView = Minecraft.getInstance().getMainRenderTarget().getColorTextureView();
 			GpuTextureView depthTextureView = Minecraft.getInstance().getMainRenderTarget().getDepthTextureView();
 
+			// Now that we offset, we have to translate to the chunk's offset from the camera in double precision
 			matrix4fStack.pushMatrix();
-			matrix4fStack.translate((float) playerPos.x(), (float) playerPos.y(), (float) playerPos.z());
+			matrix4fStack.translate(
+					(float) (chunkPos.getMinBlockX() - cameraPos.x()),
+					(float) -cameraPos.y(),
+					(float) (chunkPos.getMinBlockZ() - cameraPos.z())
+			);
 			GpuBufferSlice[] gpubufferslice = RenderSystem.getDynamicUniforms().writeTransforms(new DynamicUniforms.Transform(new Matrix4f(matrix4fStack), new Vector4f(1.0F, 1.0F, 1.0F, 1.0F), new Vector3f(), new Matrix4f()));
 
             GL11.glDisable(GL11.GL_DEPTH_TEST);

@@ -19,7 +19,6 @@ import java.util.List;
 
 public abstract class GuiBase extends Screen {
     public static final Identifier BG_NORMAL = XRay.assetLocation("gui/bg.png");
-    public static final Identifier BG_LARGE = XRay.assetLocation("gui/bg-help.png");
 
     private boolean hasSide;
     private String sideTitle = "";

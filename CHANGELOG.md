@@ -1,3 +1,25 @@
+## [26.1.0.2]
+
+### Added
+
+- "Delete all" button to remove every block from the list, with a confirmation
+- "Reset to defaults" button to restore the default ore list, with a confirmation
+
+### Changed
+
+- Reworked the block list to be easier to use and more compact:
+  - List entries are now smaller and long block names scroll instead of overflowing
+  - Reset, delete all and close are now icon buttons at the top of the sidebar.
+
+### Fixed
+
+- Random crash (`ConcurrentModificationException`) whilst moving around with XRay enabled (https://github.com/AdvancedXRay/XRay-Mod/issues/374)
+- XRay outlines breaking apart and jumping around when very far from 0,0, such as near the world border [#295](https://github.com/AdvancedXRay/XRay-Mod/issues/295)
+- The colour preview on the edit screen showing a missing texture instead of the transparency background
+
+### Removed
+- Removed the help screen and the hint text under the block list, the new list makes them redundant
+
 ## [26.1.0.1]
 
 ### Changed

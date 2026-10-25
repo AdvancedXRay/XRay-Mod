@@ -9,7 +9,6 @@
   "xray.single.tools": "工具",
   "xray.single.close": "关闭",
   "xray.single.search": "搜索",
-  "xray.single.help": "帮助",
 
   "xray.overlay": "透视已激活",
 
@@ -54,11 +53,7 @@
   "xray.tooltips.add_block_looking_at": "自动选择你正在看的方块添加到列表。",
   "xray.tooltips.show_lava": "像普通方块一样用红色显示岩浆。\n小心！很烫。",
   "xray.tooltips.distance": "警告：半径越大，更新时会卡顿一会。",
-  "xray.tooltips.edit1": "点击启用/禁用",
-  "xray.tooltips.edit2": "按住 Shift 并点击进行编辑。",
 
-  "xray.message.help.gui": "要编辑方块，只需按住 Shift 并点击你想编辑的方块。\n如需启用/禁用方块，直接点击即可切换。",
-  "xray.message.help.warning": "警告：距离超过 64 会导致 FPS 降低，\n因为需要扫描大量方块。（大约 256^3）",
 
   "xray.config.toggle": "切换透视",
   "xray.config.open": "打开透视菜单",
