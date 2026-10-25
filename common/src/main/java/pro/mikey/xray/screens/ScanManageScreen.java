@@ -37,6 +37,7 @@ import pro.mikey.xray.core.scanner.ScanStore;
 import pro.mikey.xray.core.scanner.ScanType;
 import pro.mikey.xray.screens.helpers.GuiBase;
 import pro.mikey.xray.screens.helpers.SupportButton;
+import pro.mikey.xray.screens.helpers.TriStateCheckbox;
 import pro.mikey.xray.utils.Utils;
 import pro.mikey.xray.XRay;
 import pro.mikey.xray.core.ScanController;
@@ -77,7 +78,15 @@ public class ScanManageScreen extends GuiBase {
         this.scrollList = new ScanEntryScroller(getWidth() / 2 - 137, getHeight() / 2 - 82, 201, 185);
         addRenderableWidget(this.scrollList);
 
-        this.search = new EditBox(getFontRender(), getWidth() / 2 - 137, getHeight() / 2 - 105, 202, 18, Component.empty());
+        // "Select all" checkbox beside the search, lined up with the row checkboxes below it
+        int boxSize = Checkbox.getBoxSize(getFontRender());
+        int toggleAllX = this.scrollList.getRowRight() - ScanEntryScroller.ScanSlot.INSET - boxSize;
+        TriStateCheckbox toggleAll = new TriStateCheckbox(toggleAllX, getHeight() / 2 - 96 - boxSize / 2, boxSize, Component.translatable("xray.single.toggle_all"), this::visibleEnabledState, this::setVisibleEnabled);
+        toggleAll.setTooltip(Tooltip.create(Component.translatable("xray.tooltips.toggle_all")));
+        addRenderableWidget(toggleAll);
+
+        int searchLeft = getWidth() / 2 - 137;
+        this.search = new EditBox(getFontRender(), searchLeft, getHeight() / 2 - 105, toggleAllX - 4 - searchLeft, 18, Component.empty());
         this.search.setCanLoseFocus(true);
         this.search.setHint(Component.translatable("xray.single.search_hint").withStyle(EditBox.SEARCH_HINT_STYLE));
         addRenderableWidget(this.search);
@@ -164,6 +173,25 @@ public class ScanManageScreen extends GuiBase {
         panel.setPosition(getWidth() / 2 + 79, getHeight() / 2 - 80);
         panel.arrangeElements();
         panel.visitWidgets(this::addRenderableWidget);
+    }
+
+    private TriStateCheckbox.State visibleEnabledState() {
+        List<ScanType> visible = this.scrollList.visibleTargets();
+        long enabled = visible.stream().filter(ScanType::enabled).count();
+
+        if (enabled == 0) {
+            return TriStateCheckbox.State.NONE;
+        }
+
+        return enabled == visible.size() ? TriStateCheckbox.State.ALL : TriStateCheckbox.State.SOME;
+    }
+
+    private void setVisibleEnabled(boolean enabled) {
+        this.scrollList.visibleTargets().forEach(target -> target.enabled = enabled);
+        ScanController.INSTANCE.scanStore.save();
+
+        // Rows build their checkbox from the entry, so rebuild them to pick up the change
+        this.scrollList.updateEntries();
     }
 
     private static SpriteIconButton iconButton(String icon, String labelKey, String tooltipKey, Button.OnPress onPress) {
@@ -295,6 +323,10 @@ public class ScanManageScreen extends GuiBase {
 
         @Override
         protected void extractListSeparators(GuiGraphicsExtractor graphics) {
+        }
+
+        List<ScanType> visibleTargets() {
+            return this.children().stream().map(slot -> slot.entry).toList();
         }
 
         void updateEntries() {

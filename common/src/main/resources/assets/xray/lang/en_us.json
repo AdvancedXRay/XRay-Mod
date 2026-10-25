@@ -12,6 +12,7 @@
   "xray.single.search_hint": "Search...",
   "xray.single.reset": "Reset to defaults",
   "xray.single.clear_all": "Delete all",
+  "xray.single.toggle_all": "Toggle all",
 
   "xray.overlay": "XRay Active",
 
@@ -58,6 +59,7 @@
   "xray.tooltips.distance": "Warning: Larger radius will lag for a second whilst updating.",
   "xray.tooltips.reset_defaults": "Reset the XRay list back to the default ores.",
   "xray.tooltips.clear_all": "Delete all blocks from the XRay list.",
+  "xray.tooltips.toggle_all": "Enable or disable every block shown in the list.",
   "xray.tooltips.edit_entry": "Edit",
   "xray.narration.edit_entry": "Edit %s",
 
