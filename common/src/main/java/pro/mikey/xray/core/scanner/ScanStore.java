@@ -102,6 +102,19 @@ public class ScanStore {
         this.save();
     }
 
+    public Set<Block> addedBlocks() {
+        Set<Block> blocks = new HashSet<>();
+        for (Category category : this.categories) {
+            for (ScanType entry : category.entries) {
+                if (entry instanceof BlockScanType blockScanType && blockScanType.block != null) {
+                    blocks.add(blockScanType.block);
+                }
+            }
+        }
+
+        return blocks;
+    }
+
     // TODO: Support categories once the GUI can support it.
     public void removeEntry(ScanType type) {
         for (Category category : this.categories) {

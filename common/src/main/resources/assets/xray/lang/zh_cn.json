@@ -20,8 +20,6 @@
 
   "xray.input.gui": "界面名称",
   "xray.input.add": "添加方块",
-  "xray.input.add_hand": "添加手持方块",
-  "xray.input.add_look": "添加所看方块",
   "xray.input.distance": "距离: %s",
   "xray.input.show-lava": "显示岩浆: %s",
   "xray.input.toggle_oredict": "使用字典",
@@ -48,10 +46,6 @@
   "xray.message.not_a_number": "{%s} 不是数字。请为元数据输入数字",
   "xray.message.meta_not_supported": "{%s} 不是 {%s} 的有效元数据",
   "xray.message.state_warning": "警告，这将只限于默认方块。\n使用“所看方块”或“手持方块”可获得你需要的精确方块。\n某些情况下（如箱子）你可能需要这样做，\n如果是这样，这就是正确的选项。",
-
-  "xray.tooltips.add_block": "选择一个方块添加到透视列表\n此操作使用方块默认值，如需特定方块\n请用“添加所看方块”。",
-  "xray.tooltips.add_block_in_hand": "自动选择你手持的方块添加到列表。",
-  "xray.tooltips.add_block_looking_at": "自动选择你正在看的方块添加到列表。",
   "xray.tooltips.show_lava": "像普通方块一样用红色显示岩浆。\n小心！很烫。",
   "xray.tooltips.distance": "警告：半径越大，更新时会卡顿一会。",
 

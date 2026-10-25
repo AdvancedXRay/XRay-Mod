@@ -101,11 +101,11 @@ public class ScanConfigureScreen extends GuiBase {
         layout.arrangeElements();
         layout.visitWidgets(this::addRenderableWidget);
 
-        int defaultColor = 0xFF00A8FF; // Default color (Blue with full alpha)
+        // Attempt to compute a default colour based on the blocks "map" color.
+        int mapColor = selectBlock.defaultMapColor().col;
+        int defaultColor = mapColor != 0 ? 0xFF000000 | mapColor : 0xFF00A8FF;
         if (editingType != null) {
-            // Use the existing color with its alpha value
             defaultColor = editingType.colorInt;
-            // Only add alpha if the color doesn't have it (checking if top byte is 0)
             if ((defaultColor & 0xFF000000) == 0) {
                 defaultColor = defaultColor | 0xFF000000;
             }
@@ -213,6 +213,11 @@ public class ScanConfigureScreen extends GuiBase {
         }
 
         return super.mouseClicked(mouseButtonEvent, bl);
+    }
+
+    @Override
+    public void onClose() {
+        minecraft.setScreen(this.previousScreenCallback.get());
     }
 
     @Override

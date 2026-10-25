@@ -19,26 +19,16 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
 import pro.mikey.xray.core.scanner.BlockScanType;
 import pro.mikey.xray.core.scanner.ScanStore;
 import pro.mikey.xray.core.scanner.ScanType;
 import pro.mikey.xray.screens.helpers.GuiBase;
 import pro.mikey.xray.screens.helpers.SupportButton;
 import pro.mikey.xray.screens.helpers.TriStateCheckbox;
-import pro.mikey.xray.utils.Utils;
 import pro.mikey.xray.XRay;
 import pro.mikey.xray.core.ScanController;
 
@@ -107,56 +97,9 @@ public class ScanManageScreen extends GuiBase {
                 .tooltip(Tooltip.create(Component.translatable("xray.tooltips.add_block")))
                 .build());
 
-        panel.addChild(Button.builder(Component.translatable("xray.input.add_hand"), btn -> {
-            ItemStack handItem = minecraft.player.getItemInHand(InteractionHand.MAIN_HAND);
-
-            // Check if the hand item is a block or not
-            if (!(handItem.getItem() instanceof BlockItem)) {
-                minecraft.player.sendSystemMessage(Component.literal("[XRay] " + Component.translatable("xray.message.invalid_hand", Utils.safeItemStackName(handItem).getString())));
-                this.onClose();
-                return;
-            }
-
-            minecraft.setScreen(new ScanConfigureScreen(((BlockItem) handItem.getItem()).getBlock(), ScanManageScreen::new));
-        })
-                .size(120, 20)
-                .tooltip(Tooltip.create(Component.translatable("xray.tooltips.add_block_in_hand")))
-                .build());
-
-        panel.addChild(Button.builder(Component.translatable("xray.input.add_look"), btn -> {
-            Player player = minecraft.player;
-            if (minecraft.level == null || player == null) {
-                return;
-            }
-
-            try {
-                Vec3 look = player.getLookAngle();
-                Vec3 start = new Vec3(player.blockPosition().getX(), player.blockPosition().getY() + player.getEyeHeight(), player.blockPosition().getZ());
-                Vec3 end = new Vec3(player.blockPosition().getX() + look.x * 100, player.blockPosition().getY() + player.getEyeHeight() + look.y * 100, player.blockPosition().getZ() + look.z * 100);
-
-                ClipContext context = new ClipContext(start, end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player);
-                BlockHitResult result = minecraft.level.clip(context);
-
-                if (result.getType() == HitResult.Type.BLOCK) {
-                    Block lookingAt = minecraft.level.getBlockState(result.getBlockPos()).getBlock();
-
-                    minecraft.setScreen(new ScanConfigureScreen(lookingAt, ScanManageScreen::new));
-                } else {
-                    player.sendSystemMessage(Component.literal("[XRay] " + I18n.get("xray.message.nothing_infront")));
-                    this.onClose();
-                }
-            } catch (NullPointerException ex) {
-                player.sendSystemMessage(Component.literal("[XRay] " + I18n.get("xray.message.thats_odd")));
-                this.onClose();
-            }
-        })
-                .size(120, 20)
-                .tooltip(Tooltip.create(Component.translatable("xray.tooltips.add_block_looking_at")))
-                .build());
-
-        panel.addChild(Button.builder(Component.translatable("xray.input.show-lava", ScanController.INSTANCE.isLavaActive()), btn -> {
+        panel.addChild(Button.builder(Component.translatable("xray.input.show-lava", CommonComponents.optionStatus(ScanController.INSTANCE.isLavaActive())), btn -> {
                     ScanController.INSTANCE.toggleLava();
-                    btn.setMessage(Component.translatable("xray.input.show-lava", ScanController.INSTANCE.isLavaActive()));
+                    btn.setMessage(Component.translatable("xray.input.show-lava", CommonComponents.optionStatus(ScanController.INSTANCE.isLavaActive())));
                 })
                 .size(120, 20)
                 .tooltip(Tooltip.create(Component.translatable("xray.tooltips.show_lava")))
@@ -279,6 +222,10 @@ public class ScanManageScreen extends GuiBase {
 
     @Override
     public void renderExtra(GuiGraphicsExtractor graphics, int x, int y, float partialTicks) {
+        if (this.scrollList != null && this.scrollList.children().isEmpty()) {
+            Component message = Component.translatable(this.search.getValue().isEmpty() ? "xray.empty.list" : "xray.empty.no_matches");
+            FindBlockScreen.drawEmptyState(graphics, getFontRender(), message, this.scrollList.getX(), this.scrollList.getY(), this.scrollList.getWidth());
+        }
     }
 
     @Override
