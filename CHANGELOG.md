@@ -4,18 +4,42 @@
 
 - "Delete all" button to remove every block from the list, with a confirmation
 - "Reset to defaults" button to restore the default ore list, with a confirmation
+- Checkbox above the block list to enable or disable every block shown at once, respecting the current search
+- The add block list now pins the block in your hand and the block you're looking at to the top
+- Blocks already on your list are greyed out in the add block list and marked "Added", so they can't be added twice
+- Hovering a block's icon in the add block list shows its normal item tooltip
+- Messages for an empty list and for searches with no matches
 
 ### Changed
 
 - Reworked the block list to be easier to use and more compact:
   - List entries are now smaller and long block names scroll instead of overflowing
   - Reset, delete all and close are now icon buttons at the top of the sidebar.
+- Reworked the add block screen:
+  - More compact layout with the search box at the top, a "Search..." hint and a close button beside it
+  - Shows the mod's display name instead of its namespace, hover it to see the namespace
+  - Pressing Enter in the search adds the top result
+  - Your search and scroll position are kept when coming back from configuring a block
+- Removed the "Add Block in hand" and "Add Looking at" buttons, the add block list covers both now
+- Escape now goes back a screen instead of closing XRay entirely
+- New blocks default to their map colour (iron is beige, gold is yellow...) instead of always blue
+- The lava button now shows ON/OFF instead of true/false
+- XRay now scans around the camera instead of the player, so it works with freecam style mods
+- Much faster scanning, chunks are read section by section and empty sections are skipped
+- Much faster outline rendering, every chunk is drawn in a single render pass, chunks off screen are skipped and new chunks are built a few per frame to avoid stutters
+- Improved compatibility with Iris shader packs, the outlines are now drawn with the pack's own line shader
 
 ### Fixed
 
 - Random crash (`ConcurrentModificationException`) whilst moving around with XRay enabled (https://github.com/AdvancedXRay/XRay-Mod/issues/374)
 - XRay outlines breaking apart and jumping around when very far from 0,0, such as near the world border [#295](https://github.com/AdvancedXRay/XRay-Mod/issues/295)
 - The colour preview on the edit screen showing a missing texture instead of the transparency background
+- The add block screen freezing the game for a few seconds in large modpacks
+- Breaking an outlined block not removing its outline
+- Outlines not following you when moving, especially when flying or teleporting
+- Chunks that hadn't loaded yet being treated as empty, so their ores never showed up
+- Outlines from the previous dimension staying visible after changing dimension
+- Lava placed whilst XRay was on not being outlined
 
 ### Removed
 - Removed the help screen and the hint text under the block list, the new list makes them redundant
