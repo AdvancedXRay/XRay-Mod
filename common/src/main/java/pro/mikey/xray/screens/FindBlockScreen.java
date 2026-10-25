@@ -19,7 +19,9 @@ import pro.mikey.xray.XRay;
 import pro.mikey.xray.core.ScanController;
 import pro.mikey.xray.screens.helpers.GuiBase;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class FindBlockScreen extends GuiBase {
@@ -28,9 +30,10 @@ public class FindBlockScreen extends GuiBase {
     private static final int SPACING = 4;
 
     // Built once per screen so searching doesn't recreate item stacks or re-translate names for every block
+    private final Map<String, String> modNames = new HashMap<>();
     private final List<BlockEntry> allBlocks = BuiltInRegistries.BLOCK.stream()
             .filter(removeIgnoredBlocks())
-            .map(BlockEntry::of)
+            .map(block -> BlockEntry.of(block, this.modNames))
             .toList();
 
     private ScrollingBlockList blockList;
@@ -183,7 +186,21 @@ public class FindBlockScreen extends GuiBase {
                 guiGraphics.item(this.entry.stack(), left, middle - 8);
 
                 guiGraphics.textRenderer().acceptScrolling(Component.literal(this.entry.name()).withStyle(ChatFormatting.WHITE), textLeft, textLeft, textRight, middle - 10, middle);
-                guiGraphics.text(font, this.entry.namespace(), textLeft, middle + 1, SECONDARY_TEXT_COLOR, false);
+                guiGraphics.textRenderer().acceptScrolling(Component.literal(this.entry.modName()).withColor(SECONDARY_TEXT_COLOR).withoutShadow(), textLeft, textLeft, textRight, middle, middle + 10);
+
+                if (!hovering) {
+                    return;
+                }
+
+                if (!this.entry.stack().isEmpty() && isWithin(mouseX, mouseY, left, middle - 8, 16, 16)) {
+                    guiGraphics.setTooltipForNextFrame(font, this.entry.stack(), mouseX, mouseY);
+                } else if (isWithin(mouseX, mouseY, textLeft, middle, Math.min(font.width(this.entry.modName()), textRight - textLeft), 10)) {
+                    guiGraphics.setTooltipForNextFrame(font, Component.literal(this.entry.namespace()).withStyle(ChatFormatting.GRAY), mouseX, mouseY);
+                }
+            }
+
+            private static boolean isWithin(int mouseX, int mouseY, int x, int y, int width, int height) {
+                return mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height;
             }
 
             @Override
@@ -199,10 +216,13 @@ public class FindBlockScreen extends GuiBase {
         }
     }
 
-    private record BlockEntry(Block block, ItemStack stack, String name, String searchName, String namespace) {
-        static BlockEntry of(Block block) {
+    private record BlockEntry(Block block, ItemStack stack, String name, String searchName, String namespace, String modName) {
+        static BlockEntry of(Block block, Map<String, String> modNames) {
             String name = block.getName().getString();
-            return new BlockEntry(block, block.asItem().getDefaultInstance(), name, name.toLowerCase(), BuiltInRegistries.BLOCK.getKey(block).getNamespace());
+            String namespace = BuiltInRegistries.BLOCK.getKey(block).getNamespace();
+            String modName = modNames.computeIfAbsent(namespace, XRay.XPLAT::modDisplayName);
+
+            return new BlockEntry(block, block.asItem().getDefaultInstance(), name, name.toLowerCase(), namespace, modName);
         }
     }
 }

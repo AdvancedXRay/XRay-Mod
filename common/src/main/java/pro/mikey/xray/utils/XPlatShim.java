@@ -12,4 +12,6 @@ public interface XPlatShim {
     Supplier<Path> configPath();
 
     boolean isModLoaded(String modId);
+    
+    String modDisplayName(String modId);
 }

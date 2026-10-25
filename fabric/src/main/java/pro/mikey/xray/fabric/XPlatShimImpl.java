@@ -26,4 +26,11 @@ public class XPlatShimImpl implements XPlatShim {
     public boolean isModLoaded(String modId) {
         return FabricLoader.getInstance().isModLoaded(modId);
     }
+
+    @Override
+    public String modDisplayName(String modId) {
+        return FabricLoader.getInstance().getModContainer(modId)
+                .map(container -> container.getMetadata().getName())
+                .orElse(modId);
+    }
 }
