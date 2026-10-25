@@ -2,8 +2,6 @@ package pro.mikey.xray.core;
 
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
-import com.mojang.blaze3d.pipeline.BlendFunction;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuTextureView;
@@ -12,7 +10,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.DynamicUniforms;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.ShapeRenderer;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -32,7 +29,7 @@ public class OutlineRender {
 	private static final Set<ChunkPos> chunksToRefresh = Collections.synchronizedSet(new HashSet<>());
 
 	public static void renderBlocks(PoseStack poseStack) {
-		if (!ScanController.INSTANCE.isXRayActive() || Minecraft.getInstance().player == null) {
+		if (!ScanController.INSTANCE.isActive() || Minecraft.getInstance().player == null) {
 			return;
 		}
 
@@ -41,15 +38,20 @@ public class OutlineRender {
 		}
 
 		if (!chunksToRefresh.isEmpty()) {
+			// The scanner threads add to this, so take a copy and clear it in one go under the lock
+			List<ChunkPos> refreshing;
+			synchronized (chunksToRefresh) {
+				refreshing = new ArrayList<>(chunksToRefresh);
+				chunksToRefresh.clear();
+			}
+
 			// Clear the vertex buffers for the chunks that need to be refreshed
-			for (ChunkPos pos : chunksToRefresh) {
+			for (ChunkPos pos : refreshing) {
 				VBOHolder holder = vertexBuffers.remove(pos);
 				if (holder != null) {
 					holder.close();
 				}
 			}
-
-			chunksToRefresh.clear();
 		}
 
 		// Clone the entrySet to avoid concurrent modification exceptions
@@ -72,7 +74,7 @@ public class OutlineRender {
 				final int originX = chunkPos.getMinBlockX(), originZ = chunkPos.getMinBlockZ();
 
 				// More concurrent modification exceptions can happen here, so we clone the list
-				var blockPropsClone = new ArrayList<>(blocksWithProps);
+				var blockPropsClone = new ArrayList<>(blocksWithProps.values());
 
 				for (var blockProps : blockPropsClone) {
 					if (blockProps == null) {

@@ -15,7 +15,7 @@ public class HudOverlay {
 
     public static void renderGameOverlayEvent(GuiGraphicsExtractor graphics) {
         // Draw Indicator
-        if(!ScanController.INSTANCE.isXRayActive() || !XRay.config().showOverlay.get())
+        if(!ScanController.INSTANCE.isActive() || !XRay.config().showOverlay.get())
             return;
 
         GpuDevice gpuDevice = RenderSystem.tryGetDevice();
