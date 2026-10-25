@@ -20,6 +20,12 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class FindBlockScreen extends GuiBase {
+    // Built once per screen so searching doesn't recreate item stacks or re-translate names for every block
+    private final List<BlockEntry> allBlocks = BuiltInRegistries.BLOCK.stream()
+            .filter(removeIgnoredBlocks())
+            .map(BlockEntry::of)
+            .toList();
+
     private ScrollingBlockList blockList;
     private EditBox search;
     private String lastSearched = "";
@@ -55,14 +61,12 @@ public class FindBlockScreen extends GuiBase {
     }
 
     private void reloadBlocks() {
+        String query = search.getValue().toLowerCase();
         this.blockList.updateEntries(
-                search.getValue().isEmpty()
-                        ? BuiltInRegistries.BLOCK.stream()
-                            .filter(removeIgnoredBlocks())
-                            .toList()
-                        : BuiltInRegistries.BLOCK.stream()
-                            .filter(removeIgnoredBlocks())
-                            .filter(e -> e.getName().getString().toLowerCase().contains(search.getValue().toLowerCase()))
+                query.isEmpty()
+                        ? this.allBlocks
+                        : this.allBlocks.stream()
+                            .filter(e -> e.searchName().contains(query))
                             .toList()
         );
 
@@ -77,7 +81,6 @@ public class FindBlockScreen extends GuiBase {
     @Override
     public void renderExtra(GuiGraphicsExtractor graphics, int x, int y, float partialTicks) {
         search.extractRenderState(graphics, x, y, partialTicks);
-        blockList.extractRenderState(graphics, x, y, partialTicks);
     }
 
     @Override
@@ -113,6 +116,11 @@ public class FindBlockScreen extends GuiBase {
         }
 
         @Override
+        public int getNextY() {
+            return this.getY() + 2 - (int) this.scrollAmount() + this.children().size() * SLOT_HEIGHT;
+        }
+
+        @Override
         public void setSelected(@Nullable BlockSlot entry) {
             if (entry == null) {
                 return;
@@ -121,36 +129,32 @@ public class FindBlockScreen extends GuiBase {
             Minecraft.getInstance().setScreen(new ScanConfigureScreen(entry.getBlock(), FindBlockScreen::new));
         }
 
-        void updateEntries(List<Block> blocks) {
+        void updateEntries(List<BlockEntry> blocks) {
             this.clearEntries();
             blocks.forEach(block -> this.addEntry(new BlockSlot(block, this)));
         }
 
         public class BlockSlot extends ObjectSelectionList.Entry<ScrollingBlockList.BlockSlot> {
-            Block block;
-            ItemStack stack;
+            private final BlockEntry entry;
             private final ScrollingBlockList parent;
 
-            public BlockSlot(Block block, ScrollingBlockList parent) {
-                this.block = block;
+            public BlockSlot(BlockEntry entry, ScrollingBlockList parent) {
+                this.entry = entry;
                 this.parent = parent;
-                this.stack = block.asItem().getDefaultInstance();
             }
 
             public Block getBlock() {
-                return block;
+                return entry.block();
             }
 
             @Override
             public void extractContent(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovering, float partialTicks) {
                 Font font = this.parent.minecraft.font;
 
-                var registryName = BuiltInRegistries.BLOCK.getKey(this.block);
+                guiGraphics.text(font, this.entry.name(), this.getContentX() + 25, this.getContentY() + 7, Color.WHITE.getRGB());
+                guiGraphics.text(font, this.entry.namespace(), this.getContentX() + 25, this.getContentY() + 17, Color.GRAY.getRGB());
 
-                guiGraphics.text(font, this.block.getName().getString(), this.getContentX() + 25, this.getContentY() + 7, Color.WHITE.getRGB());
-                guiGraphics.text(font, registryName.getNamespace(), this.getContentX() + 25, this.getContentY() + 17, Color.GRAY.getRGB());
-
-                guiGraphics.item(this.stack, this.getContentX(), this.getContentY() + 7);
+                guiGraphics.item(this.entry.stack(), this.getContentX(), this.getContentY() + 7);
             }
 
             @Override
@@ -163,6 +167,13 @@ public class FindBlockScreen extends GuiBase {
                 this.parent.setSelected(this);
                 return false;
             }
+        }
+    }
+
+    private record BlockEntry(Block block, ItemStack stack, String name, String searchName, String namespace) {
+        static BlockEntry of(Block block) {
+            String name = block.getName().getString();
+            return new BlockEntry(block, block.asItem().getDefaultInstance(), name, name.toLowerCase(), BuiltInRegistries.BLOCK.getKey(block).getNamespace());
         }
     }
 }
