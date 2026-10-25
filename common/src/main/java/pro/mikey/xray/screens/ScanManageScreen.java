@@ -41,7 +41,6 @@ import pro.mikey.xray.utils.Utils;
 import pro.mikey.xray.XRay;
 import pro.mikey.xray.core.ScanController;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -80,6 +79,7 @@ public class ScanManageScreen extends GuiBase {
 
         this.search = new EditBox(getFontRender(), getWidth() / 2 - 137, getHeight() / 2 - 105, 202, 18, Component.empty());
         this.search.setCanLoseFocus(true);
+        this.search.setHint(Component.translatable("xray.single.search_hint").withStyle(EditBox.SEARCH_HINT_STYLE));
         addRenderableWidget(this.search);
 
         LinearLayout panel = LinearLayout.vertical().spacing(2);
@@ -251,9 +251,6 @@ public class ScanManageScreen extends GuiBase {
 
     @Override
     public void renderExtra(GuiGraphicsExtractor graphics, int x, int y, float partialTicks) {
-        if (!search.isFocused() && search.getValue().isEmpty()) {
-            graphics.text(getFontRender(), I18n.get("xray.single.search"), getWidth() / 2 - 130, getHeight() / 2 - 101, Color.GRAY.getRGB());
-        }
     }
 
     @Override
@@ -380,7 +377,9 @@ public class ScanManageScreen extends GuiBase {
                 // Name, scrolling like vanilla button labels when it's too long to fit
                 int nameLeft = left + SWATCH_SIZE + 5;
                 int nameRight = this.editButton.getX() - 4;
-                Component name = Component.literal(this.entry.name()).withStyle(this.entry.enabled() ? ChatFormatting.WHITE : ChatFormatting.GRAY);
+                Component name = this.entry.enabled()
+                        ? Component.literal(this.entry.name()).withStyle(ChatFormatting.WHITE)
+                        : Component.literal(this.entry.name()).withColor(SECONDARY_TEXT_COLOR).withoutShadow();
                 guiGraphics.textRenderer().acceptScrolling(name, nameLeft, nameLeft, nameRight, this.getContentY(), this.getContentBottom());
 
                 this.editButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);

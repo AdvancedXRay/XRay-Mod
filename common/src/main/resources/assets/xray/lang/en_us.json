@@ -9,6 +9,7 @@
   "xray.single.tools": "Tools",
   "xray.single.close": "Close",
   "xray.single.search": "Search",
+  "xray.single.search_hint": "Search...",
   "xray.single.reset": "Reset to defaults",
   "xray.single.clear_all": "Delete all",
 

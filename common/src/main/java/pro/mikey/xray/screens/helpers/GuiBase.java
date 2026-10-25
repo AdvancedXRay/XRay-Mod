@@ -19,6 +19,8 @@ import java.util.List;
 
 public abstract class GuiBase extends Screen {
     public static final Identifier BG_NORMAL = XRay.assetLocation("gui/bg.png");
+    // Vanilla's container label colour, readable on the light background without a shadow
+    public static final int SECONDARY_TEXT_COLOR = 0xFF404040;
 
     private boolean hasSide;
     private String sideTitle = "";
