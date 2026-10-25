@@ -197,7 +197,7 @@ public enum ScanController {
             return;
         }
 
-        var chunkPos = new ChunkPos(pos.getX(), pos.getZ());
+        var chunkPos = new ChunkPos(pos.getX() >> 4, pos.getZ() >> 4);
         Set<OutlineRenderTarget> outlineRenderTargets = ScanController.INSTANCE.syncRenderList.get(chunkPos);
         if (outlineRenderTargets == null) {
             // It's not being rendered, so we don't care
