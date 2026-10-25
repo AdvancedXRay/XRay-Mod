@@ -25,9 +25,8 @@
 - New blocks default to their map colour (iron is beige, gold is yellow...) instead of always blue
 - The lava button now shows ON/OFF instead of true/false
 - XRay now scans around the camera instead of the player, so it works with freecam style mods
-- Much faster scanning, chunks are read section by section and empty sections are skipped
-- Much faster outline rendering, every chunk is drawn in a single render pass, chunks off screen are skipped and new chunks are built a few per frame to avoid stutters
-- Improved compatibility with Iris shader packs, the outlines are now drawn with the pack's own line shader
+- Improved rendering performance via various optimisations, especially when scanning large areas
+  - Added Iris compatability to ensure our outlines are drawn correctly with Iris shader packs
 
 ### Fixed
 
@@ -40,6 +39,7 @@
 - Chunks that hadn't loaded yet being treated as empty, so their ores never showed up
 - Outlines from the previous dimension staying visible after changing dimension
 - Lava placed whilst XRay was on not being outlined
+- XRay's fog settings leaking into other rendering
 
 ### Removed
 - Removed the help screen and the hint text under the block list, the new list makes them redundant
