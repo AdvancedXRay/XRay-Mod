@@ -44,7 +44,7 @@ public class XRayNeoForge {
 	}
 
 	private void onWorldRenderLast(RenderLevelStageEvent.AfterWeather event) {
-		OutlineRender.renderBlocks(event.getPoseStack());
+		OutlineRender.renderBlocks();
 	}
 
 	public void onClientSetup(FMLClientSetupEvent event) {

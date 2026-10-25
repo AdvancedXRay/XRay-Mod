@@ -33,7 +33,7 @@ public class XRayFabric implements ClientModInitializer {
     }
 
     private void renderOverlay(LevelRenderContext levelRenderContext) {
-        OutlineRender.renderBlocks(levelRenderContext.poseStack());
+        OutlineRender.renderBlocks();
     }
 
 
