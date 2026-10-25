@@ -36,7 +36,7 @@ import java.util.*;
 public class OutlineRender {
 	// Build our own pipeline for no-depth test lines that mimics the vanilla lines pipeline, but with no depth test and no fog.
 	// This is used to draw the outlines of blocks that are being scanned for.
-	private static final RenderPipeline XRAY_LINES = RenderPipeline.builder()
+	public static final RenderPipeline NO_DEPTH_LINES_PIPELINE = RenderPipeline.builder()
 			.withLocation(XRay.id("pipeline/xray_lines"))
 			.withUniform("DynamicTransforms", UniformType.UNIFORM_BUFFER)
 			.withUniform("Projection", UniformType.UNIFORM_BUFFER)
@@ -132,7 +132,7 @@ public class OutlineRender {
 				.createCommandEncoder()
 				.createRenderPass(() -> "xray", colorTextureView, OptionalInt.empty(), depthTextureView, OptionalDouble.empty())) {
 
-			renderPass.setPipeline(XRAY_LINES);
+			renderPass.setPipeline(NO_DEPTH_LINES_PIPELINE);
 			RenderSystem.bindDefaultUniforms(renderPass);
 			// Outlines stay fully visible however far into the fog they are
 			renderPass.setUniform("Fog", noFog());
@@ -189,7 +189,7 @@ public class OutlineRender {
 	}
 
 	private static VBOHolder build(ChunkPos chunkPos, Collection<OutlineRenderTarget> outlines) {
-		BufferBuilder bufferBuilder = Tesselator.getInstance().begin(XRAY_LINES.getVertexFormatMode(), XRAY_LINES.getVertexFormat());
+		BufferBuilder bufferBuilder = Tesselator.getInstance().begin(NO_DEPTH_LINES_PIPELINE.getVertexFormatMode(), NO_DEPTH_LINES_PIPELINE.getVertexFormat());
 
 		final int originX = chunkPos.getMinBlockX(), originZ = chunkPos.getMinBlockZ();
 		int minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;

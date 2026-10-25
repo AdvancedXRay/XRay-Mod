@@ -57,6 +57,7 @@ public class XRayNeoForge {
 	}
 
 	public void registerPipeline(RegisterRenderPipelinesEvent event) {
+		event.registerPipeline(OutlineRender.NO_DEPTH_LINES_PIPELINE);
 	}
 
 	public void eventInput(InputEvent.Key event) {
