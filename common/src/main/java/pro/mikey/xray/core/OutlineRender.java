@@ -53,7 +53,6 @@ public class OutlineRender {
 	// Building one chunk's outlines is quick, but a burst of finished scans can land in the same frame, so spread them out
 	private static final int MAX_BUILDS_PER_FRAME = 8;
 
-	private static final RenderSystem.AutoStorageIndexBuffer indices = RenderSystem.getSequentialBuffer(VertexFormat.Mode.LINES);
 	private static final Map<ChunkPos, VBOHolder> vertexBuffers = new HashMap<>();
 
 	private static final Set<ChunkPos> chunksToRefresh = Collections.synchronizedSet(new HashSet<>());
@@ -122,6 +121,7 @@ public class OutlineRender {
 		}
 
 		GpuBufferSlice[] transformSlices = RenderSystem.getDynamicUniforms().writeTransforms(transforms.toArray(DynamicUniforms.Transform[]::new));
+		RenderSystem.AutoStorageIndexBuffer indices = RenderSystem.getSequentialBuffer(VertexFormat.Mode.LINES);
 		GpuBuffer indexBuffer = indices.getBuffer(maxIndexCount);
 
 		GpuTextureView colorTextureView = Minecraft.getInstance().getMainRenderTarget().getColorTextureView();
